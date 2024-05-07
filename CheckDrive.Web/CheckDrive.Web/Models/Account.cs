@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-
-namespace CheckDrive.Web.Models
+﻿namespace CheckDrive.Web.Models
 {
     public class Account
     {
