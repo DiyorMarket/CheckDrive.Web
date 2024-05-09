@@ -9,6 +9,9 @@
   <ItemGroup>
     <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="25.1.42" />
     <PackageReference Include="Syncfusion.Licensing" Version="25.2.3" />
+
+    <Folder Include="Controllers\" />
+
   </ItemGroup>
 
 </Project>
