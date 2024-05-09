@@ -29,15 +29,15 @@ namespace CheckDrive.Web.Stores.Accounts
 
         public async Task<Account> CreateAccount(Account account)
         {
-            await Task.Delay(100); 
-            account.Id = _accounts.Max(a => a.Id) + 1; 
+            await Task.Delay(100);
+            account.Id = _accounts.Max(a => a.Id) + 1;
             _accounts.Add(account);
             return account;
         }
 
         public async Task<Account> UpdateAccount(int id, Account account)
         {
-            await Task.Delay(100); 
+            await Task.Delay(100);
             var existingAccount = _accounts.FirstOrDefault(a => a.Id == id);
             if (existingAccount != null)
             {
@@ -54,7 +54,7 @@ namespace CheckDrive.Web.Stores.Accounts
 
         public async Task DeleteAccount(int id)
         {
-            await Task.Delay(100); 
+            await Task.Delay(100);
             var accountToRemove = _accounts.FirstOrDefault(a => a.Id == id);
             if (accountToRemove != null)
             {
