@@ -7,9 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Stores\" />
+    <Compile Remove="Controllers\**" />
+    <Content Remove="Controllers\**" />
+    <EmbeddedResource Remove="Controllers\**" />
+    <None Remove="Controllers\**" />
+  </ItemGroup>
 
-    <Folder Include="Controllers\" />
+  <ItemGroup>
+    <Folder Include="Stores\" />
   </ItemGroup>
 
 </Project>
