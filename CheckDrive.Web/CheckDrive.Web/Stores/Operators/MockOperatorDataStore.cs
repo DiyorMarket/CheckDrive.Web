@@ -1,4 +1,5 @@
 ﻿using CheckDrive.Web.Models;
+using System.Security.Cryptography;
 
 namespace CheckDrive.Web.Stores.Operators
 {
@@ -48,7 +49,7 @@ namespace CheckDrive.Web.Stores.Operators
 
         public async Task DeleteOperator(int id)
         {
-            await Task.Delay(100); 
+            await Task.Delay(100);
             var operatorToRemove = _operators.FirstOrDefault(op => op.Id == id);
             if (operatorToRemove != null)
             {
