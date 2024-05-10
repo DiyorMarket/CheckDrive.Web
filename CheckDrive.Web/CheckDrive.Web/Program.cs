@@ -1,7 +1,11 @@
+using CheckDrive.Web.Exceptions;
+using CheckDrive.Web.Filters;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+    options.Filters.Add(new ApiExceptionFilter()));
 
 var app = builder.Build();
 
