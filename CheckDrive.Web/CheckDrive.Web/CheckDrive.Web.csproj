@@ -13,4 +13,8 @@
     <None Remove="Controllers\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Stores\Technician\" />
+  </ItemGroup>
+
 </Project>
