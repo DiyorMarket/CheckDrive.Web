@@ -12,3 +12,4 @@
         public virtual ICollection<OperatorReview> OperatorReviews { get; set; }
     }
 }
+    
