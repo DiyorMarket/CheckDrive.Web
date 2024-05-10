@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Stores.Accounts;
+﻿using CheckDrive.Web.Service;
+using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DispatcherReviews;
 using CheckDrive.Web.Stores.Dispatchers;
@@ -31,6 +32,13 @@ namespace CheckDrive.Web.Extensions
             services.AddScoped<IOperatorDataStore, MockOperatorDataStore>();
             services.AddScoped<IRoleDataStore, MockRoleDataStore>();
             services.AddScoped<ITechnicianDataStore, ITechnicianDataStore>();
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureServices(this IServiceCollection services)
+        {
+            services.AddSingleton<ApiClient>();
 
             return services;
         }
