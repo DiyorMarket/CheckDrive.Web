@@ -12,6 +12,12 @@ html {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+.main-content {
+    margin-left: 290px;
+    overflow-y: auto;
+    height: 92vh;
+}
+
 html {
   position: relative;
   min-height: 100%;
@@ -20,3 +26,45 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*SideBar*/
+#sidebar {
+    background-color:#000000;
+    border-right: 1px dashed rgba(75,82,85,0.24);
+    padding: 10px 20px;
+    overflow: hidden;
+}
+
+.widget {
+    border-radius: 1rem;
+    background-color: white;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+
+    .widget.summary > div:first-child {
+        background-color: whitesmoke;
+        padding: 1rem;
+        border-top-left-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+    }
+
+        .widget.summary > div:first-child i {
+            font-weight: bold;
+        }
+
+    .widget.total > div:first-child {
+        color: black;
+    }
+
+    .widget.sales > div:first-child {
+        color: black;
+    }
+
+    .widget.supplies > div:first-child {
+        color: black;
+    }
+
+    .widget.chart {
+        padding: 5px;
+    }
