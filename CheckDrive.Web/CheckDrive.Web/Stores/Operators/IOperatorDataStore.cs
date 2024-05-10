@@ -11,3 +11,4 @@ namespace CheckDrive.Web.Stores.Operators
         Task DeleteOperator(int id);
     }
 }
+    
