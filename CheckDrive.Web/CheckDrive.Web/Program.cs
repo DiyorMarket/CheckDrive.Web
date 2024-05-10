@@ -1,6 +1,8 @@
+using CheckDrive.Web.Constants;
 using CheckDrive.Web.Exceptions;
 using CheckDrive.Web.Filters;
 using Microsoft.Extensions.Configuration;
+using System.Reflection.Metadata;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new ApiExceptionFilter()));
 
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NBaF1cXmhPYVRpR2Nbe053flBEalhZVAciSV9jS3pTc0VrWXZfeXdSRGhUVQ==");
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(Configurations.SynfusionLicenseKey);
 
 var app = builder.Build();
 
