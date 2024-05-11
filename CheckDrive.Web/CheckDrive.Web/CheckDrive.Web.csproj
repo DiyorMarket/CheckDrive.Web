@@ -18,6 +18,7 @@
     <Compile Include="Controllers\DoctorReviewsController.cs" />
     <Compile Include="Controllers\DoctorsController.cs" />
     <Compile Include="Controllers\DriversController.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\MechanicAcceptancesController.cs" />
     <Compile Include="Controllers\MechanicHandoversController.cs" />
     <Compile Include="Controllers\MechanicsController.cs" />
