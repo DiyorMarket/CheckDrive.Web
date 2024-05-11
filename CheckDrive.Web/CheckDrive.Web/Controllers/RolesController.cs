@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using CheckDrive.Web.Models;
+﻿using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Roles;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
 {
