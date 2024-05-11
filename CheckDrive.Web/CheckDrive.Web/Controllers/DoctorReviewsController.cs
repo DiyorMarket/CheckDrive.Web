@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
-using CheckDrive.Web.Models;
+﻿using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.DoctorReviews;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
 {
