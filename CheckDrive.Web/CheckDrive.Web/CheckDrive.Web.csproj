@@ -15,6 +15,7 @@
     <Compile Include="Controllers\CarsController.cs" />
     <Compile Include="Controllers\DispatcherReviewsController.cs" />
     <Compile Include="Controllers\DispatchersController.cs" />
+    <Compile Include="Controllers\DoctorReviewsController.cs" />
     <Compile Include="Controllers\DoctorsController.cs" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="25.1.42" />
