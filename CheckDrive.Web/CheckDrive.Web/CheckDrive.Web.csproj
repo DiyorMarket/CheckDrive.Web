@@ -11,11 +11,23 @@
     <Content Remove="Controllers\**" />
     <EmbeddedResource Remove="Controllers\**" />
     <None Remove="Controllers\**" />
+    <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Controllers\CarsController.cs" />
+    <Compile Include="Controllers\DispatcherReviewsController.cs" />
+    <Compile Include="Controllers\DispatchersController.cs" />
+    <Compile Include="Controllers\DoctorReviewsController.cs" />
+    <Compile Include="Controllers\DoctorsController.cs" />
+    <Compile Include="Controllers\DriversController.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
+    <Compile Include="Controllers\MechanicAcceptancesController.cs" />
+    <Compile Include="Controllers\MechanicHandoversController.cs" />
+    <Compile Include="Controllers\MechanicsController.cs" />
+    <Compile Include="Controllers\OperatorReviewsController.cs" />
+    <Compile Include="Controllers\OperatorsController.cs" />
+    <Compile Include="Controllers\TechniciansController.cs" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="25.1.42" />
     <PackageReference Include="Syncfusion.Licensing" Version="25.2.3" />
-
-    <Folder Include="Controllers\" />
 
   </ItemGroup>
 
