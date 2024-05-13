@@ -13,6 +13,7 @@
     <None Remove="Controllers\**" />
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\CarsController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\DispatcherReviewsController.cs" />
     <Compile Include="Controllers\DispatchersController.cs" />
     <Compile Include="Controllers\DoctorReviewsController.cs" />
