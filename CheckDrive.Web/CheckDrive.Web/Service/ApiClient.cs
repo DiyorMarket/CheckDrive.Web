@@ -1,12 +1,11 @@
 ﻿using CheckDrive.Web.Constants;
 using CheckDrive.Web.Exceptions;
-using Microsoft.Extensions.Configuration;
 
 namespace CheckDrive.Web.Service
 {
     public class ApiClient
     {
-        private const string baseUrl = "";
+        private const string baseUrl = "https://rtd6g5vp-7111.asse.devtunnels.ms/api";
         private readonly HttpClient _client = new();
         private readonly IHttpContextAccessor _contextAccessor;
 
