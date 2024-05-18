@@ -1,9 +1,37 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\**" />
+    <Content Remove="Controllers\**" />
+    <EmbeddedResource Remove="Controllers\**" />
+    <None Remove="Controllers\**" />
+    <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Controllers\CarsController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\DispatcherReviewsController.cs" />
+    <Compile Include="Controllers\DispatchersController.cs" />
+    <Compile Include="Controllers\DoctorReviewsController.cs" />
+    <Compile Include="Controllers\DoctorsController.cs" />
+    <Compile Include="Controllers\DriversController.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
+    <Compile Include="Controllers\MechanicAcceptancesController.cs" />
+    <Compile Include="Controllers\MechanicHandoversController.cs" />
+    <Compile Include="Controllers\MechanicsController.cs" />
+    <Compile Include="Controllers\OperatorReviewsController.cs" />
+    <Compile Include="Controllers\OperatorsController.cs" />
+    <Compile Include="Controllers\TechniciansController.cs" />
+    <PackageReference Include="CheckDrive.DTOs" Version="1.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+    <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="25.1.42" />
+    <PackageReference Include="Syncfusion.Licensing" Version="25.2.3" />
+
+  </ItemGroup>
 
 </Project>

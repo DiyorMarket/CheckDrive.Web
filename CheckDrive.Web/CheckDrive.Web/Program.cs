@@ -1,7 +1,21 @@
+using CheckDrive.Web.Constants;
+using CheckDrive.Web.Exceptions;
+using CheckDrive.Web.Extensions;
+using CheckDrive.Web.Filters;
+using Microsoft.Extensions.Configuration;
+using System.Reflection.Metadata;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+    options.Filters.Add(new ApiExceptionFilter()));
+builder.Services.ConfigureDataStores();
+builder.Services.ConfigureServices();  
+builder.Services.AddHttpContextAccessor();
+
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(Configurations.SynfusionLicenseKey);
 
 var app = builder.Build();
 
@@ -22,6 +36,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
 
 app.Run();
