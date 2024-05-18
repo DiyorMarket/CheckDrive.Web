@@ -15,7 +15,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var accounts = await _accountDataStore.GetAccounts();
+            var accounts = await _accountDataStore.GetAccounts(2);
             return View(accounts);
         }
 

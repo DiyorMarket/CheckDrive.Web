@@ -52,7 +52,7 @@ body {
 }
 
     .e-grid .e-gridcontent, .e-grid .e-table {
-        background-color: #1a222b;
+        background-color: whitesmoke;
     }
 
     .e-grid .e-gridheader {
@@ -60,20 +60,20 @@ body {
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
         padding: 10px;
-        background-color: #222b33;
+        background-color: whitesmoke;
     }
 
         .e-grid .e-gridheader .e-headercell {
-            background-color: #222b33;
+            background-color: whitesmoke;
         }
 
     .e-grid .e-gridpager {
-        background-color: #1a222b;
+        background-color: whitesmoke;
     }
 
     .e-grid .e-pagercontainer {
-        border: none;
-        background-color: #1a222b;
+        border: medium;
+        background-color: black;
     }
 
     .e-grid .e-content table {
@@ -81,13 +81,13 @@ body {
     }
 
 .e-pagercontainer .e-icons {
-    background-color: #1a222b;
+    background-color: black;
     border: none !important;
 }
 
 .e-pager .e-numericitem {
-    color: #adb5bd;
-    background-color: #1a222b;
+    color: black;
+    background-color: white;
     padding: 15px !important;
 }
 
@@ -96,17 +96,17 @@ body {
     }
 
     .e-pager .e-numericitem:hover {
-        color: #fff;
+        color: black;
     }
 
     .e-pager .e-numericitem.e-currentitem {
-        color: #fff;
+        color: black;
         border: none !important;
-        background-color: #31373d;
+        background-color: whitesmoke;
     }
 
 .e-pager div.e-icons:not(.e-disable) {
-    color: #fff;
+    color: black;
     cursor: pointer;
     font-weight: bold;
 }
