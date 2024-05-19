@@ -13,38 +13,55 @@
 
     menuItems.Add(new
     {
-        text = "Ishchilar",
+        text = "Ishchilar va avtomobillar",
         separator = true,
     });
 
     menuItems.Add(new
     {
-        text = "Haydovchilar",
+        text = "Ishchilar",
+        url = "/accounts",
+        iconCss = "fa-solid fa-user-group"
+    });
+    menuItems.Add(new
+    {
+        text = "Avtomobillar",
         iconCss = "fas fa-car",
         url = "/drivers"
     });
 
     menuItems.Add(new
     {
-        text = "Operatorlar",
-        iconCss = "fa-solid fa-phone-volume",
-        url = "/operators"
+        text = "Xizmat ko'rsatish",
+        separator = true,
     });
     menuItems.Add(new
     {
-        text = "Shifokorlar",
+        text = "Doctor Ko'riklari",
+        iconCss = "fas fa-user-doctor",
+        url = "/drivers"
+    });
+    menuItems.Add(new
+    {
+        text = "Mechanik (topshirishlari)",
+        iconCss = "fa-solid fa-phone-volume",
+        url = "/operator"
+    });
+    menuItems.Add(new
+    {
+        text = "Operator xizmatilari",
         iconCss = "fa-solid fa-user-doctor",
         url = "/doctors"
     });
     menuItems.Add(new
     {
-        text = "Mexaniklar",
+        text = "Despicherlar Xizmati",
         iconCss = "fa-solid fa-user-gear",
         url = "/mechanics"
     });
     menuItems.Add(new
     {
-        text = "Dispetcherlar",
+        text = "Mechanik (qabul qilishlari)",
         iconCss = "fa-solid fa-person-chalkboard",
         url = "/dispatchers"
     });

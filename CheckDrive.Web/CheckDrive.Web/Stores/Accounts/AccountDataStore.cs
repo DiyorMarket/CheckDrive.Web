@@ -15,16 +15,10 @@ namespace CheckDrive.Web.Stores.Accounts
             _api = apiClient;
         }
 
-        public async Task<GetAccountResponse> GetAccounts(int roleId)
+        public async Task<GetAccountResponse> GetAccounts()
         {
-            StringBuilder query = new("");
 
-            if (roleId != null)
-            {
-                query.Append($"roleId={roleId}&");
-            }
-
-            var response = _api.Get("accounts?" + query.ToString());
+            var response = _api.Get("accounts");
 
             if (!response.IsSuccessStatusCode)
             {
