@@ -4,19 +4,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
 {
-    public class OperatorReviewsController : Controller
+    public class OperatorReviewsController(IOperatorReviewDataStore operatorReviewDataStore) : Controller
     {
-        private readonly IOperatorReviewDataStore _operatorReviewDataStore;
-
-        public OperatorReviewsController(IOperatorReviewDataStore operatorReviewDataStore)
-        {
-            _operatorReviewDataStore = operatorReviewDataStore;
-        }
+        private readonly IOperatorReviewDataStore _operatorReviewDataStore = operatorReviewDataStore;
 
         public async Task<IActionResult> Index()
         {
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews();
-            return View(operatorReviews);
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorsReviews();
+
+            if (operatorReviews is null)
+            {
+                return BadRequest();
+            }
+           
+            ViewBag.OperatorsReview = operatorReviews.Data;
+            return View();
         }
 
         public async Task<IActionResult> Details(int id)
