@@ -64,12 +64,9 @@
                 <e-chartarea-border width="0"></e-chartarea-border>
             </e-chart-chartarea>
             <e-series-collection>
-                <e-series xName="Month" width="3"
-                          yName="Income" name="Ai-80" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline"></e-series>
-                <e-series xName="Month" width="3"
-                          yName="Expense" name="Ai-91" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline"></e-series>
-                <e-series xName="Month" width="3"
-                          yName="Expense" name="Ai-95" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline"></e-series>
+                <e-series dataSource="ViewBag.SplineData" name="Ai80" xName="Days" width="2" yName="MaxTemp" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline"></e-series>
+                <e-series dataSource="ViewBag.SplineData" name="Ai91" xName="Days" width="2" yName="AvgTemp" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline"></e-series>
+                <e-series dataSource="ViewBag.SplineData" name="Ai95" xName="Days" width="2" yName="MinTemp" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline"></e-series>
             </e-series-collection>
             <e-chart-legendsettings position="Top" alignment="Far" toggleVisibility="false">
                 <e-legendsettings-textstyle color="#0f0f0f" size="1rem"></e-legendsettings-textstyle>
