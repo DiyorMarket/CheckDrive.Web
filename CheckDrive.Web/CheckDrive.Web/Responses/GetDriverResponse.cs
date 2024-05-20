@@ -1,8 +1,9 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Driver;
+using CheckDrive.Web.Models;
 
 namespace CheckDrive.Web.Responses
 {
-    public class GetDriverResponse : GetBaseResponse<Driver>
+    public class GetDriverResponse : GetBaseResponse<DriverDto>
     {
     }
 }

@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Account;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +41,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Login,Password,PhoneNumber,FirstName,LastName,Birthdate,RoleId")] Account account)
+        public async Task<IActionResult> Create([Bind("Login,Password,PhoneNumber,FirstName,LastName,Birthdate,RoleId")]AccountForCreateDto  account)
         {
             if (ModelState.IsValid)
             {
@@ -62,7 +63,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Birthdate,RoleId")] Account account)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Birthdate,RoleId")]AccountForUpdateDto account)
         {
             if (id != account.Id)
             {
