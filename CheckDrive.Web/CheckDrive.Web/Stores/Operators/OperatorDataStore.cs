@@ -24,21 +24,6 @@ namespace CheckDrive.Web.Stores.Operators
             return result;
         }
 
-        public async Task<GetOperatorReviewResponse> GetOperatorsReviews()
-        {
-            var response = _api.Get("operators/reviews");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Could not fetch drivers.");
-            }
-
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<GetOperatorReviewResponse>(json);
-
-            return result;
-        }
-
         public Task<Operator> GetOperator(int id)
         {
             throw new NotImplementedException();
