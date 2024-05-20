@@ -2,7 +2,6 @@
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
-using System.Text;
 
 namespace CheckDrive.Web.Stores.Accounts
 {
