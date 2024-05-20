@@ -21,22 +21,6 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var accounts = await _accountDataStore.GetAccounts();
-            var roles = await _roleDataStore.GetRoles();
-            var drivers = new List<Account>();
-
-            foreach(var account in accounts.Data.ToList())
-            {
-                var role = roles.Data.ToList().FirstOrDefault(a=>a.Name.ToLower() == "driver");
-
-                if(role.Id == account.RoleId)
-                {
-                    drivers.Add(account);
-                }
-            }
-
-            ViewBag.Drivers = drivers;
-
             return View();
         }
 

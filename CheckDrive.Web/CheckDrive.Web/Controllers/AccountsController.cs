@@ -1,5 +1,6 @@
 ﻿using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Accounts;
+using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
@@ -7,15 +8,17 @@ namespace CheckDrive.Web.Controllers
     public class AccountsController : Controller
     {
         private readonly IAccountDataStore _accountDataStore;
-
-        public AccountsController(IAccountDataStore accountDataStore)
+        private readonly IRoleDataStore _roleStore;
+        public AccountsController(IAccountDataStore accountDataStore, IRoleDataStore roleDataStore)
         {
+            _roleStore = roleDataStore;
             _accountDataStore = accountDataStore;
         }
 
         public async Task<IActionResult> Index()
         {
             var accounts = await _accountDataStore.GetAccounts();
+
             ViewBag.Accounts = accounts.Data;
             return View();
         }

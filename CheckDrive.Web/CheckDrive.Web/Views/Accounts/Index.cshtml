@@ -4,7 +4,8 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>Ishchilar ma`lumotlari</h2>
+<h2>Ishchilar</h2>
+
 <div class="row">
     <div class="col-12 text-end mb-2">
         <a class="btn btn-success" asp-action="create">
@@ -12,6 +13,7 @@
         </a>
     </div>
 </div>
+
 <div class="row">
     <div class="col-12">
         <ejs-grid id="accounts-list"
@@ -20,11 +22,13 @@
                   allowSorting="true">
             <e-grid-columns>
                 <e-grid-column headerText="Id" field="Id" field="Id" template="#template" typeof="Text"></e-grid-column>
+                <e-grid-column headerText="Email" field="Login" typeof="Text"></e-grid-column>
+                <e-grid-column headerText="Parol" field="Password" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Telefon raqam" field="PhoneNumber" typeof="text"></e-grid-column>
                 <e-grid-column headerText="Ism" field="FirstName" typeof="text"></e-grid-column>
                 <e-grid-column headerText="Familiya" field="LastName" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Telefon raqam" field="PhoneNumber" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Tugilgan yil" field="Bithdate" typeof="text"></e-grid-column>
-                <e-grid-column headerText="RoleId" field="RoleId" typeof="text"></e-grid-column>
+                <e-grid-column headerText="To'g'ilgan yil" field="Bithdate" typeof="text"></e-grid-column>
+                <e-grid-column headerText="RoleName" field="RoleName" typeof="text"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
