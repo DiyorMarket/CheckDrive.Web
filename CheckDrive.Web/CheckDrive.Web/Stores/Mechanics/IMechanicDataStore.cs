@@ -1,13 +1,13 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Mechanic;
+using CheckDrive.ApiContracts.MechanicAcceptance;
+using CheckDrive.ApiContracts.MechanicHandover;
 
 namespace CheckDrive.Web.Stores.Mechanics
 {
     public interface IMechanicDataStore
     {
-        Task<List<Mechanic>> GetMechanics();
-        Task<Mechanic> GetMechanic(int id);
-        Task<Mechanic> CreateMechanic(Mechanic mechanic);
-        Task<Mechanic> UpdateMechanic(int id, Mechanic mechanic);
-        Task DeleteMechanic(int id);
+        Task<IEnumerable<MechanicDto>> GetMechanicsAsync();
+        Task<IEnumerable<MechanicAcceptanceDto>> GetMechanicAcceptancesAsync();
+        Task<IEnumerable<MechanicHandoverDto>> GetMechanicHandoversAsync();
     }
 }
