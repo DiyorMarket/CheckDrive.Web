@@ -1,0 +1,30 @@
+﻿@model CheckDrive.ApiContracts.Mechanic.MechanicDto
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Mexaniklar</h2>
+
+<div class="row">
+    <div class="col-12">
+        <ejs-grid id="accounts-list"
+                  dataSource="@ViewBag.Accounts"
+                  gridLines="Vertical"
+                  allowSorting="true">
+            <e-grid-columns>
+                <e-grid-column headerText="Id" field="Id" field="Id" typeof="Text"></e-grid-column>
+                <e-grid-column headerText="Mexanik F.I.Sh" templete="#fullNameTemplate" typeof="text"></e-grid-column>
+@*                 <e-grid-column headerText="Haydoychi F.I.Sh" field="LastName" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Haydovchilik guvohnoma" field="Bithdate" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Transport" field="RoleId" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Transport raqami" field="RoleId" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Sana" field="RoleId" typeof="text"></e-grid-column> *@
+            </e-grid-columns>
+        </ejs-grid>
+    </div>
+</div>
+
+<script id="fullNameTemplate" type="text/x-template">
+    ${FirstName} ${LastName}
+</script>
