@@ -26,7 +26,7 @@
     <Compile Include="Controllers\OperatorReviewsController.cs" />
     <Compile Include="Controllers\OperatorsController.cs" />
     <Compile Include="Controllers\TechniciansController.cs" />
-    <PackageReference Include="CheckDrive.ApiContracts" Version="1.0.7" />
+    <PackageReference Include="CheckDrive.ApiContracts" Version="1.0.8" />
     <PackageReference Include="CheckDrive.DTOs" Version="1.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
