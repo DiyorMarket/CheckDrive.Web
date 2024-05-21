@@ -6,7 +6,6 @@ namespace CheckDrive.Web.Service
     public class ApiClient
     {
         private const string baseUrl = "https://js1plv9k-7111.euw.devtunnels.ms/api";
-
         private readonly HttpClient _client = new();
         private readonly IHttpContextAccessor _contextAccessor;
 
@@ -17,14 +16,14 @@ namespace CheckDrive.Web.Service
             _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
         }
 
-        public HttpResponseMessage Get(string url)
+        public async Task<HttpResponseMessage> GetAsync(string url)
         {
             string token = string.Empty;
-            var request = new HttpRequestMessage(HttpMethod.Get, _client.BaseAddress?.AbsolutePath + "/" + url);
+            var request = new HttpRequestMessage(HttpMethod.Get, _client.BaseAddress + "/" + url);
             _contextAccessor.HttpContext?.Request.Cookies.TryGetValue(Configurations.JwtToken, out token);
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var response = _client.Send(request);
+            var response = await _client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -34,16 +33,17 @@ namespace CheckDrive.Web.Service
             return response;
         }
 
-        public HttpResponseMessage Post(string url, string data)
+        public async Task<HttpResponseMessage> PostAsync(string url, string data)
         {
             string token = string.Empty;
-            var request = new HttpRequestMessage(HttpMethod.Post, _client.BaseAddress?.AbsolutePath + "/" + url)
+            var request = new HttpRequestMessage(HttpMethod.Post, _client.BaseAddress + "/" + url)
             {
-                Content = new StringContent(data, new System.Net.Http.Headers.MediaTypeHeaderValue("application/json"))
+                Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
             };
             _contextAccessor.HttpContext?.Request.Cookies.TryGetValue(Configurations.JwtToken, out token);
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            var response = _client.Send(request);
+
+            var response = await _client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -53,16 +53,17 @@ namespace CheckDrive.Web.Service
             return response;
         }
 
-        public HttpResponseMessage Put(string url, string data)
+        public async Task<HttpResponseMessage> PutAsync(string url, string data)
         {
-            var token = string.Empty;
-            var request = new HttpRequestMessage(HttpMethod.Put, _client.BaseAddress?.AbsolutePath + "/" + url)
+            string token = string.Empty;
+            var request = new HttpRequestMessage(HttpMethod.Put, _client.BaseAddress + "/" + url)
             {
-                Content = new StringContent(data, new System.Net.Http.Headers.MediaTypeHeaderValue("application/json"))
+                Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
             };
             _contextAccessor.HttpContext?.Request.Cookies.TryGetValue(Configurations.JwtToken, out token);
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            var response = _client.Send(request);
+
+            var response = await _client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -72,13 +73,14 @@ namespace CheckDrive.Web.Service
             return response;
         }
 
-        public HttpResponseMessage Delete(string url)
+        public async Task<HttpResponseMessage> DeleteAsync(string url)
         {
             string token = string.Empty;
-            var request = new HttpRequestMessage(HttpMethod.Delete, _client.BaseAddress?.AbsolutePath + "/" + url);
+            var request = new HttpRequestMessage(HttpMethod.Delete, _client.BaseAddress + "/" + url);
             _contextAccessor.HttpContext?.Request.Cookies.TryGetValue(Configurations.JwtToken, out token);
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            var response = _client.Send(request);
+
+            var response = await _client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)
             {
