@@ -12,27 +12,27 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
         {
             _api = apiClient;
         }
-        public Task<GetMechanicResponse> GetMechanicAcceptances()
+        public Task<GetMechanicResponse> GetMechanicAcceptancesAsync()
         {
             throw new NotImplementedException();
         }
-        public Task<MechanicAcceptance> CreateMechanicAcceptance(MechanicAcceptance mechanicAcceptance)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteMechanicAcceptance(int id)
+        public Task<MechanicAcceptance> CreateMechanicAcceptanceAsync(MechanicAcceptance mechanicAcceptance)
         {
             throw new NotImplementedException();
         }
 
-        public Task<MechanicAcceptance> GetMechanicAcceptance(int id)
+        public Task DeleteMechanicAcceptanceAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<MechanicAcceptance> GetMechanicAcceptanceAsync(int id)
         {
             throw new NotImplementedException();
         }
 
 
-        public Task<MechanicAcceptance> UpdateMechanicAcceptance(int id, MechanicAcceptance mechanicAcceptance)
+        public Task<MechanicAcceptance> UpdateMechanicAcceptanceAsync(int id, MechanicAcceptance mechanicAcceptance)
         {
             throw new NotImplementedException();
         }

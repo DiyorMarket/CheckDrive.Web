@@ -15,7 +15,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptances();
+            var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
 
             if (mechanicAcceptances is null)
             {
@@ -28,7 +28,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptance(id);
+            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
             if (mechanicAcceptance == null)
             {
                 return NotFound();
@@ -47,7 +47,7 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _mechanicAcceptanceDataStore.CreateMechanicAcceptance(mechanicAcceptance);
+                await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptance);
                 return RedirectToAction(nameof(Index));
             }
             return View(mechanicAcceptance);
@@ -55,7 +55,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptance(id);
+            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
             if (mechanicAcceptance == null)
             {
                 return NotFound();
@@ -76,7 +76,7 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    await _mechanicAcceptanceDataStore.UpdateMechanicAcceptance(id, mechanicAcceptance);
+                    await _mechanicAcceptanceDataStore.UpdateMechanicAcceptanceAsync(id, mechanicAcceptance);
                 }
                 catch (Exception)
                 {
@@ -96,7 +96,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptance(id);
+            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
             if (mechanicAcceptance == null)
             {
                 return NotFound();
@@ -108,13 +108,13 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _mechanicAcceptanceDataStore.DeleteMechanicAcceptance(id);
+            await _mechanicAcceptanceDataStore.DeleteMechanicAcceptanceAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> MechanicAcceptanceExists(int id)
         {
-            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptance(id);
+            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
             return mechanicAcceptance != null;
         }
     }
