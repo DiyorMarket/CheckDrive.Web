@@ -16,7 +16,9 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var cars = await _carDataStore.GetCars();
-            return View(cars);
+
+            ViewBag.Cars = cars.Data;
+            return View();
         }
 
         public async Task<IActionResult> Details(int id)

@@ -20,7 +20,7 @@ namespace CheckDrive.Web.Extensions
         public static IServiceCollection ConfigureDataStores(this IServiceCollection services)
         {
             services.AddScoped<IAccountDataStore, AccountDataStore>();
-            services.AddScoped<ICarDataStore, MockCarDataStore>();
+            services.AddScoped<ICarDataStore, CarDataStore>();
             services.AddScoped<IDispatcherReviewDataStore, MockDispatcherReviewDataStore>();
             services.AddScoped<IDispatcherDataStore, MockDispatcherDataStore>();
             services.AddScoped<IDoctorDataStore, MockDoctorDataStore>();
