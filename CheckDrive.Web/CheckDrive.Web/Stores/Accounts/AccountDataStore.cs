@@ -14,74 +14,71 @@ namespace CheckDrive.Web.Stores.Accounts
             _api = apiClient;
         }
 
-        public async Task<GetAccountResponse> GetAccounts()
+        public async Task<GetAccountResponse> GetAccountsAsync()
         {
-
-            var response = _api.Get("accounts");
+            var response = await _api.GetAsync("accounts");
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Could not fetch accounts.");
             }
 
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<GetAccountResponse>(json);
 
             return result;
         }
 
-        public async Task<Account> GetAccount(int id)
+        public async Task<Account> GetAccountAsync(int id)
         {
-            var response = _api.Get($"accounts/{id}");
+            var response = await _api.GetAsync($"accounts/{id}");
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Could not fetch accounts with id: {id}.");
+                throw new Exception($"Could not fetch account with id: {id}.");
             }
 
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<Account>(json);
 
             return result;
         }
 
-        public async Task<Account> CreateAccount(Account account)
+        public async Task<Account> CreateAccountAsync(Account account)
         {
             var json = JsonConvert.SerializeObject(account);
-            var response = _api.Post("accounts", json);
+            var response = await _api.PostAsync("accounts", json);
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Error creating accounts.");
+                throw new Exception("Error creating account.");
             }
 
-            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
+            var jsonResponse = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Account>(jsonResponse);
         }
 
-        public async Task<Account> UpdateAccount(int id, Account account)
+        public async Task<Account> UpdateAccountAsync(int id, Account account)
         {
             var json = JsonConvert.SerializeObject(account);
-            var response = _api.Put($"accounts/{account.Id}", json);
+            var response = await _api.PutAsync($"accounts/{account.Id}", json);
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Error updating accounts.");
+                throw new Exception("Error updating account.");
             }
 
-            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
+            var jsonResponse = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Account>(jsonResponse);
         }
 
-        public async Task DeleteAccount(int id)
+        public async Task DeleteAccountAsync(int id)
         {
-            var response = _api.Delete($"accounts/{id}");
+            var response = await _api.DeleteAsync($"accounts/{id}");
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Could not delete accounts with id: {id}.");
+                throw new Exception($"Could not delete account with id: {id}.");
             }
         }
     }

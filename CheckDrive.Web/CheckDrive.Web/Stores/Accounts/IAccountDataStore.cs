@@ -5,10 +5,10 @@ namespace CheckDrive.Web.Stores.Accounts
 {
     public interface IAccountDataStore
     {
-        Task<GetAccountResponse> GetAccounts();
-        Task<Account> GetAccount(int id);
-        Task<Account> CreateAccount(Account account);
-        Task<Account> UpdateAccount(int id, Account account);
-        Task DeleteAccount(int id);
+        Task<GetAccountResponse> GetAccountsAsync();
+        Task<Account> GetAccountAsync(int id);
+        Task<Account> CreateAccountAsync(Account account);
+        Task<Account> UpdateAccountAsync(int id, Account account);
+        Task DeleteAccountAsync(int id);
     }
 }
