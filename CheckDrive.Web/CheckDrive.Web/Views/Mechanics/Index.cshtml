@@ -1,19 +1,15 @@
-﻿@model IEnumerable<MechanicViewModel>
-
-@using Syncfusion.EJ2.Grids
+﻿@model CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>Mexaniklar</h2>
+
+<h1>Mexaniklar</h1>
 
 <div class="row">
     <div class="col-12">
-        <ejs-grid id="accounts-list"
-                  dataSource="@Model"
-                  gridLines="Vertical"
-                  allowSorting="true">
+        <ejs-grid id="operatorReview-list" dataSource="@ViewBag.MechanicAcceptances" gridLines="Vertical" allowSorting="true">
             <e-grid-columns>
                 <e-grid-column headerText="Id" field="Id" type="number"></e-grid-column>
                 <e-grid-column headerText="Mechanic F.I.Sh" field="MechanicName" type="string"></e-grid-column>
