@@ -22,7 +22,7 @@ namespace CheckDrive.Web.Controllers
                 return BadRequest();
             }
 
-            ViewBag.OperatorsReview = mechanicAcceptances.Data;
+            ViewBag.MechanicAcceptances = mechanicAcceptances.Data;
             return View();
         }
 

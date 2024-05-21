@@ -1,4 +1,4 @@
-﻿@model CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto
+﻿@model MechanicViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -12,7 +12,7 @@
         <ejs-grid id="operatorReview-list" dataSource="@ViewBag.MechanicAcceptances" gridLines="Vertical" allowSorting="true">
             <e-grid-columns>
                 <e-grid-column headerText="Id" field="Id" type="number"></e-grid-column>
-                <e-grid-column headerText="Mechanic F.I.Sh" template="#fullNameTemplate type="string"></e-grid-column>
+                <e-grid-column headerText="Mexanik F.I.Sh" template="#fullNameTemplate" typeof="text"></e-grid-column>
                 <e-grid-column headerText="Driver" field="DriverName" type="string"></e-grid-column>
                 <e-grid-column headerText="Car" field="CarName" type="string"></e-grid-column>
                 <e-grid-column headerText="Boshlang'ich Masofa" field="Distance" type="number"></e-grid-column>
@@ -25,17 +25,14 @@
     </div>
 </div>
 
-<!-- Template for combining first and last names -->
 <script id="fullNameTemplate" type="text/x-template">
     ${FirstName} ${LastName}
 </script>
 
-<!-- Template for IsAccepted Switch -->
 <script id="isAcceptedTemplate" type="text/x-template">
     <input type="checkbox" ${IsAccepted ? 'checked' : ''} />
 </script>
 
-<!-- Template for Actions Button -->
 <script id="actionsTemplate" type="text/x-template">
     <button class="btn btn-primary">Save</button>
 </script>
