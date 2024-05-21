@@ -6,6 +6,7 @@ namespace CheckDrive.Web.Service
     public class ApiClient
     {
         private const string baseUrl = "https://js1plv9k-7111.euw.devtunnels.ms/api";
+
         private readonly HttpClient _client = new();
         private readonly IHttpContextAccessor _contextAccessor;
 
@@ -19,7 +20,7 @@ namespace CheckDrive.Web.Service
         public async Task<HttpResponseMessage> GetAsync(string url)
         {
             string token = string.Empty;
-            var request = new HttpRequestMessage(HttpMethod.Get, _client.BaseAddress + "/" + url);
+            var request = new HttpRequestMessage(HttpMethod.Get, _client.BaseAddress?.AbsolutePath + "/" + url);
             _contextAccessor.HttpContext?.Request.Cookies.TryGetValue(Configurations.JwtToken, out token);
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
@@ -36,7 +37,7 @@ namespace CheckDrive.Web.Service
         public async Task<HttpResponseMessage> PostAsync(string url, string data)
         {
             string token = string.Empty;
-            var request = new HttpRequestMessage(HttpMethod.Post, _client.BaseAddress + "/" + url)
+            var request = new HttpRequestMessage(HttpMethod.Post, _client.BaseAddress?.AbsolutePath + "/" + url)
             {
                 Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
             };
@@ -56,7 +57,7 @@ namespace CheckDrive.Web.Service
         public async Task<HttpResponseMessage> PutAsync(string url, string data)
         {
             string token = string.Empty;
-            var request = new HttpRequestMessage(HttpMethod.Put, _client.BaseAddress + "/" + url)
+            var request = new HttpRequestMessage(HttpMethod.Put, _client.BaseAddress?.AbsolutePath + "/" + url)
             {
                 Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
             };
@@ -76,7 +77,7 @@ namespace CheckDrive.Web.Service
         public async Task<HttpResponseMessage> DeleteAsync(string url)
         {
             string token = string.Empty;
-            var request = new HttpRequestMessage(HttpMethod.Delete, _client.BaseAddress + "/" + url);
+            var request = new HttpRequestMessage(HttpMethod.Delete, _client.BaseAddress?.AbsolutePath + "/" + url);
             _contextAccessor.HttpContext?.Request.Cookies.TryGetValue(Configurations.JwtToken, out token);
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 

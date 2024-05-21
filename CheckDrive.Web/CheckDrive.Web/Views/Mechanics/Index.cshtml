@@ -1,4 +1,6 @@
-﻿@model CheckDrive.ApiContracts.Mechanic.MechanicDto
+﻿@model IEnumerable<MechanicViewModel>
+
+@using Syncfusion.EJ2.Grids
 
 @{
     ViewData["Title"] = "Index";
@@ -9,22 +11,30 @@
 <div class="row">
     <div class="col-12">
         <ejs-grid id="accounts-list"
-                  dataSource="@ViewBag.Accounts"
+                  dataSource="@Model"
                   gridLines="Vertical"
                   allowSorting="true">
             <e-grid-columns>
-                <e-grid-column headerText="Id" field="Id" field="Id" typeof="Text"></e-grid-column>
-                <e-grid-column headerText="Mexanik F.I.Sh" templete="#fullNameTemplate" typeof="text"></e-grid-column>
-@*                 <e-grid-column headerText="Haydoychi F.I.Sh" field="LastName" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Haydovchilik guvohnoma" field="Bithdate" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Transport" field="RoleId" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Transport raqami" field="RoleId" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Sana" field="RoleId" typeof="text"></e-grid-column> *@
+                <e-grid-column headerText="Id" field="Id" type="number"></e-grid-column>
+                <e-grid-column headerText="Mechanic F.I.Sh" field="MechanicName" type="string"></e-grid-column>
+                <e-grid-column headerText="Driver" field="DriverName" type="string"></e-grid-column>
+                <e-grid-column headerText="Car" field="CarDetails" type="string"></e-grid-column>
+                <e-grid-column headerText="Boshlang'ich Masofa" field="Distance" type="number"></e-grid-column>
+                <e-grid-column headerText="Topshirish" template="#isAcceptedTemplate" type="boolean"></e-grid-column>
+                <e-grid-column headerText="Izoh" field="Comments" type="string"></e-grid-column>
+                <e-grid-column headerText="Status" field="Status" type="string"></e-grid-column>
+                <e-grid-column headerText="Actions" template="#actionsTemplate" type="string"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
 </div>
 
-<script id="fullNameTemplate" type="text/x-template">
-    ${FirstName} ${LastName}
+<!-- Template for IsAccepted Switch -->
+<script id="isAcceptedTemplate" type="text/x-template">
+    <input type="checkbox" ${IsAccepted ? 'checked' : ''} />
+</script>
+
+<!-- Template for Actions Button -->
+<script id="actionsTemplate" type="text/x-template">
+    <button class="btn btn-primary">Save</button>
 </script>

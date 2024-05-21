@@ -13,17 +13,17 @@ namespace CheckDrive.Web.Stores.Roles
         {
             _api = apiClient;
         }
-        
+
         public async Task<GetRoleResponse> GetRoles()
         {
-            var response = _api.Get("roles?");
+            var response = await _api.GetAsync("roles");
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Could not fetch roles.");
             }
 
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<GetRoleResponse>(json);
 
             return result;
@@ -31,14 +31,14 @@ namespace CheckDrive.Web.Stores.Roles
 
         public async Task<Role> GetRole(int id)
         {
-            var response = _api.Get($"roles/{id}");
+            var response = await _api.GetAsync($"roles/{id}");
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Could not fetch roles with id: {id}.");
             }
 
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<Role>(json);
 
             return result;
@@ -47,14 +47,14 @@ namespace CheckDrive.Web.Stores.Roles
         public async Task<Role> CreateRole(Role role)
         {
             var json = JsonConvert.SerializeObject(role);
-            var response = _api.Post("roles", json);
+            var response = await _api.PostAsync("roles", json);
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Error creating roles.");
             }
 
-            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var jsonResponse = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<Role>(jsonResponse);
         }
@@ -62,22 +62,21 @@ namespace CheckDrive.Web.Stores.Roles
         public async Task<Role> UpdateRole(int id, Role role)
         {
             var json = JsonConvert.SerializeObject(role);
-            var response = _api.Put($"roles/{role.Id}", json);
+            var response = await _api.PutAsync($"roles/{role.Id}", json);
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Error updating roles.");
             }
 
-            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var jsonResponse = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<Role>(jsonResponse);
-
         }
 
         public async Task DeleteRole(int id)
         {
-            var response = _api.Delete($"roles/{id}");
+            var response = await _api.DeleteAsync($"roles/{id}");
 
             if (!response.IsSuccessStatusCode)
             {
