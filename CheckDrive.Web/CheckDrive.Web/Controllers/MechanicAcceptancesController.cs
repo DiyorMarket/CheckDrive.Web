@@ -16,7 +16,14 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptances();
-            return View(mechanicAcceptances);
+
+            if (mechanicAcceptances is null)
+            {
+                return BadRequest();
+            }
+
+            ViewBag.OperatorsReview = mechanicAcceptances.Data;
+            return View();
         }
 
         public async Task<IActionResult> Details(int id)
