@@ -22,7 +22,7 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
                 throw new Exception("Could not fetch drivers.");
             }
 
-            var json = await response.Content.ReadAsStringAsync();
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             var result = JsonConvert.DeserializeObject<GetMechanicAcceptanceResponse>(json);
 
             return result;
