@@ -1,6 +1,7 @@
 ﻿using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
+using Newtonsoft.Json;
 
 namespace CheckDrive.Web.Stores.MechanicAcceptances
 {
@@ -12,9 +13,19 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
         {
             _api = apiClient;
         }
-        public Task<GetMechanicResponse> GetMechanicAcceptancesAsync()
+        public async Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync()
         {
-            throw new NotImplementedException();
+            var response = await _api.GetAsync("mechanics/acceptances");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch drivers.");
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<GetMechanicAcceptanceResponse>(json);
+
+            return result;
         }
         public Task<MechanicAcceptance> CreateMechanicAcceptanceAsync(MechanicAcceptance mechanicAcceptance)
         {
