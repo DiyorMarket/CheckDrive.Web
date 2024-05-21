@@ -5,10 +5,10 @@ namespace CheckDrive.Web.Stores.Drivers
 {
     public interface IDriverDataStore
     {
-        Task<GetDriverResponse> GetDrivers();
-        Task<Driver> GetDriver(int id);
-        Task<Driver> CreateDriver(Driver driver);
-        Task<Driver> UpdateDriver(int id, Driver driver);
-        Task DeleteDriver(int id);
+        Task<GetDriverResponse> GetDriversAsync();
+        Task<Driver> GetDriverAsync(int id);
+        Task<Driver> CreateDriverAsync(Driver driver);
+        Task<Driver> UpdateDriverAsync(int id, Driver driver);
+        Task DeleteDriverAsync(int id);
     }
 }

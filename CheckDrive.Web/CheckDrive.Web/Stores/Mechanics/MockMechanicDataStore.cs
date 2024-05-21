@@ -1,59 +1,35 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Mechanic;
+using CheckDrive.ApiContracts.MechanicAcceptance;
+using CheckDrive.ApiContracts.MechanicHandover;
+using CheckDrive.Web.Service;
 
 namespace CheckDrive.Web.Stores.Mechanics
 {
-    public class MockMechanicDataStore : IMechanicDataStore
+    public class MechanicDataStore : IMechanicDataStore
     {
-        private readonly List<Mechanic> _mechanics;
+        private readonly ApiClient _apiClient;
 
-        public MockMechanicDataStore()
+        public MechanicDataStore(ApiClient apiClient)
         {
-            _mechanics = new List<Mechanic>
-            {
-                new Mechanic { Id = 1, AccountId = 1 },
-                new Mechanic { Id = 2, AccountId = 2 },
-            };
+            _apiClient = apiClient;
         }
 
-        public async Task<List<Mechanic>> GetMechanics()
+        public async Task<IEnumerable<MechanicDto>> GetMechanicsAsync()
         {
-            await Task.Delay(100); 
-            return _mechanics.ToList();
+            var response =_apiClient.Get("mechanics");
+            return await response.Content.ReadAsAsync<IEnumerable<MechanicDto>>();
         }
 
-        public async Task<Mechanic> GetMechanic(int id)
+        public async Task<IEnumerable<MechanicAcceptanceDto>> GetMechanicAcceptancesAsync()
         {
-            await Task.Delay(100); 
-            return _mechanics.FirstOrDefault(m => m.Id == id);
+            var response = await _apiClient.GetAsync("mechanicacceptances");
+            return await response.Content.ReadAsAsync<IEnumerable<MechanicAcceptanceDto>>();
         }
 
-        public async Task<Mechanic> CreateMechanic(Mechanic mechanic)
+        public async Task<IEnumerable<MechanicHandoverDto>> GetMechanicHandoversAsync()
         {
-            await Task.Delay(100);
-            mechanic.Id = _mechanics.Max(m => m.Id) + 1; 
-            _mechanics.Add(mechanic);
-            return mechanic;
-        }
-
-        public async Task<Mechanic> UpdateMechanic(int id, Mechanic mechanic)
-        {
-            await Task.Delay(100); 
-            var existingMechanic = _mechanics.FirstOrDefault(m => m.Id == id);
-            if (existingMechanic != null)
-            {
-                existingMechanic.AccountId = mechanic.AccountId;
-            }
-            return existingMechanic;
-        }
-
-        public async Task DeleteMechanic(int id)
-        {
-            await Task.Delay(100); 
-            var mechanicToRemove = _mechanics.FirstOrDefault(m => m.Id == id);
-            if (mechanicToRemove != null)
-            {
-                _mechanics.Remove(mechanicToRemove);
-            }
+            var response = await _apiClient.GetAsync("mechanichandovers");
+            return await response.Content.ReadAsAsync<IEnumerable<MechanicHandoverDto>>();
         }
     }
 }
