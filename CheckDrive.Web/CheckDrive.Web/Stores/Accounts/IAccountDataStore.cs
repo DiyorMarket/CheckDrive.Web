@@ -6,7 +6,7 @@ namespace CheckDrive.Web.Stores.Accounts
 {
     public interface IAccountDataStore
     {
-        Task<GetAccountResponse> GetAccounts();
+        Task<GetAccountResponse> GetAccounts(string searchString,int? roleId,DateTime? birthDate);
         Task<AccountDto> GetAccount(int id);
         Task<AccountDto> CreateAccount(AccountForCreateDto account);
         Task<AccountDto> UpdateAccount(int id, AccountForUpdateDto account);

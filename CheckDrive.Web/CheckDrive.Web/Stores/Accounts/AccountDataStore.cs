@@ -16,10 +16,24 @@ namespace CheckDrive.Web.Stores.Accounts
             _api = apiClient;
         }
 
-        public async Task<GetAccountResponse> GetAccounts()
+        public async Task<GetAccountResponse> GetAccounts(string? searchString, int? roleId ,DateTime? birthDate)
         {
+            StringBuilder query = new("");
 
-            var response = _api.Get("accounts");
+            if (birthDate is not null)
+            {
+                query.Append($"birthDate={birthDate.Value.ToString("MM/dd/yyyy")}&");
+            }
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query.Append($"searchString={searchString}&");
+            }
+            if(roleId != 0)
+            {
+                query.Append($"roleId={roleId}&");
+            }
+
+           var response = _api.Get("accounts?" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {

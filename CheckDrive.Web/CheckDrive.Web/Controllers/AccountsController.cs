@@ -1,5 +1,5 @@
 ﻿using CheckDrive.ApiContracts.Account;
-using CheckDrive.Web.Models;
+using CheckDrive.ApiContracts.Role;
 using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
@@ -16,14 +16,42 @@ namespace CheckDrive.Web.Controllers
             _accountDataStore = accountDataStore;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchString, int? roleId, DateTime? birthDate)
         {
-            var accounts = await _accountDataStore.GetAccounts();
+            var accounts = await _accountDataStore.GetAccounts(searchString, roleId, birthDate);
+
+            var roles = await GETRoles();
+
+            roles.Insert(0, new RoleDto
+            {
+                Id = 0,
+                Name = "Hammasi",
+            });
+            var selectedRole = roles[0];
+
+            if (roleId.HasValue && roleId != 0)
+            {
+                selectedRole = roles.FirstOrDefault(x => x.Id == roleId);
+            }
 
             ViewBag.Accounts = accounts.Data;
+            ViewBag.SearchString = searchString;
+
+            ViewBag.Roles = roles;
+            ViewBag.CurrentRoleId = roleId;
+            ViewBag.SelectedRole = selectedRole;
+
+
             return View();
         }
+        private async Task<List<RoleDto>> GETRoles()
+        {
+            var categoryResponse = await _roleStore.GetRoles();
 
+            var categories = categoryResponse.Data.ToList();
+
+            return categories;
+        }
         public async Task<IActionResult> Details(int id)
         {
             var account = await _accountDataStore.GetAccount(id);
@@ -41,7 +69,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Login,Password,PhoneNumber,FirstName,LastName,Birthdate,RoleId")]AccountForCreateDto  account)
+        public async Task<IActionResult> Create([Bind("Login,Password,PhoneNumber,FirstName,LastName,Birthdate,RoleId")] AccountForCreateDto account)
         {
             if (ModelState.IsValid)
             {
@@ -63,7 +91,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Birthdate,RoleId")]AccountForUpdateDto account)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Birthdate,RoleId")] AccountForUpdateDto account)
         {
             if (id != account.Id)
             {
