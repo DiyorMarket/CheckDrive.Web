@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Role;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -29,7 +30,7 @@ namespace CheckDrive.Web.Stores.Roles
             return result;
         }
 
-        public async Task<Role> GetRole(int id)
+        public async Task<RoleDto> GetRole(int id)
         {
             var response = _api.Get($"roles/{id}");
 
@@ -39,12 +40,12 @@ namespace CheckDrive.Web.Stores.Roles
             }
 
             var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<Role>(json);
+            var result = JsonConvert.DeserializeObject<RoleDto>(json);
 
             return result;
         }
 
-        public async Task<Role> CreateRole(Role role)
+        public async Task<Role> CreateRole(RoleForCreateDto role)
         {
             var json = JsonConvert.SerializeObject(role);
             var response = _api.Post("roles", json);
@@ -59,7 +60,7 @@ namespace CheckDrive.Web.Stores.Roles
             return JsonConvert.DeserializeObject<Role>(jsonResponse);
         }
 
-        public async Task<Role> UpdateRole(int id, Role role)
+        public async Task<RoleDto> UpdateRole(int id, RoleForUpdateDto role)
         {
             var json = JsonConvert.SerializeObject(role);
             var response = _api.Put($"roles/{role.Id}", json);
@@ -71,7 +72,7 @@ namespace CheckDrive.Web.Stores.Roles
 
             var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
-            return JsonConvert.DeserializeObject<Role>(jsonResponse);
+            return JsonConvert.DeserializeObject<RoleDto>(jsonResponse);
 
         }
 
@@ -83,6 +84,21 @@ namespace CheckDrive.Web.Stores.Roles
             {
                 throw new Exception($"Could not delete roles with id: {id}.");
             }
+        }
+
+        Task<RoleDto> IRoleDataStore.CreateRole(RoleForCreateDto role)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CreateRole(DTOs.Role.RoleForCreateDto role)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateRole(int id, RoleForCreateDto role)
+        {
+            throw new NotImplementedException();
         }
     }
 }

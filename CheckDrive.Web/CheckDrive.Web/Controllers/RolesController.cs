@@ -1,4 +1,6 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Role;
+using CheckDrive.DTOs.Role;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,7 +38,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] Role role)
+        public async Task<IActionResult> Create([Bind("Name")] ApiContracts.Role.RoleForCreateDto role)
         {
             if (ModelState.IsValid)
             {
@@ -58,12 +60,8 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Role role)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] ApiContracts.Role.RoleForCreateDto role)
         {
-            if (id != role.Id)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
