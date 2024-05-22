@@ -1,9 +1,7 @@
 ﻿using CheckDrive.ApiContracts.Car;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
-using System.Security.Principal;
 
 namespace CheckDrive.Web.Stores.Cars
 {
@@ -61,29 +59,28 @@ namespace CheckDrive.Web.Stores.Cars
             return JsonConvert.DeserializeObject<CarDto>(jsonResponse);
         }
 
-        public async Task<Car> UpdateCar(int id, Car car)
+        public async Task<CarDto> UpdateCar(int id, CarForUpdateDto car)
         {
-            await Task.Delay(100);
-            var existingCar = _cars.FirstOrDefault(c => c.Id == id);
-            if (existingCar != null)
+            var json = JsonConvert.SerializeObject(car);
+            var response = _api.Put($"cars/{car.Id}", json);
+
+            if (!response.IsSuccessStatusCode)
             {
-                existingCar.Model = car.Model;
-                existingCar.Color = car.Color;
-                existingCar.Number = car.Number;
-                existingCar.MeduimFuelConsumption = car.MeduimFuelConsumption;
-                existingCar.FuelTankCapacity = car.FuelTankCapacity;
-                existingCar.ManufacturedYear = car.ManufacturedYear;
+                throw new Exception("Error updating cars.");
             }
-            return existingCar;
+
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<CarDto>(jsonResponse);
         }
 
         public async Task DeleteCar(int id)
         {
-            await Task.Delay(100);
-            var carToRemove = _cars.FirstOrDefault(c => c.Id == id);
-            if (carToRemove != null)
+            var response = _api.Delete($"cars/{id}");
+
+            if (!response.IsSuccessStatusCode)
             {
-                _cars.Remove(carToRemove);
+                throw new Exception($"Could not delete car with id: {id}.");
             }
         }
     }

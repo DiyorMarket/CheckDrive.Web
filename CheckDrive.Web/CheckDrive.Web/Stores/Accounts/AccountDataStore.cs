@@ -83,7 +83,7 @@ namespace CheckDrive.Web.Stores.Accounts
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Could not delete accounts with id: {id}.");
+                throw new Exception($"Could not delete account with id: {id}.");
             }
         }
     }
