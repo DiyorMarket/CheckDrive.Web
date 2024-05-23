@@ -22,10 +22,9 @@
                 </div>
             </div>
             <!-- Filter -->
-            <div class="col-md-3 mb-4">
+            <div class="col-md-2 mb-4">
                 <div class="input-group">
-                    <select class="form-control" name="roleId">
-                        <option value="" selected disabled>@ViewBag.SelectedRole.Name</option>
+                    <select class="form-control" name="roleId"> 
                         @foreach (var role in ViewBag.Roles)
                         {
                             <option value="@role.Id" selected="@(role.Id == ViewBag.RoleId)">
@@ -40,17 +39,14 @@
                 <input type="date" name="birthDate" class="form-control">
             </div>
             <!-- Create -->
-            <div class="row">
-                <div class="col-12 text-end mb-2">
-                    <a class="btn btn-success" asp-action="create">
+            <div class="d-flex col-md-4 mb-4">
+                  <a class="btn btn-success" asp-action="create">
                         <i class="fa fa-plus"></i> Create
-                    </a>
-                </div>
-            </div>
+                  </a>
+             </div>
         </div>
     </div>
 </form>
-
 
 <div class="row">
     <div class="col-12">
@@ -60,13 +56,11 @@
                   allowSorting="true">
             <e-grid-columns>
                 <e-grid-column headerText="Id" field="Id" field="Id" template="#template" typeof="Text"></e-grid-column>
-                <e-grid-column headerText="Email" field="Login" typeof="Text"></e-grid-column>
-                <e-grid-column headerText="Parol" field="Password" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Telefon raqam" field="PhoneNumber" typeof="text"></e-grid-column>
                 <e-grid-column headerText="Ism" field="FirstName" typeof="text"></e-grid-column>
                 <e-grid-column headerText="Familiya" field="LastName" typeof="text"></e-grid-column>
-                <e-grid-column headerText="To'g'ilgan yil" field="Bithdate" typeof="text"></e-grid-column>
-                <e-grid-column headerText="RoleName" field="RoleName" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Telefon raqam" field="PhoneNumber" typeof="text"></e-grid-column>
+                <e-grid-column headerText="To'g'ilgan yil" field="Bithdate" type="date" format="dd-MM-yyyy"></e-grid-column>
+                <e-grid-column headerText="Kasbi" field="RoleName" typeof="text"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>

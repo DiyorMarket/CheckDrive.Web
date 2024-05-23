@@ -25,7 +25,7 @@ namespace CheckDrive.Web.Controllers
             roles.Insert(0, new RoleDto
             {
                 Id = 0,
-                Name = "Hammasi",
+                Name = "Barcha ishchilar",
             });
             var selectedRole = roles[0];
 
