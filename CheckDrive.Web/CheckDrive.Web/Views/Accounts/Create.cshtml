@@ -1,0 +1,61 @@
+﻿@model CheckDrive.ApiContracts.Account.AccountDto
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Ishchi ma`lumotini yaratish</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Login" class="control-label"></label>
+                <input asp-for="Login" class="form-control" />
+                <span asp-validation-for="Login" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bithdate" class="control-label"></label>
+                <input asp-for="Bithdate" class="form-control" />
+                <span asp-validation-for="Bithdate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RoleName" class="control-label"></label>
+                <input asp-for="RoleName" class="form-control" />
+                <span asp-validation-for="RoleName" class="text-danger"></span>
+            </div>
+            <div class="form-group  mt-3">
+                <a asp-action="Index" class="btn btn-outline-info">
+                    <i class="fa-solid fa-arrow-left-long"></i>
+                    Back
+                </a>
+                <button class="btn btn-outline-success mr-auto">
+                    <i class="fa fa-plus"></i> Create
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+

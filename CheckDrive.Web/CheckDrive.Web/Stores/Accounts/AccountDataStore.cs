@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Account;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -15,16 +16,24 @@ namespace CheckDrive.Web.Stores.Accounts
             _api = apiClient;
         }
 
-        public async Task<GetAccountResponse> GetAccounts(int roleId)
+        public async Task<GetAccountResponse> GetAccounts(string? searchString, int? roleId ,DateTime? birthDate)
         {
             StringBuilder query = new("");
 
-            if (roleId != null)
+            if (birthDate is not null)
+            {
+                query.Append($"birthDate={birthDate.Value.ToString("MM/dd/yyyy")}&");
+            }
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query.Append($"searchString={searchString}&");
+            }
+            if(roleId != 0)
             {
                 query.Append($"roleId={roleId}&");
             }
 
-            var response = _api.Get("accounts?" + query.ToString());
+           var response = _api.Get("accounts?" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {
@@ -37,7 +46,7 @@ namespace CheckDrive.Web.Stores.Accounts
             return result;
         }
 
-        public async Task<Account> GetAccount(int id)
+        public async Task<AccountDto> GetAccount(int id)
         {
             var response = _api.Get($"accounts/{id}");
 
@@ -47,12 +56,12 @@ namespace CheckDrive.Web.Stores.Accounts
             }
 
             var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<Account>(json);
+            var result = JsonConvert.DeserializeObject<AccountDto>(json);
 
             return result;
         }
 
-        public async Task<Account> CreateAccount(Account account)
+        public async Task<AccountDto> CreateAccount(AccountForCreateDto account)
         {
             var json = JsonConvert.SerializeObject(account);
             var response = _api.Post("accounts", json);
@@ -64,10 +73,10 @@ namespace CheckDrive.Web.Stores.Accounts
 
             var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
-            return JsonConvert.DeserializeObject<Account>(jsonResponse);
+            return JsonConvert.DeserializeObject<AccountDto>(jsonResponse);
         }
 
-        public async Task<Account> UpdateAccount(int id, Account account)
+        public async Task<AccountDto> UpdateAccount(int id, AccountForUpdateDto account)
         {
             var json = JsonConvert.SerializeObject(account);
             var response = _api.Put($"accounts/{account.Id}", json);
@@ -79,7 +88,7 @@ namespace CheckDrive.Web.Stores.Accounts
 
             var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
-            return JsonConvert.DeserializeObject<Account>(jsonResponse);
+            return JsonConvert.DeserializeObject<AccountDto>(jsonResponse);
         }
 
         public async Task DeleteAccount(int id)
@@ -88,7 +97,7 @@ namespace CheckDrive.Web.Stores.Accounts
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Could not delete accounts with id: {id}.");
+                throw new Exception($"Could not delete account with id: {id}.");
             }
         }
     }
