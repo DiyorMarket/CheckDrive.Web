@@ -9,18 +9,17 @@ namespace CheckDrive.Web.Controllers
     public class DriversController : Controller
     {
         private readonly IDriverDataStore _driverDataStore;
-        private readonly IAccountDataStore _accountDataStore;
-        private readonly IRoleDataStore _roleDataStore;
 
-        public DriversController(IDriverDataStore driverDataStore, IAccountDataStore accountDataStore, IRoleDataStore roleDataStore)
+        public DriversController(IDriverDataStore driverDataStore)
         {
             _driverDataStore = driverDataStore;
-            _accountDataStore = accountDataStore;
-            _roleDataStore = roleDataStore;
         }
 
         public async Task<IActionResult> Index()
         {
+            var drivers = await _driverDataStore.GetDrivers();
+
+            ViewBag.Drivers = drivers;
             return View();
         }
 
