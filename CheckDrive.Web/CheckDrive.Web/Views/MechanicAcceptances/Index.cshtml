@@ -1,38 +1,25 @@
-﻿@model MechanicViewModel
+﻿@model CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Mexaniklar</h1>
+<h2>Mexaniklar</h2>
 
 <div class="row">
     <div class="col-12">
-        <ejs-grid id="operatorReview-list" dataSource="@ViewBag.MechanicAcceptances" gridLines="Vertical" allowSorting="true">
+        <ejs-grid id="mechanics-list" dataSource="@ViewBag.MechanicAcceptances" gridLines="Vertical" allowSorting="true">
             <e-grid-columns>
-                <e-grid-column headerText="Id" field="Id" type="number"></e-grid-column>
-                <e-grid-column headerText="Mexanik F.I.Sh" template="#fullNameTemplate" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Driver" field="DriverName" type="string"></e-grid-column>
-                <e-grid-column headerText="Car" field="CarName" type="string"></e-grid-column>
-                <e-grid-column headerText="Boshlang'ich Masofa" field="Distance" type="number"></e-grid-column>
-                <e-grid-column headerText="Topshirish" template="#isAcceptedTemplate" type="boolean"></e-grid-column>
-                <e-grid-column headerText="Izoh" field="Comments" type="string"></e-grid-column>
-                <e-grid-column headerText="Status" field="Status" type="string"></e-grid-column>
-                <e-grid-column headerText="Actions" template="#actionsTemplate" type="string"></e-grid-column>
+                <e-grid-column headerText="Id" field="Id" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Mashina" field="CarName" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Boshlang'ich masofa" field="Distance" typeof="number" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Topshirish" field="isAccepted" typeof="bool" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Izoh" field="Comments" typeof="string" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Status" field="Status" typeof="number" class="customcss"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
 </div>
-
-<script id="fullNameTemplate" type="text/x-template">
-    ${FirstName} ${LastName}
-</script>
-
-<script id="isAcceptedTemplate" type="text/x-template">
-    <input type="checkbox" ${IsAccepted ? 'checked' : ''} />
-</script>
-
-<script id="actionsTemplate" type="text/x-template">
-    <button class="btn btn-primary">Save</button>
-</script>

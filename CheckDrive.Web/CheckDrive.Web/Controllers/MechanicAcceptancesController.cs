@@ -1,5 +1,6 @@
 ﻿using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.MechanicAcceptances;
+using CheckDrive.Web.Stores.Mechanics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
@@ -8,7 +9,7 @@ namespace CheckDrive.Web.Controllers
     {
         private readonly IMechanicAcceptanceDataStore _mechanicAcceptanceDataStore;
 
-        public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore)
+        public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, IMechanicDataStore mechanicDataStore)
         {
             _mechanicAcceptanceDataStore = mechanicAcceptanceDataStore;
         }
@@ -17,15 +18,15 @@ namespace CheckDrive.Web.Controllers
         {
             var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
 
-            if (mechanicAcceptances is null)
+            if (mechanicAcceptances == null)
             {
                 return BadRequest();
             }
 
-            ViewBag.MechanicAcceptances = mechanicAcceptances.Data;
+            ViewBag.MechanicAcceptances = mechanicAcceptances;
+
             return View();
         }
-
         public async Task<IActionResult> Details(int id)
         {
             var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
