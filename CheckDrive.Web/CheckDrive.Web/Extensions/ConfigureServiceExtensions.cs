@@ -3,6 +3,7 @@ using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DispatcherReviews;
 using CheckDrive.Web.Stores.Dispatchers;
+using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Doctors;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
@@ -24,6 +25,7 @@ namespace CheckDrive.Web.Extensions
             services.AddScoped<IDispatcherReviewDataStore, MockDispatcherReviewDataStore>();
             services.AddScoped<IDispatcherDataStore, MockDispatcherDataStore>();
             services.AddScoped<IDoctorDataStore, MockDoctorDataStore>();
+            services.AddScoped<IDoctorReviewDataStore, DoctorReviewDataStore>();
             services.AddScoped<IDriverDataStore, DriverDataStore>();
             services.AddScoped<IMechanicAcceptanceDataStore, MockMechanicAcceptanceDataStore>();
             services.AddScoped<IMechanicHandoverDataStore, MockMechanicHandoverDataStore>();

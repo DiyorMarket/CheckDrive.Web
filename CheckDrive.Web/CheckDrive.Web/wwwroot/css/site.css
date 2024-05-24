@@ -1,15 +1,16 @@
+/* Основные настройки */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 .main-content {
@@ -19,33 +20,33 @@ html {
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
-/*BreadCrumb*/
+/* BreadCrumb */
 .e-breadcrumb a, .e-breadcrumb a:hover {
     text-decoration: none !important;
     color: inherit !important;
 }
 
-/*Button*/
+/* Button */
 .btn:focus, .btn:active {
     outline: none !important;
     box-shadow: none;
 }
 
-/*Hyperlink*/
+/* Hyperlink */
 .no-a-decoration, .no-a-decoration:hover {
     text-decoration: none;
     color: inherit;
 }
 
-/*Grid*/
+/* Grid */
 .e-grid {
     border: 0;
     border-radius: 5px;
@@ -111,13 +112,7 @@ body {
     font-weight: bold;
 }
 
-.e-grid .e-pager {
-    padding: 10px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-
-/*Logo*/
+/* Logo */
 .logo-wrapper {
     height: 70px;
     display: flex;
@@ -129,7 +124,7 @@ body {
     padding: 10px 10px;
 }
 
-/*Menu*/
+/* Menu */
 #menu {
     width: 100% !important;
     background-color: inherit;
@@ -139,7 +134,7 @@ body {
     #menu .e-menu-item:not(.e-separator) {
         height: 50px;
         border-radius: 4px;
-        background-color:whitesmoke;
+        background-color: whitesmoke;
     }
 
     #menu .e-menu-item {
@@ -175,9 +170,7 @@ body {
             margin-top: 35px;
         }
 
-
-
-/*Navbar*/
+/* Navbar */
 nav.navbar {
     background-color: rgba(18, 22, 29);
 }
@@ -199,7 +192,7 @@ nav.navbar {
     margin-left: 290px;
 }
 
-/*Profile Pic*/
+/* Profile Pic */
 img.profile-pic {
     width: 45px;
     height: 45px;
@@ -221,7 +214,7 @@ img.profile-pic {
         line-height: 1;
     }
 
-/*Radio Button Group*/
+/* Radio Button Group */
 .e-btn-group.custom-rbt-group {
     width: 100%;
 }
@@ -243,7 +236,7 @@ img.profile-pic {
     border: 1px solid #fff;
 }
 
-/*SideBar*/
+/* SideBar */
 #sidebar {
     background-color: whitesmoke;
     border-right: 1px dashed rgba(75,82,85,0.24);
@@ -290,7 +283,6 @@ img.profile-pic {
         display: none !important;
     }
 
-
     #sidebar.e-open .e-anchor-wrap,
     #sidebar.e-close .e-menu-icon, #sidebar.e-open .e-menu-icon {
         visibility: visible;
@@ -313,7 +305,7 @@ img.profile-pic {
     content: '\f101'
 }
 
-/*Widget*/
+/* Widget */
 .widget {
     border-radius: 1rem;
     background-color: white;

@@ -6,14 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
 {
-    public class DriversController : Controller
+    public class DriversController(IDriverDataStore driverDataStore) : Controller
     {
-        private readonly IDriverDataStore _driverDataStore;
-
-        public DriversController(IDriverDataStore driverDataStore)
-        {
-            _driverDataStore = driverDataStore;
-        }
+        private readonly IDriverDataStore _driverDataStore = driverDataStore;
 
         public async Task<IActionResult> Index()
         {
