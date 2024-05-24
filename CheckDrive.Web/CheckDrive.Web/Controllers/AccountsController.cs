@@ -3,6 +3,7 @@ using CheckDrive.ApiContracts.Role;
 using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -44,14 +45,6 @@ namespace CheckDrive.Web.Controllers
 
             return View();
         }
-        private async Task<List<RoleDto>> GETRoles()
-        {
-            var categoryResponse = await _roleStore.GetRoles();
-
-            var categories = categoryResponse.Data.ToList();
-
-            return categories;
-        }
         public async Task<IActionResult> Details(int id)
         {
             var account = await _accountDataStore.GetAccount(id);
@@ -61,12 +54,12 @@ namespace CheckDrive.Web.Controllers
             }
             return View(account);
         }
-
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var roles = await GETRoles();
+            ViewBag.Roles = new SelectList(roles, "Id", "Name");
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Login,Password,PhoneNumber,FirstName,LastName,Birthdate,RoleId")] AccountForCreateDto account)
@@ -142,6 +135,14 @@ namespace CheckDrive.Web.Controllers
         {
             var account = await _accountDataStore.GetAccount(id);
             return account != null;
+        }
+        private async Task<List<RoleDto>> GETRoles()
+        {
+            var categoryResponse = await _roleStore.GetRoles();
+
+            var categories = categoryResponse.Data.ToList();
+
+            return categories;
         }
     }
 }

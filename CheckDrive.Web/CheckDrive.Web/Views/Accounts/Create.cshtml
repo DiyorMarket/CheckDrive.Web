@@ -1,9 +1,20 @@
-﻿@model CheckDrive.ApiContracts.Account.AccountDto
+﻿@model CheckDrive.ApiContracts.Account.AccountForCreateDto
 
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<head>
+    <link rel="stylesheet" href="~/css/animation.css" />
+</head>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/dashboard/index"><i class="fa fa-home" style="color: white"></i></a></li>
+        <li class="breadcrumb-item"><a asp-controller="Accounts" asp-action="Index">Accounts List</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Create</li>
+    </ol>
+</nav>
 
 <h4>Ishchi ma`lumotini yaratish</h4>
 <hr />
@@ -12,39 +23,38 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Login" class="control-label"></label>
-                <input asp-for="Login" class="form-control" />
-                <span asp-validation-for="Login" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
+                <label asp-for="FirstName" class="control-label">Ism</label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
+                <label asp-for="LastName" class="control-label">Familiya</label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Bithdate" class="control-label"></label>
-                <input asp-for="Bithdate" class="form-control" />
+                <label asp-for="PhoneNumber" class="control-label">Telefon raqam</label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Login" class="control-label">Elektron pochta</label>
+                <input asp-for="Login" class="form-control" />
+                <span asp-validation-for="Login" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label">Parol</label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bithdate" class="control-label">Tug'ilgan kun</label>
+                <input asp-for="Bithdate" type="date" class="form-control" />
                 <span asp-validation-for="Bithdate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RoleName" class="control-label"></label>
-                <input asp-for="RoleName" class="form-control" />
-                <span asp-validation-for="RoleName" class="text-danger"></span>
+                <label asp-for="RoleId" class="control-label mt-2">Kasb</label>
+                <select asp-for="RoleId" class="form-control border border-dark" asp-items="@ViewBag.Roles"></select>
             </div>
             <div class="form-group  mt-3">
                 <a asp-action="Index" class="btn btn-outline-info">

@@ -42,9 +42,8 @@
                 <span asp-validation-for="Bithdate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RoleName" class="control-label"></label>
-                <input asp-for="RoleName" class="form-control" />
-                <span asp-validation-for="RoleName" class="text-danger"></span>
+                <label asp-for="RoleName" class="control-label mt-2"></label>
+                <select asp-for="RoleName" class="form-control border border-dark" asp-items="@ViewBag.Roles"></select>
             </div>
         </form>
     </div>
