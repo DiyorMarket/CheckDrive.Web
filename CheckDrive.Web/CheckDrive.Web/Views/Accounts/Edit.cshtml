@@ -12,50 +12,58 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Login" class="control-label"></label>
-                <input asp-for="Login" class="form-control" />
-                <span asp-validation-for="Login" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
+                <label asp-for="FirstName" class="control-label">Ism</label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
+                <label asp-for="LastName" class="control-label">Familiya</label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Bithdate" class="control-label"></label>
-                <input asp-for="Bithdate" class="form-control" />
+                <label asp-for="Bithdate" class="control-label">Tug'ilgan yil</label>
+                <input asp-for="Bithdate" type="date" class="form-control" />
                 <span asp-validation-for="Bithdate" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label">Telefon raqam</label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Login" class="control-label">Elektron pochta</label>
+                <input asp-for="Login" class="form-control" />
+                <span asp-validation-for="Login" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label">Parol</label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="RoleName" class="control-label mt-2"></label>
-                <select asp-for="RoleName" class="form-control border border-dark" asp-items="@ViewBag.Roles"></select>
+                <select class="form-control" name="roleId">
+                    <option value="" selected disabled>@Model.RoleName </option>
+                    @foreach (var category in ViewBag.Roles)
+                    {
+                        <option value="@category.Id" selected="@(category.Id == ViewBag.categoryId)">
+                            @category.Name
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="form-group mt-3">
+                <a asp-action="Details" asp-route-id="@Model?.Id" class="btn btn-outline-info">
+                    <i class="fa-solid fa-arrow-left-long"></i>
+                    Orqaga
+                </a>
+                <button class="btn btn-outline-success">
+                    <i class="fa fa-pencil"></i> Tahrirlash
+                </button>
             </div>
         </form>
     </div>
 </div>
 
-<div class="form-group mt-3">
-    <a asp-action="Details" asp-route-id="@Model?.Id" class="btn btn-outline-info">
-        <i class="fa-solid fa-arrow-left-long"></i>
-        Back
-    </a>
-    <button class="btn btn-outline-success">
-        <i class="fa fa-pencil"></i> Save
-    </button>
-</div>
 
