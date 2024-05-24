@@ -62,7 +62,8 @@ namespace CheckDrive.Web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Login,Password,PhoneNumber,FirstName,LastName,Birthdate,RoleId")] AccountForCreateDto account)
+        public async Task<IActionResult> Create([Bind("Login,Password,PhoneNumber,FirstName,LastName,Bithdate,RoleId")]
+            AccountForCreateDto account)
         {
             if (ModelState.IsValid)
             {
@@ -75,22 +76,17 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var account = await _accountDataStore.GetAccount(id);
-            if (account == null)
-            {
-                return NotFound();
-            }
+            var roles = await GETRoles();
+            ViewBag.Roles = roles;
             return View(account);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Birthdate,RoleId")] AccountForUpdateDto account)
-        {
-            if (id != account.Id)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Bithdate,RoleId")] 
+            AccountForUpdateDto account)
             {
-                return NotFound();
-            }
-
+            
             if (ModelState.IsValid)
             {
                 try
@@ -138,11 +134,9 @@ namespace CheckDrive.Web.Controllers
         }
         private async Task<List<RoleDto>> GETRoles()
         {
-            var categoryResponse = await _roleStore.GetRoles();
-
-            var categories = categoryResponse.Data.ToList();
-
-            return categories;
+            var roleResponse = await _roleStore.GetRoles();
+            var roles = roleResponse.Data.ToList();
+            return roles;
         }
     }
 }
