@@ -1,33 +1,33 @@
 ﻿using CheckDrive.ApiContracts.DoctorReview;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.DoctorReviews;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
 {
-    public class DoctorReviewsController : Controller
+    public class PersonalDoctorReviewsController(IDoctorReviewDataStore doctorReviewDataStore) : Controller
     {
-        private readonly IDoctorReviewDataStore _doctorReviewDataStore;
-
-        public DoctorReviewsController(IDoctorReviewDataStore doctorReviewDataStore)
-        {
-            _doctorReviewDataStore = doctorReviewDataStore;
-        }
-
+        private readonly IDoctorReviewDataStore _doctorReviewDataStore = doctorReviewDataStore;
         public async Task<IActionResult> Index()
         {
-            var reviews = await _doctorReviewDataStore.GetDoctorReviews();
-            return View(reviews);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviews();
+
+            if (doctorReviews is null)
+            {
+                return BadRequest();
+            }
+
+            ViewBag.DoctorsReview = doctorReviews.Data;
+            return View();
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            var review = await _doctorReviewDataStore.GetDoctorReview(id);
-            if (review == null)
+            var doctorReview = await _doctorReviewDataStore.GetDoctorReview(id);
+            if (doctorReview == null)
             {
                 return NotFound();
             }
-            return View(review);
+            return View(doctorReview);
         }
 
         public IActionResult Create()
@@ -49,12 +49,12 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var review = await _doctorReviewDataStore.GetDoctorReview(id);
-            if (review == null)
+            var doctorReview = await _doctorReviewDataStore.GetDoctorReview(id);
+            if (doctorReview == null)
             {
                 return NotFound();
             }
-            return View(review);
+            return View(doctorReview);
         }
 
         [HttpPost]
@@ -90,12 +90,12 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var review = await _doctorReviewDataStore.GetDoctorReview(id);
-            if (review == null)
+            var doctorReview = await _doctorReviewDataStore.GetDoctorReview(id);
+            if (doctorReview == null)
             {
                 return NotFound();
             }
-            return View(review);
+            return View(doctorReview);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -108,8 +108,8 @@ namespace CheckDrive.Web.Controllers
 
         private async Task<bool> DoctorReviewExists(int id)
         {
-            var review = await _doctorReviewDataStore.GetDoctorReview(id);
-            return review != null;
+            var doctorReview = await _doctorReviewDataStore.GetDoctorReview(id);
+            return doctorReview != null;
         }
     }
 }

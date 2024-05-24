@@ -1,0 +1,37 @@
+﻿@model CheckDrive.ApiContracts.DoctorReview.DoctorReviewDto
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+}
+
+<h1>Shifokor oynasi</h1>
+
+<div class="row justify-content-center">
+    <div class="col-12">
+        <ejs-grid id="doctorReviews-list" dataSource="@ViewBag.DoctorsReview" gridLines="Vertical" allowSorting="true" class="centered-grid">
+            <e-grid-columns>
+                <e-grid-column headerText="Id" field="Id" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Driver name" field="DriverName" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Doctor name" field="DoctorName" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="IsHealthy" field="IsHealthy" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Comments" field="Comments" typeof="text" class="customcss"></e-grid-column>
+            </e-grid-columns>
+        </ejs-grid>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var grid = document.getElementById('doctorReviews-list');
+        grid.style.width = '115%'; // Максимальная ширина таблицы
+        grid.style.maxWidth = '100%'; // Ширина таблицы относительно контейнера
+        grid.style.margin = '0'; // Центрирование таблицы
+
+        // Убираем отступ у основного контейнера
+        var mainContent = document.querySelector('.main-content');
+        if (mainContent) {
+            mainContent.style.marginLeft = '0';
+        }
+    });
+</script>
