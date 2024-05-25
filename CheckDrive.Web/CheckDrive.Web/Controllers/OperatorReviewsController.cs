@@ -16,6 +16,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews();
+
             return View(operatorReviews);
         }
 
