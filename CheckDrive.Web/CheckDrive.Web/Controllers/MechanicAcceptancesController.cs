@@ -9,7 +9,7 @@ namespace CheckDrive.Web.Controllers
     {
         private readonly IMechanicAcceptanceDataStore _mechanicAcceptanceDataStore;
 
-        public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, IMechanicDataStore mechanicDataStore)
+        public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore)
         {
             _mechanicAcceptanceDataStore = mechanicAcceptanceDataStore;
         }

@@ -8,7 +8,7 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
         Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync();
         Task<MechanicHandover> GetMechanicHandoverAsync(int id);
         Task<MechanicHandover> CreateMechanicHandoverAsync(MechanicHandover mechanicHandover);
-        Task<MechanicHandover> UpdateMechanicHandoverasync(int id, MechanicHandover mechanicHandover);
+        Task<MechanicHandover> UpdateMechanicHandoverAsync(int id, MechanicHandover mechanicHandover);
         Task DeleteMechanicHandoverAsync(int id);
     }
 }

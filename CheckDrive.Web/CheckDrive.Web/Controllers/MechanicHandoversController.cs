@@ -15,13 +15,21 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandovers();
-            return View(mechanicHandovers);
+            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
+
+            if (mechanicHandovers == null)
+            {
+                return BadRequest();
+            }
+
+            ViewBag.MechanicHandovers = mechanicHandovers.Data;
+
+            return View();
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            var mechanicHandover = await _mechanicHandoverDataStore.GetMechanicHandover(id);
+            var mechanicHandover = await _mechanicHandoverDataStore.GetMechanicHandoverAsync(id);
             if (mechanicHandover == null)
             {
                 return NotFound();
@@ -40,7 +48,7 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _mechanicHandoverDataStore.CreateMechanicHandover(mechanicHandover);
+                await _mechanicHandoverDataStore.CreateMechanicHandoverAsync(mechanicHandover);
                 return RedirectToAction(nameof(Index));
             }
             return View(mechanicHandover);
@@ -48,7 +56,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var mechanicHandover = await _mechanicHandoverDataStore.GetMechanicHandover(id);
+            var mechanicHandover = await _mechanicHandoverDataStore.GetMechanicHandoverAsync(id);
             if (mechanicHandover == null)
             {
                 return NotFound();
@@ -69,7 +77,7 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    await _mechanicHandoverDataStore.UpdateMechanicHandover(id, mechanicHandover);
+                    await _mechanicHandoverDataStore.UpdateMechanicHandoverAsync(id, mechanicHandover);
                 }
                 catch (Exception)
                 {
@@ -101,13 +109,13 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _mechanicHandoverDataStore.DeleteMechanicHandover(id);
+            await _mechanicHandoverDataStore.DeleteMechanicHandoverAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> MechanicHandoverExists(int id)
         {
-            var mechanicHandover = await _mechanicHandoverDataStore.GetMechanicHandover(id);
+            var mechanicHandover = await _mechanicHandoverDataStore.GetMechanicHandoverAsync(id);
             return mechanicHandover != null;
         }
     }
