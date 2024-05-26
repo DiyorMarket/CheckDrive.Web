@@ -97,7 +97,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var mechanicHandover = await _mechanicHandoverDataStore.GetMechanicHandover(id);
+            var mechanicHandover = await _mechanicHandoverDataStore.GetMechanicHandoverAsync(id);
             if (mechanicHandover == null)
             {
                 return NotFound();

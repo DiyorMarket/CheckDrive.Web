@@ -41,7 +41,7 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
         {
             throw new NotImplementedException();
         }
-        public Task<MechanicHandover> UpdateMechanicHandoverasync(int id, MechanicHandover mechanicHandover)
+        public Task<MechanicHandover> UpdateMechanicHandoverAsync(int id, MechanicHandover mechanicHandover)
         {
             throw new NotImplementedException();
         }

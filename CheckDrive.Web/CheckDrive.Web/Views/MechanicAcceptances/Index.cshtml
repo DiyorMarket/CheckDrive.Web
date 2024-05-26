@@ -5,26 +5,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<nav style="margin-top: 90px;">
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <button class="nav-link active" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">Acceptance</button>
-        <button class="nav-link" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" type="button" role="tab" aria-controls="nav-history" aria-selected="false">Handover</button>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-mechanicAcceptances" role="tabpanel" aria-labelledby="nav-mechanicAcceptances-tab">
+        <div class="row">
+            <div class="col-12">
+                <ejs-grid id="mechanicAcceptances-list" dataSource="@ViewBag.MechanicAcceptances" gridLines="Vertical" allowSorting="true">
+                    <e-grid-columns>
+                        <e-grid-column headerText="Id" field="Id" type="number"></e-grid-column>
+                        <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" type="string"></e-grid-column>
+                        <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string"></e-grid-column>
+                        <e-grid-column headerText="Mashina" field="CarName" type="string"></e-grid-column>
+                        <e-grid-column headerText="Oxirgi masofa" field="Distance" type="number"></e-grid-column>
+                        <e-grid-column headerText="Topshirish" field="isAccepted" type="bool"></e-grid-column>
+                        <e-grid-column headerText="Izoh" field="Comments" type="string"></e-grid-column>
+                        <e-grid-column headerText="Status" field="Status" type="number"></e-grid-column>
+                    </e-grid-columns>
+                </ejs-grid>
+            </div>
+        </div>
     </div>
-</nav>
-
-<div class="row">
-    <div class="col-12">
-        <ejs-grid id="mechanics-list" dataSource="@ViewBag.MechanicAcceptances" gridLines="Vertical" allowSorting="true">
-            <e-grid-columns>
-                <e-grid-column headerText="Id" field="Id" type="number"></e-grid-column>
-                <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" type="string"></e-grid-column>
-                <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string"></e-grid-column>
-                <e-grid-column headerText="Mashina" field="CarName" type="string"></e-grid-column>
-                <e-grid-column headerText="Boshlang'ich masofa" field="Distance" type="number"></e-grid-column>
-                <e-grid-column headerText="Topshirish" field="isAccepted" type="bool"> </e-grid-column>
-                <e-grid-column headerText="Izoh" field="Comments" type="string"></e-grid-column>
-                <e-grid-column headerText="Status" field="Status" type="number"></e-grid-column>
-            </e-grid-columns>
-        </ejs-grid>
-    </div>
-</div>
