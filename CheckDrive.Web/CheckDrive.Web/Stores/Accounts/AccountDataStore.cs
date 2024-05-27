@@ -1,5 +1,4 @@
 ﻿using CheckDrive.ApiContracts.Account;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -16,7 +15,7 @@ namespace CheckDrive.Web.Stores.Accounts
             _api = apiClient;
         }
 
-        public async Task<GetAccountResponse> GetAccounts(string? searchString, int? roleId ,DateTime? birthDate)
+        public async Task<GetAccountResponse> GetAccounts(string? searchString, int? roleId, DateTime? birthDate)
         {
             StringBuilder query = new("");
 
@@ -28,12 +27,12 @@ namespace CheckDrive.Web.Stores.Accounts
             {
                 query.Append($"searchString={searchString}&");
             }
-            if(roleId != 0)
+            if (roleId != 0)
             {
                 query.Append($"roleId={roleId}&");
             }
 
-           var response = _api.Get("accounts?" + query.ToString());
+            var response = _api.Get("accounts?" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {
@@ -60,7 +59,6 @@ namespace CheckDrive.Web.Stores.Accounts
 
             return result;
         }
-
         public async Task<AccountDto> CreateAccount(AccountForCreateDto account)
         {
             var json = JsonConvert.SerializeObject(account);

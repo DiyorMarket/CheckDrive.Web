@@ -3,6 +3,7 @@ using CheckDrive.ApiContracts.Role;
 using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -25,7 +26,7 @@ namespace CheckDrive.Web.Controllers
             roles.Insert(0, new RoleDto
             {
                 Id = 0,
-                Name = "Hammasi",
+                Name = "Barcha ishchilar",
             });
             var selectedRole = roles[0];
 
@@ -44,14 +45,6 @@ namespace CheckDrive.Web.Controllers
 
             return View();
         }
-        private async Task<List<RoleDto>> GETRoles()
-        {
-            var categoryResponse = await _roleStore.GetRoles();
-
-            var categories = categoryResponse.Data.ToList();
-
-            return categories;
-        }
         public async Task<IActionResult> Details(int id)
         {
             var account = await _accountDataStore.GetAccount(id);
@@ -61,15 +54,16 @@ namespace CheckDrive.Web.Controllers
             }
             return View(account);
         }
-
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var roles = await GETRoles();
+            ViewBag.Roles = new SelectList(roles, "Id", "Name");
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Login,Password,PhoneNumber,FirstName,LastName,Birthdate,RoleId")] AccountForCreateDto account)
+        public async Task<IActionResult> Create([Bind("Login,Password,PhoneNumber,FirstName,LastName,Bithdate,RoleId")]
+            AccountForCreateDto account)
         {
             if (ModelState.IsValid)
             {
@@ -82,22 +76,14 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var account = await _accountDataStore.GetAccount(id);
-            if (account == null)
-            {
-                return NotFound();
-            }
             return View(account);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Birthdate,RoleId")] AccountForUpdateDto account)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Bithdate,RoleId")] 
+            AccountForUpdateDto account)
         {
-            if (id != account.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
@@ -142,6 +128,12 @@ namespace CheckDrive.Web.Controllers
         {
             var account = await _accountDataStore.GetAccount(id);
             return account != null;
+        }
+        private async Task<List<RoleDto>> GETRoles()
+        {
+            var roleResponse = await _roleStore.GetRoles();
+            var roles = roleResponse.Data.ToList();
+            return roles;
         }
     }
 }
