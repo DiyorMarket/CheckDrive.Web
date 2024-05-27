@@ -41,18 +41,7 @@
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="RoleName" class="control-label mt-2"></label>
-                <select class="form-control" name="roleId">
-                    <option value="" selected disabled>@Model.RoleName </option>
-                    @foreach (var category in ViewBag.Roles)
-                    {
-                        <option value="@category.Id" selected="@(category.Id == ViewBag.categoryId)">
-                            @category.Name
-                        </option>
-                    }
-                </select>
-            </div>
+            <input asp-for="RoleId" type="hidden" />
             <div class="form-group mt-3">
                 <a asp-action="Details" asp-route-id="@Model?.Id" class="btn btn-outline-info">
                     <i class="fa-solid fa-arrow-left-long"></i>
