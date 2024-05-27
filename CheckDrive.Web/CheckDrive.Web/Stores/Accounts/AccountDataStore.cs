@@ -59,7 +59,6 @@ namespace CheckDrive.Web.Stores.Accounts
 
             return result;
         }
-
         public async Task<AccountDto> CreateAccount(AccountForCreateDto account)
         {
             var json = JsonConvert.SerializeObject(account);

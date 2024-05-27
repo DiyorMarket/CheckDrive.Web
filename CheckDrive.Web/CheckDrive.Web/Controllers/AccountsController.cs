@@ -76,8 +76,6 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var account = await _accountDataStore.GetAccount(id);
-            var roles = await GETRoles();
-            ViewBag.Roles = roles;
             return View(account);
         }
 
@@ -85,8 +83,7 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Bithdate,RoleId")] 
             AccountForUpdateDto account)
-            {
-            
+        {
             if (ModelState.IsValid)
             {
                 try

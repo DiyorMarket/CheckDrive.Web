@@ -5,7 +5,7 @@ namespace CheckDrive.Web.Service
 {
     public class ApiClient
     {
-        private const string baseUrl = "https://d1mk21rg-7111.euw.devtunnels.ms/api";
+        private const string baseUrl = "https://localhost:7111/api";
 
         private readonly HttpClient _client = new();
         private readonly IHttpContextAccessor _contextAccessor;
