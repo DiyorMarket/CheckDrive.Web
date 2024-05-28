@@ -19,8 +19,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(string? searchString, int? roleId, DateTime? birthDate)
         {
-            var accounts = await _accountDataStore.GetAccountsAsync();
-            var accounts = await _accountDataStore.GetAccounts(searchString, roleId, birthDate);
+            var accounts = await _accountDataStore.GetAccountsAsync(searchString, roleId, birthDate);
 
             var roles = await GETRoles();
 

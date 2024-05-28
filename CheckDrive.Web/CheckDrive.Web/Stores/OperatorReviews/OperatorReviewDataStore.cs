@@ -11,7 +11,7 @@ namespace CheckDrive.Web.Stores.OperatorReviews
 
         public async Task<GetOperatorReviewResponse> GetOperatorsReviews()
         {
-            var response = _api.Get("operators/reviews");
+            var response = await _api.GetAsync("operators/reviews");
 
             if (!response.IsSuccessStatusCode)
             {

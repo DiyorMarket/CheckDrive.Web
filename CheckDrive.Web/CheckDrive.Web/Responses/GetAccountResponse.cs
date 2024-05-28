@@ -1,5 +1,4 @@
 ﻿using CheckDrive.ApiContracts.Account;
-using CheckDrive.Web.Models;
 
 namespace CheckDrive.Web.Responses
 {

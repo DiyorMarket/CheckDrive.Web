@@ -12,7 +12,7 @@ namespace CheckDrive.Web.Stores.DoctorReviews
 
         public async Task<GetDoctorReviewResponse> GetDoctorReviews()
         {
-            var response = _api.Get("doctors/reviews");
+            var response = await _api.GetAsync("doctors/reviews");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -27,7 +27,7 @@ namespace CheckDrive.Web.Stores.DoctorReviews
 
         public async Task<DoctorReviewDto> GetDoctorReview(int id)
         {
-            var response = _api.Get($"doctors/review/{id}");
+            var response = await _api.GetAsync($"doctors/review/{id}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -43,7 +43,7 @@ namespace CheckDrive.Web.Stores.DoctorReviews
         public async Task<DoctorReviewDto> CreateDoctorReview(DoctorReviewForCreateDto review)
         {
             var json = JsonConvert.SerializeObject(review);
-            var response = _api.Post("doctors/review", json);
+            var response = await _api.PostAsync("doctors/review", json);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -58,7 +58,7 @@ namespace CheckDrive.Web.Stores.DoctorReviews
         public async Task<DoctorReview> UpdateDoctorReview(int id, DoctorReviewForUpdateDto review)
         {
             var json = JsonConvert.SerializeObject(review);
-            var response = _api.Put($"doctors/review/{review.Id}", json);
+            var response = await _api.PutAsync($"doctors/review/{review.Id}", json);
 
             if (!response.IsSuccessStatusCode)
             {

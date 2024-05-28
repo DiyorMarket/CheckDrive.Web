@@ -1,7 +1,5 @@
 ﻿using CheckDrive.Web.Models;
-using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Drivers;
-using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
@@ -12,9 +10,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var accounts = await _accountDataStore.GetAccountsAsync();
-            var roles = await _roleDataStore.GetRoles();
-            var drivers = await _driverDataStore.GetDrivers();
+            var drivers = await _driverDataStore.GetDriversAsync();
 
             ViewBag.Drivers = drivers;
             return View();
@@ -70,7 +66,7 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    await _driverDataStore.UpdateDriverAsync(id,driver);
+                    await _driverDataStore.UpdateDriverAsync(id, driver);
                 }
                 catch (Exception)
                 {
