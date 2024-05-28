@@ -1,4 +1,5 @@
 ﻿using CheckDrive.ApiContracts.Car;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +14,20 @@ namespace CheckDrive.Web.Controllers
             _carDataStore = carDataStore;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchString,int? pageNumber)
         {
-            var cars = await _carDataStore.GetCars();
+            var cars = await _carDataStore.GetCars(searchString,pageNumber);
 
+            ViewBag.SearchString = searchString;
             ViewBag.Cars = cars.Data;
+
+            ViewBag.PageSize = cars.PageSize;
+            ViewBag.PageCount = cars.TotalPages;
+            ViewBag.TotalCount = cars.TotalCount;
+            ViewBag.CurrentPage = cars.PageNumber;
+            ViewBag.HasPreviousPage = cars.HasPreviousPage;
+            ViewBag.HasNextPage = cars.HasNextPage;
+
             return View();
         }
 
@@ -62,28 +72,9 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Model,Color,Number,MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear")] CarForUpdateDto car)
         {
-            if (id != car.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    await _carDataStore.UpdateCar(id, car);
-                }
-                catch (Exception)
-                {
-                    if (!await CarExists(id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _carDataStore.UpdateCar(id, car);
                 return RedirectToAction(nameof(Index));
             }
             return View(car);
@@ -105,12 +96,6 @@ namespace CheckDrive.Web.Controllers
         {
             await _carDataStore.DeleteCar(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private async Task<bool> CarExists(int id)
-        {
-            var car = await _carDataStore.GetCar(id);
-            return car != null;
         }
     }
 }
