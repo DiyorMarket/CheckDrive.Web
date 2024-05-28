@@ -11,7 +11,7 @@ namespace CheckDrive.Web.Stores.Operators
 
         public async Task<GetOperatorResponse> GetOperators()
         {
-            var response = _api.Get("operators?");
+            var response = await _api.GetAsync("operators?");
 
             if (!response.IsSuccessStatusCode)
             {

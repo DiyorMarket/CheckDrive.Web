@@ -30,8 +30,6 @@ namespace CheckDrive.Web.Extensions
             services.AddScoped<IMechanicAcceptanceDataStore, MechanicAcceptanceDataStore>();
             services.AddScoped<IMechanicHandoverDataStore, MechanicHandoverDataStore>();
             services.AddScoped<IMechanicDataStore, MechanicDataStore>();
-          
-            services.AddScoped<IOperatorDataStore, MockOperatorDataStore>();
             services.AddScoped<IOperatorReviewDataStore, OperatorReviewDataStore>();
             services.AddScoped<IOperatorDataStore, OperatorDataStore>();
             services.AddScoped<IRoleDataStore, RoleDataStore>();

@@ -2,6 +2,7 @@
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace CheckDrive.Web.Stores.Accounts
 {
@@ -32,20 +33,21 @@ namespace CheckDrive.Web.Stores.Accounts
                 query.Append($"roleId={roleId}&");
             }
 
-            var response = _api.Get("accounts?" + query.ToString());
+            var response = await _api.GetAsync("accounts?" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Could not fetch accounts.");
             }
 
-            var json = await response.Content.ReadAsStringAsync();
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             var result = JsonConvert.DeserializeObject<GetAccountResponse>(json);
 
             return result;
         }
 
-        public async Task<Account> GetAccountAsync(int id)
+        public async Task<AccountDto> GetAccountAsync(int id)
 
         {
             var response = await _api.GetAsync($"accounts/{id}");
@@ -56,7 +58,7 @@ namespace CheckDrive.Web.Stores.Accounts
             }
 
             var json = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<Account>(json);
+            var result = JsonConvert.DeserializeObject<AccountDto>(json);
 
             return result;
         }
@@ -72,7 +74,7 @@ namespace CheckDrive.Web.Stores.Accounts
             }
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Account>(jsonResponse);
+            return JsonConvert.DeserializeObject<AccountDto>(jsonResponse);
         }
 
     

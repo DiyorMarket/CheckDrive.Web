@@ -16,7 +16,7 @@ namespace CheckDrive.Web.Stores.Cars
 
         public async Task<GetCarResponse> GetCars()
         {
-            var response = _api.Get("cars");
+            var response = await _api.GetAsync("cars");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -31,7 +31,7 @@ namespace CheckDrive.Web.Stores.Cars
 
         public async Task<CarDto> GetCar(int id)
         {
-            var response = _api.Get($"cars/{id}");
+            var response = await _api.GetAsync($"cars/{id}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -47,7 +47,7 @@ namespace CheckDrive.Web.Stores.Cars
         public async Task<CarDto> CreateCar(CarForCreateDto carForCreate)
         {
             var json = JsonConvert.SerializeObject(carForCreate);
-            var response = _api.Post("cars", json);
+            var response = await _api.PostAsync("cars", json);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -62,7 +62,7 @@ namespace CheckDrive.Web.Stores.Cars
         public async Task<CarDto> UpdateCar(int id, CarForUpdateDto car)
         {
             var json = JsonConvert.SerializeObject(car);
-            var response = _api.Put($"cars/{car.Id}", json);
+            var response =  await _api.PutAsync($"cars/{car.Id}", json);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -76,7 +76,7 @@ namespace CheckDrive.Web.Stores.Cars
 
         public async Task DeleteCar(int id)
         {
-            var response = _api.Delete($"cars/{id}");
+            var response = await _api.DeleteAsync($"cars/{id}");
 
             if (!response.IsSuccessStatusCode)
             {
