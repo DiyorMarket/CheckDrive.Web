@@ -2,6 +2,8 @@
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
+using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CheckDrive.Web.Stores.Cars
 {
@@ -14,9 +16,20 @@ namespace CheckDrive.Web.Stores.Cars
             _api = apiClient;
         }
 
-        public async Task<GetCarResponse> GetCars()
+        public async Task<GetCarResponse> GetCars(string? searchString,int? pageNumber)
         {
-            var response = await _api.GetAsync("cars");
+            StringBuilder query = new("");
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query.Append($"searchString={searchString}&");
+            }
+            if (pageNumber != null)
+            {
+                query.Append($"pageNumber={pageNumber}");
+            }
+
+            var response = await _api.GetAsync("cars?" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {
