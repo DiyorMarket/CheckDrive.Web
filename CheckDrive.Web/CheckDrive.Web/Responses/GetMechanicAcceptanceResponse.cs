@@ -1,8 +1,6 @@
-﻿using CheckDrive.Web.Models;
-
-namespace CheckDrive.Web.Responses
+﻿namespace CheckDrive.Web.Responses
 {
-    public class GetMechanicAcceptanceResponse : GetBaseResponse<MechanicAcceptance>
+    public class GetMechanicAcceptanceResponse : GetBaseResponse<ApiContracts.MechanicAcceptance.MechanicAcceptanceDto>
     {
     }
 }

@@ -1,8 +1,6 @@
-﻿using CheckDrive.Web.Models;
-
-namespace CheckDrive.Web.Responses
+﻿namespace CheckDrive.Web.Responses
 {
-    public class GetMechanicHandoverResponse : GetBaseResponse<MechanicHandover>
+    public class GetMechanicHandoverResponse : GetBaseResponse<ApiContracts.MechanicHandover.MechanicHandoverDto>
     {
     }
 }

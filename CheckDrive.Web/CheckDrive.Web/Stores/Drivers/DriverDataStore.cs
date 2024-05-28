@@ -14,73 +14,71 @@ namespace CheckDrive.Web.Stores.Drivers
             _api = apiClient;
         }
 
-        public async Task<GetDriverResponse> GetDrivers()
+        public async Task<GetDriverResponse> GetDriversAsync()
         {
-            var response = _api.Get("drivers?");
+            var response = await _api.GetAsync("drivers");
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Could not fetch drivers.");
             }
 
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<GetDriverResponse>(json);
 
             return result;
         }
 
-        public async Task<Driver> GetDriver(int id)
+        public async Task<Driver> GetDriverAsync(int id)
         {
-            var response = _api.Get($"drivers/{id}");
+            var response = await _api.GetAsync($"drivers/{id}");
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Could not fetch drivers with id: {id}.");
+                throw new Exception($"Could not fetch driver with id: {id}.");
             }
 
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<Driver>(json);
 
             return result;
         }
 
-        public async Task<Driver> CreateDriver(Driver driver)
+        public async Task<Driver> CreateDriverAsync(Driver driver)
         {
             var json = JsonConvert.SerializeObject(driver);
-            var response = _api.Post("drivers", json);
+            var response = await _api.PostAsync("drivers", json);
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Error creating drivers.");
+                throw new Exception("Error creating driver.");
             }
 
-            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
+            var jsonResponse = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Driver>(jsonResponse);
         }
 
-        public async Task<Driver> UpdateDriver(int id, Driver driver)
+        public async Task<Driver> UpdateDriverAsync(int id, Driver driver)
         {
             var json = JsonConvert.SerializeObject(driver);
-            var response = _api.Put($"drivers/{driver.Id}", json);
+            var response = await _api.PutAsync($"drivers/{driver.Id}", json);
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Error updating drivers.");
+                throw new Exception("Error updating driver.");
             }
 
-            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
+            var jsonResponse = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Driver>(jsonResponse);
         }
 
-        public async Task DeleteDriver(int id)
+        public async Task DeleteDriverAsync(int id)
         {
-            var response = _api.Delete($"drivers/{id}");
+            var response = await _api.DeleteAsync($"drivers/{id}");
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Could not delete drivers with id: {id}.");
+                throw new Exception($"Could not delete driver with id: {id}.");
             }
         }
     }

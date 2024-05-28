@@ -1,13 +1,14 @@
 ﻿using CheckDrive.Web.Models;
+using CheckDrive.Web.Responses;
 
 namespace CheckDrive.Web.Stores.MechanicAcceptances
 {
     public interface IMechanicAcceptanceDataStore
     {
-        Task<List<MechanicAcceptance>> GetMechanicAcceptances();
-        Task<MechanicAcceptance> GetMechanicAcceptance(int id);
-        Task<MechanicAcceptance> CreateMechanicAcceptance(MechanicAcceptance mechanicAcceptance);
-        Task<MechanicAcceptance> UpdateMechanicAcceptance(int id, MechanicAcceptance mechanicAcceptance);
-        Task DeleteMechanicAcceptance(int id);
+        Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync();
+        Task<MechanicAcceptance> GetMechanicAcceptanceAsync(int id);
+        Task<MechanicAcceptance> CreateMechanicAcceptanceAsync(MechanicAcceptance mechanicAcceptance);
+        Task<MechanicAcceptance> UpdateMechanicAcceptanceAsync(int id, MechanicAcceptance mechanicAcceptance);
+        Task DeleteMechanicAcceptanceAsync(int id);
     }
 }

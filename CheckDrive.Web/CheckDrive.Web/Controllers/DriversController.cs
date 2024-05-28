@@ -12,6 +12,8 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var accounts = await _accountDataStore.GetAccountsAsync();
+            var roles = await _roleDataStore.GetRoles();
             var drivers = await _driverDataStore.GetDrivers();
 
             ViewBag.Drivers = drivers;
@@ -20,7 +22,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var driver = await _driverDataStore.GetDriver(id);
+            var driver = await _driverDataStore.GetDriverAsync(id);
             if (driver == null)
             {
                 return NotFound();
@@ -39,7 +41,7 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _driverDataStore.CreateDriver(driver);
+                await _driverDataStore.CreateDriverAsync(driver);
                 return RedirectToAction(nameof(Index));
             }
             return View(driver);
@@ -47,7 +49,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var driver = await _driverDataStore.GetDriver(id);
+            var driver = await _driverDataStore.GetDriverAsync(id);
             if (driver == null)
             {
                 return NotFound();
@@ -68,7 +70,7 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    await _driverDataStore.UpdateDriver(id,driver);
+                    await _driverDataStore.UpdateDriverAsync(id,driver);
                 }
                 catch (Exception)
                 {
@@ -88,7 +90,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var driver = await _driverDataStore.GetDriver(id);
+            var driver = await _driverDataStore.GetDriverAsync(id);
             if (driver == null)
             {
                 return NotFound();
@@ -100,13 +102,13 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _driverDataStore.DeleteDriver(id);
+            await _driverDataStore.DeleteDriverAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> DriverExists(int id)
         {
-            var driver = await _driverDataStore.GetDriver(id);
+            var driver = await _driverDataStore.GetDriverAsync(id);
             return driver != null;
         }
     }

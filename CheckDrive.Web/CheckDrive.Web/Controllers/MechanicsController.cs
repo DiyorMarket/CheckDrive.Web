@@ -15,13 +15,13 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var mechanics = await _mechanicDataStore.GetMechanics();
+            var mechanics = await _mechanicDataStore.GetMechanicsAsync();
             return View(mechanics);
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            var mechanic = await _mechanicDataStore.GetMechanic(id);
+            var mechanic = await _mechanicDataStore.GetMechanicAsync(id);
             if (mechanic == null)
             {
                 return NotFound();
@@ -40,7 +40,7 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _mechanicDataStore.CreateMechanic(mechanic);
+                await _mechanicDataStore.CreateMechanicAsync(mechanic);
                 return RedirectToAction(nameof(Index));
             }
             return View(mechanic);
@@ -48,7 +48,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var mechanic = await _mechanicDataStore.GetMechanic(id);
+            var mechanic = await _mechanicDataStore.GetMechanicAsync(id);
             if (mechanic == null)
             {
                 return NotFound();
@@ -69,7 +69,7 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    await _mechanicDataStore.UpdateMechanic(id, mechanic);
+                    await _mechanicDataStore.UpdateMechanicAsync(id, mechanic);
                 }
                 catch (Exception)
                 {
@@ -89,7 +89,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var mechanic = await _mechanicDataStore.GetMechanic(id);
+            var mechanic = await _mechanicDataStore.GetMechanicAsync(id);
             if (mechanic == null)
             {
                 return NotFound();
@@ -101,13 +101,13 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _mechanicDataStore.DeleteMechanic(id);
+            await _mechanicDataStore.DeleteMechanicAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> MechanicExists(int id)
         {
-            var mechanic = await _mechanicDataStore.GetMechanic(id);
+            var mechanic = await _mechanicDataStore.GetMechanicAsync(id);
             return mechanic != null;
         }
     }

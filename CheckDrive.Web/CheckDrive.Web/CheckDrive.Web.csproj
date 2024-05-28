@@ -27,6 +27,7 @@
     <Compile Include="Controllers\OperatorReviewsController.cs" />
     <Compile Include="Controllers\OperatorsController.cs" />
     <Compile Include="Controllers\TechniciansController.cs" />
+
     <PackageReference Include="CheckDrive.ApiContracts" Version="1.1.2" />
     <PackageReference Include="CheckDrive.DTOs" Version="1.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />

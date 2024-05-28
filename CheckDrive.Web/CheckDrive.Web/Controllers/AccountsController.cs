@@ -19,6 +19,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(string? searchString, int? roleId, DateTime? birthDate)
         {
+            var accounts = await _accountDataStore.GetAccountsAsync();
             var accounts = await _accountDataStore.GetAccounts(searchString, roleId, birthDate);
 
             var roles = await GETRoles();
@@ -47,7 +48,7 @@ namespace CheckDrive.Web.Controllers
         }
         public async Task<IActionResult> Details(int id)
         {
-            var account = await _accountDataStore.GetAccount(id);
+            var account = await _accountDataStore.GetAccountAsync(id);
             if (account == null)
             {
                 return NotFound();
@@ -67,7 +68,7 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _accountDataStore.CreateAccount(account);
+                await _accountDataStore.CreateAccountAsync(account);
                 return RedirectToAction(nameof(Index));
             }
             return View(account);
@@ -75,7 +76,12 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var account = await _accountDataStore.GetAccount(id);
+            var account = await _accountDataStore.GetAccountAsync(id);
+            if (account == null)
+            {
+                return NotFound();
+            }
+
             return View(account);
         }
 
@@ -88,7 +94,7 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    await _accountDataStore.UpdateAccount(id, account);
+                    await _accountDataStore.UpdateAccountAsync(id, account);
                 }
                 catch (Exception)
                 {
@@ -108,7 +114,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var account = await _accountDataStore.GetAccount(id);
+            var account = await _accountDataStore.GetAccountAsync(id);
             if (account == null)
             {
                 return NotFound();
@@ -120,13 +126,13 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _accountDataStore.DeleteAccount(id);
+            await _accountDataStore.DeleteAccountAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> AccountExists(int id)
         {
-            var account = await _accountDataStore.GetAccount(id);
+            var account = await _accountDataStore.GetAccountAsync(id);
             return account != null;
         }
         private async Task<List<RoleDto>> GETRoles()

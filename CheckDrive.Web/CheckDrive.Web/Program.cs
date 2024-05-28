@@ -1,9 +1,6 @@
 using CheckDrive.Web.Constants;
-using CheckDrive.Web.Exceptions;
 using CheckDrive.Web.Extensions;
 using CheckDrive.Web.Filters;
-using Microsoft.Extensions.Configuration;
-using System.Reflection.Metadata;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new ApiExceptionFilter()));
 builder.Services.ConfigureDataStores();
-builder.Services.ConfigureServices();  
+builder.Services.ConfigureServices();
 builder.Services.AddHttpContextAccessor();
 
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(Configurations.SynfusionLicenseKey);

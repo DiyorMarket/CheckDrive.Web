@@ -2,7 +2,6 @@
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
-using System.Text;
 
 namespace CheckDrive.Web.Stores.Accounts
 {
@@ -15,7 +14,8 @@ namespace CheckDrive.Web.Stores.Accounts
             _api = apiClient;
         }
 
-        public async Task<GetAccountResponse> GetAccounts(string? searchString, int? roleId, DateTime? birthDate)
+    
+        public async Task<GetAccountResponse> GetAccountsAsync(string? searchString, int? roleId, DateTime? birthDate)
         {
             StringBuilder query = new("");
 
@@ -39,34 +39,52 @@ namespace CheckDrive.Web.Stores.Accounts
                 throw new Exception("Could not fetch accounts.");
             }
 
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<GetAccountResponse>(json);
 
             return result;
         }
 
-        public async Task<AccountDto> GetAccount(int id)
+        public async Task<Account> GetAccountAsync(int id)
+
         {
-            var response = _api.Get($"accounts/{id}");
+            var response = await _api.GetAsync($"accounts/{id}");
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Could not fetch accounts with id: {id}.");
+                throw new Exception($"Could not fetch account with id: {id}.");
             }
 
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<AccountDto>(json);
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<Account>(json);
 
             return result;
         }
-        public async Task<AccountDto> CreateAccount(AccountForCreateDto account)
+
+        public async Task<AccountDto> CreateAccountAsync(AccountForCreateDto account)
         {
             var json = JsonConvert.SerializeObject(account);
-            var response = _api.Post("accounts", json);
+            var response = await _api.PostAsync("accounts", json);
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Error creating accounts.");
+                throw new Exception("Error creating account.");
+            }
+
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Account>(jsonResponse);
+        }
+
+    
+
+        public async Task<AccountDto> UpdateAccountAsync(int id, AccountForUpdateDto account)
+        {
+            var json = JsonConvert.SerializeObject(account);
+            var response = await _api.PutAsync($"accounts/{account.Id}", json);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error updating account.");
             }
 
             var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
@@ -74,24 +92,9 @@ namespace CheckDrive.Web.Stores.Accounts
             return JsonConvert.DeserializeObject<AccountDto>(jsonResponse);
         }
 
-        public async Task<AccountDto> UpdateAccount(int id, AccountForUpdateDto account)
+        public async Task DeleteAccountAsync(int id)
         {
-            var json = JsonConvert.SerializeObject(account);
-            var response = _api.Put($"accounts/{account.Id}", json);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Error updating accounts.");
-            }
-
-            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
-            return JsonConvert.DeserializeObject<AccountDto>(jsonResponse);
-        }
-
-        public async Task DeleteAccount(int id)
-        {
-            var response = _api.Delete($"accounts/{id}");
+            var response = await _api.DeleteAsync($"accounts/{id}");
 
             if (!response.IsSuccessStatusCode)
             {

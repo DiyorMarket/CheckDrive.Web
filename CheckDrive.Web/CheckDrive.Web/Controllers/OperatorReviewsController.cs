@@ -10,6 +10,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
+
             var operatorReviews = await _operatorReviewDataStore.GetOperatorsReviews();
 
             if (operatorReviews is null)
@@ -19,6 +20,7 @@ namespace CheckDrive.Web.Controllers
            
             ViewBag.OperatorsReview = operatorReviews.Data;
             return View();
+
         }
 
         public async Task<IActionResult> Details(int id)
