@@ -17,9 +17,9 @@ namespace CheckDrive.Web.Controllers
             _accountDataStore = accountDataStore;
         }
 
-        public async Task<IActionResult> Index(string? searchString, int? roleId, DateTime? birthDate)
+        public async Task<IActionResult> Index(string? searchString, int? roleId, DateTime? birthDate, int? pageNumber)
         {
-            var accounts = await _accountDataStore.GetAccountsAsync(searchString, roleId, birthDate);
+            var accounts = await _accountDataStore.GetAccountsAsync(searchString, roleId, birthDate, pageNumber);
 
             var roles = await GETRoles();
 
@@ -36,12 +36,18 @@ namespace CheckDrive.Web.Controllers
             }
 
             ViewBag.Accounts = accounts.Data;
-            ViewBag.SearchString = searchString;
-
             ViewBag.Roles = roles;
+
+            ViewBag.PageSize = accounts.PageSize;
+            ViewBag.PageCount = accounts.TotalPages;
+            ViewBag.TotalCount = accounts.TotalCount;
+            ViewBag.CurrentPage = accounts.PageNumber;
+            ViewBag.HasPreviousPage = accounts.HasPreviousPage;
+            ViewBag.HasNextPage = accounts.HasNextPage;
+
+            ViewBag.SearchString = searchString;
             ViewBag.CurrentRoleId = roleId;
             ViewBag.SelectedRole = selectedRole;
-
 
             return View();
         }
@@ -86,26 +92,12 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Bithdate,RoleId")] 
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Bithdate,RoleId")]
             AccountForUpdateDto account)
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    await _accountDataStore.UpdateAccountAsync(id, account);
-                }
-                catch (Exception)
-                {
-                    if (!await AccountExists(id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _accountDataStore.UpdateAccountAsync(id, account);
                 return RedirectToAction(nameof(Index));
             }
             return View(account);

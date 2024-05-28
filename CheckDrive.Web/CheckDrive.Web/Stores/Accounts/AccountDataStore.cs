@@ -15,8 +15,8 @@ namespace CheckDrive.Web.Stores.Accounts
             _api = apiClient;
         }
 
-    
-        public async Task<GetAccountResponse> GetAccountsAsync(string? searchString, int? roleId, DateTime? birthDate)
+
+        public async Task<GetAccountResponse> GetAccountsAsync(string? searchString, int? roleId, DateTime? birthDate, int? pageNumber)
         {
             StringBuilder query = new("");
 
@@ -28,9 +28,13 @@ namespace CheckDrive.Web.Stores.Accounts
             {
                 query.Append($"searchString={searchString}&");
             }
-            if (roleId != 0)
+            if (roleId is not null)
             {
                 query.Append($"roleId={roleId}&");
+            }
+            if (pageNumber != null)
+            {
+                query.Append($"pageNumber={pageNumber}");
             }
 
             var response = await _api.GetAsync("accounts?" + query.ToString());
@@ -77,7 +81,7 @@ namespace CheckDrive.Web.Stores.Accounts
             return JsonConvert.DeserializeObject<AccountDto>(jsonResponse);
         }
 
-    
+
 
         public async Task<AccountDto> UpdateAccountAsync(int id, AccountForUpdateDto account)
         {
