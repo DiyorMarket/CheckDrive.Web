@@ -2,7 +2,7 @@
 
 namespace CheckDrive.Web.Responses
 {
-    public class GetOperatorReviewResponse : GetBaseResponse<OperatorReview>
+    public class GetOperatorReviewResponse : GetBaseResponse<ApiContracts.OperatorReview.OperatorReviewDto>
     {
     }
 }

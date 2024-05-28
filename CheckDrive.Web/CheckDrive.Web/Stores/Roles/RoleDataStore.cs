@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Role;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -29,7 +30,7 @@ namespace CheckDrive.Web.Stores.Roles
             return result;
         }
 
-        public async Task<Role> GetRole(int id)
+        public async Task<RoleDto> GetRole(int id)
         {
             var response = await _api.GetAsync($"roles/{id}");
 
@@ -38,13 +39,13 @@ namespace CheckDrive.Web.Stores.Roles
                 throw new Exception($"Could not fetch roles with id: {id}.");
             }
 
-            var json = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<Role>(json);
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<RoleDto>(json);
 
             return result;
         }
 
-        public async Task<Role> CreateRole(Role role)
+        public async Task<Role> CreateRole(RoleForCreateDto role)
         {
             var json = JsonConvert.SerializeObject(role);
             var response = await _api.PostAsync("roles", json);
@@ -59,7 +60,7 @@ namespace CheckDrive.Web.Stores.Roles
             return JsonConvert.DeserializeObject<Role>(jsonResponse);
         }
 
-        public async Task<Role> UpdateRole(int id, Role role)
+        public async Task<RoleDto> UpdateRole(int id, RoleForUpdateDto role)
         {
             var json = JsonConvert.SerializeObject(role);
             var response = await _api.PutAsync($"roles/{role.Id}", json);
@@ -71,7 +72,8 @@ namespace CheckDrive.Web.Stores.Roles
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<Role>(jsonResponse);
+            return JsonConvert.DeserializeObject<RoleDto>(jsonResponse);
+
         }
 
         public async Task DeleteRole(int id)
@@ -82,6 +84,21 @@ namespace CheckDrive.Web.Stores.Roles
             {
                 throw new Exception($"Could not delete roles with id: {id}.");
             }
+        }
+
+        Task<RoleDto> IRoleDataStore.CreateRole(RoleForCreateDto role)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CreateRole(DTOs.Role.RoleForCreateDto role)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateRole(int id, RoleForCreateDto role)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -13,21 +13,22 @@
 
     menuItems.Add(new
     {
-        text = "Ishchilar va avtomobillar",
+        text = "Ishchilar",
         separator = true,
     });
 
     menuItems.Add(new
     {
         text = "Ishchilar",
-        url = "/accounts",
-        iconCss = "fa-solid fa-user-group"
+        iconCss = "fas fa-person",
+        url = "/accounts"
     });
+
     menuItems.Add(new
     {
-        text = "Avtomobillar",
+        text = "Haydovchilar",
         iconCss = "fas fa-car",
-        url = "/drivers"
+        url = "/cars"
     });
 
     menuItems.Add(new
@@ -39,7 +40,7 @@
     {
         text = "Doctor Ko'riklari",
         iconCss = "fas fa-user-doctor",
-        url = "/drivers"
+        url = "/doctorreviews"
     });
     menuItems.Add(new
     {
@@ -55,15 +56,34 @@
     });
     menuItems.Add(new
     {
-        text = "Operator xizmatilari",
+        text = "Operatorlar",
         iconCss = "fa-solid fa-user-doctor",
-        url = "/doctors"
+        url = "/OperatorReviews"
     });
     menuItems.Add(new
     {
-        text = "Despicherlar Xizmati",
+        text = "Mexaniklar",
         iconCss = "fa-solid fa-user-gear",
         url = "/mechanichandovers"
+
+    });
+    menuItems.Add(new
+    {
+        text = "Dispetcherlar",
+        iconCss = "fa-solid fa-person-chalkboard",
+        url = "/dispatchers"
+    });
+
+    menuItems.Add(new
+    {
+        text = "Alohida oynalar",
+        separator = true,
+    });
+    menuItems.Add(new
+    {
+        text = "Shifokor oynasi",
+        iconCss = "fa-solid fa-person-chalkboard",
+        url = "/PersonalDoctorReviews"
     });
 }
 

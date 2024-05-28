@@ -1,0 +1,24 @@
+﻿@model CheckDrive.ApiContracts.OperatorReview.OperatorReviewDto
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}   
+
+<h1>Index</h1>
+
+<div class="row">
+    <div class="col-12">
+        <ejs-grid id="operatorReview-list" dataSource="@ViewBag.OperatorsReview" gridLines="Vertical" allowSorting="true">
+            <e-grid-columns>
+                <e-grid-column headerText="Id" field="Id" typeof="text"></e-grid-column>
+                <e-grid-column headerText="OilAmount" field="OilAmount" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Comments" field="Comments" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Status" field="Status" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Date" field="Date" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Operator name" field="OperatorName" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Driver name" field="DriverName" typeof="text" class="customcss"></e-grid-column>
+            </e-grid-columns>
+        </ejs-grid>
+    </div>
+</div>

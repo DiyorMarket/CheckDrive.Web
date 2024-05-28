@@ -1,4 +1,4 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Account;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -14,9 +14,25 @@ namespace CheckDrive.Web.Stores.Accounts
             _api = apiClient;
         }
 
-        public async Task<GetAccountResponse> GetAccountsAsync()
+    
+        public async Task<GetAccountResponse> GetAccountsAsync(string? searchString, int? roleId, DateTime? birthDate)
         {
-            var response = await _api.GetAsync("accounts");
+            StringBuilder query = new("");
+
+            if (birthDate is not null)
+            {
+                query.Append($"birthDate={birthDate.Value.ToString("MM/dd/yyyy")}&");
+            }
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query.Append($"searchString={searchString}&");
+            }
+            if (roleId != 0)
+            {
+                query.Append($"roleId={roleId}&");
+            }
+
+            var response = _api.Get("accounts?" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {
@@ -30,6 +46,7 @@ namespace CheckDrive.Web.Stores.Accounts
         }
 
         public async Task<Account> GetAccountAsync(int id)
+
         {
             var response = await _api.GetAsync($"accounts/{id}");
 
@@ -44,7 +61,7 @@ namespace CheckDrive.Web.Stores.Accounts
             return result;
         }
 
-        public async Task<Account> CreateAccountAsync(Account account)
+        public async Task<AccountDto> CreateAccountAsync(AccountForCreateDto account)
         {
             var json = JsonConvert.SerializeObject(account);
             var response = await _api.PostAsync("accounts", json);
@@ -58,7 +75,9 @@ namespace CheckDrive.Web.Stores.Accounts
             return JsonConvert.DeserializeObject<Account>(jsonResponse);
         }
 
-        public async Task<Account> UpdateAccountAsync(int id, Account account)
+    
+
+        public async Task<AccountDto> UpdateAccountAsync(int id, AccountForUpdateDto account)
         {
             var json = JsonConvert.SerializeObject(account);
             var response = await _api.PutAsync($"accounts/{account.Id}", json);
@@ -68,8 +87,9 @@ namespace CheckDrive.Web.Stores.Accounts
                 throw new Exception("Error updating account.");
             }
 
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Account>(jsonResponse);
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<AccountDto>(jsonResponse);
         }
 
         public async Task DeleteAccountAsync(int id)

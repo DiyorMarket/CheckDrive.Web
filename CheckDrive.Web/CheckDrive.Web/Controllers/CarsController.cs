@@ -1,4 +1,4 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Car;
 using CheckDrive.Web.Stores.Cars;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +16,9 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var cars = await _carDataStore.GetCars();
-            return View(cars);
+
+            ViewBag.Cars = cars.Data;
+            return View();
         }
 
         public async Task<IActionResult> Details(int id)
@@ -36,7 +38,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Model,Color,Number,MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear")] Car car)
+        public async Task<IActionResult> Create([Bind("Model,Color,Number,MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear")] CarForCreateDto car)
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +60,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Model,Color,Number,MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear")] Car car)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Model,Color,Number,MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear")] CarForUpdateDto car)
         {
             if (id != car.Id)
             {

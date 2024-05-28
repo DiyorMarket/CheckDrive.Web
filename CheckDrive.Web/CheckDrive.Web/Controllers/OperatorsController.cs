@@ -1,22 +1,28 @@
 ﻿using CheckDrive.Web.Models;
+using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Operators;
+using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
+using Syncfusion.EJ2.PivotView;
 
 namespace CheckDrive.Web.Controllers
 {
     public class OperatorsController : Controller
     {
         private readonly IOperatorDataStore _operatorDataStore;
+        private readonly IAccountDataStore _accountDataStore;
+        private readonly IRoleDataStore _roleDataStore;
 
-        public OperatorsController(IOperatorDataStore operatorDataStore)
+        public OperatorsController(IOperatorDataStore operatorDataStore, IAccountDataStore accountDataStore, IRoleDataStore roleDataStore)
         {
             _operatorDataStore = operatorDataStore;
+            _accountDataStore = accountDataStore;
+            _roleDataStore = roleDataStore;
         }
 
         public async Task<IActionResult> Index()
         {
-            var operators = await _operatorDataStore.GetOperators();
-            return View(operators);
+            return View();
         }
 
         public async Task<IActionResult> Details(int id)

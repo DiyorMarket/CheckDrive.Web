@@ -10,7 +10,7 @@
         public string LastName { get; set; }
         public DateTime Bithdate { get; set; }
 
-        public int RoleId { get; set; }
+        public string RoleName { get; set; }
         public Role Role { get; set; }
 
         public virtual ICollection<Dispatcher> Dispatchers { get; set; }

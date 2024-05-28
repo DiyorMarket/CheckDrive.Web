@@ -3,6 +3,7 @@ using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DispatcherReviews;
 using CheckDrive.Web.Stores.Dispatchers;
+using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Doctors;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
@@ -20,16 +21,19 @@ namespace CheckDrive.Web.Extensions
         public static IServiceCollection ConfigureDataStores(this IServiceCollection services)
         {
             services.AddScoped<IAccountDataStore, AccountDataStore>();
-            services.AddScoped<ICarDataStore, MockCarDataStore>();
+            services.AddScoped<ICarDataStore, CarDataStore>();
             services.AddScoped<IDispatcherReviewDataStore, MockDispatcherReviewDataStore>();
             services.AddScoped<IDispatcherDataStore, MockDispatcherDataStore>();
             services.AddScoped<IDoctorDataStore, MockDoctorDataStore>();
+            services.AddScoped<IDoctorReviewDataStore, DoctorReviewDataStore>();
             services.AddScoped<IDriverDataStore, DriverDataStore>();
             services.AddScoped<IMechanicAcceptanceDataStore, MechanicAcceptanceDataStore>();
             services.AddScoped<IMechanicHandoverDataStore, MechanicHandoverDataStore>();
             services.AddScoped<IMechanicDataStore, MechanicDataStore>();
-            services.AddScoped<IOperatorReviewDataStore, MockOperatorReviewDataStore>();
+          
             services.AddScoped<IOperatorDataStore, MockOperatorDataStore>();
+            services.AddScoped<IOperatorReviewDataStore, OperatorReviewDataStore>();
+            services.AddScoped<IOperatorDataStore, OperatorDataStore>();
             services.AddScoped<IRoleDataStore, RoleDataStore>();
             services.AddScoped<ITechnicianDataStore, MockTechnicianDataStore>();
 

@@ -6,37 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
 {
-    public class DriversController : Controller
+    public class DriversController(IDriverDataStore driverDataStore) : Controller
     {
-        private readonly IDriverDataStore _driverDataStore;
-        private readonly IAccountDataStore _accountDataStore;
-        private readonly IRoleDataStore _roleDataStore;
-
-        public DriversController(IDriverDataStore driverDataStore, IAccountDataStore accountDataStore, IRoleDataStore roleDataStore)
-        {
-            _driverDataStore = driverDataStore;
-            _accountDataStore = accountDataStore;
-            _roleDataStore = roleDataStore;
-        }
+        private readonly IDriverDataStore _driverDataStore = driverDataStore;
 
         public async Task<IActionResult> Index()
         {
             var accounts = await _accountDataStore.GetAccountsAsync();
             var roles = await _roleDataStore.GetRoles();
-            var drivers = new List<Account>();
-
-            foreach(var account in accounts.Data.ToList())
-            {
-                var role = roles.Data.ToList().FirstOrDefault(a=>a.Name.ToLower() == "driver");
-
-                if(role.Id == account.RoleId)
-                {
-                    drivers.Add(account);
-                }
-            }
+            var drivers = await _driverDataStore.GetDrivers();
 
             ViewBag.Drivers = drivers;
-
             return View();
         }
 
