@@ -121,11 +121,6 @@ namespace CheckDrive.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> AccountExists(int id)
-        {
-            var account = await _accountDataStore.GetAccountAsync(id);
-            return account != null;
-        }
         private async Task<List<RoleDto>> GETRoles()
         {
             var roleResponse = await _roleStore.GetRoles();
