@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.MechanicHandovers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,14 +16,34 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
+
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
+            var mechanicHandovers = response.Data.Select(r => new
+            {
+                r.Id,
+                IsHanded = r.IsHanded ? "Qabul qilindi" : "Rad etildi",
+                r.Comments,
+                Status = ((StatusForDto)r.Status) switch
+                {
+                    StatusForDto.Pending => "Pending",
+                    StatusForDto.Completed => "Completed",
+                    StatusForDto.Rejected => "Rejected",
+                    StatusForDto.Unassigned => "Unassigned",
+                    _ => "Unknown Status"
+                },
+                r.Date,
+                r.Distance,
+                r.DriverName,
+                r.MechanicName,
+                r.CarName
+            }).ToList();
 
             if (mechanicHandovers == null)
             {
                 return BadRequest();
             }
 
-            ViewBag.MechanicHandovers = mechanicHandovers.Data;
+            ViewBag.MechanicHandovers = mechanicHandovers;
 
             return View();
         }
