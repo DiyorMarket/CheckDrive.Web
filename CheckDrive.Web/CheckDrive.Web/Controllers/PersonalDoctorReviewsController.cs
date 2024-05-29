@@ -1,22 +1,50 @@
 ﻿using CheckDrive.ApiContracts.DoctorReview;
 using CheckDrive.Web.Stores.DoctorReviews;
+using CheckDrive.Web.Stores.Doctors;
+using CheckDrive.Web.Stores.Drivers;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CheckDrive.Web.Controllers
 {
-    public class PersonalDoctorReviewsController(IDoctorReviewDataStore doctorReviewDataStore) : Controller
+    public class PersonalDoctorReviewsController : Controller
     {
-        private readonly IDoctorReviewDataStore _doctorReviewDataStore = doctorReviewDataStore;
+        private readonly IDoctorReviewDataStore _doctorReviewDataStore;
+        private readonly IDoctorDataStore _doctorDataStore;
+        private readonly IDriverDataStore _driverDataStore;
+
+        public PersonalDoctorReviewsController(IDoctorReviewDataStore doctorReviewDataStore, IDoctorDataStore doctorDataStore, IDriverDataStore driverDataStore)
+        {
+            _doctorReviewDataStore = doctorReviewDataStore;
+            _doctorDataStore = doctorDataStore;
+            _driverDataStore = driverDataStore;
+        }
+
+        public IActionResult HelloPage()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> Index()
         {
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviews();
+            var doctors = await _doctorDataStore.GetDoctors();
+            var drivers = await _driverDataStore.GetDrivers();
 
-            if (doctorReviews is null)
+            var response = await _doctorReviewDataStore.GetDoctorReviews();
+            var doctorReviews = response.Data.Select(r => new
             {
-                return BadRequest();
-            }
+                r.Id,
+                r.DriverName,
+                r.DoctorName,
+                IsHealthy = r.IsHealthy ? "Sog`lom" : "Kasal",
+                r.Comments
+            }).ToList();
 
-            ViewBag.DoctorsReview = doctorReviews.Data;
+            ViewBag.Drivers = drivers;
+            ViewBag.Doctors = doctors;
+            ViewBag.DoctorsReview = doctorReviews;
+
             return View();
         }
 
