@@ -3,7 +3,6 @@ using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
 using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CheckDrive.Web.Stores.MechanicAcceptances
 {

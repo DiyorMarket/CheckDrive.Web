@@ -1,5 +1,6 @@
 ﻿using CheckDrive.ApiContracts;
 using CheckDrive.Web.Models;
+using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.MechanicAcceptances;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +9,12 @@ namespace CheckDrive.Web.Controllers
     public class MechanicAcceptancesController : Controller
     {
         private readonly IMechanicAcceptanceDataStore _mechanicAcceptanceDataStore;
+        private readonly ICarDataStore _carDataStore;
 
-        public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore)
+        public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, ICarDataStore carDataStore)
         {
             _mechanicAcceptanceDataStore = mechanicAcceptanceDataStore;
+            _carDataStore = carDataStore;
         }
 
         public async Task<IActionResult> Index(int? pageNumber)
@@ -43,7 +46,8 @@ namespace CheckDrive.Web.Controllers
                 r.Distance,
                 r.DriverName,
                 r.MechanicName,
-                r.CarName
+                r.CarName,
+                r.CarId
             }).ToList();
 
 
@@ -51,16 +55,6 @@ namespace CheckDrive.Web.Controllers
 
             return View();
         }
-        public async Task<IActionResult> Details(int id)
-        {
-            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
-            if (mechanicAcceptance == null)
-            {
-                return NotFound();
-            }
-            return View(mechanicAcceptance);
-        }
-
         public IActionResult Create()
         {
             return View();
