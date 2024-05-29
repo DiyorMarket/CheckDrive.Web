@@ -2,6 +2,8 @@
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
+using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CheckDrive.Web.Stores.MechanicHandovers
 {
@@ -13,9 +15,15 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
         {
             _api = apiClient;
         }
-        public async Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync()
+        public async Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync(int? pageNumber)
         {
-            var response = await _api.GetAsync("mechanics/handovers");
+            StringBuilder query = new("");
+
+            if (pageNumber != null)
+            {
+                query.Append($"pageNumber={pageNumber}");
+            }
+            var response = await _api.GetAsync("mechanics/handovers?" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {

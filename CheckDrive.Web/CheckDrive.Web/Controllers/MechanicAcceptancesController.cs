@@ -1,5 +1,6 @@
 ﻿using CheckDrive.ApiContracts;
 using CheckDrive.Web.Models;
+using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.MechanicAcceptances;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,16 +9,26 @@ namespace CheckDrive.Web.Controllers
     public class MechanicAcceptancesController : Controller
     {
         private readonly IMechanicAcceptanceDataStore _mechanicAcceptanceDataStore;
+        private readonly ICarDataStore _carDataStore;
 
-        public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore)
+        public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, ICarDataStore carDataStore)
         {
             _mechanicAcceptanceDataStore = mechanicAcceptanceDataStore;
+            _carDataStore = carDataStore;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNumber)
         {
 
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber);
+
+            ViewBag.PageSize = response.PageSize;
+            ViewBag.PageCount = response.TotalPages;
+            ViewBag.TotalCount = response.TotalCount;
+            ViewBag.CurrentPage = response.PageNumber;
+            ViewBag.HasPreviousPage = response.HasPreviousPage;
+            ViewBag.HasNextPage = response.HasNextPage;
+
             var mechanicAcceptances = response.Data.Select(r => new
             {
                 r.Id,
@@ -35,29 +46,15 @@ namespace CheckDrive.Web.Controllers
                 r.Distance,
                 r.DriverName,
                 r.MechanicName,
-                r.CarName
+                r.CarName,
+                r.CarId
             }).ToList();
 
-
-            if (mechanicAcceptances == null)
-            {
-                return BadRequest();
-            }
 
             ViewBag.MechanicAcceptances = mechanicAcceptances;
 
             return View();
         }
-        public async Task<IActionResult> Details(int id)
-        {
-            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
-            if (mechanicAcceptance == null)
-            {
-                return NotFound();
-            }
-            return View(mechanicAcceptance);
-        }
-
         public IActionResult Create()
         {
             return View();

@@ -14,10 +14,18 @@ namespace CheckDrive.Web.Controllers
             _mechanicHandoverDataStore = mechanicHandoverDataStore;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNumber)
         {
 
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber);
+
+            ViewBag.PageSize = response.PageSize;
+            ViewBag.PageCount = response.TotalPages;
+            ViewBag.TotalCount = response.TotalCount;
+            ViewBag.CurrentPage = response.PageNumber;
+            ViewBag.HasPreviousPage = response.HasPreviousPage;
+            ViewBag.HasNextPage = response.HasNextPage;
+
             var mechanicHandovers = response.Data.Select(r => new
             {
                 r.Id,
@@ -35,7 +43,8 @@ namespace CheckDrive.Web.Controllers
                 r.Distance,
                 r.DriverName,
                 r.MechanicName,
-                r.CarName
+                r.CarName,
+                r.CarId
             }).ToList();
 
             if (mechanicHandovers == null)
