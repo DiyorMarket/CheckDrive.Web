@@ -41,6 +41,15 @@ namespace CheckDrive.Web.Controllers
             return PartialView("_CarDetailsForMechanicAcceptance", car);
         }
 
+        public async Task<IActionResult> DetailsForMechanicHandover(int id)
+        {
+            var car = await _carDataStore.GetCar(id);
+            if (car == null)
+            {
+                return NotFound();
+            }
+            return PartialView("_CarDetailsForMechanicHandover", car);
+        }
 
         public IActionResult Create()
         {

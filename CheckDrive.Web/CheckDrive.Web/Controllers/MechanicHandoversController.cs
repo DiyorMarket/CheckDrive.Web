@@ -43,7 +43,8 @@ namespace CheckDrive.Web.Controllers
                 r.Distance,
                 r.DriverName,
                 r.MechanicName,
-                r.CarName
+                r.CarName,
+                r.CarId
             }).ToList();
 
             if (mechanicHandovers == null)

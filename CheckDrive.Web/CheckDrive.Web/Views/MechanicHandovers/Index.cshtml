@@ -12,7 +12,7 @@
                 <e-grid-column headerText="Id" field="Id" type="number"></e-grid-column>
                 <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" type="string"></e-grid-column>
                 <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string"></e-grid-column>
-                <e-grid-column headerText="Mashina" field="CarName" type="string"></e-grid-column>
+                <e-grid-column headerText="Mashina" field="CarName" template="#template" type="string"></e-grid-column>
                 <e-grid-column headerText="Boshlang'ich' masofa" field="Distance" type="number"></e-grid-column>
                 <e-grid-column headerText="Topshirish" field="IsHanded" type="string"> </e-grid-column>
                 <e-grid-column headerText="Izoh" field="Comments" type="string"></e-grid-column>
@@ -54,7 +54,14 @@
             }
         </ul>
     </nav>
+
     <div class="p-2">
         <p class="h6 mb-0">@ViewBag.CurrentPage of @ViewBag.PageCount pages (@ViewBag.TotalCount items)</p>
     </div>
 </div>
+
+<script id="template" type="text/x-template">
+    <div>
+        <a href="/Cars/DetailsForMechanicHandover/${CarId}">${CarName}</a>
+    </div>
+</script>
