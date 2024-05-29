@@ -27,7 +27,6 @@ namespace CheckDrive.Web.Controllers
             ViewBag.CurrentPage = cars.PageNumber;
             ViewBag.HasPreviousPage = cars.HasPreviousPage;
             ViewBag.HasNextPage = cars.HasNextPage;
-
             return View();
         }
 
