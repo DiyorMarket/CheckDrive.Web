@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Account;
+using CheckDrive.ApiContracts.Driver;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -29,7 +30,7 @@ namespace CheckDrive.Web.Stores.Drivers
             return result;
         }
 
-        public async Task<Driver> GetDriverAsync(int id)
+        public async Task<DriverDto> GetDriverAsync(int id)
         {
             var response = await _api.GetAsync($"drivers/{id}");
 
@@ -39,14 +40,14 @@ namespace CheckDrive.Web.Stores.Drivers
             }
 
             var json = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<Driver>(json);
+            var result = JsonConvert.DeserializeObject<DriverDto>(json);
 
             return result;
         }
 
-        public async Task<Driver> CreateDriverAsync(Driver driver)
+        public async Task<DriverDto> CreateDriverAsync(DriverForCreateDto driverForCreate)
         {
-            var json = JsonConvert.SerializeObject(driver);
+            var json = JsonConvert.SerializeObject(driverForCreate);
             var response = await _api.PostAsync("drivers", json);
 
             if (!response.IsSuccessStatusCode)
@@ -55,13 +56,13 @@ namespace CheckDrive.Web.Stores.Drivers
             }
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Driver>(jsonResponse);
+            return JsonConvert.DeserializeObject<DriverDto>(jsonResponse);
         }
 
-        public async Task<Driver> UpdateDriverAsync(int id, Driver driver)
+        public async Task<DriverDto> UpdateDriverAsync(int id, AccountForUpdateDto driverForUpdate)
         {
-            var json = JsonConvert.SerializeObject(driver);
-            var response = await _api.PutAsync($"drivers/{driver.Id}", json);
+            var json = JsonConvert.SerializeObject(driverForUpdate);
+            var response = await _api.PutAsync($"drivers/{driverForUpdate.Id}", json);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -69,7 +70,7 @@ namespace CheckDrive.Web.Stores.Drivers
             }
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Driver>(jsonResponse);
+            return JsonConvert.DeserializeObject<DriverDto>(jsonResponse);
         }
 
         public async Task DeleteDriverAsync(int id)

@@ -1,8 +1,8 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Doctor;
 
 namespace CheckDrive.Web.Responses
 {
-    public class GetDoctorResponse : GetBaseResponse<Doctor>
+    public class GetDoctorResponse : GetBaseResponse<DoctorDto>
     {
     }
 }
