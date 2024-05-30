@@ -17,21 +17,28 @@
     <div class="col-12 text-center">
         <ejs-grid id="doctorReviews-list" dataSource="@ViewBag.DoctorsReview" gridLines="Vertical" allowSorting="true" style="margin: 0 auto;">
             <e-grid-columns>
-                <e-grid-column headerText="Haydovshi F.I." field="DriverName" textAlign="Center" typeof="text" class="customcss"></e-grid-column>
-                <e-grid-column headerText="Shifokor F.I." field="DoctorName" textAlign="Center" typeof="text" class="customcss"></e-grid-column>
-                <e-grid-column headerText="Sog`lig`i" field="IsHealthy" textAlign="Center"></e-grid-column>
-                <e-grid-column headerText="Sabab" field="Comments" textAlign="Center" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Haydovshi F.I." field="DriverName" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
+                <e-grid-column headerText="Shifokor F.I." field="DoctorName" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
+                <e-grid-column headerText="Sog`lig`i" field="IsHealthy" textAlign="Center" width="20%"></e-grid-column>
+                <e-grid-column headerText="Sabab" field="Comments" textAlign="Center" typeof="text" class="customcss" width="40%"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var table = document.getElementById("doctorReviews-list");
+<style>
+    #doctorReviews-list {
+        width: 80% !important;
+    }
 
-        var newWidth = "80%";
-         
-        table.style.width = newWidth;
-    });
-</script>
+        #doctorReviews-list .e-gridheader,
+        #doctorReviews-list .e-gridcontent {
+            width: 100% !important;
+        }
+
+            #doctorReviews-list .e-gridheader th,
+            #doctorReviews-list .e-gridcontent td {
+                width: auto !important;
+                white-space: nowrap;
+            }
+</style>

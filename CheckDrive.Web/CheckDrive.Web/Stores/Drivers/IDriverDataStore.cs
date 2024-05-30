@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Account;
+using CheckDrive.ApiContracts.Driver;
 using CheckDrive.Web.Responses;
 
 namespace CheckDrive.Web.Stores.Drivers
@@ -6,9 +7,9 @@ namespace CheckDrive.Web.Stores.Drivers
     public interface IDriverDataStore
     {
         Task<GetDriverResponse> GetDriversAsync();
-        Task<Driver> GetDriverAsync(int id);
-        Task<Driver> CreateDriverAsync(Driver driver);
-        Task<Driver> UpdateDriverAsync(int id, Driver driver);
+        Task<DriverDto> GetDriverAsync(int id);
+        Task<DriverDto> CreateDriverAsync(DriverForCreateDto driverForCreate);
+        Task<DriverDto> UpdateDriverAsync(int id, AccountForUpdateDto driverForUpdate);
         Task DeleteDriverAsync(int id);
     }
 }

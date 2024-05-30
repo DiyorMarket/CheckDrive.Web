@@ -3,8 +3,7 @@ using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Doctors;
 using CheckDrive.Web.Stores.Drivers;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -28,9 +27,6 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var doctors = await _doctorDataStore.GetDoctors();
-            var drivers = await _driverDataStore.GetDrivers();
-
             var response = await _doctorReviewDataStore.GetDoctorReviews();
             var doctorReviews = response.Data.Select(r => new
             {
@@ -41,8 +37,6 @@ namespace CheckDrive.Web.Controllers
                 r.Comments
             }).ToList();
 
-            ViewBag.Drivers = drivers;
-            ViewBag.Doctors = doctors;
             ViewBag.DoctorsReview = doctorReviews;
 
             return View();
@@ -58,8 +52,14 @@ namespace CheckDrive.Web.Controllers
             return View(doctorReview);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var doctors = await GETDoctors();
+            var drivers = await GETDrivers();
+
+            ViewBag.Drivers = new SelectList(drivers, "Value", "Text");
+            ViewBag.Doctors = new SelectList(doctors, "Value", "Text");
+
             return View();
         }
 
@@ -138,6 +138,32 @@ namespace CheckDrive.Web.Controllers
         {
             var doctorReview = await _doctorReviewDataStore.GetDoctorReview(id);
             return doctorReview != null;
+        }
+
+        private async Task<List<SelectListItem>> GETDrivers()
+        {
+            var driverResponse = await _driverDataStore.GetDriversAsync();
+            var drivers = driverResponse.Data
+                .Select(d => new SelectListItem
+                {
+                    Value = d.Id.ToString(),
+                    Text = $"{d.FirstName} {d.LastName}"
+                })
+                .ToList();
+            return drivers;
+        }
+
+        private async Task<List<SelectListItem>> GETDoctors()
+        {
+            var doctorResponse = await _doctorDataStore.GetDoctors();
+            var doctors = doctorResponse.Data
+                .Select(d => new SelectListItem
+                {
+                    Value = d.Id.ToString(),
+                    Text = $"{d.FirstName} {d.LastName}"
+                })
+                .ToList();
+            return doctors;
         }
     }
 }
