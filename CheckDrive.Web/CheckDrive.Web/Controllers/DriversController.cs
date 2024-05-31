@@ -1,4 +1,6 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.Account;
+using CheckDrive.ApiContracts.Driver;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Drivers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,7 +35,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AccountId")] Driver driver)
+        public async Task<IActionResult> Create([Bind("AccountId")] DriverForCreateDto driver)
         {
             if (ModelState.IsValid)
             {
@@ -55,7 +57,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountId")] Driver driver)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountId")] AccountForUpdateDto driver)
         {
             if (id != driver.Id)
             {
