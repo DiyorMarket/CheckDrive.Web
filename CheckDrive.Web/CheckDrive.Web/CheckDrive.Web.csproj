@@ -20,6 +20,7 @@
     <Compile Include="Controllers\DoctorsController.cs" />
     <Compile Include="Controllers\DriversController.cs" />
     <Compile Include="Controllers\PersonalDoctorReviewsController.cs" />
+    <Compile Include="Controllers\PersonalMechanicAcceptanceController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\MechanicAcceptancesController.cs" />
     <Compile Include="Controllers\MechanicHandoversController.cs" />
@@ -35,6 +36,10 @@
     <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="25.1.42" />
     <PackageReference Include="Syncfusion.Licensing" Version="25.2.3" />
 
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\PersonalMechanicAcceptances\" />
   </ItemGroup>
 
 </Project>

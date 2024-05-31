@@ -3,8 +3,6 @@ using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Doctors;
 using CheckDrive.Web.Stores.Drivers;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -29,7 +27,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var doctors = await _doctorDataStore.GetDoctors();
-            var drivers = await _driverDataStore.GetDrivers();
+            var drivers = await _driverDataStore.GetDriversAsync();
 
             var response = await _doctorReviewDataStore.GetDoctorReviews();
             var doctorReviews = response.Data.Select(r => new

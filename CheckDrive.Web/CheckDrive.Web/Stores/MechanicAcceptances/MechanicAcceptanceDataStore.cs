@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.MechanicAcceptance;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -34,11 +35,20 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
 
             return result;
         }
-        public Task<MechanicAcceptance> CreateMechanicAcceptanceAsync(MechanicAcceptance mechanicAcceptance)
+        public async Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync()
         {
-            throw new NotImplementedException();
-        }
+            var response = await _api.GetAsync("mechanics/acceptances?");
 
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch drivers.");
+            }
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<GetMechanicAcceptanceResponse>(json);
+
+            return result;
+        }
         public Task DeleteMechanicAcceptanceAsync(int id)
         {
             throw new NotImplementedException();
@@ -48,11 +58,36 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
         {
             throw new NotImplementedException();
         }
+        
+        public async  Task<MechanicAcceptanceDto> CreateMechanicAcceptanceAsync(MechanicAcceptanceForCreateDto acceptanceForCreateDto)
+        {
+            var json = JsonConvert.SerializeObject(acceptanceForCreateDto);
+            var response = await _api.PostAsync("mechanics/acceptances", json);
 
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error creating mechanicAcceptance.");
+            }
+
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<MechanicAcceptanceDto>(jsonResponse);
+        }
 
         public Task<MechanicAcceptance> UpdateMechanicAcceptanceAsync(int id, MechanicAcceptance mechanicAcceptance)
         {
             throw new NotImplementedException();
         }
+
+        Task<MechanicAcceptanceDto> IMechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<MechanicAcceptanceDto> IMechanicAcceptanceDataStore.UpdateMechanicAcceptanceAsync(int id, MechanicAcceptance mechanicAcceptance)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

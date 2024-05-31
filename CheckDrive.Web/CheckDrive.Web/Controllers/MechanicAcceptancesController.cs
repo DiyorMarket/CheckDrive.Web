@@ -1,4 +1,5 @@
 ﻿using CheckDrive.ApiContracts;
+using CheckDrive.ApiContracts.MechanicAcceptance;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.MechanicAcceptances;
@@ -62,7 +63,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IsAccepted,Comments,Status,Date,Distance")] MechanicAcceptance mechanicAcceptance)
+        public async Task<IActionResult> Create(MechanicAcceptanceForCreateDto mechanicAcceptance)
         {
             if (ModelState.IsValid)
             {
