@@ -8,17 +8,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CheckDrive.Web.Controllers
 {
-    public class PersonalMechanicAcceptanceController : Controller
+    public class PersonalMechanicAcceptancesController : Controller
     {
         private readonly IMechanicAcceptanceDataStore _mechanicAcceptanceDataStore;
         private readonly IDriverDataStore _driverDataStore;
         private readonly ICarDataStore _carDataStore;
-        public PersonalMechanicAcceptanceController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore)
+
+        public PersonalMechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore)
         {
             _mechanicAcceptanceDataStore = mechanicAcceptanceDataStore;
             _driverDataStore = driverDataStore;
             _carDataStore = carDataStore;
         }
+
         public async Task<IActionResult> Index()
         {
             var drivers = await _driverDataStore.GetDriversAsync();
@@ -46,12 +48,23 @@ namespace CheckDrive.Web.Controllers
                 r.CarId
             }).ToList();
 
-            ViewBag.Drivers = drivers;
-            ViewBag.Cars = cars;
+            ViewBag.Drivers = drivers.Data.Select(d => new SelectListItem
+            {
+                Value = d.Id.ToString(),
+                Text = $"{d.FirstName} {d.LastName}"
+            }).ToList();
+
+            ViewBag.Cars = cars.Data.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = $"{c.Model} ({c.Number})"
+            }).ToList();
+
             ViewBag.MechanicAcceptances = mechanicAcceptances;
 
             return View();
         }
+
         public async Task<IActionResult> Create()
         {
             var cars = await GETCars();
@@ -70,8 +83,15 @@ namespace CheckDrive.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptance);
+
+                TempData["SuccessMessage"] = "Ro'yxat muvaffaqiyatli yaratildi!";
+
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Drivers = new SelectList(await GETDrivers(), "Value", "Text");
+            ViewBag.Cars = new SelectList(await GETCars(), "Value", "Text");
+
             return View(mechanicAcceptance);
         }
 
@@ -91,14 +111,14 @@ namespace CheckDrive.Web.Controllers
         private async Task<List<SelectListItem>> GETCars()
         {
             var carResponse = await _carDataStore.GetCarsAsync();
-            var doctors = carResponse.Data
-                .Select(d => new SelectListItem
+            var cars = carResponse.Data
+                .Select(c => new SelectListItem
                 {
-                    Value = d.Id.ToString(),
-                    Text = $"{d.Model} ({d.Number})"
+                    Value = c.Id.ToString(),
+                    Text = $"{c.Model} ({c.Number})"
                 })
                 .ToList();
-            return doctors;
+            return cars;
         }
-    } 
+    }
 }
