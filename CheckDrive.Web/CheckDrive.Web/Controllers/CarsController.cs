@@ -16,7 +16,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(string? searchString,int? pageNumber)
         {
-            var cars = await _carDataStore.GetCars(searchString,pageNumber);
+            var cars = await _carDataStore.GetCarsAsync(searchString,pageNumber);
 
             ViewBag.SearchString = searchString;
             ViewBag.Cars = cars.Data;
