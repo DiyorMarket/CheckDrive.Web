@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.MechanicHandover;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -34,7 +35,21 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
 
             return result;
         }
-        public Task<MechanicHandover> CreateMechanicHandoverAsync(MechanicHandover mechanicHandover)
+        public async Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync()
+        {
+            var response = await _api.GetAsync("mechanics/handovers");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch handovers.");
+            }
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<GetMechanicHandoverResponse>(json);
+
+            return result;
+        }
+        public Task<MechanicHandoverDto> CreateMechanicHandoverAsync(MechanicHandoverForCreateDto mechanicHandoverForCreateDto)
         {
             throw new NotImplementedException();
         }
@@ -44,11 +59,11 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
             throw new NotImplementedException();
         }
 
-        public Task<MechanicHandover> GetMechanicHandoverAsync(int id)
+        public Task<MechanicHandoverDto> GetMechanicHandoverAsync(int id)
         {
             throw new NotImplementedException();
         }
-        public Task<MechanicHandover> UpdateMechanicHandoverAsync(int id, MechanicHandover mechanicHandover)
+        public Task<MechanicHandoverDto> UpdateMechanicHandoverAsync(int id, MechanicHandover mechanicHandover)
         {
             throw new NotImplementedException();
         }

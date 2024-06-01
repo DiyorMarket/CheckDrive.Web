@@ -20,6 +20,7 @@
     <Compile Include="Controllers\DoctorsController.cs" />
     <Compile Include="Controllers\DriversController.cs" />
     <Compile Include="Controllers\PersonalDoctorReviewsController.cs" />
+    <Compile Include="Controllers\PersonalMechanicHandoversController.cs" />
     <Compile Include="Controllers\PersonalMechanicAcceptancesController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\MechanicAcceptancesController.cs" />
