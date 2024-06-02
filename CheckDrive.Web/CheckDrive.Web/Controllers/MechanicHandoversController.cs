@@ -1,4 +1,5 @@
 ﻿using CheckDrive.ApiContracts;
+using CheckDrive.ApiContracts.MechanicHandover;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.MechanicHandovers;
 using Microsoft.AspNetCore.Mvc;
@@ -74,7 +75,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IsHanded,Comments,Status,Date,MechanicId,CarId,DriverId")] MechanicHandover mechanicHandover)
+        public async Task<IActionResult> Create([Bind("IsHanded,Comments,Status,Date,MechanicId,CarId,DriverId")] MechanicHandoverForCreateDto mechanicHandover)
         {
             if (ModelState.IsValid)
             {
