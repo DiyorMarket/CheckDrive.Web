@@ -6,7 +6,7 @@ namespace CheckDrive.Web.Stores.DoctorReviews
 {
     public interface IDoctorReviewDataStore
     {
-        Task<GetDoctorReviewResponse> GetDoctorReviews();
+        Task<GetDoctorReviewResponse> GetDoctorReviews(int? pageNumber);
         Task<DoctorReviewDto> GetDoctorReview(int id);
         Task<DoctorReviewDto> CreateDoctorReview(DoctorReviewForCreateDto review);
         Task<DoctorReview> UpdateDoctorReview(int id, DoctorReviewForUpdateDto review);
