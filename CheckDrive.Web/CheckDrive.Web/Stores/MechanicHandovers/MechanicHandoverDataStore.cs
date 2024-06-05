@@ -49,9 +49,19 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
 
             return result;
         }
-        public Task<MechanicHandoverDto> CreateMechanicHandoverAsync(MechanicHandoverForCreateDto mechanicHandoverForCreateDto)
+        public async Task<MechanicHandoverDto> CreateMechanicHandoverAsync(MechanicHandoverForCreateDto mechanicHandoverForCreateDto)
         {
-            throw new NotImplementedException();
+            var json = JsonConvert.SerializeObject(mechanicHandoverForCreateDto);
+            var response = await _api.PostAsync("mechanics/handover", json);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error creating mechanicAcceptance.");
+            }
+
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<MechanicHandoverDto>(jsonResponse);
         }
 
         public Task DeleteMechanicHandoverAsync(int id)
@@ -63,7 +73,7 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
         {
             throw new NotImplementedException();
         }
-        public Task<MechanicHandoverDto> UpdateMechanicHandoverAsync(int id, MechanicHandover mechanicHandover)
+        public Task<MechanicHandoverDto> UpdateMechanicHandoverAsync(int id, MechanicHandoverForUpdateDto mechanicHandover)
         {
             throw new NotImplementedException();
         }

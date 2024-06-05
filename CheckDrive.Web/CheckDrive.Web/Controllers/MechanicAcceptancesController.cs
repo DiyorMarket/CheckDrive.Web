@@ -57,7 +57,6 @@ namespace CheckDrive.Web.Controllers
                 r.CarId
             }).ToList();
 
-
             ViewBag.MechanicAcceptances = mechanicAcceptances;
 
             return View();

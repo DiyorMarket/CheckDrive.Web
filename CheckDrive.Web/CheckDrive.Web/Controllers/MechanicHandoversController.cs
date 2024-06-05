@@ -27,7 +27,6 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber)
         {
-
             var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber);
 
             ViewBag.PageSize = response.PageSize;
@@ -58,16 +57,10 @@ namespace CheckDrive.Web.Controllers
                 r.CarId
             }).ToList();
 
-            if (mechanicHandovers == null)
-            {
-                return BadRequest();
-            }
-
             ViewBag.MechanicHandovers = mechanicHandovers;
 
             return View();
         }
-
         public async Task<IActionResult> PersonalIndex(int? pageNumber)
         {
             var drivers = await _driverDataStore.GetDriversAsync();
@@ -99,10 +92,9 @@ namespace CheckDrive.Web.Controllers
                 r.Distance,
                 r.DriverName,
                 r.MechanicName,
-                r.CarName
+                r.CarName,
+                r.CarId
             }).ToList();
-
-            ViewBag.Handovers = mechanicHandovers;
 
             ViewBag.Mechanics = mechanics.Data.Select(d => new SelectListItem
             {
@@ -122,18 +114,11 @@ namespace CheckDrive.Web.Controllers
                 Text = $"{c.Model} ({c.Number})"
             }).ToList();
 
+            ViewBag.MechanicHandovers = mechanicHandovers;
+
             return View();
         }
 
-        public async Task<IActionResult> Details(int id)
-        {
-            var mechanicHandover = await _mechanicHandoverDataStore.GetMechanicHandoverAsync(id);
-            if (mechanicHandover == null)
-            {
-                return NotFound();
-            }
-            return View(mechanicHandover);
-        }
 
         public async Task<IActionResult> Create()
         {
@@ -150,7 +135,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IsHanded,Comments,Distance,Date,MechanicId,CarId,DriverId")] MechanicHandoverForCreateDto mechanicHandoverForCreateDto)
+        public async Task<IActionResult> Create([Bind("IsHanded,Comments,Date,MechanicId,Distance,CarId,DriverId")] MechanicHandoverForCreateDto mechanicHandoverForCreateDto)
         {
             if (ModelState.IsValid)
             {
@@ -167,12 +152,17 @@ namespace CheckDrive.Web.Controllers
             {
                 return NotFound();
             }
+
+            ViewBag.Mechanics = new SelectList(await GETMechanics(), "Value", "Text");
+            ViewBag.Drivers = new SelectList(await GETDrivers(), "Value", "Text");
+            ViewBag.Cars = new SelectList(await GETCars(), "Value", "Text");
+
             return View(mechanicHandover);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IsHanded,Comments,Status,Date,MechanicId,CarId,DriverId")] MechanicHandover mechanicHandover)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,IsHanded,Comments,Status,Date,MechanicId,CarId,DriverId")] MechanicHandoverForUpdateDto mechanicHandover)
         {
             if (id != mechanicHandover.Id)
             {
@@ -198,6 +188,10 @@ namespace CheckDrive.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Drivers = new SelectList(await GETDrivers(), "Value", "Text");
+            ViewBag.Cars = new SelectList(await GETCars(), "Value", "Text");
+
             return View(mechanicHandover);
         }
 
@@ -224,6 +218,7 @@ namespace CheckDrive.Web.Controllers
             var mechanicHandover = await _mechanicHandoverDataStore.GetMechanicHandoverAsync(id);
             return mechanicHandover != null;
         }
+
         private async Task<List<SelectListItem>> GETMechanics()
         {
             var mechanicResponse = await _mechanicDataStore.GetMechanicsAsync();
