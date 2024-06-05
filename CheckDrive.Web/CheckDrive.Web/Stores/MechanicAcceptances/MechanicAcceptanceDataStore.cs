@@ -62,7 +62,7 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
         public async  Task<MechanicAcceptanceDto> CreateMechanicAcceptanceAsync(MechanicAcceptanceForCreateDto acceptanceForCreateDto)
         {
             var json = JsonConvert.SerializeObject(acceptanceForCreateDto);
-            var response = await _api.PostAsync("mechanics/acceptances", json);
+            var response = await _api.PostAsync("mechanics/acceptance", json);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -73,21 +73,14 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
 
             return JsonConvert.DeserializeObject<MechanicAcceptanceDto>(jsonResponse);
         }
-
-        public Task<MechanicAcceptance> UpdateMechanicAcceptanceAsync(int id, MechanicAcceptance mechanicAcceptance)
-        {
-            throw new NotImplementedException();
-        }
-
         Task<MechanicAcceptanceDto> IMechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        Task<MechanicAcceptanceDto> IMechanicAcceptanceDataStore.UpdateMechanicAcceptanceAsync(int id, MechanicAcceptance mechanicAcceptance)
+        Task<MechanicAcceptanceDto> IMechanicAcceptanceDataStore.UpdateMechanicAcceptanceAsync(int id, MechanicAcceptanceForUpdateDto mechanicAcceptanceForUpdateDto)
         {
             throw new NotImplementedException();
         }
-
     }
 }

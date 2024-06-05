@@ -3,7 +3,6 @@ using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Operators;
 using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
-using Syncfusion.EJ2.PivotView;
 
 namespace CheckDrive.Web.Controllers
 {
