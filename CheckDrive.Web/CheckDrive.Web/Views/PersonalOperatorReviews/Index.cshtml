@@ -1,0 +1,49 @@
+﻿@model CheckDrive.ApiContracts.OperatorReview.OperatorReviewDto
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+}
+
+<h1 style="margin-left:180px">Operator oynasi</h1>
+
+<div class="col-12 text-end mb-2">
+    <a class="btn btn-success" asp-action="create" style="margin-right:180px">
+        <i class="fa fa-plus"></i> Create
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-12 text-center">
+        <ejs-grid id="operatorReviews-list" dataSource="@ViewBag.OperatorReviews" gridLines="Vertical" allowSorting="true" style="margin: 0 auto;">
+            <e-grid-columns>
+                <e-grid-column headerText="Haydovshi F.I." field="DriverName" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
+                <e-grid-column headerText="Moshina markasi" field="CarModel" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
+                <e-grid-column headerText="Moshina raqami" field="CarNumber" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
+                <e-grid-column headerText="Yoqilg`i sig`imi" field="CarOilCapacity" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
+                <e-grid-column headerText="Yoqilg`i qoldig`i" field="CarOilRemainig" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
+                <e-grid-column headerText="Quyilgan yoqilg`i miqdori" field="OilAmount" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
+                <e-grid-column headerText="Yoqilg`i Markasi" field="OilMarks" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
+                <e-grid-column headerText="Izoh" field="Comments" textAlign="Center" typeof="text" class="customcss" width="40%"></e-grid-column>
+                <e-grid-column headerText="Status" field="Status" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
+            </e-grid-columns>
+        </ejs-grid>
+    </div>
+</div>
+
+<style>
+    #operatorReviews-list {
+        width: 80% !important;
+    }
+
+        #operatorReviews-list .e-gridheader,
+        #operatorReviews-list .e-gridcontent {
+            width: 100% !important;
+        }
+
+            #operatorReviews-list .e-gridheader th,
+            #operatorReviews-list .e-gridcontent td {
+                width: auto !important;
+                white-space: nowrap;
+            }
+</style>

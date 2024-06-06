@@ -12,7 +12,7 @@ namespace CheckDrive.Web.Stores.DoctorReviews
 
         public async Task<GetDoctorReviewResponse> GetDoctorReviews()
         {
-            var response = await _api.GetAsync("doctors/reviews");
+            var response = await _api.GetAsync("doctors/reviews?OrderBy=datedesc");
 
             if (!response.IsSuccessStatusCode)
             {

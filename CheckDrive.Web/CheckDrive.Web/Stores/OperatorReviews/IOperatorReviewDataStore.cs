@@ -5,7 +5,7 @@ namespace CheckDrive.Web.Stores.OperatorReviews
 {
     public interface IOperatorReviewDataStore
     {
-        Task<GetOperatorReviewResponse> GetOperatorsReviews();
+        Task<GetOperatorReviewResponse> GetOperatorReviews();
         Task<OperatorReview> GetOperatorReview(int id);
         Task<OperatorReview> CreateOperatorReview(OperatorReview operatorReview);
         Task<OperatorReview> UpdateOperatorReview(int id, OperatorReview operatorReview);

@@ -9,7 +9,7 @@ namespace CheckDrive.Web.Stores.OperatorReviews
     {
         private readonly ApiClient _api = api;
 
-        public async Task<GetOperatorReviewResponse> GetOperatorsReviews()
+        public async Task<GetOperatorReviewResponse> GetOperatorReviews()
         {
             var response = await _api.GetAsync("operators/reviews");
 

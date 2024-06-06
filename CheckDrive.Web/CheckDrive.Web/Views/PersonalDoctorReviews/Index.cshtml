@@ -1,4 +1,4 @@
-﻿@model CheckDrive.ApiContracts.DoctorReview.DoctorReviewDto
+﻿@model IEnumerable<CheckDrive.ApiContracts.DoctorReview.DoctorReviewDto>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,24 +7,24 @@
 
 <h1 style="margin-left:180px">Shifokor oynasi</h1>
 
-<div class="col-12 text-end mb-2">
-    <a class="btn btn-success" asp-action="create" style="margin-right:180px">
-        <i class="fa fa-plus"></i> Create
-    </a>
-</div>
-
 <div class="row">
     <div class="col-12 text-center">
-        <ejs-grid id="doctorReviews-list" dataSource="@ViewBag.DoctorsReview" gridLines="Vertical" allowSorting="true" style="margin: 0 auto;">
+        <ejs-grid id="doctorReviews-list" dataSource="@Model" gridLines="Vertical" allowSorting="true" style="margin: 0 auto;">
             <e-grid-columns>
-                <e-grid-column headerText="Haydovshi F.I." field="DriverName" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
+                <e-grid-column headerText="Haydovshi F.I." field="DriverName" textAlign="Center" typeof="text" class="customcss" width="20%" headerTextAlign="Center" template="#driverTemplate"></e-grid-column>
                 <e-grid-column headerText="Shifokor F.I." field="DoctorName" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
                 <e-grid-column headerText="Sog`lig`i" field="IsHealthy" textAlign="Center" width="20%"></e-grid-column>
-                <e-grid-column headerText="Sabab" field="Comments" textAlign="Center" typeof="text" class="customcss" width="40%"></e-grid-column>
+                <e-grid-column headerText="Izoh" field="Comments" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
+                <e-grid-column headerText="Sana" field="Date" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
 </div>
+
+<script id="driverTemplate" type="text/x-template">
+    <a href="/PersonalDoctorReviews/Create?driverId=${DriverId}&driverName=${DriverName}">${DriverName}</a>
+</script>
+
 
 <style>
     #doctorReviews-list {
