@@ -28,7 +28,7 @@ namespace CheckDrive.Web.Service
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Error fetching url: {url}");
+                throw new ApiException(response.StatusCode, $"Error fetching url: {url}");
             }
 
             return response;
