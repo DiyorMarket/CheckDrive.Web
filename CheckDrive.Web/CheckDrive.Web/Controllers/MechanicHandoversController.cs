@@ -68,33 +68,36 @@ namespace CheckDrive.Web.Controllers
             var mechanics = await _mechanicDataStore.GetMechanicsAsync();
             var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber);
 
+            // Sort by date in descending order for PersonalIndex
+            var mechanicHandovers = response.Data
+                .OrderByDescending(r => r.Date)
+                .Select(r => new
+                {
+                    r.Id,
+                    IsHanded = r.IsHanded ? "Qabul qilindi" : "Rad etildi",
+                    r.Comments,
+                    Status = ((StatusForDto)r.Status) switch
+                    {
+                        StatusForDto.Pending => "Pending",
+                        StatusForDto.Completed => "Completed",
+                        StatusForDto.Rejected => "Rejected",
+                        StatusForDto.Unassigned => "Unassigned",
+                        _ => "Unknown Status"
+                    },
+                    r.Date,
+                    r.Distance,
+                    r.DriverName,
+                    r.MechanicName,
+                    r.CarName,
+                    r.CarId
+                }).ToList();
+
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
             ViewBag.TotalCount = response.TotalCount;
             ViewBag.CurrentPage = response.PageNumber;
             ViewBag.HasPreviousPage = response.HasPreviousPage;
             ViewBag.HasNextPage = response.HasNextPage;
-
-            var mechanicHandovers = response.Data.Select(r => new
-            {
-                r.Id,
-                IsHanded = r.IsHanded ? "Qabul qilindi" : "Rad etildi",
-                r.Comments,
-                Status = ((StatusForDto)r.Status) switch
-                {
-                    StatusForDto.Pending => "Pending",
-                    StatusForDto.Completed => "Completed",
-                    StatusForDto.Rejected => "Rejected",
-                    StatusForDto.Unassigned => "Unassigned",
-                    _ => "Unknown Status"
-                },
-                r.Date,
-                r.Distance,
-                r.DriverName,
-                r.MechanicName,
-                r.CarName,
-                r.CarId
-            }).ToList();
 
             ViewBag.Mechanics = mechanics.Data.Select(d => new SelectListItem
             {
@@ -120,6 +123,7 @@ namespace CheckDrive.Web.Controllers
         }
 
 
+
         public async Task<IActionResult> Create()
         {
             var mechanics = await GETMechanics();
@@ -139,6 +143,7 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                mechanicHandoverForCreateDto.Date = DateTime.Now;
                 await _mechanicHandoverDataStore.CreateMechanicHandoverAsync(mechanicHandoverForCreateDto);
                 return RedirectToAction(nameof(PersonalIndex));
             }
