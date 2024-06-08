@@ -68,7 +68,6 @@ namespace CheckDrive.Web.Controllers
             var mechanics = await _mechanicDataStore.GetMechanicsAsync();
             var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber);
 
-            // Sort by date in descending order for PersonalIndex
             var mechanicHandovers = response.Data
                 .OrderByDescending(r => r.Date)
                 .Select(r => new
