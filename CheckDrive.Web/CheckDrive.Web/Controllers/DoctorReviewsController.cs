@@ -14,10 +14,29 @@ namespace CheckDrive.Web.Controllers
             _doctorReviewDataStore = doctorReviewDataStore;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-            var reviews = await _doctorReviewDataStore.GetDoctorReviews();
-            return View(reviews);
+            var response = await _doctorReviewDataStore.GetDoctorReviews(pageNumber);
+
+            ViewBag.PageSize = response.PageSize;
+            ViewBag.PageCount = response.TotalPages;
+            ViewBag.TotalCount = response.TotalCount;
+            ViewBag.CurrentPage = response.PageNumber;
+            ViewBag.HasPreviousPage = response.HasPreviousPage;
+            ViewBag.HasNextPage = response.HasNextPage;
+
+            var doctorReviews = response.Data.Select(r => new
+            {
+                r.Id,
+                r.DriverName,
+                r.DoctorName,
+                IsHealthy = r.IsHealthy ? "Sog`lom" : "Kasal",
+                r.Comments
+            }).ToList();
+
+            ViewBag.DoctorsReview = doctorReviews;
+
+            return View();
         }
 
         public async Task<IActionResult> Details(int id)
