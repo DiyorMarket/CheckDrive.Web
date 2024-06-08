@@ -27,6 +27,10 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber)
         {
+            var doctors = await _doctorDataStore.GetDoctors();
+            var drivers = await _driverDataStore.GetDriversAsync();
+
+   
             var response = await _doctorReviewDataStore.GetDoctorReviews( pageNumber);
             var doctorReviews = response.Data.Select(r => new
             {

@@ -1,0 +1,48 @@
+﻿@model CheckDrive.ApiContracts.MechanicHandover.MechanicHandoverDto
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+}
+
+<div class="row mt-custom">
+    <div class="col-md-4 offset-md-1 mt-5">
+        <h4>Ro'yxatga olish</h4>
+        <hr class="w-50" />
+
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-check form-switch">
+                <input asp-for="IsHanded" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                <label asp-for="IsHanded" class="form-check-label" for="flexSwitchCheckDefault">Topshirish</label>
+            </div>
+            <div class="form-group w-50">
+                <label asp-for="MechanicId" class="control-label mt-2">Mexanik</label>
+                <select asp-for="MechanicId" class="form-control border border-dark" asp-items="@ViewBag.Mechanics"></select>
+            </div>
+            <div class="form-group w-50">
+                <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
+                <select asp-for="DriverId" class="form-control border border-dark" asp-items="@ViewBag.Drivers"></select>
+            </div>
+            <div class="form-group w-50">
+                <label asp-for="CarId" class="control-label mt-2">Mashina</label>
+                <select asp-for="CarId" class="form-control border border-dark" asp-items="@ViewBag.Cars"></select>
+            </div>
+            <div class="form-group w-50">
+                <label asp-for="Distance" class="control-label mt-2">Topshirish masofasi</label>
+                <input asp-for="Distance" class="form-control" type="number" />
+            </div>
+            <div class="form-group w-50">
+                <label asp-for="Comments" class="control-label mt-2">Izoh</label>
+                <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
+            </div>
+            <div class="form-group mt-3 w-50">
+                <a asp-action="Index" class="btn btn-outline-info">
+                    <i class="fa-solid fa-arrow-left-long"></i> Orqaga
+                </a>
+                <button class="btn btn-outline-success" type="submit">
+                    <i class="fa fa-plus"></i> Create
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
