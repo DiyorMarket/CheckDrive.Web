@@ -1,4 +1,5 @@
 ﻿using CheckDrive.ApiContracts.DoctorReview;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Doctors;
 using CheckDrive.Web.Stores.Drivers;
@@ -97,15 +98,16 @@ namespace CheckDrive.Web.Controllers
             ViewBag.SelectedDriverName = driverName;
             ViewBag.SelectedDriverId = driverId;
 
-            return View(new DoctorReviewForCreateDto { DriverId = driverId, Date = DateTime.Today });
+            return View(new DoctorReviewForCreateDto { DriverId = driverId, Date = DateTime.Now });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IsHealthy,Comments,Date,DriverId,DoctorId")] DoctorReviewForCreateDto doctorReview)
+        public async Task<IActionResult> Create([Bind("IsHealthy,Comments,DriverId,DoctorId")] DoctorReviewForCreateDto doctorReview)
         {
             if (ModelState.IsValid)
             {
+                doctorReview.Date = DateTime.Now;
                 await _doctorReviewDataStore.CreateDoctorReview(doctorReview);
                 return RedirectToAction(nameof(Index));
             }
@@ -119,6 +121,8 @@ namespace CheckDrive.Web.Controllers
 
             return View(doctorReview);
         }
+
+
 
         public async Task<IActionResult> Edit(int id)
         {

@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
-    var todayDate = DateTime.Today.ToString("yyyy-MM-dd");
 }
 
 <div class="row mt-custom">
@@ -30,10 +29,6 @@
             <div class="form-group w-50">
                 <label asp-for="Comments" for="exampleFormControlTextarea1">Izoh</label>
                 <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
-            </div>
-            <div class="form-group w-50">
-                <label asp-for="Date" class="control-label">Sana</label>
-                <input asp-for="Date" class="form-control" type="date" value="@todayDate" />
             </div>
             <div class="form-group mt-3 w-50">
                 <a asp-action="Index" class="btn btn-outline-info">
