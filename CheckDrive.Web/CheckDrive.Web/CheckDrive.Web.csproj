@@ -12,6 +12,7 @@
     <EmbeddedResource Remove="Controllers\**" />
     <None Remove="Controllers\**" />
     <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\CarsController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\DispatcherReviewsController.cs" />
