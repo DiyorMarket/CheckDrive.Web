@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="d-flex justify-content-end mb-3">
-                <a class="btn btn-success shadow" asp-action="create">
+                <a class="btn btn-success shadow" href="@Url.Action("Create", "MechanicAcceptance")">
                     <i class="fa fa-plus"></i> Yaratish
                 </a>
             </div>
@@ -18,7 +18,7 @@
                 <table class="table table-bordered table-striped table-hover shadow">
                     <thead>
                         <tr>
-                            <th scope="col" style="width: 10%">Mexanik F.I</th>
+                            <th scope="col" style="width: 13%">Mexanik F.I</th>
                             <th scope="col" style="width: 13%">Haydovchi F.I</th>
                             <th scope="col" style="width: 10%">Qabul qilish</th>
                             <th scope="col" style="width: 38%">Izoh</th>
@@ -29,7 +29,7 @@
                         @foreach (var item in ViewBag.MechanicAcceptances)
                         {
                             <tr>
-                                <td>@item.MechanicName</td>
+                                <td><a href="@Url.Action("Create")">@item.MechanicName</a></td>
                                 <td>@item.DriverName</td>
                                 <td>
                                     @if ((string)item.IsAccepted == "Qabul qilindi")

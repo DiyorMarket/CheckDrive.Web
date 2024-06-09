@@ -93,6 +93,7 @@ namespace CheckDrive.Web.Controllers
                 r.Distance,
                 r.DriverName,
                 r.MechanicName,
+                r.MechanicId,
                 r.CarName
             }).ToList();
 
@@ -119,6 +120,8 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
+
+
         public async Task<IActionResult> Create()
         {
             var mechanics = await GETMechanics();
@@ -138,6 +141,7 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                mechanicAcceptanceForCreateDto.Date = DateTime.Now;
                 await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
                 return RedirectToAction(nameof(PersonalIndex));
             }
