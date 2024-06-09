@@ -3,7 +3,6 @@ using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
 using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CheckDrive.Web.Stores.Cars
 {
@@ -16,7 +15,7 @@ namespace CheckDrive.Web.Stores.Cars
             _api = apiClient;
         }
 
-        public async Task<GetCarResponse> GetCars(string? searchString,int? pageNumber)
+        public async Task<GetCarResponse> GetCarsAsync(string? searchString, int? pageNumber)
         {
             StringBuilder query = new("");
 
@@ -42,6 +41,20 @@ namespace CheckDrive.Web.Stores.Cars
             return result;
         }
 
+        public async Task<GetCarResponse> GetCarsAsync()
+        {
+            var response = await _api.GetAsync("cars");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch cars.");
+            }
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<GetCarResponse>(json);
+
+            return result;
+        }
         public async Task<CarDto> GetCar(int id)
         {
             var response = await _api.GetAsync($"cars/{id}");
@@ -75,7 +88,7 @@ namespace CheckDrive.Web.Stores.Cars
         public async Task<CarDto> UpdateCar(int id, CarForUpdateDto car)
         {
             var json = JsonConvert.SerializeObject(car);
-            var response =  await _api.PutAsync($"cars/{car.Id}", json);
+            var response = await _api.PutAsync($"cars/{car.Id}", json);
 
             if (!response.IsSuccessStatusCode)
             {

@@ -1,6 +1,7 @@
 ﻿using CheckDrive.Web.Service;
 using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Cars;
+using CheckDrive.Web.Stores.Dashbord;
 using CheckDrive.Web.Stores.DispatcherReviews;
 using CheckDrive.Web.Stores.Dispatchers;
 using CheckDrive.Web.Stores.DoctorReviews;
@@ -34,6 +35,7 @@ namespace CheckDrive.Web.Extensions
             services.AddScoped<IOperatorDataStore, OperatorDataStore>();
             services.AddScoped<IRoleDataStore, RoleDataStore>();
             services.AddScoped<ITechnicianDataStore, MockTechnicianDataStore>();
+            services.AddScoped<IDashboardStore,DashboardStore>();
 
             return services;
         }

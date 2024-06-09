@@ -78,6 +78,18 @@
         iconCss = "fa-solid fa-person-chalkboard",
         url = "/PersonalDoctorReviews"
     });
+    menuItems.Add(new
+    {
+        text = "Mexanik(Qabul qiluvchi) oynasi",
+        iconCss = "fa-solid fa-person-chalkboard",
+        url = Url.Action("PersonalIndex", "MechanicAcceptances")
+    });
+    menuItems.Add(new
+    {
+        text = "Mexanik(Topshiruvchi) oynasi",
+        iconCss = "fa-solid fa-person-chalkboard",
+        url = Url.Action("PersonalIndex", "MechanicHandovers")
+    });
 }
 
 <ejs-sidebar id="sidebar" width="290px" enableDock dockSize="100px"

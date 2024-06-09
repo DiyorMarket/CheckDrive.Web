@@ -6,53 +6,54 @@
 }
 
 <div>
-    <h4>Moshina haqida ma`lumot</h4>
+    <h4>Moshina haqida ma'lumot</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
+            ID:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Id)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Model)
+            Model:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Model)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Color)
+            Rangi:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Color)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Number)
+            Davlat raqami:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Number)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MeduimFuelConsumption)
+            O'rtacha yoqilg'i sarfi:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MeduimFuelConsumption)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FuelTankCapacity)
+            Yoqilg'i baki sig'imi:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FuelTankCapacity)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ManufacturedYear)
+            Ishlab chiqarilgan yili:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ManufacturedYear)
         </dd>
     </dl>
 </div>
+
 <div class="mt-4">
     <a asp-controller="MechanicAcceptances" asp-action="Index" class="btn btn-outline-info">
         <i class="fa-solid fa-arrow-left"></i>
