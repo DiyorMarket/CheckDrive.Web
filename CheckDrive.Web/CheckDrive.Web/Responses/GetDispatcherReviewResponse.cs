@@ -1,8 +1,8 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.DispatcherReview;
 
 namespace CheckDrive.Web.Responses
 {
-    public class GetDispatcherReviewResponse : GetBaseResponse<DispatcherReview>
+    public class GetDispatcherReviewResponse : GetBaseResponse<DispatcherReviewDto>
     {
     }
 }

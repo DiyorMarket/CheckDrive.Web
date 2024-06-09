@@ -1,4 +1,4 @@
-﻿using CheckDrive.Web.Models;
+﻿ using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.DispatcherReviews;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +13,38 @@ namespace CheckDrive.Web.Controllers
             _dispatcherReviewDataStore = dispatcherReviewDataStore;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pagenumber)
         {
-            var reviews = await _dispatcherReviewDataStore.GetDispatcherReviews();
-            return View(reviews);
+            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber);
+            
+
+            if (response is null)
+            {
+                return BadRequest();
+            }
+            ViewBag.PageSize = response.PageSize;
+            ViewBag.PageCount = response.TotalPages;
+            ViewBag.TotalCount = response.TotalCount;
+            ViewBag.CurrentPage = response.PageNumber;
+            ViewBag.HasPreviousPage = response.HasPreviousPage;
+            ViewBag.HasNextPage = response.HasNextPage;
+
+            var dispatcherReviewResponse = response.Data.Select(r => new
+            {
+                r.Id,
+                FuelSpended = r.FuelSpended.ToString("0.00").PadLeft(4, '0'),
+                r.DistanceCovered,
+                r.Date,
+                r.CarMeduimFuelConsumption,
+                r.CarName,
+                r.DispatcherName,
+                r.MechanicName,
+                r.OperatorName,
+                r.DriverName
+            }).ToList();
+
+            ViewBag.DispatcherReviews = dispatcherReviewResponse; 
+            return View();
         }
 
         public async Task<IActionResult> Details(int id)
