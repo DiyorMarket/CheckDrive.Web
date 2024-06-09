@@ -14,6 +14,7 @@ using CheckDrive.Web.Stores.OperatorReviews;
 using CheckDrive.Web.Stores.Operators;
 using CheckDrive.Web.Stores.Roles;
 using CheckDrive.Web.Stores.Technicians;
+using CheckDrive.Web.Stores.User;
 
 namespace CheckDrive.Web.Extensions
 {
@@ -35,7 +36,8 @@ namespace CheckDrive.Web.Extensions
             services.AddScoped<IOperatorDataStore, OperatorDataStore>();
             services.AddScoped<IRoleDataStore, RoleDataStore>();
             services.AddScoped<ITechnicianDataStore, MockTechnicianDataStore>();
-            services.AddScoped<IDashboardStore,DashboardStore>();
+            services.AddScoped<IDashboardStore, DashboardStore>();
+            services.AddScoped<IUserDataStore, UserDataStore>();
 
             return services;
         }
