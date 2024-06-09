@@ -22,7 +22,7 @@ namespace CheckDrive.Web.Extensions
         {
             services.AddScoped<IAccountDataStore, AccountDataStore>();
             services.AddScoped<ICarDataStore, CarDataStore>();
-            services.AddScoped<IDispatcherReviewDataStore, MockDispatcherReviewDataStore>();
+            services.AddScoped<IDispatcherReviewDataStore, DispatcherReviewDataStore>();
             services.AddScoped<IDispatcherDataStore, MockDispatcherDataStore>();
             services.AddScoped<IDoctorDataStore, DoctorDataStore>();
             services.AddScoped<IDoctorReviewDataStore, DoctorReviewDataStore>();
