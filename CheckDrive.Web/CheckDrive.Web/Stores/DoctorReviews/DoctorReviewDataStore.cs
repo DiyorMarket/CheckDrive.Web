@@ -1,4 +1,5 @@
-﻿using CheckDrive.ApiContracts.DoctorReview;
+﻿using System.Text;
+using CheckDrive.ApiContracts.DoctorReview;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
@@ -10,9 +11,16 @@ namespace CheckDrive.Web.Stores.DoctorReviews
     {
         private readonly ApiClient _api = api;
 
-        public async Task<GetDoctorReviewResponse> GetDoctorReviews()
+        public async Task<GetDoctorReviewResponse> GetDoctorReviews(int? pageNumber)
         {
             var response = await _api.GetAsync("doctors/reviews?OrderBy=datedesc");
+            StringBuilder query = new("");
+
+            if (pageNumber != null)
+            {
+                query.Append($"pageNumber={pageNumber}");
+            }
+            var response = await _api.GetAsync("doctors/reviews?" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {
