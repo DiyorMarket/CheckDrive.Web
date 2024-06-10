@@ -6,72 +6,75 @@
 
 <div class="row mb-4">
     <div class="col-md-4">
-        <div class="d-flex flex-row widget summary total" data-bs-toggle="tooltip" data-bs-placement="top">
+        <div class="d-flex flex-row widget summary car" data-bs-toggle="tooltip" data-bs-placement="top">
             <div class="icon-container p-5" onmouseover="startBounce(this)" onmouseout="stopBounce(this)">
-                <i class="fa-solid fa-car-burst fa-2xl"></i>
+                <i class="fa-solid fa-car fa-2xl"></i>
             </div>
             <div class="d-flex flex-column m-auto py-3" id="revenueContainer" onclick="toggleRevenue()">
-                <span class="lead">Tamirtalab avtomobillar</span>
-                <h1 class="display-6 fw-bold">12</h1>
+                <span class="lead">Avtomobillar soni:</span>
+                <h1 class="display-6 fw-bold">@ViewBag.CarsCount</h1>
             </div>
         </div>
     </div>
 
     <div class="col-md-4">
-        <div class="d-flex flex-row widget summary sales">
+        <div class="d-flex flex-row widget summary driver">
+            <div class="icon-container p-5" onmouseover="startBounce(this)" onmouseout="stopBounce(this)">
+                <i class="fa-solid fa-user fa-2xl"></i>
+            </div>
+            <div class="d-flex flex-column m-auto py-3">
+                <span class="lead">Haydovchilar soni:</span>
+                <h1 class="display-6 fw-bold">@ViewBag.DriversCount</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="d-flex flex-row widget summary oil">
             <div class="icon-container p-5" onmouseover="startBounce(this)" onmouseout="stopBounce(this)">
                 <i class="fa-solid fa-gas-pump fa-2xl"></i>
             </div>
             <div class="d-flex flex-column m-auto py-3">
-                <span class="lead">Yoqilgi sarfi</span>
-                <h1 class="display-6 fw-bold">123</h1>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="d-flex flex-row widget summary supplies">
-            <div class="icon-container p-5" onmouseover="startBounce(this)" onmouseout="stopBounce(this)">
-                <i class="fa-solid fa-bolt fa-2xl"></i>
-            </div>
-            <div class="d-flex flex-column m-auto py-3">
-                <span class="lead">Haydovchilar</span>
-                <h1 class="display-6 fw-bold">32</h1>
+                <span class="lead">Umumiy yoqilg'i sarfi (Oylik)</span>
+                <h1 class="display-6 fw-bold">@ViewBag.MonthlyFuelConsumption</h1>
             </div>
         </div>
     </div>
 </div>
 
 <div class="row mb-4">
-    <div class="col-md-12">
-        <div class="widget chart" >
+        <div class="widget chart"  style="width: 100%; padding: 1; margin: 1;">
             <div class="p-4">
-                <h5 class="fw-bold">Ai-80, Ai-91, Ai-95</h5>
+                <h5 class="fw-bold">Yoqilg'i sarfi</h5>
             </div>
+            <ejs-chart id="spline-chart" background="whitesmoke"
+                       palettes=@(new string[]{"#54ffa9","#ffe91a","#4287f5","#8a442c"})>
+                <e-chart-primaryxaxis valueType="Category">
+                    <e-majorgridlines width="0"></e-majorgridlines>
+                    <e-majorticklines width="0"></e-majorticklines>
+                </e-chart-primaryxaxis>
+                <e-chart-primaryyaxis>
+                    <e-majorgridlines width="1" color="#32414d" dashArray="3,5"></e-majorgridlines>
+                    <e-majorticklines width="0"></e-majorticklines>
+                    <e-linestyle width="0"></e-linestyle>
+                </e-chart-primaryyaxis>
+                <e-chart-chartarea>
+                    <e-chartarea-border width="1"></e-chartarea-border>
+                </e-chart-chartarea>
+                <e-series-collection>
+                    <e-series dataSource="@ViewBag.SplineChartData" xName="Month" width="3" 
+                              yName="Ai80" name="Ai80" type="Spline"></e-series>
+                    <e-series dataSource="@ViewBag.SplineChartData" xName="Month" width="3"
+                              yName="Ai91" name="Ai91" type="Spline"></e-series>
+                    <e-series dataSource="@ViewBag.SplineChartData" xName="Month" width="3"
+                              yName="Ai92" name="Ai92" type="Spline"></e-series>
+                    <e-series dataSource="@ViewBag.SplineChartData" xName="Month" width="3"
+                              yName="Ai95" name="Ai95" type="Spline"></e-series>
+                </e-series-collection>
+                <e-chart-legendsettings position="Top" alignment="Far" toggleVisibility="false">
+                    <e-legendsettings-textstyle color="#0f0f0f" size="1rem"></e-legendsettings-textstyle>
+                </e-chart-legendsettings>
+                <e-chart-tooltipsettings enable shared></e-chart-tooltipsettings>
+            </ejs-chart>
         </div>
-        <ejs-chart id="spline-chart" background="whitesmoke"
-                   palettes=@(new string[]{"#54ffa9","#ffe91a","#4287f5"})>
-            <e-chart-primaryxaxis valueType="Category">
-                <e-majorgridlines width="0"></e-majorgridlines>
-                <e-majorticklines width="0"></e-majorticklines>
-            </e-chart-primaryxaxis>
-            <e-chart-primaryyaxis>
-                <e-majorgridlines width="1" color="#32414d" dashArray="3,5"></e-majorgridlines>
-                <e-majorticklines width="0"></e-majorticklines>
-                <e-linestyle width="0"></e-linestyle>
-            </e-chart-primaryyaxis>
-            <e-chart-chartarea>
-                <e-chartarea-border width="0"></e-chartarea-border>
-            </e-chart-chartarea>
-            <e-series-collection>
-                <e-series dataSource="ViewBag.SplineData" name="Ai80" xName="Days" width="2" yName="MaxTemp" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline"></e-series>
-                <e-series dataSource="ViewBag.SplineData" name="Ai91" xName="Days" width="2" yName="AvgTemp" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline"></e-series>
-                <e-series dataSource="ViewBag.SplineData" name="Ai95" xName="Days" width="2" yName="MinTemp" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline"></e-series>
-            </e-series-collection>
-            <e-chart-legendsettings position="Top" alignment="Far" toggleVisibility="false">
-                <e-legendsettings-textstyle color="#0f0f0f" size="1rem"></e-legendsettings-textstyle>
-            </e-chart-legendsettings>
-            <e-chart-tooltipsettings enable shared></e-chart-tooltipsettings>
-        </ejs-chart>
-    </div>
 </div>

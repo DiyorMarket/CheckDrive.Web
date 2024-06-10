@@ -1,9 +1,9 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.MechanicHandover;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
 using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CheckDrive.Web.Stores.MechanicHandovers
 {
@@ -35,9 +35,33 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
 
             return result;
         }
-        public Task<MechanicHandover> CreateMechanicHandoverAsync(MechanicHandover mechanicHandover)
+        public async Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync()
         {
-            throw new NotImplementedException();
+            var response = await _api.GetAsync("mechanics/handovers");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch handovers.");
+            }
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<GetMechanicHandoverResponse>(json);
+
+            return result;
+        }
+        public async Task<MechanicHandoverDto> CreateMechanicHandoverAsync(MechanicHandoverForCreateDto mechanicHandoverForCreateDto)
+        {
+            var json = JsonConvert.SerializeObject(mechanicHandoverForCreateDto);
+            var response = await _api.PostAsync("mechanics/handover", json);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error creating mechanicAcceptance.");
+            }
+
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<MechanicHandoverDto>(jsonResponse);
         }
 
         public Task DeleteMechanicHandoverAsync(int id)
@@ -45,11 +69,11 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
             throw new NotImplementedException();
         }
 
-        public Task<MechanicHandover> GetMechanicHandoverAsync(int id)
+        public Task<MechanicHandoverDto> GetMechanicHandoverAsync(int id)
         {
             throw new NotImplementedException();
         }
-        public Task<MechanicHandover> UpdateMechanicHandoverAsync(int id, MechanicHandover mechanicHandover)
+        public Task<MechanicHandoverDto> UpdateMechanicHandoverAsync(int id, MechanicHandoverForUpdateDto mechanicHandover)
         {
             throw new NotImplementedException();
         }

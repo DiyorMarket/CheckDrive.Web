@@ -1,0 +1,159 @@
+﻿@model CheckDrive.Web.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>We are The Lotus Team</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            background: linear-gradient(to bottom right, rgba(0,0,0,0.8), rgba(0,0,0,0.6)), url('your-background-image.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+            margin: 0;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.8);
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            color: #fff;
+        }
+
+        .form-outline {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            height: 50px;
+            font-size: 18px;
+        }
+
+            .form-control::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+        .input-group-text {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .btn-hover {
+            width: 100%;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            margin-top: 20px;
+            height: 50px;
+            text-align: center;
+            border: none;
+            background-size: 300% 100%;
+            border-radius: 50px;
+            transition: all .4s ease-in-out;
+        }
+
+            .btn-hover.color-6 {
+                background-image: linear-gradient(to right, #009245, #FCEE21, #00A8C5, #D9E021);
+                box-shadow: 0 4px 15px 0 rgba(83, 176, 57, 0.75);
+            }
+
+        .text-danger {
+            font-size: 14px;
+            position: relative;
+            top: -10px;
+        }
+
+        .card-title {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .logo {
+            width: 120px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+</head>
+<body>
+    <div class="card">
+        <img src="~/images/Logo.png" class="logo" alt="logo">
+        <h4 class="card-title">Please login to your account</h4>
+        <form asp-action="Index" method="post">
+            <div class="form-outline">
+                <input type="text" asp-for="Login" id="login" class="form-control" placeholder="Login" />
+                @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-outline">
+                <div class="input-group">
+                    <input type="password" asp-for="Password" class="form-control" placeholder="Password" id="password" />
+                    <span class="input-group-text" onclick="togglePasswordVisibility()">
+                        <i id="password-icon" class="fas fa-eye-slash"></i>
+                    </span>
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn-hover color-6">Log in</button>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#password').focus(function () {
+                $(this).removeClass('input-validation-error');
+                $('span[data-valmsg-for="Password"]').empty();
+            });
+            $('#login').focus(function () {
+                $(this).removeClass('input-validation-error');
+                $('span[data-valmsg-for="Login"]').empty();
+            });
+        });
+
+        function togglePasswordVisibility() {
+            var passwordInput = $("#password");
+            var passwordIcon = $("#password-icon");
+
+            if (passwordInput.attr("type") === "password") {
+                passwordInput.attr("type", "text");
+                passwordIcon.removeClass("fa-eye-slash").addClass("fa-eye");
+                passwordInput.removeClass("input-validation-error");
+                $("#password ~ .text-danger").empty();
+            } else {
+                passwordInput.attr("type", "password");
+                passwordIcon.removeClass("fa-eye").addClass("fa-eye-slash");
+            }
+        }
+    </script>
+</body>
+</html>

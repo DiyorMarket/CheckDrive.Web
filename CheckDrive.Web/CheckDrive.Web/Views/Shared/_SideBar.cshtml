@@ -64,7 +64,7 @@
     {
         text = "Dispetcherlar",
         iconCss = "fa-solid fa-person-chalkboard",
-        url = "/dispatchers"
+        url = "/DispatcherReviews"
     });
 
     menuItems.Add(new
@@ -80,9 +80,15 @@
     });
     menuItems.Add(new
     {
-        text = "Operator oynasi",
+        text = "Mexanik(Qabul qiluvchi) oynasi",
         iconCss = "fa-solid fa-person-chalkboard",
-        url = "/PersonalOperatorReviews"
+        url = Url.Action("PersonalIndex", "MechanicAcceptances")
+    });
+    menuItems.Add(new
+    {
+        text = "Mexanik(Topshiruvchi) oynasi",
+        iconCss = "fa-solid fa-person-chalkboard",
+        url = Url.Action("PersonalIndex", "MechanicHandovers")
     });
 }
 
