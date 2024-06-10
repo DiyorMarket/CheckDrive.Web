@@ -13,14 +13,13 @@ namespace CheckDrive.Web.Stores.DoctorReviews
 
         public async Task<GetDoctorReviewResponse> GetDoctorReviews(int? pageNumber)
         {
-            var response = await _api.GetAsync("doctors/reviews?OrderBy=datedesc");
             StringBuilder query = new("");
 
             if (pageNumber != null)
             {
                 query.Append($"pageNumber={pageNumber}");
             }
-            var response = await _api.GetAsync("doctors/reviews?" + query.ToString());
+            var response = await _api.GetAsync("doctors/reviews?OrderBy=datedesc&" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {

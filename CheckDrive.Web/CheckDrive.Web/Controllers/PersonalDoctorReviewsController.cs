@@ -31,17 +31,8 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index(int? pageNumber)
         {
             var currentDate = DateTime.Today;
-            var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviews();
+            var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviews(pageNumber);
             var driversResponse = await _driverDataStore.GetDriversAsync();
-            var response = await _doctorReviewDataStore.GetDoctorReviews( pageNumber);
-            var doctorReviews = response.Data.Select(r => new
-            {
-                r.Id,
-                r.DriverName,
-                r.DoctorName,
-                IsHealthy = r.IsHealthy ? "Sog`lom" : "Kasal",
-                r.Comments
-            }).ToList();
 
             var doctorReviews = new List<DoctorReviewDto>();
 
@@ -88,6 +79,7 @@ namespace CheckDrive.Web.Controllers
 
             return View(doctorReviews);
         }
+
 
         public async Task<IActionResult> Details(int id)
         {
