@@ -28,11 +28,11 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Index(int? pageNumber)
+        public async Task<IActionResult> Index(int? pageNumber,string? searchString)
         {
             var currentDate = DateTime.Today;
             var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviews(pageNumber);
-            var driversResponse = await _driverDataStore.GetDriversAsync();
+            var driversResponse = await _driverDataStore.GetDriversAsync(searchString);
 
             var doctorReviews = new List<DoctorReviewDto>();
 
@@ -192,7 +192,7 @@ namespace CheckDrive.Web.Controllers
 
         private async Task<List<SelectListItem>> GETDrivers()
         {
-            var driverResponse = await _driverDataStore.GetDriversAsync();
+            var driverResponse = await _driverDataStore.GetDriversAsync(null);
             var drivers = driverResponse.Data
                 .Select(d => new SelectListItem
                 {

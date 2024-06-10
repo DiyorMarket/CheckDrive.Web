@@ -155,7 +155,7 @@ namespace CheckDrive.Web.Controllers
 
         private async Task<List<SelectListItem>> GETDrivers()
         {
-            var driverResponse = await _driverDataStore.GetDriversAsync();
+            var driverResponse = await _driverDataStore.GetDriversAsync(null);
             var drivers = driverResponse.Data
                 .Select(d => new SelectListItem
                 {
