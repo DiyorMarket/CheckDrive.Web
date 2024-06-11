@@ -52,13 +52,17 @@
                                     </td>
                                     <td class="text-center vertical-align-middle">@review.DoctorName</td>
                                     <td class="text-center vertical-align-middle">
-                                        @if (review.IsHealthy)
+                                        @if (review.IsHealthy == true)
                                         {
-                                            <span class="badge bg-success shadow">Sog`lom</span>
+                                            <span class="badge bg-success shadow">Healthy</span>
+                                        }
+                                        else if(review.IsHealthy == false)
+                                        {
+                                            <span class="badge bg-danger shadow">Sick</span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-danger shadow">Sick</span>
+                                            <span class="badge bg-empty shadow"></span>
                                         }
                                     </td>
                                     <td class="text-center vertical-align-middle">@review.Comments</td>
@@ -86,6 +90,10 @@
 
     .bg-danger {
         background-color: #dc3545;
+    }
+
+    .bg-empty {
+        background-color: gray;
     }
 
     .container {

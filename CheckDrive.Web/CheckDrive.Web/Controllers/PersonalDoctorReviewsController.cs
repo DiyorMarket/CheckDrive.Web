@@ -65,7 +65,7 @@ namespace CheckDrive.Web.Controllers
                         DriverId = driver.Id,
                         DriverName = $"{driver.FirstName} {driver.LastName}",
                         DoctorName = "",
-                        IsHealthy = false,
+                        IsHealthy = null,
                         Comments = "",
                         Date = currentDate
                     };
@@ -78,7 +78,7 @@ namespace CheckDrive.Web.Controllers
                     DriverId = driver.Id,
                     DriverName = $"{driver.FirstName} {driver.LastName}",
                     DoctorName = "",
-                    IsHealthy = false,
+                    IsHealthy = null,
                     Comments = "",
                     Date = currentDate
                 }).ToList();
@@ -115,6 +115,12 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Если значение IsHealthy не установлено, установите его в false
+                if (doctorReview.IsHealthy == null)
+                {
+                    doctorReview.IsHealthy = false;
+                }
+
                 doctorReview.Date = DateTime.Now;
                 await _doctorReviewDataStore.CreateDoctorReview(doctorReview);
                 return RedirectToAction(nameof(Index));
@@ -129,8 +135,6 @@ namespace CheckDrive.Web.Controllers
 
             return View(doctorReview);
         }
-
-
 
         public async Task<IActionResult> Edit(int id)
         {
