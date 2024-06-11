@@ -1,12 +1,9 @@
 ﻿using CheckDrive.ApiContracts.DoctorReview;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Doctors;
 using CheckDrive.Web.Stores.Drivers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -28,7 +25,7 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Index(int? pageNumber,string? searchString)
+        public async Task<IActionResult> Index(int? pageNumber, string? searchString)
         {
             var currentDate = DateTime.Today;
             var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviews(pageNumber);

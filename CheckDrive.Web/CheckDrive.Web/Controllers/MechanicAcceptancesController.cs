@@ -7,120 +7,120 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
 
-    namespace CheckDrive.Web.Controllers
+namespace CheckDrive.Web.Controllers
+{
+    public class MechanicAcceptancesController : Controller
     {
-        public class MechanicAcceptancesController : Controller
+        private readonly IMechanicAcceptanceDataStore _mechanicAcceptanceDataStore;
+        private readonly IDriverDataStore _driverDataStore;
+        private readonly ICarDataStore _carDataStore;
+        private readonly IMechanicDataStore _mechanicDataStore;
+
+        public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore, IMechanicDataStore mechanicDataStore)
         {
-            private readonly IMechanicAcceptanceDataStore _mechanicAcceptanceDataStore;
-            private readonly IDriverDataStore _driverDataStore;
-            private readonly ICarDataStore _carDataStore;
-            private readonly IMechanicDataStore _mechanicDataStore;
+            _mechanicAcceptanceDataStore = mechanicAcceptanceDataStore;
+            _driverDataStore = driverDataStore;
+            _carDataStore = carDataStore;
+            _mechanicDataStore = mechanicDataStore;
+        }
 
-            public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore, IMechanicDataStore mechanicDataStore)
+        public async Task<IActionResult> Index(int? pageNumber)
+        {
+
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber);
+
+            ViewBag.PageSize = response.PageSize;
+            ViewBag.PageCount = response.TotalPages;
+            ViewBag.TotalCount = response.TotalCount;
+            ViewBag.CurrentPage = response.PageNumber;
+            ViewBag.HasPreviousPage = response.HasPreviousPage;
+            ViewBag.HasNextPage = response.HasNextPage;
+
+            var mechanicAcceptances = response.Data.Select(r => new
             {
-                _mechanicAcceptanceDataStore = mechanicAcceptanceDataStore;
-                _driverDataStore = driverDataStore;
-                _carDataStore = carDataStore;
-                _mechanicDataStore = mechanicDataStore;
-            }
-
-            public async Task<IActionResult> Index(int? pageNumber)
-            {
-
-                var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber);
-
-                ViewBag.PageSize = response.PageSize;
-                ViewBag.PageCount = response.TotalPages;
-                ViewBag.TotalCount = response.TotalCount;
-                ViewBag.CurrentPage = response.PageNumber;
-                ViewBag.HasPreviousPage = response.HasPreviousPage;
-                ViewBag.HasNextPage = response.HasNextPage;
-
-                var mechanicAcceptances = response.Data.Select(r => new
+                r.Id,
+                IsAccepted = r.IsAccepted ? "Qabul qilindi" : "Rad etildi",
+                r.Comments,
+                Status = ((StatusForDto)r.Status) switch
                 {
-                    r.Id,
-                    IsAccepted = r.IsAccepted ? "Qabul qilindi" : "Rad etildi",
-                    r.Comments,
-                    Status = ((StatusForDto)r.Status) switch
-                    {
-                        StatusForDto.Pending => "Pending",
-                        StatusForDto.Completed => "Completed",
-                        StatusForDto.Rejected => "Rejected",
-                        StatusForDto.Unassigned => "Unassigned",
-                        _ => "Unknown Status"
-                    },
-                    r.Date,
-                    r.Distance,
-                    r.DriverName,
-                    r.MechanicName,
-                    r.CarName,
-                    r.CarId
-                }).ToList();
+                    StatusForDto.Pending => "Pending",
+                    StatusForDto.Completed => "Completed",
+                    StatusForDto.Rejected => "Rejected",
+                    StatusForDto.Unassigned => "Unassigned",
+                    _ => "Unknown Status"
+                },
+                r.Date,
+                r.Distance,
+                r.DriverName,
+                r.MechanicName,
+                r.CarName,
+                r.CarId
+            }).ToList();
 
-                ViewBag.MechanicAcceptances = mechanicAcceptances;
+            ViewBag.MechanicAcceptances = mechanicAcceptances;
 
-                return View();
-            }
+            return View();
+        }
 
 
         public async Task<IActionResult> PersonalIndex(string? searchstring, int? pageNumber)
         {
-                var drivers = await _driverDataStore.GetDriversAsync();
-                var cars = await _carDataStore.GetCarsAsync();
-                var mechanics = await _mechanicDataStore.GetMechanicsAsync();
-                var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber);
+            var drivers = await _driverDataStore.GetDriversAsync(null);
+            var cars = await _carDataStore.GetCarsAsync(null,null);
+            var mechanics = await _mechanicDataStore.GetMechanicsAsync();
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber);
 
-                ViewBag.PageSize = response.PageSize;
-                ViewBag.PageCount = response.TotalPages;
-                ViewBag.TotalCount = response.TotalCount;
-                ViewBag.CurrentPage = response.PageNumber;
-                ViewBag.HasPreviousPage = response.HasPreviousPage;
-                ViewBag.HasNextPage = response.HasNextPage;
+            ViewBag.PageSize = response.PageSize;
+            ViewBag.PageCount = response.TotalPages;
+            ViewBag.TotalCount = response.TotalCount;
+            ViewBag.CurrentPage = response.PageNumber;
+            ViewBag.HasPreviousPage = response.HasPreviousPage;
+            ViewBag.HasNextPage = response.HasNextPage;
 
-                var mechanicAcceptances = response.Data.Select(r => new
+            var mechanicAcceptances = response.Data.Select(r => new
+            {
+                r.Id,
+                IsAccepted = r.IsAccepted ? "Qabul qilindi" : "Rad etildi",
+                r.Comments,
+                Status = ((StatusForDto)r.Status) switch
                 {
-                    r.Id,
-                    IsAccepted = r.IsAccepted ? "Qabul qilindi" : "Rad etildi",
-                    r.Comments,
-                    Status = ((StatusForDto)r.Status) switch
-                    {
-                        StatusForDto.Pending => "Pending",
-                        StatusForDto.Completed => "Completed",
-                        StatusForDto.Rejected => "Rejected",
-                        StatusForDto.Unassigned => "Unassigned",
-                        _ => "Unknown Status"
-                    },
-                    r.Date,
-                    r.Distance,
-                    r.DriverName,
-                    r.MechanicName,
-                    r.MechanicId,
-                    r.DriverId,
-                    r.CarName
-                }).ToList();
+                    StatusForDto.Pending => "Pending",
+                    StatusForDto.Completed => "Completed",
+                    StatusForDto.Rejected => "Rejected",
+                    StatusForDto.Unassigned => "Unassigned",
+                    _ => "Unknown Status"
+                },
+                r.Date,
+                r.Distance,
+                r.DriverName,
+                r.MechanicName,
+                r.MechanicId,
+                r.DriverId,
+                r.CarName
+            }).ToList();
 
-                ViewBag.MechanicAcceptances = mechanicAcceptances;
+            ViewBag.MechanicAcceptances = mechanicAcceptances;
 
-                ViewBag.Mechanics = mechanics.Data.Select(d => new SelectListItem
-                {
-                    Value = d.Id.ToString(),
-                    Text = $"{d.FirstName} {d.LastName}"
-                }).ToList();
+            ViewBag.Mechanics = mechanics.Data.Select(d => new SelectListItem
+            {
+                Value = d.Id.ToString(),
+                Text = $"{d.FirstName} {d.LastName}"
+            }).ToList();
 
-                ViewBag.Drivers = drivers.Data.Select(d => new SelectListItem
-                {
-                    Value = d.Id.ToString(),
-                    Text = $"{d.FirstName} {d.LastName}"
-                }).ToList();
+            ViewBag.Drivers = drivers.Data.Select(d => new SelectListItem
+            {
+                Value = d.Id.ToString(),
+                Text = $"{d.FirstName} {d.LastName}"
+            }).ToList();
 
-                ViewBag.Cars = cars.Data.Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = $"{c.Model} ({c.Number})"
-                }).ToList();
+            ViewBag.Cars = cars.Data.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = $"{c.Model} ({c.Number})"
+            }).ToList();
 
-                return View();
-            }
+            return View();
+        }
 
 
 
@@ -141,116 +141,116 @@
 
 
         [HttpPost]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Create([Bind("IsAccepted,Comments,Date,MechanicId,Distance,CarId,DriverId")] MechanicAcceptanceForCreateDto mechanicAcceptanceForCreateDto)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("IsAccepted,Comments,Date,MechanicId,Distance,CarId,DriverId")] MechanicAcceptanceForCreateDto mechanicAcceptanceForCreateDto)
+        {
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    mechanicAcceptanceForCreateDto.Date = DateTime.Now;
-                    await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
-                    return RedirectToAction(nameof(PersonalIndex));
-                }
-                return View(mechanicAcceptanceForCreateDto);
+                mechanicAcceptanceForCreateDto.Date = DateTime.Now;
+                await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
+                return RedirectToAction(nameof(PersonalIndex));
+            }
+            return View(mechanicAcceptanceForCreateDto);
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
+            if (mechanicAcceptance == null)
+            {
+                return NotFound();
             }
 
-            public async Task<IActionResult> Edit(int id)
+            ViewBag.Mechanics = new SelectList(await GETMechanics(), "Value", "Text");
+            ViewBag.Drivers = new SelectList(await GETDrivers(), "Value", "Text");
+            ViewBag.Cars = new SelectList(await GETCars(), "Value", "Text");
+
+            return View(mechanicAcceptance);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, MechanicAcceptanceForUpdateDto mechanicAcceptance)
+        {
+            if (id != mechanicAcceptance.Id)
             {
-                var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
-                if (mechanicAcceptance == null)
-                {
-                    return NotFound();
-                }
-
-                ViewBag.Mechanics = new SelectList(await GETMechanics(), "Value", "Text");
-                ViewBag.Drivers = new SelectList(await GETDrivers(), "Value", "Text");
-                ViewBag.Cars = new SelectList(await GETCars(), "Value", "Text");
-
-                return View(mechanicAcceptance);
+                return NotFound();
             }
 
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Edit(int id, MechanicAcceptanceForUpdateDto mechanicAcceptance)
+            if (ModelState.IsValid)
             {
-                if (id != mechanicAcceptance.Id)
+                try
                 {
-                    return NotFound();
+                    await _mechanicAcceptanceDataStore.UpdateMechanicAcceptanceAsync(id, mechanicAcceptance);
                 }
-
-                if (ModelState.IsValid)
+                catch (Exception)
                 {
-                    try
+                    if (!await MechanicAcceptanceExists(id))
                     {
-                        await _mechanicAcceptanceDataStore.UpdateMechanicAcceptanceAsync(id, mechanicAcceptance);
+                        return NotFound();
                     }
-                    catch (Exception)
+                    else
                     {
-                        if (!await MechanicAcceptanceExists(id))
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            throw;
-                        }
+                        throw;
                     }
-                    return RedirectToAction(nameof(Index));
                 }
-
-                ViewBag.Drivers = new SelectList(await GETDrivers(), "Value", "Text");
-                ViewBag.Cars = new SelectList(await GETCars(), "Value", "Text");
-
-                return View(mechanicAcceptance);
-            }
-
-            public async Task<IActionResult> Delete(int id)
-            {
-                var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
-                if (mechanicAcceptance == null)
-                {
-                    return NotFound();
-                }
-                return View(mechanicAcceptance);
-            }
-
-            [HttpPost, ActionName("Delete")]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> DeleteConfirmed(int id)
-            {
-                await _mechanicAcceptanceDataStore.DeleteMechanicAcceptanceAsync(id);
                 return RedirectToAction(nameof(Index));
             }
 
-            private async Task<bool> MechanicAcceptanceExists(int id)
-            {
-                var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
-                return mechanicAcceptance != null;
-            }
+            ViewBag.Drivers = new SelectList(await GETDrivers(), "Value", "Text");
+            ViewBag.Cars = new SelectList(await GETCars(), "Value", "Text");
 
-            private async Task<List<SelectListItem>> GETMechanics()
+            return View(mechanicAcceptance);
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
+            if (mechanicAcceptance == null)
             {
-                var mechanicResponse = await _mechanicDataStore.GetMechanicsAsync();
-                var mechanics = mechanicResponse.Data
-                    .Select(d => new SelectListItem
-                    {
-                        Value = d.Id.ToString(),
-                        Text = $"{d.FirstName} {d.LastName}"
-                    })
-                    .ToList();
-                return mechanics;
+                return NotFound();
             }
-            private async Task<List<SelectListItem>> GETCars()
-            {
-                var carResponse = await _carDataStore.GetCarsAsync();
-                var cars = carResponse.Data
-                    .Select(c => new SelectListItem
-                    {
-                        Value = c.Id.ToString(),
-                        Text = $"{c.Model} ({c.Number})"
-                    })
-                    .ToList();
-                return cars;
-            }
+            return View(mechanicAcceptance);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await _mechanicAcceptanceDataStore.DeleteMechanicAcceptanceAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<bool> MechanicAcceptanceExists(int id)
+        {
+            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
+            return mechanicAcceptance != null;
+        }
+
+        private async Task<List<SelectListItem>> GETMechanics()
+        {
+            var mechanicResponse = await _mechanicDataStore.GetMechanicsAsync();
+            var mechanics = mechanicResponse.Data
+                .Select(d => new SelectListItem
+                {
+                    Value = d.Id.ToString(),
+                    Text = $"{d.FirstName} {d.LastName}"
+                })
+                .ToList();
+            return mechanics;
+        }
+        private async Task<List<SelectListItem>> GETCars()
+        {
+            var carResponse = await _carDataStore.GetCarsAsync(null,null);
+            var cars = carResponse.Data
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = $"{c.Model} ({c.Number})"
+                })
+                .ToList();
+            return cars;
+        }
 
         private async Task<List<SelectListItem>> GETDrivers()
         {
@@ -265,3 +265,4 @@
             return drivers;
         }
     }
+}
