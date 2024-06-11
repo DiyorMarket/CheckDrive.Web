@@ -6,10 +6,11 @@ namespace CheckDrive.Web.Stores.DoctorReviews
 {
     public interface IDoctorReviewDataStore
     {
-        Task<GetDoctorReviewResponse> GetDoctorReviews(int? pageNumber);
-        Task<DoctorReviewDto> GetDoctorReview(int id);
-        Task<DoctorReviewDto> CreateDoctorReview(DoctorReviewForCreateDto review);
-        Task<DoctorReview> UpdateDoctorReview(int id, DoctorReviewForUpdateDto review);
-        Task DeleteDoctorReview(int id);
+        Task<GetDoctorReviewResponse> GetDoctorReviewsAsync(int? pageNumber);
+        Task<IEnumerable<DoctorReviewDto>>? GetTodayReviewsAsync();
+        Task<DoctorReviewDto> GetDoctorReviewAsync(int id);
+        Task<DoctorReviewDto> CreateDoctorReviewAsync(DoctorReviewForCreateDto review);
+        Task<DoctorReview> UpdateDoctorReviewAsync(int id, DoctorReviewForUpdateDto review);
+        Task DeleteDoctorReviewAsync(int id);
     }
 }
