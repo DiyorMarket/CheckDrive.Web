@@ -1,9 +1,12 @@
 ﻿using CheckDrive.ApiContracts.DoctorReview;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Doctors;
 using CheckDrive.Web.Stores.Drivers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -25,26 +28,58 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Index(int? pageNumber)
+        public async Task<IActionResult> Index(int? pageNumber,string? searchString)
         {
-            var doctors = await _doctorDataStore.GetDoctors();
-            var drivers = await _driverDataStore.GetDriversAsync();
+            var currentDate = DateTime.Today;
+            var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviews(pageNumber);
+            var driversResponse = await _driverDataStore.GetDriversAsync(searchString);
 
-   
-            var response = await _doctorReviewDataStore.GetDoctorReviews( pageNumber);
-            var doctorReviews = response.Data.Select(r => new
+            var doctorReviews = new List<DoctorReviewDto>();
+
+            if (reviewsResponse.Data.Any())
             {
-                r.Id,
-                r.DriverName,
-                r.DoctorName,
-                IsHealthy = r.IsHealthy ? "Sog`lom" : "Kasal",
-                r.Comments
-            }).ToList();
+                doctorReviews = driversResponse.Data.Select(driver =>
+                {
+                    var review = reviewsResponse.Data.FirstOrDefault(r => r.DriverId == driver.Id && r.Date.Date == currentDate);
+                    if (review != null)
+                    {
+                        return new DoctorReviewDto
+                        {
+                            DriverId = driver.Id,
+                            DriverName = $"{driver.FirstName} {driver.LastName}",
+                            DoctorName = review.DoctorName,
+                            IsHealthy = review.IsHealthy,
+                            Comments = review.Comments,
+                            Date = review.Date
+                        };
+                    }
+                    return new DoctorReviewDto
+                    {
+                        DriverId = driver.Id,
+                        DriverName = $"{driver.FirstName} {driver.LastName}",
+                        DoctorName = "",
+                        IsHealthy = false,
+                        Comments = "",
+                        Date = currentDate
+                    };
+                }).ToList();
+            }
+            else
+            {
+                doctorReviews = driversResponse.Data.Select(driver => new DoctorReviewDto
+                {
+                    DriverId = driver.Id,
+                    DriverName = $"{driver.FirstName} {driver.LastName}",
+                    DoctorName = "",
+                    IsHealthy = false,
+                    Comments = "",
+                    Date = currentDate
+                }).ToList();
+            }
 
-            ViewBag.DoctorsReview = doctorReviews;
-
-            return View();
+            return View(doctorReviews);
         }
+
 
         public async Task<IActionResult> Details(int id)
         {
@@ -56,28 +91,39 @@ namespace CheckDrive.Web.Controllers
             return View(doctorReview);
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int driverId, string driverName)
         {
             var doctors = await GETDoctors();
-            var drivers = await GETDrivers();
 
-            ViewBag.Drivers = new SelectList(drivers, "Value", "Text");
             ViewBag.Doctors = new SelectList(doctors, "Value", "Text");
+            ViewBag.SelectedDriverName = driverName;
+            ViewBag.SelectedDriverId = driverId;
 
-            return View();
+            return View(new DoctorReviewForCreateDto { DriverId = driverId, Date = DateTime.Now });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IsHealthy,Comments,Date,DriverId,DoctorId")] DoctorReviewForCreateDto doctorReview)
+        public async Task<IActionResult> Create([Bind("IsHealthy,Comments,DriverId,DoctorId")] DoctorReviewForCreateDto doctorReview)
         {
             if (ModelState.IsValid)
             {
+                doctorReview.Date = DateTime.Now;
                 await _doctorReviewDataStore.CreateDoctorReview(doctorReview);
                 return RedirectToAction(nameof(Index));
             }
+
+            var doctors = await GETDoctors();
+            ViewBag.Doctors = new SelectList(doctors, "Value", "Text");
+
+            var driver = await _driverDataStore.GetDriverAsync(doctorReview.DriverId);
+            ViewBag.SelectedDriverName = $"{driver.FirstName} {driver.LastName}";
+            ViewBag.SelectedDriverId = doctorReview.DriverId;
+
             return View(doctorReview);
         }
+
+
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -146,7 +192,7 @@ namespace CheckDrive.Web.Controllers
 
         private async Task<List<SelectListItem>> GETDrivers()
         {
-            var driverResponse = await _driverDataStore.GetDriversAsync();
+            var driverResponse = await _driverDataStore.GetDriversAsync(null);
             var drivers = driverResponse.Data
                 .Select(d => new SelectListItem
                 {
@@ -170,4 +216,5 @@ namespace CheckDrive.Web.Controllers
             return doctors;
         }
     }
+
 }

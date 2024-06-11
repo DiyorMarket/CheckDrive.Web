@@ -1,44 +1,133 @@
-﻿@model CheckDrive.ApiContracts.DoctorReview.DoctorReviewDto
+﻿@model IEnumerable<CheckDrive.ApiContracts.DoctorReview.DoctorReviewDto>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
 }
 
-<h1 style="margin-left:180px">Shifokor oynasi</h1>
+<h1 class="text-center">Shifokor oynasi</h1>
 
-<div class="col-12 text-end mb-2">
-    <a class="btn btn-success" asp-action="create" style="margin-right:180px">
-        <i class="fa fa-plus"></i> Create
-    </a>
-</div>
+<form asp-controller="PersonalDoctorReviews" asp-action="Index">
+    <div class="container mt-5">
+        <div class="row justify-content-between align-items-center mb-4">
+            <!-- Search -->
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input type="text" class="form-control rounded-left" placeholder="Haydovchini kiriting ..." name="searchString" value="@ViewBag.SearchString">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div class="row">
-    <div class="col-12 text-center">
-        <ejs-grid id="doctorReviews-list" dataSource="@ViewBag.DoctorsReview" gridLines="Vertical" allowSorting="true" style="margin: 0 auto;">
-            <e-grid-columns>
-                <e-grid-column headerText="Haydovshi F.I." field="DriverName" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
-                <e-grid-column headerText="Shifokor F.I." field="DoctorName" textAlign="Center" typeof="text" class="customcss" width="20%"></e-grid-column>
-                <e-grid-column headerText="Sog`lig`i" field="IsHealthy" textAlign="Center" width="20%"></e-grid-column>
-                <e-grid-column headerText="Sabab" field="Comments" textAlign="Center" typeof="text" class="customcss" width="40%"></e-grid-column>
-            </e-grid-columns>
-        </ejs-grid>
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover shadow">
+                        <thead>
+                            <tr>
+                                <th class="text-center vertical-align-middle">Haydovshi F.I.</th>
+                                <th class="text-center vertical-align-middle">Shifokor F.I.</th>
+                                <th class="text-center vertical-align-middle">Sog`lig`i</th>
+                                <th class="text-center vertical-align-middle">Izoh</th>
+                                <th class="text-center vertical-align-middle">Sana</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var review in Model)
+                            {
+                                <tr>
+                                    <td class="text-center vertical-align-middle">
+                                        @if (!string.IsNullOrEmpty(review.DoctorName))
+                                        {
+                                            @review.DriverName
+                                        }
+                                        else
+                                        {
+                                            <a href="/PersonalDoctorReviews/Create?driverId=@review.DriverId&driverName=@review.DriverName">@review.DriverName</a>
+                                        }
+                                    </td>
+                                    <td class="text-center vertical-align-middle">@review.DoctorName</td>
+                                    <td class="text-center vertical-align-middle">
+                                        @if (review.IsHealthy)
+                                        {
+                                            <span class="badge bg-success shadow">Sog`lom</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger shadow">Sick</span>
+                                        }
+                                    </td>
+                                    <td class="text-center vertical-align-middle">@review.Comments</td>
+                                    <td class="text-center vertical-align-middle">@review.Date</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+</form>
 
 <style>
-    #doctorReviews-list {
-        width: 80% !important;
+    .badge {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 5px;
     }
 
-        #doctorReviews-list .e-gridheader,
-        #doctorReviews-list .e-gridcontent {
-            width: 100% !important;
+    .bg-success {
+        background-color: #28a745;
+    }
+
+    .bg-danger {
+        background-color: #dc3545;
+    }
+
+    .container {
+        margin-top: 30px;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #dee2e6;
         }
 
-            #doctorReviews-list .e-gridheader th,
-            #doctorReviews-list .e-gridcontent td {
-                width: auto !important;
-                white-space: nowrap;
-            }
+    .pagination {
+        justify-content: flex-end;
+    }
+
+    .shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .pagination .page-link {
+        margin-left: 5px;
+    }
+
+    .pagination .page-item.shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .vertical-align-middle {
+        vertical-align: middle !important;
+    }
+
+    .row {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    .col-md-4, .col-md-12 {
+        padding-right: 0;
+        padding-left: 0;
+    }
 </style>

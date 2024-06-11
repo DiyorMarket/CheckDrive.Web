@@ -21,7 +21,7 @@ namespace CheckDrive.Web.Service
         {
             string token = string.Empty;
             var request = new HttpRequestMessage(HttpMethod.Get, _client.BaseAddress?.AbsolutePath + "/" + url);
-            _contextAccessor.HttpContext?.Request.Cookies.TryGetValue(Configurations.JwtToken, out token);
+            _contextAccessor.HttpContext?.Request.Cookies.TryGetValue("tasty-cookies", out token);
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             var response = await _client.SendAsync(request);
@@ -41,7 +41,7 @@ namespace CheckDrive.Web.Service
             {
                 Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
             };
-            _contextAccessor.HttpContext?.Request.Cookies.TryGetValue(Configurations.JwtToken, out token);
+            _contextAccessor.HttpContext?.Request.Cookies.TryGetValue("tasty-cookies", out token);
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             var response = await _client.SendAsync(request);
@@ -61,7 +61,7 @@ namespace CheckDrive.Web.Service
             {
                 Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
             };
-            _contextAccessor.HttpContext?.Request.Cookies.TryGetValue(Configurations.JwtToken, out token);
+            _contextAccessor.HttpContext?.Request.Cookies.TryGetValue("tasty-cookies", out token);
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             var response = await _client.SendAsync(request);
@@ -78,7 +78,7 @@ namespace CheckDrive.Web.Service
         {
             string token = string.Empty;
             var request = new HttpRequestMessage(HttpMethod.Delete, _client.BaseAddress?.AbsolutePath + "/" + url);
-            _contextAccessor.HttpContext?.Request.Cookies.TryGetValue(Configurations.JwtToken, out token);
+            _contextAccessor.HttpContext?.Request.Cookies.TryGetValue("tasty-cookies", out token);
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             var response = await _client.SendAsync(request);

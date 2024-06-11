@@ -6,7 +6,7 @@ namespace CheckDrive.Web.Stores.Drivers
 {
     public interface IDriverDataStore
     {
-        Task<GetDriverResponse> GetDriversAsync();
+        Task<GetDriverResponse> GetDriversAsync(string? searchString);
         Task<DriverDto> GetDriverAsync(int id);
         Task<DriverDto> CreateDriverAsync(DriverForCreateDto driverForCreate);
         Task<DriverDto> UpdateDriverAsync(int id, AccountForUpdateDto driverForUpdate);

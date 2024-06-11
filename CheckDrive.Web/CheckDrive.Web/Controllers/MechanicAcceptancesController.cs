@@ -1,4 +1,4 @@
-﻿    using CheckDrive.ApiContracts;
+    using CheckDrive.ApiContracts;
     using CheckDrive.ApiContracts.MechanicAcceptance;
     using CheckDrive.Web.Stores.Cars;
     using CheckDrive.Web.Stores.Drivers;
@@ -62,8 +62,9 @@
                 return View();
             }
 
-            public async Task<IActionResult> PersonalIndex(int? pageNumber)
-            {
+
+        public async Task<IActionResult> PersonalIndex(string? searchstring, int? pageNumber)
+        {
                 var drivers = await _driverDataStore.GetDriversAsync();
                 var cars = await _carDataStore.GetCarsAsync();
                 var mechanics = await _mechanicDataStore.GetMechanicsAsync();
@@ -238,20 +239,6 @@
                     .ToList();
                 return mechanics;
             }
-
-            private async Task<List<SelectListItem>> GETDrivers()
-            {
-                var driverResponse = await _driverDataStore.GetDriversAsync();
-                var drivers = driverResponse.Data
-                    .Select(d => new SelectListItem
-                    {
-                        Value = d.Id.ToString(),
-                        Text = $"{d.FirstName} {d.LastName}"
-                    })
-                    .ToList();
-                return drivers;
-            }
-
             private async Task<List<SelectListItem>> GETCars()
             {
                 var carResponse = await _carDataStore.GetCarsAsync();
@@ -264,5 +251,17 @@
                     .ToList();
                 return cars;
             }
+
+        private async Task<List<SelectListItem>> GETDrivers()
+        {
+            var driverResponse = await _driverDataStore.GetDriversAsync(null);
+            var drivers = driverResponse.Data
+                .Select(d => new SelectListItem
+                {
+                    Value = d.Id.ToString(),
+                    Text = $"{d.FirstName} {d.LastName}"
+                })
+                .ToList();
+            return drivers;
         }
     }

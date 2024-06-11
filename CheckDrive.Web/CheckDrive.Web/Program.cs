@@ -13,7 +13,7 @@ builder.Services.ConfigureServices();
 builder.Services.AddHttpContextAccessor();
 
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(Configurations.SynfusionLicenseKey);
-
+//builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -33,6 +33,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+    pattern: "{controller=PersonalOperatorReviews}/{action=Index}/{id?}");
 
 app.Run();
