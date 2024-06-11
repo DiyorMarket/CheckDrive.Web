@@ -12,7 +12,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var drivers = await _driverDataStore.GetDriversAsync(null);
+            var drivers = await _driverDataStore.GetDriversAsync(null,null);
 
             ViewBag.Drivers = drivers;
             return View();

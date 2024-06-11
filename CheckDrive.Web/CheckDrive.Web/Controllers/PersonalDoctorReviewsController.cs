@@ -31,8 +31,15 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index(int? pageNumber,string? searchString)
         {
             var currentDate = DateTime.Today;
-            var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviews(pageNumber);
-            var driversResponse = await _driverDataStore.GetDriversAsync(searchString);
+            var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviews(null);
+            var driversResponse = await _driverDataStore.GetDriversAsync(searchString, pageNumber);
+
+            ViewBag.PageSize = driversResponse.PageSize;
+            ViewBag.PageCount = driversResponse.TotalPages;
+            ViewBag.TotalCount = driversResponse.TotalCount;
+            ViewBag.CurrentPage = driversResponse.PageNumber;
+            ViewBag.HasPreviousPage = driversResponse.HasPreviousPage;
+            ViewBag.HasNextPage = driversResponse.HasNextPage;
 
             var doctorReviews = new List<DoctorReviewDto>();
 
@@ -196,7 +203,7 @@ namespace CheckDrive.Web.Controllers
 
         private async Task<List<SelectListItem>> GETDrivers()
         {
-            var driverResponse = await _driverDataStore.GetDriversAsync(null);
+            var driverResponse = await _driverDataStore.GetDriversAsync(null, null);
             var drivers = driverResponse.Data
                 .Select(d => new SelectListItem
                 {
