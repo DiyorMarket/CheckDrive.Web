@@ -16,7 +16,7 @@ namespace CheckDrive.Web.Stores.Drivers
             _api = apiClient;
         }
 
-        public async Task<GetDriverResponse> GetDriversAsync(string searchString)
+        public async Task<GetDriverResponse> GetDriversAsync(string? searchString,int? pageNumber)
         {
             StringBuilder query = new("");
 
@@ -24,11 +24,10 @@ namespace CheckDrive.Web.Stores.Drivers
             {
                 query.Append($"searchString={searchString}&");
             }
-
-            //if (pageNumber != null)
-            //{
-            //    query.Append($"pageNumber={pageNumber}");
-            //}
+            if (pageNumber != null)
+            {
+                query.Append($"pageNumber={pageNumber}");
+            }
 
             var response = await _api.GetAsync("drivers?" + query.ToString());
 
