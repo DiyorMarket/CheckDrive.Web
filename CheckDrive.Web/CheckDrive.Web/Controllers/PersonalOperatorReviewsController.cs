@@ -1,4 +1,5 @@
 ﻿using CheckDrive.ApiContracts;
+using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Drivers;
@@ -38,10 +39,10 @@ namespace CheckDrive.Web.Controllers
                 r.Comments,
                 Status = ((StatusForDto)r.Status) switch
                 {
-                    StatusForDto.Pending => "Pending",
-                    StatusForDto.Completed => "Completed",
-                    StatusForDto.Rejected => "Rejected",
-                    StatusForDto.Unassigned => "Unassigned",
+                    StatusForDto.Pending => "Kutilmoqda",
+                    StatusForDto.Completed => "Muvofaqiyatli bajarilda",
+                    StatusForDto.Rejected => "Rad etildi",
+                    StatusForDto.Unassigned => "Hali yaratilmagan",
                     _ => "Unknown Status"
                 },
                 r.Date,
@@ -49,6 +50,7 @@ namespace CheckDrive.Web.Controllers
             }).ToList();
 
             ViewBag.OperatorReviews = operatorReviews;
+
             return View();
         }
 
@@ -78,7 +80,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OilAmount,Comments,Status,Date,OperatorId,DriverId")] OperatorReview operatorReview)
+        public async Task<IActionResult> Create([Bind("OilAmount,Comments,Status,Date,OperatorId,DriverId")] OperatorReviewForCreateDto operatorReview)
         {
             if (ModelState.IsValid)
             {

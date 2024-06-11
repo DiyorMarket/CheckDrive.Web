@@ -1,8 +1,8 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.OperatorReview;
 
 namespace CheckDrive.Web.Responses
 {
-    public class GetOperatorReviewResponse : GetBaseResponse<ApiContracts.OperatorReview.OperatorReviewDto>
+    public class GetOperatorReviewResponse : GetBaseResponse<OperatorReviewDto>
     {
     }
 }
