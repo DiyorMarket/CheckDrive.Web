@@ -3,6 +3,7 @@ using CheckDrive.ApiContracts.Driver;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace CheckDrive.Web.Stores.Drivers
 {
@@ -15,14 +16,27 @@ namespace CheckDrive.Web.Stores.Drivers
             _api = apiClient;
         }
 
-        public async Task<GetDriverResponse> GetDriversAsync()
+        public async Task<GetDriverResponse> GetDriversAsync(string searchString)
         {
-            var response = await _api.GetAsync("drivers");
+            StringBuilder query = new("");
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query.Append($"searchString={searchString}&");
+            }
+
+            //if (pageNumber != null)
+            //{
+            //    query.Append($"pageNumber={pageNumber}");
+            //}
+
+            var response = await _api.GetAsync("drivers?" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Could not fetch drivers.");
             }
+
 
             var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<GetDriverResponse>(json);

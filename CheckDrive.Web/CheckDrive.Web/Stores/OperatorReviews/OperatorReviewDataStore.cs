@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.OperatorReview;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -9,7 +10,7 @@ namespace CheckDrive.Web.Stores.OperatorReviews
     {
         private readonly ApiClient _api = api;
 
-        public async Task<GetOperatorReviewResponse> GetOperatorsReviews()
+        public async Task<GetOperatorReviewResponse> GetOperatorReviews()
         {
             var response = await _api.GetAsync("operators/reviews");
 
@@ -24,14 +25,34 @@ namespace CheckDrive.Web.Stores.OperatorReviews
             return result;
         }
 
-        public Task<OperatorReview> GetOperatorReview(int id)
+        public async Task<OperatorReviewDto> GetOperatorReview(int id)
         {
-            throw new NotImplementedException();
+            var response = await _api.GetAsync($"operators/review/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not fetch operatorReview with id: {id}.");
+            }
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<OperatorReviewDto>(json);
+
+            return result;
         }
 
-        public Task<OperatorReview> CreateOperatorReview(OperatorReview operatorReview)
+        public async Task<OperatorReviewDto> CreateOperatorReview(OperatorReviewForCreateDto review)
         {
-            throw new NotImplementedException();
+            var json = JsonConvert.SerializeObject(review);
+            var response = await _api.PostAsync("operators/review", json);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error creating operatorReviews.");
+            }
+
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<OperatorReviewDto>(jsonResponse);
         }
 
         public Task DeleteOperatorReview(int id)

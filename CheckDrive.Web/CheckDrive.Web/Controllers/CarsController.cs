@@ -32,7 +32,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var car = await _carDataStore.GetCar(id);
+            var car = await _carDataStore.GetCarAsync(id);
             if (car == null)
             {
                 return NotFound();
@@ -42,7 +42,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> DetailsForMechanicAcceptance(int id)
         {
-            var car = await _carDataStore.GetCar(id);
+            var car = await _carDataStore.GetCarAsync(id);
             if (car == null)
             {
                 return NotFound();
@@ -52,7 +52,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> DetailsForMechanicHandover(int id)
         {
-            var car = await _carDataStore.GetCar(id);
+            var car = await _carDataStore.GetCarAsync(id);
             if (car == null)
             {
                 return NotFound();
@@ -71,7 +71,7 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _carDataStore.CreateCar(car);
+                await _carDataStore.CreateCarAsync(car);
                 return RedirectToAction(nameof(Index));
             }
             return View(car);
@@ -79,7 +79,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var car = await _carDataStore.GetCar(id);
+            var car = await _carDataStore.GetCarAsync(id);
             if (car == null)
             {
                 return NotFound();
@@ -93,7 +93,7 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _carDataStore.UpdateCar(id, car);
+                await _carDataStore.UpdateCarAsync(id, car);
                 return RedirectToAction(nameof(Index));
             }
             return View(car);
@@ -101,7 +101,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var car = await _carDataStore.GetCar(id);
+            var car = await _carDataStore.GetCarAsync(id);
             if (car == null)
             {
                 return NotFound();
@@ -113,7 +113,7 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _carDataStore.DeleteCar(id);
+            await _carDataStore.DeleteCarAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }

@@ -19,7 +19,7 @@ namespace CheckDrive.Web.Stores.DoctorReviews
             {
                 query.Append($"pageNumber={pageNumber}");
             }
-            var response = await _api.GetAsync("doctors/reviews?" + query.ToString());
+            var response = await _api.GetAsync("doctors/reviews?OrderBy=datedesc&" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {

@@ -15,7 +15,8 @@ namespace CheckDrive.Web.Stores.Cars
             _api = apiClient;
         }
 
-        public async Task<GetCarResponse> GetCarsAsync(string? searchString, int? pageNumber)
+        public async Task<GetCarResponse> GetCarsAsync(string? searchString,int? pageNumber)
+
         {
             StringBuilder query = new("");
 
@@ -41,21 +42,7 @@ namespace CheckDrive.Web.Stores.Cars
             return result;
         }
 
-        public async Task<GetCarResponse> GetCarsAsync()
-        {
-            var response = await _api.GetAsync("cars");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Could not fetch cars.");
-            }
-
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<GetCarResponse>(json);
-
-            return result;
-        }
-        public async Task<CarDto> GetCar(int id)
+        public async Task<CarDto> GetCarAsync(int id)
         {
             var response = await _api.GetAsync($"cars/{id}");
 
@@ -70,7 +57,7 @@ namespace CheckDrive.Web.Stores.Cars
             return result;
         }
 
-        public async Task<CarDto> CreateCar(CarForCreateDto carForCreate)
+        public async Task<CarDto> CreateCarAsync(CarForCreateDto carForCreate)
         {
             var json = JsonConvert.SerializeObject(carForCreate);
             var response = await _api.PostAsync("cars", json);
@@ -85,7 +72,7 @@ namespace CheckDrive.Web.Stores.Cars
             return JsonConvert.DeserializeObject<CarDto>(jsonResponse);
         }
 
-        public async Task<CarDto> UpdateCar(int id, CarForUpdateDto car)
+        public async Task<CarDto> UpdateCarAsync(int id, CarForUpdateDto car)
         {
             var json = JsonConvert.SerializeObject(car);
             var response = await _api.PutAsync($"cars/{car.Id}", json);
@@ -100,7 +87,7 @@ namespace CheckDrive.Web.Stores.Cars
             return JsonConvert.DeserializeObject<CarDto>(jsonResponse);
         }
 
-        public async Task DeleteCar(int id)
+        public async Task DeleteCarAsync(int id)
         {
             var response = await _api.DeleteAsync($"cars/{id}");
 

@@ -62,10 +62,10 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> PersonalIndex(int? pageNumber)
+        public async Task<IActionResult> PersonalIndex(string? searchstring, int? pageNumber)
         {
-            var drivers = await _driverDataStore.GetDriversAsync();
-            var cars = await _carDataStore.GetCarsAsync();
+            var drivers = await _driverDataStore.GetDriversAsync(null);
+            var cars = await _carDataStore.GetCarsAsync(searchstring, pageNumber);
             var mechanics = await _mechanicDataStore.GetMechanicsAsync();
             var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber);
 
@@ -233,7 +233,7 @@ namespace CheckDrive.Web.Controllers
 
         private async Task<List<SelectListItem>> GETDrivers()
         {
-            var driverResponse = await _driverDataStore.GetDriversAsync();
+            var driverResponse = await _driverDataStore.GetDriversAsync(null);
             var drivers = driverResponse.Data
                 .Select(d => new SelectListItem
                 {
@@ -246,7 +246,7 @@ namespace CheckDrive.Web.Controllers
 
         private async Task<List<SelectListItem>> GETCars()
         {
-            var carResponse = await _carDataStore.GetCarsAsync();
+            var carResponse = await _carDataStore.GetCarsAsync(null, null);
             var cars = carResponse.Data
                 .Select(c => new SelectListItem
                 {
