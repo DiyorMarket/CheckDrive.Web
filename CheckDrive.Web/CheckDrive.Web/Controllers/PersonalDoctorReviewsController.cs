@@ -31,6 +31,13 @@ namespace CheckDrive.Web.Controllers
             var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber);
             var driversResponse = await _driverDataStore.GetDriversAsync(searchString, pageNumber);
 
+            ViewBag.PageSize = driversResponse.PageSize;
+            ViewBag.PageCount = driversResponse.TotalPages;
+            ViewBag.TotalCount = driversResponse.TotalCount;
+            ViewBag.CurrentPage = driversResponse.PageNumber;
+            ViewBag.HasPreviousPage = driversResponse.HasPreviousPage;
+            ViewBag.HasNextPage = driversResponse.HasNextPage;
+
             var doctorReviews = new List<DoctorReviewDto>();
 
             if (reviewsResponse.Data.Any())
