@@ -37,7 +37,7 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
         }
         public async Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync()
         {
-            var response = await _api.GetAsync("mechanics/acceptances?");
+            var response = await _api.GetAsync("mechanics/acceptances?OrderBy=datedesc");
 
             if (!response.IsSuccessStatusCode)
             {

@@ -11,7 +11,7 @@ namespace CheckDrive.Web.Stores.DoctorReviews
     {
         private readonly ApiClient _api = api;
 
-        public async Task<GetDoctorReviewResponse> GetDoctorReviews(int? pageNumber)
+        public async Task<GetDoctorReviewResponse> GetDoctorReviewsAsync(int? pageNumber)
         {
             StringBuilder query = new("");
 
@@ -32,7 +32,23 @@ namespace CheckDrive.Web.Stores.DoctorReviews
             return result;
         }
 
-        public async Task<DoctorReviewDto> GetDoctorReview(int id)
+        public async Task<IEnumerable<DoctorReviewDto>>? GetTodayReviewsAsync()
+        {
+          
+            var response = await _api.GetAsync("doctors/reviews/today");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch doctorReviews.");
+            }
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<IEnumerable<DoctorReviewDto>>(json);
+
+            return result;
+        }
+
+        public async Task<DoctorReviewDto> GetDoctorReviewAsync(int id)
         {
             var response = await _api.GetAsync($"doctors/review/{id}");
 
@@ -47,7 +63,7 @@ namespace CheckDrive.Web.Stores.DoctorReviews
             return result;
         }
 
-        public async Task<DoctorReviewDto> CreateDoctorReview(DoctorReviewForCreateDto review)
+        public async Task<DoctorReviewDto> CreateDoctorReviewAsync(DoctorReviewForCreateDto review)
         {
             var json = JsonConvert.SerializeObject(review);
             var response = await _api.PostAsync("doctors/review", json);
@@ -62,7 +78,7 @@ namespace CheckDrive.Web.Stores.DoctorReviews
             return JsonConvert.DeserializeObject<DoctorReviewDto>(jsonResponse);
         }
 
-        public async Task<DoctorReview> UpdateDoctorReview(int id, DoctorReviewForUpdateDto review)
+        public async Task<DoctorReview> UpdateDoctorReviewAsync(int id, DoctorReviewForUpdateDto review)
         {
             var json = JsonConvert.SerializeObject(review);
             var response = await _api.PutAsync($"doctors/review/{review.Id}", json);
@@ -77,7 +93,7 @@ namespace CheckDrive.Web.Stores.DoctorReviews
             return JsonConvert.DeserializeObject<DoctorReview>(jsonResponse);
         }
 
-        public async Task DeleteDoctorReview(int id)
+        public async Task DeleteDoctorReviewAsync(int id)
         {
             throw new NotImplementedException();
         }

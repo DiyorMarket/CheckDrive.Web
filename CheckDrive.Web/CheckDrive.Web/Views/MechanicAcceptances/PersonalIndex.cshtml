@@ -1,4 +1,4 @@
-﻿@model CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto
+﻿@model IEnumerable<CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto>
 
 @{
     ViewData["Title"] = "Mechanic Acceptances (Personal)";
@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="d-flex justify-content-end mb-3">
-                <a class="btn btn-success shadow" asp-action="create">
+                <a class="btn btn-success shadow" href="@Url.Action("Create", "MechanicAcceptances")">
                     <i class="fa fa-plus"></i> Yaratish
                 </a>
             </div>
@@ -18,88 +18,58 @@
                 <table class="table table-bordered table-striped table-hover shadow">
                     <thead>
                         <tr>
-                            <th scope="col" style="width: 10%">Mexanik F.I</th>
                             <th scope="col" style="width: 13%">Haydovchi F.I</th>
+                            <th scope="col" style="width: 13%">Mexanik F.I</th>
                             <th scope="col" style="width: 10%">Qabul qilish</th>
                             <th scope="col" style="width: 38%">Izoh</th>
                             <th scope="col" style="width: 15%">Sana</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in ViewBag.MechanicAcceptances)
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-center vertical-align-middle">
+                                        @if (!string.IsNullOrEmpty(item.MechanicName))
+                                        {
+                                            @item.DriverName
+                                        }
+                                        else
+                                        {
+                                            <a href="/MechanicAcceptances/Create?driverId=@item.DriverId">@item.DriverName</a>
+                                        }
+                                    </td>
+                                    <td>@item.MechanicName</td>
+                                    <td>
+                                        @if (item.Date != null && item.Date.Value.Date == DateTime.Today)
+                                        {
+                                            @if (item.IsAccepted)
+                                            {
+                                                <span class="badge bg-success shadow">Qabul qilindi</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary shadow">Unknown</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td>@item.Comments</td>
+                                    <td>@item.Date?.ToString("dd-MM-yyyy")</td>
+                                </tr>
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td>@item.MechanicName</td>
-                                <td>@item.DriverName</td>
-                                <td>
-                                    @if ((string)item.IsAccepted == "Qabul qilindi")
-                                    {
-                                        <span class="badge bg-success shadow">Qabul qilindi</span>
-                                    }
-                                    else if ((string)item.IsAccepted == "Rad etildi")
-                                    {
-                                        <span class="badge bg-danger shadow">Rad etildi</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary shadow">Unknown</span>
-                                    }
-                                </td>
-                                <td>@item.Comments</td>
-                                <td>@item.Date</td>
+                                <td colspan="5" class="text-center">No data available</td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
 
-            <div class="col-md-12">
-                <div class="d-flex justify-content-end align-items-center my-3">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination mb-0">
-                            @if (ViewBag.HasPreviousPage)
-                            {
-                                <li class="page-item">
-                                    <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = 1 })" aria-label="First">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
-                                </li>
-                            }
-
-                            <li class="page-item active">
-                                <span class="page-link">@ViewBag.CurrentPage</span>
-                            </li>
-
-                            @if (ViewBag.CurrentPage < ViewBag.PageCount)
-                            {
-                                <li class="page-item">
-                                    <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
-                                </li>
-                            }
-                            @if (ViewBag.CurrentPage + 1 < ViewBag.PageCount)
-                            {
-                                <li class="page-item">
-                                    <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.CurrentPage + 2 })">@(@ViewBag.CurrentPage + 2)</a>
-                                </li>
-                            }
-                            @if (ViewBag.CurrentPage + 2 < ViewBag.PageCount)
-                            {
-                                <li class="page-item">
-                                    <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </nav>
-                    <div class="p-2">
-                        <p class="h6 mb-0">1 of @ViewBag.PageCount pages (@ViewBag.TotalCount items)</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -113,10 +83,6 @@
 
     .bg-success {
         background-color: #28a745;
-    }
-
-    .bg-danger {
-        background-color: #dc3545;
     }
 
     .bg-secondary {

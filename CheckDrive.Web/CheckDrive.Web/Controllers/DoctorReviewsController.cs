@@ -16,7 +16,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber)
         {
-            var response = await _doctorReviewDataStore.GetDoctorReviews(pageNumber);
+            var response = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -41,7 +41,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var review = await _doctorReviewDataStore.GetDoctorReview(id);
+            var review = await _doctorReviewDataStore.GetDoctorReviewAsync(id);
             if (review == null)
             {
                 return NotFound();
@@ -60,7 +60,7 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _doctorReviewDataStore.CreateDoctorReview(doctorReview);
+                await _doctorReviewDataStore.CreateDoctorReviewAsync(doctorReview);
                 return RedirectToAction(nameof(Index));
             }
             return View(doctorReview);
@@ -68,7 +68,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var review = await _doctorReviewDataStore.GetDoctorReview(id);
+            var review = await _doctorReviewDataStore.GetDoctorReviewAsync(id);
             if (review == null)
             {
                 return NotFound();
@@ -89,7 +89,7 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    await _doctorReviewDataStore.UpdateDoctorReview(id, doctorReview);
+                    await _doctorReviewDataStore.UpdateDoctorReviewAsync(id, doctorReview);
                 }
                 catch (Exception)
                 {
@@ -109,7 +109,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var review = await _doctorReviewDataStore.GetDoctorReview(id);
+            var review = await _doctorReviewDataStore.GetDoctorReviewAsync(id);
             if (review == null)
             {
                 return NotFound();
@@ -121,13 +121,13 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _doctorReviewDataStore.DeleteDoctorReview(id);
+            await _doctorReviewDataStore.DeleteDoctorReviewAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> DoctorReviewExists(int id)
         {
-            var review = await _doctorReviewDataStore.GetDoctorReview(id);
+            var review = await _doctorReviewDataStore.GetDoctorReviewAsync(id);
             return review != null;
         }
     }
