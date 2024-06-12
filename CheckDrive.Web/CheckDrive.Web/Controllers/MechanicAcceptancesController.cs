@@ -1,5 +1,6 @@
 using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.MechanicAcceptance;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Drivers;
@@ -167,6 +168,11 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (mechanicAcceptanceForCreateDto.IsAccepted == null)
+                {
+                    mechanicAcceptanceForCreateDto.IsAccepted = false;
+                }
+
                 mechanicAcceptanceForCreateDto.Date = DateTime.Now;
                 await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
                 return RedirectToAction(nameof(PersonalIndex));
