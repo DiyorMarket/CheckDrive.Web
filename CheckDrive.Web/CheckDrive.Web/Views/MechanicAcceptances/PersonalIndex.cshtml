@@ -31,7 +31,16 @@
                             foreach (var item in Model)
                             {
                                 <tr>
-                                    <td><a href="@Url.Action("Create", new { driverId = item.DriverId })">@item.DriverName</a></td>
+                                    <td class="text-center vertical-align-middle">
+                                        @if (!string.IsNullOrEmpty(item.MechanicName))
+                                        {
+                                            @item.DriverName
+                                        }
+                                        else
+                                        {
+                                            <a href="/MechanicAcceptances/Create?driverId=@item.DriverId">@item.DriverName</a>
+                                        }
+                                    </td>
                                     <td>@item.MechanicName</td>
                                     <td>
                                         @if (item.Date != null && item.Date.Value.Date == DateTime.Today)

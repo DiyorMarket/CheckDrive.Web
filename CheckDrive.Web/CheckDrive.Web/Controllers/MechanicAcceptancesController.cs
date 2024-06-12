@@ -82,7 +82,7 @@ namespace CheckDrive.Web.Controllers
                 var review = response.Data.FirstOrDefault(r => r.DriverId == doctor.DriverId);
                 if (review != null)
                 {
-                    if (review.Date == DateTime.Today)
+                    if (review.Date.HasValue && review.Date.Value.Date == DateTime.Today)
                     {
                         mechanicAcceptance.Add(new MechanicAcceptanceDto
                         {
