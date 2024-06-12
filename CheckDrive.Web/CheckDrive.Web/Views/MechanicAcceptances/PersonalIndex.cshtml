@@ -1,4 +1,4 @@
-﻿@model CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto
+﻿@model IEnumerable<CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto>
 
 @{
     ViewData["Title"] = "Mechanic Acceptances (Personal)";
@@ -26,34 +26,42 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in ViewBag.MechanicAcceptances)
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td><a href="@Url.Action("Create", new { driverId = item.DriverId })">@item.DriverName</a></td>
+                                    <td>@item.MechanicName</td>
+                                    <td>
+                                        @if (item.Date != null && item.Date.Value.Date == DateTime.Today)
+                                        {
+                                            @if (item.IsAccepted)
+                                            {
+                                                <span class="badge bg-success shadow">Qabul qilindi</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary shadow">Unknown</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td>@item.Comments</td>
+                                    <td>@item.Date?.ToString("dd-MM-yyyy")</td>
+                                </tr>
+                            }
+                        }
+                        else
                         {
                             <tr>
-                                <td><a href="@Url.Action("Create", new { driverId = item.DriverId })">@item.DriverName</a></td>
-                                <td>@item.MechanicName</td>
-                                <td>
-                                    @if ((string)item.IsAccepted == "Qabul qilindi")
-                                    {
-                                        <span class="badge bg-success shadow">Qabul qilindi</span>
-                                    }
-                                    else if ((string)item.IsAccepted == "Rad etildi")
-                                    {
-                                        <span class="badge bg-danger shadow">Rad etildi</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary shadow">Unknown</span>
-                                    }
-                                </td>
-                                <td>@item.Comments</td>
-                                <td>@item.Date</td>
+                                <td colspan="5" class="text-center">No data available</td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
 
-        </div>     
+        </div>
     </div>
 </div>
 
@@ -66,10 +74,6 @@
 
     .bg-success {
         background-color: #28a745;
-    }
-
-    .bg-danger {
-        background-color: #dc3545;
     }
 
     .bg-secondary {

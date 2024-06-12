@@ -68,46 +68,62 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(string? searchstring, int? pageNumber)
         {
-            // Fetching data from different stores
-            //var drivers = await _driverDataStore.GetDriversAsync(null);
-            //var cars = await _carDataStore.GetCarsAsync(null, null);
-            //var mechanics = await _mechanicDataStore.GetMechanicsAsync();
             var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
-            var doctorReviewsResponse = await _doctorReviewDataStore.GetTodayReviewsAsync();
+            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber);
 
-            var doctorReviews = doctorReviewsResponse;
+            var doctorReviews = doctorReviewsResponse.Data
+                .Where(dr => dr.Date.Date == DateTime.Today) // ‘ильтраци€ по сегодн€шней дате
+                .ToList();
 
             var mechanicAcceptance = new List<MechanicAcceptanceDto>();
 
-            if (response.Data.Any())
+            foreach (var doctor in doctorReviews)
             {
-                mechanicAcceptance = doctorReviews.Select(doctor =>
+                var review = response.Data.FirstOrDefault(r => r.DriverId == doctor.DriverId);
+                if (review != null)
                 {
-                    var review = response.Data.FirstOrDefault(r => r.DriverId == doctor.DriverId);
-                    if (review != null)
+                    if (review.Date == DateTime.Today)
                     {
-                        return new MechanicAcceptanceDto
+                        mechanicAcceptance.Add(new MechanicAcceptanceDto
                         {
-                            DriverName = review.DriverName,
+                            DriverId = review.DriverId,
+                            DriverName = doctor.DriverName,
                             MechanicName = review.MechanicName,
                             IsAccepted = review.IsAccepted,
                             Comments = review.Comments,
                             Date = review.Date
-                        };
+                        });
                     }
-                    return new MechanicAcceptanceDto
+                    else
                     {
-                        DriverName = review.DriverName,
+                        mechanicAcceptance.Add(new MechanicAcceptanceDto
+                        {
+                            DriverId = doctor.DriverId,
+                            DriverName = doctor.DriverName,
+                            MechanicName = "",
+                            IsAccepted = false,
+                            Comments = "",
+                            Date = null
+                        });
+                    }
+                }
+                else
+                {
+                    mechanicAcceptance.Add(new MechanicAcceptanceDto
+                    {
+                        DriverId = doctor.DriverId,
+                        DriverName = doctor.DriverName,
                         MechanicName = "",
                         IsAccepted = false,
                         Comments = "",
                         Date = null
-                    };
-                }).ToList();
+                    });
+                }
             }
 
             return View(mechanicAcceptance);
         }
+
 
 
 
@@ -122,15 +138,16 @@ namespace CheckDrive.Web.Controllers
             ViewBag.Drivers = new SelectList(drivers, "Value", "Text", driverId);
             ViewBag.Cars = new SelectList(cars, "Value", "Text");
 
+            var selectedDriverName = drivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
+            ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
             ViewBag.SelectedDriverId = driverId;
 
-            return View();
+            return View(new MechanicAcceptanceForCreateDto { DriverId = driverId ?? 0 });
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IsAccepted,Comments,Date,MechanicId,Distance,CarId,DriverId")] MechanicAcceptanceForCreateDto mechanicAcceptanceForCreateDto)
+        public async Task<IActionResult> Create([Bind("IsAccepted,Comments,MechanicId,Distance,CarId,DriverId")] MechanicAcceptanceForCreateDto mechanicAcceptanceForCreateDto)
         {
             if (ModelState.IsValid)
             {
@@ -138,23 +155,21 @@ namespace CheckDrive.Web.Controllers
                 await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
                 return RedirectToAction(nameof(PersonalIndex));
             }
+
+            var mechanics = await GETMechanics();
+            var drivers = await GETDrivers();
+            var cars = await GETCars();
+            ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
+            ViewBag.Drivers = new SelectList(drivers, "Value", "Text", mechanicAcceptanceForCreateDto.DriverId);
+            ViewBag.Cars = new SelectList(cars, "Value", "Text");
+
+            var selectedDriverName = drivers.FirstOrDefault(d => d.Value == mechanicAcceptanceForCreateDto.DriverId.ToString())?.Text;
+            ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
+            ViewBag.SelectedDriverId = mechanicAcceptanceForCreateDto.DriverId;
+
             return View(mechanicAcceptanceForCreateDto);
         }
 
-        public async Task<IActionResult> Edit(int id)
-        {
-            var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
-            if (mechanicAcceptance == null)
-            {
-                return NotFound();
-            }
-
-            ViewBag.Mechanics = new SelectList(await GETMechanics(), "Value", "Text");
-            ViewBag.Drivers = new SelectList(await GETDrivers(), "Value", "Text");
-            ViewBag.Cars = new SelectList(await GETCars(), "Value", "Text");
-
-            return View(mechanicAcceptance);
-        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
