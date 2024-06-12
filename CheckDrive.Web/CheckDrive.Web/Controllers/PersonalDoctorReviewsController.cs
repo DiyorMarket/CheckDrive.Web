@@ -29,7 +29,7 @@ namespace CheckDrive.Web.Controllers
         {
             var currentDate = DateTime.Today;
             var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber);
-            var driversResponse = await _driverDataStore.GetDriversAsync(searchString);
+            var driversResponse = await _driverDataStore.GetDriversAsync(searchString, pageNumber);
 
             var doctorReviews = new List<DoctorReviewDto>();
 
@@ -55,7 +55,7 @@ namespace CheckDrive.Web.Controllers
                         DriverId = driver.Id,
                         DriverName = $"{driver.FirstName} {driver.LastName}",
                         DoctorName = "",
-                        IsHealthy = false,
+                        IsHealthy = null,
                         Comments = "",
                         Date = currentDate
                     };
@@ -68,7 +68,7 @@ namespace CheckDrive.Web.Controllers
                     DriverId = driver.Id,
                     DriverName = $"{driver.FirstName} {driver.LastName}",
                     DoctorName = "",
-                    IsHealthy = false,
+                    IsHealthy = null,
                     Comments = "",
                     Date = currentDate
                 }).ToList();
@@ -105,6 +105,12 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Если значение IsHealthy не установлено, установите его в false
+                if (doctorReview.IsHealthy == null)
+                {
+                    doctorReview.IsHealthy = false;
+                }
+
                 doctorReview.Date = DateTime.Now;
                 await _doctorReviewDataStore.CreateDoctorReviewAsync(doctorReview);
                 return RedirectToAction(nameof(Index));
@@ -119,8 +125,6 @@ namespace CheckDrive.Web.Controllers
 
             return View(doctorReview);
         }
-
-
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -189,7 +193,7 @@ namespace CheckDrive.Web.Controllers
 
         private async Task<List<SelectListItem>> GETDrivers()
         {
-            var driverResponse = await _driverDataStore.GetDriversAsync(null);
+            var driverResponse = await _driverDataStore.GetDriversAsync(null, null);
             var drivers = driverResponse.Data
                 .Select(d => new SelectListItem
                 {
