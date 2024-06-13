@@ -72,7 +72,9 @@ namespace CheckDrive.Web.Controllers
             var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber);
 
             var doctorReviews = doctorReviewsResponse.Data
-                .Where(dr => dr.Date.Date == DateTime.Today) 
+
+                .Where(dr => dr.Date.Date == DateTime.Today)
+                .Where(dr => dr.IsHealthy == true)
                 .ToList();
 
             var mechanicAcceptance = new List<MechanicAcceptanceDto>();
@@ -124,26 +126,40 @@ namespace CheckDrive.Web.Controllers
             return View(mechanicAcceptance);
         }
 
-
-
-
-
         public async Task<IActionResult> Create(int? driverId)
         {
             var mechanics = await GETMechanics();
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null);
+            var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
+
+            var healthyDrivers = doctorReviews.Data
+                .Where(dr => dr.IsHealthy.HasValue && dr.IsHealthy.Value && dr.Date.Date == DateTime.Today)
+                .Select(dr => dr.DriverId)
+                .ToList();
+
+            var acceptedDrivers = mechanicAcceptances.Data
+                .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
+                .Select(ma => ma.DriverId)
+                .ToList();
+
+            var filteredDrivers = drivers
+                .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !acceptedDrivers.Contains(int.Parse(d.Value)))
+                .ToList();
+
             ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
-            ViewBag.Drivers = new SelectList(drivers, "Value", "Text", driverId);
+            ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
             ViewBag.Cars = new SelectList(cars, "Value", "Text");
 
-            var selectedDriverName = drivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
+            var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
             ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
             ViewBag.SelectedDriverId = driverId;
 
             return View(new MechanicAcceptanceForCreateDto { DriverId = driverId ?? 0 });
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -151,6 +167,11 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (mechanicAcceptanceForCreateDto.IsAccepted == null)
+                {
+                    mechanicAcceptanceForCreateDto.IsAccepted = false;
+                }
+
                 mechanicAcceptanceForCreateDto.Date = DateTime.Now;
                 await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
                 return RedirectToAction(nameof(PersonalIndex));
@@ -257,7 +278,7 @@ namespace CheckDrive.Web.Controllers
 
         private async Task<List<SelectListItem>> GETDrivers()
         {
-            var driverResponse = await _driverDataStore.GetDriversAsync(null,null);
+            var driverResponse = await _driverDataStore.GetDriversAsync(null, null);
             var drivers = driverResponse.Data
                 .Select(d => new SelectListItem
                 {
