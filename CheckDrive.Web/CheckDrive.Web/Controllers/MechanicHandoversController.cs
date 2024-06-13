@@ -69,11 +69,20 @@ namespace CheckDrive.Web.Controllers
         {
             var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
             var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber);
+          
 
             var doctorReviews = doctorReviewsResponse.Data
                 .Where(dr => dr.Date.Date == DateTime.Today)
                 .Where(dr => dr.IsHealthy == true)
                 .ToList();
+
+            ViewBag.PageSize = doctorReviewsResponse.PageSize;
+            ViewBag.PageCount = doctorReviewsResponse.TotalPages;
+            ViewBag.TotalCount = doctorReviewsResponse.TotalCount;
+            ViewBag.CurrentPage = doctorReviewsResponse.PageNumber;
+            ViewBag.HasPreviousPage = doctorReviewsResponse.HasPreviousPage;
+            ViewBag.HasNextPage = doctorReviewsResponse.HasNextPage;
+
 
             var mechanicHandover = new List<MechanicHandoverDto>();
 

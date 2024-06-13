@@ -73,7 +73,7 @@ namespace CheckDrive.Web.Controllers
 
             var doctorReviews = doctorReviewsResponse.Data
                 .Where(dr => dr.Date.Date == DateTime.Today)
-                .Where(dr => dr.IsHealthy == true)// ‘ильтраци€ по сегодн€шней дате
+                .Where(dr => dr.IsHealthy == true)
                 .ToList();
 
             var mechanicAcceptance = new List<MechanicAcceptanceDto>();

@@ -15,7 +15,7 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover shadow">
+                <table class="table table-bordered table-striped table-hover paper-shadow">
                     <thead>
                         <tr>
                             <th scope="col" style="width: 13%">Haydovchi F.I</th>
@@ -63,7 +63,9 @@
                         else
                         {
                             <tr>
-                                <td colspan="5" class="text-center">No data available</td>
+                                <td colspan="5" class="text-center">
+                                    Maʼlumotlar mavjud emas
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -105,6 +107,12 @@
         .table-bordered td {
             border: 1px solid #dee2e6;
         }
+
+    .paper-shadow {
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
 
     .pagination {
         justify-content: flex-end;
