@@ -43,6 +43,28 @@
 </div>
 
 <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="widget chart">
+                <div class="p-4">
+                    <h5 class="fw-bold">Kasblar bo'yicha ishchilar soni:</h5>
+                </div>
+            <ejs-accumulationchart id="doughnutchart" enableSmartLabels background="whitesmoke">
+                    <e-accumulation-series-collection>
+                    <e-accumulation-series dataSource="@ViewBag.EmployeesCountByRole"
+                                           xName="RoleName" yName="CountOfEmployees"
+                                               innerRadius="60%" legendShape="Circle"
+                                           palettes=@(new string[]{ "#54ffa9","#ffe91a","#4287f5","#75eb75","#d678d0","#edb7b9" })>
+                            <e-accumulationseries-datalabel name="formattedAmount" visible></e-accumulationseries-datalabel>
+                        </e-accumulation-series>
+                    </e-accumulation-series-collection>
+                    <e-accumulationchart-legendsettings position="Top" toggleVisibility="false">
+                    <e-legendsettings-textstyle color="#0f0f0f" size="1rem"></e-legendsettings-textstyle>
+                    </e-accumulationchart-legendsettings>
+                    <e-accumulationchart-tooltipsettings enable></e-accumulationchart-tooltipsettings>
+                </ejs-accumulationchart>
+            </div>
+        </div>
+    <div class="col-md-8">
         <div class="widget chart"  style="width: 100%; padding: 1; margin: 1;">
             <div class="p-4">
                 <h5 class="fw-bold">Yoqilg'i sarfi</h5>
@@ -77,4 +99,5 @@
                 <e-chart-tooltipsettings enable shared></e-chart-tooltipsettings>
             </ejs-chart>
         </div>
+    </div>
 </div>
