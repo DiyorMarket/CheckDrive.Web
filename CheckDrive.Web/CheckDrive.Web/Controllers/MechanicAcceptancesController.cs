@@ -1,6 +1,5 @@
 using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.MechanicAcceptance;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Drivers;
@@ -74,7 +73,7 @@ namespace CheckDrive.Web.Controllers
 
             var doctorReviews = doctorReviewsResponse.Data
                 .Where(dr => dr.Date.Date == DateTime.Today)
-                .Where(dr => dr.IsHealthy == true)// ‘ильтраци€ по сегодн€шней дате
+                .Where(dr => dr.IsHealthy == true)
                 .ToList();
 
             var mechanicAcceptance = new List<MechanicAcceptanceDto>();
@@ -125,7 +124,6 @@ namespace CheckDrive.Web.Controllers
 
             return View(mechanicAcceptance);
         }
-
 
         public async Task<IActionResult> Create(int? driverId)
         {
@@ -279,7 +277,7 @@ namespace CheckDrive.Web.Controllers
 
         private async Task<List<SelectListItem>> GETDrivers()
         {
-            var driverResponse = await _driverDataStore.GetDriversAsync(null,null);
+            var driverResponse = await _driverDataStore.GetDriversAsync(null, null);
             var drivers = driverResponse.Data
                 .Select(d => new SelectListItem
                 {
