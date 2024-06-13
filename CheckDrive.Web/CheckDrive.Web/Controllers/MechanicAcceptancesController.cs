@@ -125,7 +125,6 @@ namespace CheckDrive.Web.Controllers
             return View(mechanicAcceptance);
         }
 
-
         public async Task<IActionResult> Create(int? driverId)
         {
             var mechanics = await GETMechanics();
