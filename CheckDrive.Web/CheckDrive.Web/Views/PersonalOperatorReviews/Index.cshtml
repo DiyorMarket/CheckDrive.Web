@@ -1,7 +1,8 @@
-﻿@{
+﻿@model IEnumerable<CheckDrive.ApiContracts.OperatorReview.OperatorReviewDto>
+
+@{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
-    var operatorReviews = ViewBag.OperatorReviews;
 }
 
 <h1 class="text-center">Operator oynasi</h1>
@@ -26,21 +27,32 @@
                             <th class="text-center">Yoqilg`i qoldig`i</th>
                             <th class="text-center">Quyilgan yoqilg`i miqdori</th>
                             <th class="text-center">Yoqilg`i Markasi</th>
+                            <th class="text-center">Yoqilg`i beldimi?</th>
                             <th class="text-center comments-column">Izoh</th>
                             <th class="text-center">Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var review in operatorReviews)
+                        @foreach (var review in Model)
                         {
                             <tr>
-                                <td class="text-center">@review.DriverName</td>
+                                <td class="text-center">
+                                    @if (!string.IsNullOrEmpty(review.Comments))
+                                    {
+                                        @review.DriverName
+                                    }
+                                    else
+                                    {
+                                        <a href="/PersonalOperatorReviews/Create?driverId=@review.DriverId&driverName=@review.DriverName">@review.DriverName</a>
+                                    }
+                                </td>
                                 <td class="text-center">@review.CarModel</td>
                                 <td class="text-center">@review.CarNumber</td>
                                 <td class="text-center">@review.CarOilCapacity</td>
                                 <td class="text-center">@review.CarOilRemainig</td>
                                 <td class="text-center">@review.OilAmount</td>
                                 <td class="text-center">@review.OilMarks</td>
+                                <td class="text-center">@review.IsGiven</td>
                                 <td class="text-center comments-column">@review.Comments</td>
                                 <td class="text-center">@review.Status</td>
                             </tr>

@@ -72,7 +72,7 @@ namespace CheckDrive.Web.Controllers
             var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber);
 
             var doctorReviews = doctorReviewsResponse.Data
-                .Where(dr => dr.Date.Date == DateTime.Today) // ‘ильтраци€ по сегодн€шней дате
+                .Where(dr => dr.Date.Date == DateTime.Today) 
                 .ToList();
 
             var mechanicAcceptance = new List<MechanicAcceptanceDto>();

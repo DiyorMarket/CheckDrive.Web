@@ -3,55 +3,99 @@ using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Drivers;
+using CheckDrive.Web.Stores.MechanicAcceptances;
 using CheckDrive.Web.Stores.OperatorReviews;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CheckDrive.Web.Controllers
 {
-    public class PersonalOperatorReviewsController(IOperatorReviewDataStore operatorReviewDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore) : Controller
+    public class PersonalOperatorReviewsController(
+        IOperatorReviewDataStore operatorReviewDataStore, 
+        IMechanicAcceptanceDataStore mechanicAcceptance, 
+        ICarDataStore carDataStore, 
+        IDriverDataStore driverDataStore) : Controller
     {
         private readonly IOperatorReviewDataStore _operatorReviewDataStore = operatorReviewDataStore;
-        private readonly IDriverDataStore _driverDataStore = driverDataStore;
+        private readonly IMechanicAcceptanceDataStore _mechanicAcceptance = mechanicAcceptance;
         private readonly ICarDataStore _carDataStore = carDataStore;
+        private readonly IDriverDataStore _driverDataStore = driverDataStore;
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNumber, string? searchString)
         {
-            var response = await _operatorReviewDataStore.GetOperatorReviews();
+            var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews();
+            var mechanicHandoverResponse = await _mechanicAcceptance.GetMechanicAcceptancesAsync(pageNumber);
 
-            var operatorReviews = response.Data.Select(r => new
+            var mechanicHandovers = mechanicHandoverResponse.Data
+                .Where(m => m.Date.Value.Date == DateTime.Today)
+                .Where(m => m.IsAccepted == true)
+                .ToList();
+
+            var operators = new List<OperatorReviewDto>();
+
+            foreach (var mechanicHandover in mechanicHandovers)
             {
-                r.Id,
-                r.DriverName,
-                r.CarModel,
-                r.CarNumber,
-                r.CarOilCapacity,
-                r.CarOilRemainig,
-                r.OilAmount,
-                OilMarks = ((OilMarksForDto)r.OilMarks) switch
+                var review = reviewsResponse.Data.FirstOrDefault(r => r.DriverId == mechanicHandover.DriverId);
+                if (review != null)
                 {
-                    OilMarksForDto.A80 => "A80",
-                    OilMarksForDto.A91 => "A91",
-                    OilMarksForDto.A92 => "A92",
-                    OilMarksForDto.A95 => "A95",
-                    _ => "Unknown Status"
-                },
-                r.Comments,
-                Status = ((StatusForDto)r.Status) switch
+                    if (review.Date.Value.Date == DateTime.Today)
+                    {
+                        operators.Add(new OperatorReviewDto
+                        {
+                            DriverId = review.DriverId,
+                            DriverName = mechanicHandover.DriverName,
+                            CarModel = review.CarModel,
+                            CarNumber = review.CarNumber,
+                            CarOilCapacity = review.CarOilCapacity,
+                            CarOilRemainig = review.CarOilRemainig,
+                            OilAmount = review.OilAmount,
+                            OilMarks = review.OilMarks,
+                            IsGiven = review.IsGiven,
+                            Comments = review.Comments,
+                            Date = review.Date,
+                            Status = review.Status
+                        });
+                    }
+                    else
+                    {
+                        operators.Add(new OperatorReviewDto
+                        {
+                            DriverId = mechanicHandover.DriverId,
+                            DriverName = mechanicHandover.DriverName,
+                            CarModel = mechanicHandover.CarName,
+                            CarNumber = string.Empty,
+                            CarOilCapacity = string.Empty,
+                            CarOilRemainig = string.Empty,
+                            OilAmount = null,
+                            OilMarks = null,
+                            IsGiven = null,
+                            Comments = null,
+                            Date = null,
+                            Status = StatusForDto.Unassigned
+                        });
+                    }
+                }
+                else
                 {
-                    StatusForDto.Pending => "Kutilmoqda",
-                    StatusForDto.Completed => "Muvofaqiyatli bajarilda",
-                    StatusForDto.Rejected => "Rad etildi",
-                    StatusForDto.Unassigned => "Hali yaratilmagan",
-                    _ => "Unknown Status"
-                },
-                r.Date,
-                r.CarId
-            }).ToList();
+                    operators.Add(new OperatorReviewDto
+                    {
+                        DriverId = mechanicHandover.DriverId,
+                        DriverName = mechanicHandover.DriverName,
+                        CarModel = string.Empty,
+                        CarNumber = string.Empty,
+                        CarOilCapacity = string.Empty,
+                        CarOilRemainig = string.Empty,
+                        OilAmount = null,
+                        OilMarks = null,
+                        IsGiven = null,
+                        Comments = null,
+                        Date = null,
+                        Status = StatusForDto.Unassigned
+                    });
+                }
+            }
 
-            ViewBag.OperatorReviews = operatorReviews;
-
-            return View();
+            return View(operators);
         }
 
         public async Task<IActionResult> Details(int id)
@@ -64,18 +108,18 @@ namespace CheckDrive.Web.Controllers
             return View(operatorReview);
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int driverId, string driverName)
         {
-            var drivers = await GETDrivers();
             var cars = await GETCars();
             var response = await _operatorReviewDataStore.GetOperatorReviews();
             var oilMarks = response.Data.Select(r => new { r.OilMarks });
 
             ViewBag.OilMarks = oilMarks;
-            ViewBag.Drivers = new SelectList(drivers, "Value", "Text");
             ViewBag.Cars = new SelectList(cars, "Value", "Text");
+            ViewBag.SelectedDriverName = driverName;
+            ViewBag.SelectedDriverId = driverId;
 
-            return View();
+            return View(new OperatorReviewForCreateDto { DriverId = driverId, Date = DateTime.Now });
         }
 
         [HttpPost]

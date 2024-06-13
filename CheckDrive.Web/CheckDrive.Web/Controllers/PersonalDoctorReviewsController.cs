@@ -112,7 +112,6 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Если значение IsHealthy не установлено, установите его в false
                 if (doctorReview.IsHealthy == null)
                 {
                     doctorReview.IsHealthy = false;
@@ -196,19 +195,6 @@ namespace CheckDrive.Web.Controllers
         {
             var doctorReview = await _doctorReviewDataStore.GetDoctorReviewAsync(id);
             return doctorReview != null;
-        }
-
-        private async Task<List<SelectListItem>> GETDrivers()
-        {
-            var driverResponse = await _driverDataStore.GetDriversAsync(null, null);
-            var drivers = driverResponse.Data
-                .Select(d => new SelectListItem
-                {
-                    Value = d.Id.ToString(),
-                    Text = $"{d.FirstName} {d.LastName}"
-                })
-                .ToList();
-            return drivers;
         }
 
         private async Task<List<SelectListItem>> GETDoctors()
