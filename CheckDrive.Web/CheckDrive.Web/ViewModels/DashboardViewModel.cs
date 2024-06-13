@@ -3,6 +3,12 @@ public class DashboardViewModel
 {
     public SummaryViewModel Summary { get; set; }
     public IEnumerable<SpliteChartData> SplineCharts { get; set; }
+    public IEnumerable<EmployeesCountByRole> EmployeesCountByRoles { get; set; }
+}
+public class EmployeesCountByRole
+{
+    public string RoleName { get; set; }
+    public int CountOfEmployees { get; set; }
 }
 public class SummaryViewModel
 {
