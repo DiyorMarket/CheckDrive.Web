@@ -23,7 +23,7 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
             {
                 query.Append($"pageNumber={pageNumber}");
             }
-            var response = await _api.GetAsync("mechanics/handovers?" + query.ToString());
+            var response = await _api.GetAsync("mechanics/handovers?OrderBy=datedesc&" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {
@@ -37,7 +37,7 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
         }
         public async Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync()
         {
-            var response = await _api.GetAsync("mechanics/handovers");
+            var response = await _api.GetAsync("mechanics/handovers?OrderBy=datedesc");
 
             if (!response.IsSuccessStatusCode)
             {
