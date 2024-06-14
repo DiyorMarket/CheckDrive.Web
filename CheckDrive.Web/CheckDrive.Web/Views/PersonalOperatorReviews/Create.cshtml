@@ -1,4 +1,4 @@
-﻿@model CheckDrive.ApiContracts.OperatorReview.OperatorReviewDto
+﻿@model CheckDrive.ApiContracts.OperatorReview.OperatorReviewForCreateDto
 
 @{
     ViewData["Title"] = "Create";
@@ -9,30 +9,57 @@
     <div class="col-md-4 offset-md-1 mt-5">
         <h4>Ro`yxatga olish</h4>
         <hr class="w-50" />
-        <form asp-action="Create">
+        <form id="operatorReviewForm" asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="fuelTankCapacity" value="@ViewBag.FuelTankCapacity" />
+            <input type="hidden" name="remainingFuel" value="@ViewBag.RemainingFuel" />
+            <input type="hidden" asp-for="DriverId" />
+            <input type="hidden" asp-for="CarId" />
+            <div class="form-check form-switch">
+                <input asp-for="IsGiven" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" value="true">
+                <label asp-for="IsGiven" class="form-check-label" for="flexSwitchCheckDefault">@Html.DisplayNameFor(model => model.IsGiven)</label>
+            </div>
+
             <div class="form-group w-50">
                 <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
-                <select asp-for="DriverId" class="form-control border border-dark" asp-items="@ViewBag.Drivers"></select>
+                <select asp-for="DriverId" class="form-control border border-dark" asp-items="@ViewBag.Drivers" disabled>
+                    @if (ViewBag.SelectedDriverName != null)
+                    {
+                        <option value="@Model.DriverId" selected>@ViewBag.SelectedDriverName</option>
+                    }
+                </select>
             </div>
             <div class="form-group w-50">
                 <label asp-for="CarId" class="control-label mt-2">Moshina</label>
-                <select asp-for="CarId" class="form-control border border-dark" asp-items="@ViewBag.Cars"></select>
+                <select asp-for="CarId" class="form-control border border-dark" asp-items="@ViewBag.Cars" disabled>
+                    @if (ViewBag.SelectedCar != null)
+                    {
+                        <option value="@Model.CarId" selected>@ViewBag.SelectedCar</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group w-50">
+                <label asp-for="OperatorId" class="control-label mt-2">Operator</label>
+                <select asp-for="OperatorId" class="form-control border border-dark" asp-items="@ViewBag.Operators"></select>
             </div>
             <div class="form-group w-50">
                 <label asp-for="OilAmount" class="control-label"></label>
-                <input asp-for="OilAmount" class="form-control" />
+                <input asp-for="OilAmount" class="form-control" id="OilAmount" />
                 <span asp-validation-for="OilAmount" class="text-danger"></span>
             </div>
             <div class="form-group w-50">
                 <label asp-for="OilMarks" class="control-label mt-2">Yoqilg`i Markasi</label>
                 <select asp-for="OilMarks" class="form-control border border-dark" asp-items="@ViewBag.OilMarks"></select>
             </div>
+            <div class="form-group w-50">
+                <label asp-for="Comments" for="exampleFormControlTextarea1">Izoh</label>
+                <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
+            </div>
             <div class="form-group mt-3 w-50">
                 <a asp-action="Index" class="btn btn-outline-info">
                     <i class="fa-solid fa-arrow-left-long"></i> Back
                 </a>
-                <button class="btn btn-outline-success">
+                <button class="btn btn-outline-success" type="submit">
                     <i class="fa fa-plus"></i> Create
                 </button>
             </div>
@@ -40,3 +67,27 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var form = document.getElementById('operatorReviewForm');
+        form.addEventListener('submit', function (event) {
+            var oilAmountInput = document.getElementById('OilAmount');
+            var isGivenInput = document.getElementById('flexSwitchCheckDefault');
+            var fuelTankCapacity = parseFloat('@ViewBag.FuelTankCapacity');
+            var remainingFuel = parseFloat('@ViewBag.RemainingFuel');
+
+            var maxOilAmount = fuelTankCapacity - remainingFuel;
+            var oilAmount = parseFloat(oilAmountInput.value);
+            var isGiven = isGivenInput.checked;
+
+            if ((oilAmount === 0 && isGiven === true) ||
+                (oilAmount > 0 && isGiven === false)) {
+                event.preventDefault();
+                alert('Siz yoqilg`ini 0 litr berib, berdim tugmasini bostingiz yoki\n Yoqilg`ini berib bermadim tugmasini bostingiz');
+            } else if (oilAmount < 0 || oilAmount > maxOilAmount) {
+                event.preventDefault();
+                alert('Oil amount must be between 0 and ' + maxOilAmount);
+            }
+        });
+    });
+</script>

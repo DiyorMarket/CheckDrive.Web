@@ -1,16 +1,11 @@
-﻿@{
+﻿@model IEnumerable<CheckDrive.ApiContracts.OperatorReview.OperatorReviewDto>
+
+@{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
-    var operatorReviews = ViewBag.OperatorReviews;
 }
 
 <h1 class="text-center">Operator oynasi</h1>
-
-<div class="col-12 text-end mb-3">
-    <a class="btn btn-success" asp-action="Create" style="margin-right:180px">
-        <i class="fa fa-plus"></i> Create
-    </a>
-</div>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -26,21 +21,51 @@
                             <th class="text-center">Yoqilg`i qoldig`i</th>
                             <th class="text-center">Quyilgan yoqilg`i miqdori</th>
                             <th class="text-center">Yoqilg`i Markasi</th>
+                            <th class="text-center">Yoqilg`i berildimi?</th>
                             <th class="text-center comments-column">Izoh</th>
                             <th class="text-center">Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var review in operatorReviews)
+                        @foreach (var review in Model)
                         {
                             <tr>
-                                <td class="text-center">@review.DriverName</td>
+                                <td class="text-center">
+                                    @if (!string.IsNullOrEmpty(review.Comments))
+                                    {
+                                        @review.DriverName
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Create"
+                                           asp-route-driverId="@review.DriverId"
+                                           asp-route-driverName="@review.DriverName"
+                                           asp-route-carId="@review.CarId"
+                                           asp-route-carModel="@review.CarModel"
+                                           asp-route-fuelTankCapacity="@review.CarOilCapacity"
+                                           asp-route-remainingFuel="@review.CarOilRemainig">@review.DriverName</a>
+                                    }
+                                </td>
                                 <td class="text-center">@review.CarModel</td>
                                 <td class="text-center">@review.CarNumber</td>
                                 <td class="text-center">@review.CarOilCapacity</td>
                                 <td class="text-center">@review.CarOilRemainig</td>
                                 <td class="text-center">@review.OilAmount</td>
                                 <td class="text-center">@review.OilMarks</td>
+                                <td class="text-center">
+                                    @if (review.IsGiven == true)
+                                    {
+                                        <span class="badge bg-success shadow">Berildi</span>
+                                    }
+                                    else if (review.IsGiven == false)
+                                    {
+                                        <span class="badge bg-danger shadow">Berilmadi</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-empty shadow"></span>
+                                    }
+                                </td>
                                 <td class="text-center comments-column">@review.Comments</td>
                                 <td class="text-center">@review.Status</td>
                             </tr>
@@ -53,8 +78,30 @@
 </div>
 
 <style>
+    .badge {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .bg-success {
+        background-color: #28a745;
+    }
+
+    .bg-danger {
+        background-color: #dc3545;
+    }
+
+    .bg-empty {
+        background-color: gray;
+    }
+
+    .shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
     .table {
-        width: 100%; /* Увеличиваем ширину таблицы */
+        width: 100%;
         margin: 0 auto;
     }
 
@@ -76,7 +123,7 @@
 
     .pagination {
         justify-content: flex-end;
-    }
+    } 
 
     .shadow {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -90,8 +137,8 @@
         text-align: end !important;
     }
 
-    .mb-2 {
-        margin-bottom: 0.5rem !important;
+    .mb-3 {
+        margin-bottom: 1rem !important;
     }
 
     .mt-5 {
@@ -99,7 +146,8 @@
     }
 
     .comments-column {
-        min-width: 300px; 
-        word-wrap: break-word; 
+        max-width: 250px;
+        word-wrap: break-word;
+        white-space: normal;
     }
 </style>

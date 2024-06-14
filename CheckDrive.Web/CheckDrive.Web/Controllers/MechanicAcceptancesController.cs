@@ -72,6 +72,7 @@ namespace CheckDrive.Web.Controllers
             var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber);
 
             var doctorReviews = doctorReviewsResponse.Data
+
                 .Where(dr => dr.Date.Date == DateTime.Today)
                 .Where(dr => dr.IsHealthy == true)
                 .ToList();
