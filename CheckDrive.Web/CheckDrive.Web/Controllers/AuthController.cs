@@ -1,7 +1,10 @@
 ﻿using CheckDrive.Web.Constants;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.User;
 using CheckDrive.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -41,16 +44,31 @@ namespace CheckDrive.Web.Controllers
 
             var (success, token) = await _userDataStore.AuthenticateLoginAsync(user);
 
-            if (success)
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+            if (jwtToken == null)
             {
-                HttpContext.Response.Cookies.Append("tasty-cookies", token, new CookieOptions
-                {
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
-                    HttpOnly = true,
-                    IsEssential = true
-                });
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("Login", "Account");
+            }
+            var roleId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
+
+            switch (roleId)
+            {
+                case "1":
+                    return RedirectToAction("Index", "Dashboard");
+                    break;
+                case "3":
+                    return RedirectToAction("Index", "PersonalDoctorReviews");
+                    break;
+                case "4":
+                    return RedirectToAction("Index", "PersonalOperatorReviews");
+                    break;
+                case "5":
+                    return RedirectToAction("Index", "Dashboard");
+                    break;
+                case "6":
+                    return RedirectToAction("Index", "Dashboard");
+                    break;
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
