@@ -1,4 +1,7 @@
-﻿using CheckDrive.ApiContracts.DoctorReview;
+﻿using CheckDrive.ApiContracts.Doctor;
+using CheckDrive.ApiContracts.DoctorReview;
+using CheckDrive.Web.Models;
+using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Doctors;
 using CheckDrive.Web.Stores.Drivers;
@@ -12,12 +15,14 @@ namespace CheckDrive.Web.Controllers
         private readonly IDoctorReviewDataStore _doctorReviewDataStore;
         private readonly IDoctorDataStore _doctorDataStore;
         private readonly IDriverDataStore _driverDataStore;
+        private readonly IAccountDataStore _accountDataStore;
 
-        public PersonalDoctorReviewsController(IDoctorReviewDataStore doctorReviewDataStore, IDoctorDataStore doctorDataStore, IDriverDataStore driverDataStore)
+        public PersonalDoctorReviewsController(IDoctorReviewDataStore doctorReviewDataStore, IDoctorDataStore doctorDataStore, IDriverDataStore driverDataStore, IAccountDataStore accountDataStore)
         {
             _doctorReviewDataStore = doctorReviewDataStore;
             _doctorDataStore = doctorDataStore;
             _driverDataStore = driverDataStore;
+            _accountDataStore = accountDataStore;
         }
 
         public IActionResult HelloPage()
@@ -97,7 +102,18 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Create(int driverId, string driverName)
         {
-            var doctors = await GETDoctors();
+            var doctor = new DoctorDto();
+
+            var accountIdStr = TempData["AccountId"] as string;
+            if (int.TryParse(accountIdStr, out int accountId))
+            {
+                var doctorResponse = await _doctorDataStore.GetDoctors(accountId);
+                doctor = doctorResponse.Data.First();
+            }
+            var doctors = new List<SelectListItem>
+                {
+                    new SelectListItem { Value = doctor.Id.ToString(), Text = $"{doctor.FirstName} {doctor.LastName}" }
+                };
 
             ViewBag.Doctors = new SelectList(doctors, "Value", "Text");
             ViewBag.SelectedDriverName = driverName;
@@ -121,9 +137,6 @@ namespace CheckDrive.Web.Controllers
                 await _doctorReviewDataStore.CreateDoctorReviewAsync(doctorReview);
                 return RedirectToAction(nameof(Index));
             }
-
-            var doctors = await GETDoctors();
-            ViewBag.Doctors = new SelectList(doctors, "Value", "Text");
 
             var driver = await _driverDataStore.GetDriverAsync(doctorReview.DriverId);
             ViewBag.SelectedDriverName = $"{driver.FirstName} {driver.LastName}";

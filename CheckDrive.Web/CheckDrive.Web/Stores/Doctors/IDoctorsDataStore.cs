@@ -6,6 +6,7 @@ namespace CheckDrive.Web.Stores.Doctors
 {
     public interface IDoctorDataStore
     {
+        Task<GetDoctorResponse> GetDoctors(int accountId);
         Task<GetDoctorResponse> GetDoctors();
         Task<DoctorDto> GetDoctor(int id);
         Task<DoctorDto> CreateDoctor(DoctorForCreateDto doctorForCreate);

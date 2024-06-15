@@ -3,6 +3,7 @@ using CheckDrive.ApiContracts.Doctor;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace CheckDrive.Web.Stores.Doctors
 {
@@ -15,9 +16,31 @@ namespace CheckDrive.Web.Stores.Doctors
             _api = apiClient;
         }
 
+        public async Task<GetDoctorResponse> GetDoctors(int accountId)
+        {
+            StringBuilder query = new("");
+
+            if (!accountId.Equals(0))
+            {
+                query.Append($"accountId={accountId}");
+            }
+
+            var response = await _api.GetAsync("doctors?" + query.ToString());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch doctors.");
+            }
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<GetDoctorResponse>(json);
+
+            return result;
+        }
+
         public async Task<GetDoctorResponse> GetDoctors()
         {
-            var response = await _api.GetAsync("doctors");
+            var response = await _api.GetAsync("doctors?");
 
             if (!response.IsSuccessStatusCode)
             {
