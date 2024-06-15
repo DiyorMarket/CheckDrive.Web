@@ -89,6 +89,7 @@ namespace CheckDrive.Web.Controllers
                     return RedirectToAction("Login", "Account");
                 }
                 var roleId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
+                var accountId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
                 switch (roleId)
                 {
@@ -96,13 +97,14 @@ namespace CheckDrive.Web.Controllers
                         return RedirectToAction("Index", "Dashboard");
                         break;
                     case "3":
+                    TempData["AccountId"] = accountId;
                         return RedirectToAction("Index", "PersonalDoctorReviews");
                         break;
                     case "4":
                         return RedirectToAction("Index", "PersonalOperatorReviews");
                         break;
                     case "5":
-                        return RedirectToAction("Index", "Dashboard");
+                        return RedirectToAction("PersonalIndex", "MechanicHandovers");
                         break;
                     case "6":
                         return RedirectToAction("Index", "Dashboard");
