@@ -3,6 +3,7 @@ using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.User;
 using CheckDrive.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -17,16 +18,43 @@ namespace CheckDrive.Web.Controllers
         }
         public IActionResult Login()
         {
-            HttpContext.Response.Cookies.Delete("JwtToken");
+            HttpContext.Response.Cookies.Delete("tasty-cookies");
             return RedirectToAction("Index", "Auth");
         }
         public IActionResult Index()
         {
-            if (HttpContext.Request.Cookies.TryGetValue(Configurations.JwtToken, out _))
+            if (HttpContext.Request.Cookies.TryGetValue("tasty-cookies", out _))
             {
-                return RedirectToAction("Index", "Dashboard");
+                string token = HttpContext.Request.Cookies["tasty-cookies"]; 
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+                if (jwtToken == null)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                var roleId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
+
+                switch (roleId)
+                {
+                    case "1":
+                        return RedirectToAction("Index", "Dashboard");
+                        break;
+                    case "3":
+                        return RedirectToAction("Index", "PersonalDoctorReviews");
+                        break;
+                    case "4":
+                        return RedirectToAction("Index", "PersonalOperatorReviews");
+                        break;
+                    case "5":
+                        return RedirectToAction("Index", "Dashboard");
+                        break;
+                    case "6":
+                        return RedirectToAction("Index", "Dashboard");
+                        break;
+                }
+                return RedirectToAction("Index", "Auth");
             }
-            return View("Index");
+                return View("Index");
         }
         [HttpPost]
         public async Task<IActionResult> Index(LoginViewModel loginViewModel)
@@ -44,33 +72,45 @@ namespace CheckDrive.Web.Controllers
 
             var (success, token) = await _userDataStore.AuthenticateLoginAsync(user);
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
-            if (jwtToken == null)
+            if (success)
             {
-                return RedirectToAction("Login", "Account");
-            }
-            var roleId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
-            var accountId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+                HttpContext.Response.Cookies.Append("tasty-cookies", token, new CookieOptions
+                {
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    HttpOnly = true,
+                    IsEssential = true
+                });
+                
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+                if (jwtToken == null)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                var roleId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
+                var accountId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
-            switch (roleId)
-            {
-                case "1":
-                    return RedirectToAction("Index", "Dashboard");
-                    break;
-                case "3":
+                switch (roleId)
+                {
+                    case "1":
+                        return RedirectToAction("Index", "Dashboard");
+                        break;
+                    case "3":
                     TempData["AccountId"] = accountId;
-                    return RedirectToAction("Index", "PersonalDoctorReviews");
-                    break;
-                case "4":
-                    return RedirectToAction("Index", "PersonalOperatorReviews");
-                    break;
-                case "5":
-                    return RedirectToAction("PersonalIndex", "MechanicHandovers");
-                    break;
-                case "6":
-                    return RedirectToAction("Index", "Dashboard");
-                    break;
+                        return RedirectToAction("Index", "PersonalDoctorReviews");
+                        break;
+                    case "4":
+                        return RedirectToAction("Index", "PersonalOperatorReviews");
+                        break;
+                    case "5":
+                        return RedirectToAction("PersonalIndex", "MechanicHandovers");
+                        break;
+                    case "6":
+                        return RedirectToAction("Index", "Dashboard");
+                        break;
+                }
+                return RedirectToAction("Index", "Auth");
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
