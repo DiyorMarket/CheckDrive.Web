@@ -13,20 +13,20 @@ namespace CheckDrive.Web.Controllers
     public class MechanicHandoversController : Controller
     {
         private readonly IMechanicHandoverDataStore _mechanicHandoverDataStore;
-        private readonly IDriverDataStore _driverDataStore;
+        private readonly IDriverDataStore _driverDataStore;                                                                                                                                                                              
         private readonly ICarDataStore _carDataStore;
-        private readonly IMechanicDataStore _mechanicDataStore;
+        private readonly IMechanicDataStore _mechanicDataStore;         
         private readonly IDoctorReviewDataStore _doctorReviewDataStore;
-
+                                                                        
         public MechanicHandoversController(IMechanicHandoverDataStore mechanicHandoverDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore, IMechanicDataStore mechanicDataStore, IDoctorReviewDataStore doctorReviewDataStore)
-        {
+        {       
             _mechanicHandoverDataStore = mechanicHandoverDataStore;
             _driverDataStore = driverDataStore;
-            _carDataStore = carDataStore;
-            _mechanicDataStore = mechanicDataStore;
-            _doctorReviewDataStore = doctorReviewDataStore;
+            _carDataStore = carDataStore;   
+            _mechanicDataStore = mechanicDataStore; 
+            _doctorReviewDataStore = doctorReviewDataStore; 
         }
-
+                
         public async Task<IActionResult> Index(int? pageNumber)
         {
 
@@ -99,6 +99,7 @@ namespace CheckDrive.Web.Controllers
                             DriverName = doctor.DriverName,
                             MechanicName = review.MechanicName,
                             IsHanded = review.IsHanded,
+                            Distance = review.Distance,
                             Comments = review.Comments,
                             Date = review.Date
                         });
@@ -111,6 +112,7 @@ namespace CheckDrive.Web.Controllers
                             DriverName = doctor.DriverName,
                             MechanicName = "",
                             IsHanded = false,
+                            Distance = review.Distance,
                             Comments = "",
                             Date = null
                         });
@@ -124,6 +126,7 @@ namespace CheckDrive.Web.Controllers
                         DriverName = doctor.DriverName,
                         MechanicName = "",
                         IsHanded = false,
+                        Distance = review.Distance,
                         Comments = "",
                         Date = null
                     });
