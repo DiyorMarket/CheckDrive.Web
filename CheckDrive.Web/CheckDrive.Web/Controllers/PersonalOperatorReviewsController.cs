@@ -165,7 +165,6 @@ namespace CheckDrive.Web.Controllers
 
                 double maxOilAmount = await GetMaxOilAmount(operatorReview.CarId);
 
-                // New validation logic
                 if ((operatorReview.OilAmount == 0 && operatorReview.IsGiven == true) ||
                     (operatorReview.OilAmount > 0 && operatorReview.IsGiven == false))
                 {
