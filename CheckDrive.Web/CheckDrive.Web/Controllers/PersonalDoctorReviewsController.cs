@@ -1,6 +1,5 @@
 ﻿using CheckDrive.ApiContracts.Doctor;
 using CheckDrive.ApiContracts.DoctorReview;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Doctors;
@@ -33,7 +32,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index(int? pageNumber, string? searchString)
         {
             var currentDate = DateTime.Today;
-            var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber);
+            var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber,null);
             var driversResponse = await _driverDataStore.GetDriversAsync(searchString, pageNumber);
 
             ViewBag.PageSize = driversResponse.PageSize;

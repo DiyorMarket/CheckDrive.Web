@@ -13,20 +13,20 @@ namespace CheckDrive.Web.Controllers
     public class MechanicHandoversController : Controller
     {
         private readonly IMechanicHandoverDataStore _mechanicHandoverDataStore;
-        private readonly IDriverDataStore _driverDataStore;                                                                                                                                                                              
+        private readonly IDriverDataStore _driverDataStore;
         private readonly ICarDataStore _carDataStore;
-        private readonly IMechanicDataStore _mechanicDataStore;         
+        private readonly IMechanicDataStore _mechanicDataStore;
         private readonly IDoctorReviewDataStore _doctorReviewDataStore;
-                                                                        
+
         public MechanicHandoversController(IMechanicHandoverDataStore mechanicHandoverDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore, IMechanicDataStore mechanicDataStore, IDoctorReviewDataStore doctorReviewDataStore)
-        {       
+        {
             _mechanicHandoverDataStore = mechanicHandoverDataStore;
             _driverDataStore = driverDataStore;
-            _carDataStore = carDataStore;   
-            _mechanicDataStore = mechanicDataStore; 
-            _doctorReviewDataStore = doctorReviewDataStore; 
+            _carDataStore = carDataStore;
+            _mechanicDataStore = mechanicDataStore;
+            _doctorReviewDataStore = doctorReviewDataStore;
         }
-                
+
         public async Task<IActionResult> Index(int? pageNumber)
         {
 
@@ -65,11 +65,11 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> PersonalIndex(string? searchstring, int? pageNumber)
+        public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
             var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
-            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber);
-          
+            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, searchString);
+
 
             var doctorReviews = doctorReviewsResponse.Data
                 .Where(dr => dr.Date.Date == DateTime.Today)
@@ -143,7 +143,7 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null,null);
             var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
 
             var healthyDrivers = doctorReviews.Data

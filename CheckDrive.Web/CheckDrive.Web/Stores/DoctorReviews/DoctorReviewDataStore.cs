@@ -11,9 +11,14 @@ namespace CheckDrive.Web.Stores.DoctorReviews
     {
         private readonly ApiClient _api = api;
 
-        public async Task<GetDoctorReviewResponse> GetDoctorReviewsAsync(int? pageNumber)
+        public async Task<GetDoctorReviewResponse> GetDoctorReviewsAsync(int? pageNumber, string? searchString)
         {
             StringBuilder query = new("");
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query.Append($"searchString={searchString}&");
+            }
 
             if (pageNumber != null)
             {

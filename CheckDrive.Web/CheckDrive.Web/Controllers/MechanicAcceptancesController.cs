@@ -27,10 +27,10 @@ namespace CheckDrive.Web.Controllers
             _doctorReviewDataStore = doctorReviewDataStore;
         }
 
-        public async Task<IActionResult> Index(int? pageNumber)
+        public async Task<IActionResult> Index(int? pageNumber, string? searchString)
         {
 
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber);
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -66,16 +66,17 @@ namespace CheckDrive.Web.Controllers
         }
 
 
-        public async Task<IActionResult> PersonalIndex(string? searchstring, int? pageNumber)
+        public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
-            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber);
+            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber,searchString);
 
             var doctorReviews = doctorReviewsResponse.Data
-
                 .Where(dr => dr.Date.Date == DateTime.Today)
                 .Where(dr => dr.IsHealthy == true)
                 .ToList();
+
+            ViewBag.SearchString = searchString;
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, null);
 
             var mechanicAcceptance = new List<MechanicAcceptanceDto>();
 
@@ -128,14 +129,14 @@ namespace CheckDrive.Web.Controllers
 
             return View(mechanicAcceptance);
         }
-
+    
         public async Task<IActionResult> Create(int? driverId)
         {
             var mechanics = await GETMechanics();
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null,null);
             var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
 
             var healthyDrivers = doctorReviews.Data

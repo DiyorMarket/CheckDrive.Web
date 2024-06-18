@@ -1,6 +1,5 @@
 ﻿using CheckDrive.ApiContracts.Account;
 using CheckDrive.ApiContracts.Driver;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Drivers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +11,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var drivers = await _driverDataStore.GetDriversAsync(null,null);
+            var drivers = await _driverDataStore.GetDriversAsync(null, null);
 
             ViewBag.Drivers = drivers;
             return View();

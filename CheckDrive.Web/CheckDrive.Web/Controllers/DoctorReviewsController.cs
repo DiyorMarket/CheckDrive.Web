@@ -16,7 +16,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber)
         {
-            var response = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber);
+            var response = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber,null);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;

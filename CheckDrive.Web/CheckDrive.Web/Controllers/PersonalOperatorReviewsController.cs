@@ -3,7 +3,6 @@ using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Drivers;
-using CheckDrive.Web.Stores.MechanicAcceptances;
 using CheckDrive.Web.Stores.MechanicHandovers;
 using CheckDrive.Web.Stores.OperatorReviews;
 using CheckDrive.Web.Stores.Operators;
@@ -13,9 +12,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace CheckDrive.Web.Controllers
 {
     public class PersonalOperatorReviewsController(
-        IOperatorReviewDataStore operatorReviewDataStore, 
-        IMechanicHandoverDataStore mechanicHandover, 
-        ICarDataStore carDataStore, 
+        IOperatorReviewDataStore operatorReviewDataStore,
+        IMechanicHandoverDataStore mechanicHandover,
+        ICarDataStore carDataStore,
         IDriverDataStore driverDataStore,
         IOperatorDataStore operatorDataStore) : Controller
     {
@@ -118,7 +117,7 @@ namespace CheckDrive.Web.Controllers
         }
 
         public async Task<IActionResult> Create(int? driverId, string? driverName, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel)
-            {
+        {
             var drivers = await GETDrivers();
             var cars = await GETCars();
             var operators = await GETOperators();

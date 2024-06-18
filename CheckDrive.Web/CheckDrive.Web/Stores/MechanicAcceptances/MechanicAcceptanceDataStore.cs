@@ -15,26 +15,33 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
         {
             _api = apiClient;
         }
-        public async Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync(int? pageNumber)
+        public async Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync(int? pageNumber, string? searchString)
         {
-            StringBuilder query = new("");
+            StringBuilder query = new StringBuilder();
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query.Append($"searchString={searchString}&");
+            }
 
             if (pageNumber != null)
             {
                 query.Append($"pageNumber={pageNumber}");
             }
+
             var response = await _api.GetAsync("mechanics/acceptances?" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Could not fetch drivers.");
+                throw new Exception("Could not fetch mechanic acceptances.");
             }
 
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<GetMechanicAcceptanceResponse>(json);
 
             return result;
         }
+
         public async Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync()
         {
             var response = await _api.GetAsync("mechanics/acceptances?OrderBy=datedesc");
