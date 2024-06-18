@@ -66,21 +66,32 @@ namespace CheckDrive.Web.Controllers
         }
 
 
-        public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
-        {
-            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber,searchString);
+      public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
+{
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null,null);
+            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, searchString);
 
-            var doctorReviews = doctorReviewsResponse.Data
+            var filteredDoctorReviews = doctorReviewsResponse.Data
                 .Where(dr => dr.Date.Date == DateTime.Today)
                 .Where(dr => dr.IsHealthy == true)
                 .ToList();
 
-            ViewBag.SearchString = searchString;
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, null);
+            int pageSize = 10;
+            pageNumber = pageNumber ?? 1;
+
+            int totalCount = filteredDoctorReviews.Count;
+            int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+            bool hasPreviousPage = pageNumber > 1;
+            bool hasNextPage = pageNumber < totalPages;
+
+            var paginatedDoctorReviews = filteredDoctorReviews
+                .Skip((pageNumber.Value - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             var mechanicAcceptance = new List<MechanicAcceptanceDto>();
 
-            foreach (var doctor in doctorReviews)
+            foreach (var doctor in paginatedDoctorReviews)
             {
                 var review = response.Data.FirstOrDefault(r => r.DriverId == doctor.DriverId);
                 if (review != null)
@@ -127,9 +138,17 @@ namespace CheckDrive.Web.Controllers
                 }
             }
 
+            ViewBag.PageSize = pageSize;
+            ViewBag.PageCount = totalPages;
+            ViewBag.TotalCount = totalCount;
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.HasPreviousPage = hasPreviousPage;
+            ViewBag.HasNextPage = hasNextPage;
+            ViewBag.SearchString = searchString;
+
             return View(mechanicAcceptance);
         }
-    
+
         public async Task<IActionResult> Create(int? driverId)
         {
             var mechanics = await GETMechanics();
