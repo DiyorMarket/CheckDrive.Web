@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<CheckDrive.ApiContracts.DoctorReview.DoctorReviewDto>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+
 
 @{
     ViewData["Title"] = "Index";
@@ -20,6 +22,12 @@
                         </button>
                     </div>
                 </div>
+            </div>
+            <!-- LogOut Link -->
+            <div class="col-md-4 text-right">
+                <a href="@Url.Action("Login", "Auth")" class="btn btn-outline-danger">
+                    Profildan Chiqish <i class="bi bi-box-arrow-right" style="margin-left: 5px;"></i>
+                </a>
             </div>
         </div>
 
@@ -109,7 +117,6 @@
                 <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy ishchilar soni: @ViewBag.TotalCount)</p>
             </div>
         </div>
-
     </div>
 </form>
 
@@ -180,4 +187,17 @@
         padding-right: 0;
         padding-left: 0;
     }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
 </style>
