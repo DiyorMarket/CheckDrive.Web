@@ -67,33 +67,37 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
-            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, searchString);
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null);
+            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, searchString);
 
-
-            var doctorReviews = doctorReviewsResponse.Data
+            var filteredDoctorReviews = doctorReviewsResponse.Data
                 .Where(dr => dr.Date.Date == DateTime.Today)
                 .Where(dr => dr.IsHealthy == true)
                 .ToList();
 
-            ViewBag.PageSize = doctorReviewsResponse.PageSize;
-            ViewBag.PageCount = doctorReviewsResponse.TotalPages;
-            ViewBag.TotalCount = doctorReviewsResponse.TotalCount;
-            ViewBag.CurrentPage = doctorReviewsResponse.PageNumber;
-            ViewBag.HasPreviousPage = doctorReviewsResponse.HasPreviousPage;
-            ViewBag.HasNextPage = doctorReviewsResponse.HasNextPage;
+            int pageSize = 10; 
+            pageNumber = pageNumber ?? 1;
 
+            int totalCount = filteredDoctorReviews.Count;
+            int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+            bool hasPreviousPage = pageNumber > 1;
+            bool hasNextPage = pageNumber < totalPages;
 
-            var mechanicHandover = new List<MechanicHandoverDto>();
+            var paginatedDoctorReviews = filteredDoctorReviews
+                .Skip((pageNumber.Value - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
-            foreach (var doctor in doctorReviews)
+            var mechanicHandovers = new List<MechanicHandoverDto>();
+
+            foreach (var doctor in paginatedDoctorReviews)
             {
                 var review = response.Data.FirstOrDefault(r => r.DriverId == doctor.DriverId);
                 if (review != null)
                 {
                     if (review.Date.HasValue && review.Date.Value.Date == DateTime.Today)
                     {
-                        mechanicHandover.Add(new MechanicHandoverDto
+                        mechanicHandovers.Add(new MechanicHandoverDto
                         {
                             DriverId = review.DriverId,
                             DriverName = doctor.DriverName,
@@ -106,7 +110,7 @@ namespace CheckDrive.Web.Controllers
                     }
                     else
                     {
-                        mechanicHandover.Add(new MechanicHandoverDto
+                        mechanicHandovers.Add(new MechanicHandoverDto
                         {
                             DriverId = doctor.DriverId,
                             DriverName = doctor.DriverName,
@@ -120,7 +124,7 @@ namespace CheckDrive.Web.Controllers
                 }
                 else
                 {
-                    mechanicHandover.Add(new MechanicHandoverDto
+                    mechanicHandovers.Add(new MechanicHandoverDto
                     {
                         DriverId = doctor.DriverId,
                         DriverName = doctor.DriverName,
@@ -133,7 +137,15 @@ namespace CheckDrive.Web.Controllers
                 }
             }
 
-            return View(mechanicHandover);
+            ViewBag.PageSize = pageSize;
+            ViewBag.PageCount = totalPages;
+            ViewBag.TotalCount = totalCount;
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.HasPreviousPage = hasPreviousPage;
+            ViewBag.HasNextPage = hasNextPage;
+            ViewBag.SearchString = searchString;
+
+            return View(mechanicHandovers);
         }
 
 
