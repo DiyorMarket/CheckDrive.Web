@@ -13,11 +13,13 @@ namespace CheckDrive.Web.Controllers
         {
             _userDataStore = userDataStore;
         }
+
         public IActionResult Login()
         {
             HttpContext.Response.Cookies.Delete("tasty-cookies");
             return RedirectToAction("Index", "Auth");
         }
+
         public IActionResult Index()
         {
             if (HttpContext.Request.Cookies.TryGetValue("tasty-cookies", out _))
@@ -35,24 +37,20 @@ namespace CheckDrive.Web.Controllers
                 {
                     case "1":
                         return RedirectToAction("Index", "Dashboard");
-                        break;
                     case "3":
                         return RedirectToAction("Index", "PersonalDoctorReviews");
-                        break;
                     case "4":
                         return RedirectToAction("Index", "PersonalOperatorReviews");
-                        break;
                     case "5":
                         return RedirectToAction("PersonalIndex", "MechanicHandovers");
-                        break;
                     case "6":
-                        return RedirectToAction("PersonalIndex", "MechanicAcceptances");
-                        break;
+                        return RedirectToAction("PersonalIndex", "MechanicHandovers");
                 }
                 return RedirectToAction("Index", "Auth");
             }
             return View("Index");
         }
+
         [HttpPost]
         public async Task<IActionResult> Index(LoginViewModel loginViewModel)
         {
@@ -88,26 +86,28 @@ namespace CheckDrive.Web.Controllers
                 var roleId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
                 var accountId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
+                // Assuming there is a specific claim for mechanicId in the token
+                var mechanicIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "mechanicId");
+                var mechanicId = mechanicIdClaim?.Value ?? accountId;
+
                 switch (roleId)
                 {
                     case "1":
                         return RedirectToAction("Index", "Dashboard");
-                        break;
                     case "3":
                         TempData["AccountId"] = accountId;
                         return RedirectToAction("Index", "PersonalDoctorReviews");
-                        break;
                     case "4":
                         return RedirectToAction("Index", "PersonalOperatorReviews");
-                        break;
                     case "5":
-                        return RedirectToAction("PersonalIndex", "MechanicHandovers");
-                        break;
-                    case "6":
                         return RedirectToAction("Index", "Dashboard");
-                        break;
+                    case "6":
+                        TempData["AccountId"] = accountId;
+                        //TempData["MechanicId"] = mechanicId;
+                        return RedirectToAction("PersonalIndex", "MechanicHandovers");
+                    default:
+                        return RedirectToAction("Index", "Auth");
                 }
-                return RedirectToAction("Index", "Auth");
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
