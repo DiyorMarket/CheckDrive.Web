@@ -43,7 +43,7 @@ namespace CheckDrive.Web.Controllers
                         return RedirectToAction("Index", "PersonalOperatorReviews");
                         break;
                     case "5":
-                        return RedirectToAction("PersonalIndex", "MechanicHandovers");
+                        return RedirectToAction("PersonalIndex", "DispatcherReviews");
                         break;
                     case "6":
                         return RedirectToAction("PersonalIndex", "MechanicAcceptances");
@@ -101,10 +101,10 @@ namespace CheckDrive.Web.Controllers
                         return RedirectToAction("Index", "PersonalOperatorReviews");
                         break;
                     case "5":
-                        return RedirectToAction("PersonalIndex", "MechanicHandovers");
+                        return RedirectToAction("PersonalIndex", "DispatcherReviews");
                         break;
                     case "6":
-                        return RedirectToAction("Index", "Dashboard");
+                        return RedirectToAction("PersonalIndex", "MechanicAcceptances");
                         break;
                 }
                 return RedirectToAction("Index", "Auth");
