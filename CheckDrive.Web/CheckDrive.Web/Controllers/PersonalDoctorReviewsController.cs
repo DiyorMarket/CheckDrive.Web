@@ -101,24 +101,31 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Create(int driverId, string driverName)
         {
-            var doctor = new DoctorDto();
-
             var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId"); // Сохранение значения AccountId между запросами
+
             if (int.TryParse(accountIdStr, out int accountId))
             {
                 var doctorResponse = await _doctorDataStore.GetDoctors(accountId);
-                doctor = doctorResponse.Data.First();
-            }
-            var doctors = new List<SelectListItem>
+                var doctor = doctorResponse.Data.FirstOrDefault();
+                if (doctor != null)
                 {
-                    new SelectListItem { Value = doctor.Id.ToString(), Text = $"{doctor.FirstName} {doctor.LastName}" }
-                };
+                    var doctors = new List<SelectListItem>
+            {
+                new SelectListItem { Value = doctor.Id.ToString(), Text = $"{doctor.FirstName} {doctor.LastName}" }
+            };
 
-            ViewBag.Doctors = new SelectList(doctors, "Value", "Text");
-            ViewBag.SelectedDriverName = driverName;
-            ViewBag.SelectedDriverId = driverId;
+                    ViewBag.Doctors = new SelectList(doctors, "Value", "Text");
+                    ViewBag.SelectedDriverName = driverName;
+                    ViewBag.SelectedDriverId = driverId;
+                    ViewBag.DoctorId = doctor.Id;  // Сохранение doctorId в ViewBag
 
-            return View(new DoctorReviewForCreateDto { DriverId = driverId, Date = DateTime.Now });
+                    return View(new DoctorReviewForCreateDto { DriverId = driverId, Date = DateTime.Now, DoctorId = doctor.Id });
+                }
+            }
+
+            // Обработка случая, когда врач не найден или accountId недействителен
+            return NotFound("Врач не найден для указанного аккаунта.");
         }
 
         [HttpPost]
@@ -127,11 +134,6 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (doctorReview.IsHealthy == null)
-                {
-                    doctorReview.IsHealthy = false;
-                }
-
                 doctorReview.Date = DateTime.Now;
                 await _doctorReviewDataStore.CreateDoctorReviewAsync(doctorReview);
                 return RedirectToAction(nameof(Index));
@@ -141,8 +143,30 @@ namespace CheckDrive.Web.Controllers
             ViewBag.SelectedDriverName = $"{driver.FirstName} {driver.LastName}";
             ViewBag.SelectedDriverId = doctorReview.DriverId;
 
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId"); // Сохранение значения AccountId между запросами
+
+            if (int.TryParse(accountIdStr, out int accountId))
+            {
+                var doctorResponse = await _doctorDataStore.GetDoctors(accountId);
+                var doctor = doctorResponse.Data.FirstOrDefault();
+                if (doctor != null)
+                {
+                    var doctors = new List<SelectListItem>
+            {
+                new SelectListItem { Value = doctor.Id.ToString(), Text = $"{doctor.FirstName} {doctor.LastName}" }
+            };
+
+                    ViewBag.Doctors = new SelectList(doctors, "Value", "Text");
+                    ViewBag.DoctorId = doctor.Id;  // Сохранение doctorId в ViewBag при повторном отображении формы
+                }
+            }
+
             return View(doctorReview);
         }
+
+
+
 
         public async Task<IActionResult> Edit(int id)
         {

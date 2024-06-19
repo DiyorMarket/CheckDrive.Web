@@ -29,7 +29,7 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
                 query.Append($"pageNumber={pageNumber}");
             }
 
-            var response = await _api.GetAsync("mechanics/acceptances?" + query.ToString());
+            var response = await _api.GetAsync("mechanics/acceptances?OrderBy=datedesc&" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {

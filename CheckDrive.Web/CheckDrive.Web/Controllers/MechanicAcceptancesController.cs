@@ -106,7 +106,7 @@ namespace CheckDrive.Web.Controllers
                             DriverName = doctor.DriverName,
                             MechanicName = "",
                             IsAccepted = false,
-                            Distance = review.Distance,
+                            Distance = 0,
                             Comments = "",
                             Date = null
                         });
@@ -120,7 +120,7 @@ namespace CheckDrive.Web.Controllers
                         DriverName = doctor.DriverName,
                         MechanicName = "",
                         IsAccepted = false,
-                        Distance = review.Distance,
+                        Distance = 0,
                         Comments = "",
                         Date = null
                     });

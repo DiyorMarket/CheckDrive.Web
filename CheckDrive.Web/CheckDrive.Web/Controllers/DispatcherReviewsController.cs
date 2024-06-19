@@ -1,5 +1,11 @@
-﻿ using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.DispatcherReview;
+using CheckDrive.Web.Models;
+using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DispatcherReviews;
+using CheckDrive.Web.Stores.MechanicAcceptances;
+using CheckDrive.Web.Stores.MechanicHandovers;
+using CheckDrive.Web.Stores.OperatorReviews;
+using CheckDrive.Web.Stores.Operators;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
@@ -7,10 +13,23 @@ namespace CheckDrive.Web.Controllers
     public class DispatcherReviewsController : Controller
     {
         private readonly IDispatcherReviewDataStore _dispatcherReviewDataStore;
+        private readonly IMechanicAcceptanceDataStore _mechanicAcceptanceDataStore;
+        private readonly IMechanicHandoverDataStore _mechanicHandoverDataStore;
+        private readonly IOperatorReviewDataStore _operatorDataStore;
+        private readonly ICarDataStore _carDataStore;
 
-        public DispatcherReviewsController(IDispatcherReviewDataStore dispatcherReviewDataStore)
+        public DispatcherReviewsController(
+            IDispatcherReviewDataStore dispatcherReviewDataStore, 
+            IMechanicAcceptanceDataStore mechanicAcceptanceDataStore,
+            IOperatorReviewDataStore operatorDataStore, 
+            IMechanicHandoverDataStore mechanicHandoverDataStore,
+            ICarDataStore carDataStore)
         {
             _dispatcherReviewDataStore = dispatcherReviewDataStore;
+            _mechanicAcceptanceDataStore = mechanicAcceptanceDataStore;
+            _operatorDataStore = operatorDataStore;
+            _mechanicHandoverDataStore = mechanicHandoverDataStore;
+            _carDataStore = carDataStore;
         }
 
         public async Task<IActionResult> Index(int? pagenumber)
@@ -45,6 +64,101 @@ namespace CheckDrive.Web.Controllers
 
             ViewBag.DispatcherReviews = dispatcherReviewResponse; 
             return View();
+        }
+
+        public async Task<IActionResult> PersonalIndex(int? pagenumber)
+        {
+            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber);
+            var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
+            var mechanicHandoverResponse = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
+            var operatorResoponse = await _operatorDataStore.GetOperatorReviews();
+            var carResponse = await _carDataStore.GetCarsAsync(null, null);
+
+            var mechanicAcceptances = mechanicAcceptanceResponse.Data
+                .Where(m => m.Date.Value.Date == DateTime.Today)
+                .Where(m => m.IsAccepted == true)
+                .ToList();
+
+            var dispatchers = new List<DispatcherReviewDto>();
+
+            foreach (var mechanicAcceptance in mechanicAcceptances)
+            {
+                var mechanicHandoverReview = mechanicHandoverResponse.Data.FirstOrDefault(m => m.DriverId == mechanicAcceptance.DriverId && m.Date.Value.Date == DateTime.Today);
+                var operatorReview = operatorResoponse.Data.FirstOrDefault(m => m.DriverId == mechanicAcceptance.DriverId && m.Date.Value.Date == DateTime.Today);
+                var carReview = carResponse.Data.FirstOrDefault(c => c.Id == mechanicAcceptance.CarId);
+                var review = reviewsResponse.Data.FirstOrDefault(r => r.DriverId == mechanicAcceptance.DriverId);
+                if (review != null)
+                {
+                    if (review.Date == DateTime.Today)
+                    {
+                        dispatchers.Add(new DispatcherReviewDto
+                        {
+                            DriverId = review.DriverId,
+                            DriverName = mechanicAcceptance.DriverName,
+                            CarId = review.CarId,
+                            CarName = review.CarName,
+                            CarMeduimFuelConsumption = review.CarMeduimFuelConsumption,
+                            FuelSpended = review.FuelSpended,
+                            DistanceCovered = review.DistanceCovered,
+                            InitialDistance = review.InitialDistance,
+                            FinalDistance = review.FinalDistance,
+                            PouredFuel = review.PouredFuel,
+                            OperatorName = review.OperatorName,
+                            DispatcherName = review.DispatcherName,
+                            MechanicName = review.MechanicName,
+                            Date = review.Date,
+                            DispatcherId = review.DispatcherId,
+                            MechanicAcceptanceId = review.MechanicAcceptanceId,
+                            MechanicHandoverId = review.MechanicHandoverId,
+                            OperatorId = review.OperatorId,
+                            MechanicId = review.MechanicId,
+                        });
+                    }
+                    else
+                    {
+                        dispatchers.Add(new DispatcherReviewDto
+                        {
+                            DriverId = mechanicAcceptance.DriverId,
+                            DriverName = mechanicAcceptance.DriverName,
+                            CarId = mechanicAcceptance.CarId,
+                            CarName = mechanicAcceptance.CarName,
+                            CarMeduimFuelConsumption = carReview.MeduimFuelConsumption,
+                            FuelSpended = (mechanicAcceptance.Distance - mechanicHandoverReview.Distance) / carReview.MeduimFuelConsumption,
+                            DistanceCovered = mechanicAcceptance.Distance - mechanicHandoverReview.Distance,
+                            InitialDistance = mechanicHandoverReview.Distance,
+                            FinalDistance = mechanicAcceptance.Distance,
+                            PouredFuel = operatorReview.OilAmount ?? 0,
+                            OperatorName= operatorReview.OperatorName,
+                            DispatcherName = "",
+                            MechanicName = mechanicAcceptance.MechanicName,
+                            Date = DateTime.Today,
+
+                        });
+                    }
+                }
+                else
+                {
+                    dispatchers.Add(new DispatcherReviewDto
+                    {
+                        DriverId = mechanicAcceptance.DriverId,
+                        DriverName = mechanicAcceptance.DriverName,
+                        CarId = mechanicAcceptance.CarId,
+                        CarName = mechanicAcceptance.CarName,
+                        CarMeduimFuelConsumption = carReview.MeduimFuelConsumption,
+                        FuelSpended = (mechanicAcceptance.Distance - mechanicHandoverReview.Distance) / carReview.MeduimFuelConsumption,
+                        DistanceCovered = mechanicAcceptance.Distance - mechanicHandoverReview.Distance,
+                        InitialDistance = mechanicHandoverReview.Distance,
+                        FinalDistance = mechanicAcceptance.Distance,
+                        PouredFuel = operatorReview.OilAmount ?? 0,
+                        OperatorName = operatorReview.OperatorName,
+                        DispatcherName = "",
+                        MechanicName = mechanicAcceptance.MechanicName,
+                        Date = DateTime.Today,
+                    });
+                }
+            }
+
+            return View(dispatchers);
         }
 
         public async Task<IActionResult> Details(int id)

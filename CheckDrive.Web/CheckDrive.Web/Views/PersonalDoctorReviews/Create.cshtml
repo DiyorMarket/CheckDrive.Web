@@ -24,6 +24,7 @@
             </div>
             <div class="form-group w-50">
                 <select asp-for="DoctorId" class="form-control border border-dark d-none" asp-items="@ViewBag.Doctors"></select>
+                <input type="hidden" asp-for="DoctorId" value="@ViewBag.DoctorId" /> <!-- Добавлено скрытое поле для DoctorId -->
             </div>
             <div class="form-group w-50">
                 <label asp-for="Comments" for="exampleFormControlTextarea1">Izoh</label>
@@ -54,3 +55,4 @@
         });
     });
 </script>
+    
