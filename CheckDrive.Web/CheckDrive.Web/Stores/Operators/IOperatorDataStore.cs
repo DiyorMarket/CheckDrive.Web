@@ -5,6 +5,7 @@ namespace CheckDrive.Web.Stores.Operators
 {
     public interface IOperatorDataStore
     {
+        Task<GetOperatorResponse> GetOperators(int accountId);
         Task<GetOperatorResponse> GetOperators();
         Task<Operator> GetOperator(int id);
         Task<Operator> CreateOperator(Operator @operator);

@@ -232,19 +232,6 @@ namespace CheckDrive.Web.Controllers
             var doctorReview = await _doctorReviewDataStore.GetDoctorReviewAsync(id);
             return doctorReview != null;
         }
-
-        private async Task<List<SelectListItem>> GETDoctors()
-        {
-            var doctorResponse = await _doctorDataStore.GetDoctors();
-            var doctors = doctorResponse.Data
-                .Select(d => new SelectListItem
-                {
-                    Value = d.Id.ToString(),
-                    Text = $"{d.FirstName} {d.LastName}"
-                })
-                .ToList();
-            return doctors;
-        }
     }
 
 }

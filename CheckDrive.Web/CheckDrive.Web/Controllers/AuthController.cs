@@ -13,11 +13,13 @@ namespace CheckDrive.Web.Controllers
         {
             _userDataStore = userDataStore;
         }
+
         public IActionResult Login()
         {
             HttpContext.Response.Cookies.Delete("tasty-cookies");
             return RedirectToAction("Index", "Auth");
         }
+
         public IActionResult Index()
         {
             if (HttpContext.Request.Cookies.TryGetValue("tasty-cookies", out _))
@@ -35,24 +37,20 @@ namespace CheckDrive.Web.Controllers
                 {
                     case "1":
                         return RedirectToAction("Index", "Dashboard");
-                        break;
                     case "3":
                         return RedirectToAction("Index", "PersonalDoctorReviews");
-                        break;
                     case "4":
                         return RedirectToAction("Index", "PersonalOperatorReviews");
-                        break;
                     case "5":
-                        return RedirectToAction("PersonalIndex", "DispatcherReviews");
-                        break;
+                        return RedirectToAction("PersonalIndex", "MechanicHandovers");
                     case "6":
-                        return RedirectToAction("PersonalIndex", "MechanicAcceptances");
-                        break;
+                        return RedirectToAction("PersonalIndex", "MechanicHandovers");
                 }
                 return RedirectToAction("Index", "Auth");
             }
             return View("Index");
         }
+
         [HttpPost]
         public async Task<IActionResult> Index(LoginViewModel loginViewModel)
         {
@@ -92,22 +90,20 @@ namespace CheckDrive.Web.Controllers
                 {
                     case "1":
                         return RedirectToAction("Index", "Dashboard");
-                        break;
                     case "3":
                         TempData["AccountId"] = accountId;
                         return RedirectToAction("Index", "PersonalDoctorReviews");
-                        break;
                     case "4":
+                        TempData["AccountId"] = accountId;
                         return RedirectToAction("Index", "PersonalOperatorReviews");
-                        break;
                     case "5":
-                        return RedirectToAction("PersonalIndex", "DispatcherReviews");
-                        break;
+                        return RedirectToAction("Index", "Dashboard");
                     case "6":
-                        return RedirectToAction("PersonalIndex", "MechanicAcceptances");
-                        break;
+                        TempData["AccountId"] = accountId;
+                        return RedirectToAction("PersonalIndex", "MechanicHandovers");
+                    default:
+                        return RedirectToAction("Index", "Auth");
                 }
-                return RedirectToAction("Index", "Auth");
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");

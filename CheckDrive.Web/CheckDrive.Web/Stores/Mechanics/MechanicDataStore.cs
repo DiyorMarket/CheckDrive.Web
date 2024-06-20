@@ -2,6 +2,7 @@
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace CheckDrive.Web.Stores.Mechanics
 {
@@ -12,6 +13,28 @@ namespace CheckDrive.Web.Stores.Mechanics
         public MechanicDataStore(ApiClient apiClient)
         {
             _api = apiClient;
+        }
+
+        public async Task<GetMechanicResponse> GetMechanics(int accountId)
+        {
+            StringBuilder query = new("");
+
+            if (!accountId.Equals(0))
+            {
+                query.Append($"accountId={accountId}");
+            }
+
+            var response = await _api.GetAsync("mechanics?" + query.ToString());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch mechanics.");
+            }
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<GetMechanicResponse>(json);
+
+            return result;
         }
         public async Task<GetMechanicResponse> GetMechanicsAsync()
         {
