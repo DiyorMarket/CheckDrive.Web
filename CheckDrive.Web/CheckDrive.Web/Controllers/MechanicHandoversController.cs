@@ -155,34 +155,33 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null,null);
-            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId");
 
-            var healthyDrivers = doctorReviews.Data
-                .Where(dr => dr.IsHealthy.HasValue && dr.IsHealthy.Value && dr.Date.Date == DateTime.Today)
-                .Select(dr => dr.DriverId)
-                .ToList();
+            if (int.TryParse(accountIdStr, out int accountId))
+            {
+                var mechanicResponse = await _mechanicDataStore.GetMechanics(accountId);
+                var mechanic = mechanicResponse.Data.First();
+                if (mechanic != null)
+                {
+                    var filteredDrivers = drivers
+                        .Where(d => d.Value == driverId.ToString())
+                        .ToList();
 
-            var handedDrivers = mechanicHandovers.Data
-                .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
-                .Select(ma => ma.DriverId)
-                .ToList();
+                    ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
+                    ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
+                    ViewBag.Cars = new SelectList(cars, "Value", "Text");
 
-            var filteredDrivers = drivers
-                .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !handedDrivers.Contains(int.Parse(d.Value)))
-                .ToList();
+                    var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
+                    ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
+                    ViewBag.SelectedDriverId = driverId;
 
-            ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
-            ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
-            ViewBag.Cars = new SelectList(cars, "Value", "Text");
+                    return View(new MechanicHandoverForCreateDto { DriverId = driverId ?? 0, MechanicId = mechanic.Id });
+                }
+            }
 
-            var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
-            ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
-            ViewBag.SelectedDriverId = driverId;
-
-            return View(new MechanicHandoverForCreateDto { DriverId = driverId ?? 0 });
+            return NotFound("Механик не найден для указанного аккаунта.");
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -213,6 +212,8 @@ namespace CheckDrive.Web.Controllers
 
             return View(mechanicHandoverForCreateDto);
         }
+
+
 
 
         [HttpPost]

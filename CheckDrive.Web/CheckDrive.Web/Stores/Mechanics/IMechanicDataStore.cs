@@ -5,6 +5,7 @@ namespace CheckDrive.Web.Stores.Mechanics
 {
     public interface IMechanicDataStore
     {
+        Task<GetMechanicResponse> GetMechanics(int accountId);
         Task<GetMechanicResponse> GetMechanicsAsync();
         Task<Mechanic> GetMechanicAsync(int id);
         Task<Mechanic> CreateMechanicAsync(Mechanic mechanic);

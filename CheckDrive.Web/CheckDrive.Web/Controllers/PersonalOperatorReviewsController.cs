@@ -1,4 +1,5 @@
 ﻿using CheckDrive.ApiContracts;
+using CheckDrive.ApiContracts.Operator;
 using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
@@ -8,6 +9,7 @@ using CheckDrive.Web.Stores.OperatorReviews;
 using CheckDrive.Web.Stores.Operators;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Numerics;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -49,6 +51,7 @@ namespace CheckDrive.Web.Controllers
                         {
                             DriverId = review.DriverId,
                             DriverName = mechanicHandover.DriverName,
+                            OperatorName = review.OperatorName,
                             CarId = car?.Id ?? review.CarId,
                             CarModel = car?.Model ?? review.CarModel,
                             CarNumber = car?.Number ?? review.CarNumber,
@@ -68,6 +71,7 @@ namespace CheckDrive.Web.Controllers
                         {
                             DriverId = mechanicHandover.DriverId,
                             DriverName = mechanicHandover.DriverName,
+                            OperatorName = null,
                             CarId = car?.Id ?? 0,
                             CarModel = car?.Model ?? string.Empty,
                             CarNumber = car?.Number ?? string.Empty,
@@ -88,6 +92,7 @@ namespace CheckDrive.Web.Controllers
                     {
                         DriverId = mechanicHandover.DriverId,
                         DriverName = mechanicHandover.DriverName,
+                        OperatorName = null,
                         CarId = car?.Id ?? 0,
                         CarModel = car?.Model ?? string.Empty,
                         CarNumber = car?.Number ?? string.Empty,
@@ -120,14 +125,27 @@ namespace CheckDrive.Web.Controllers
         {
             var drivers = await GETDrivers();
             var cars = await GETCars();
-            var operators = await GETOperators();
+
+            var operatorr = new OperatorDto();
+
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId");
+            if (int.TryParse(accountIdStr, out int accountId))
+            {
+                var operatorResponse = await _operatorDataStore.GetOperators(accountId);
+                operatorr = operatorResponse.Data.First();
+            }
+            var operators = new List<SelectListItem>
+                {
+                    new SelectListItem { Value = operatorr.Id.ToString(), Text = $"{operatorr.FirstName} {operatorr.LastName}" }
+                };
 
             var response = await _operatorReviewDataStore.GetOperatorReviews();
             var oilMarks = response.Data.Select(r => r.OilMarks).Distinct().ToList();
 
             ViewBag.OilMarks = new SelectList(oilMarks);
             ViewBag.Drivers = new SelectList(drivers, "Value", "Text");
-            ViewBag.Operators = new SelectList(operators, "Value", "Text");
+            ViewBag.Operators = operators;
             ViewBag.Cars = new SelectList(cars, "Value", "Text", carId);
 
             var model = new OperatorReviewForCreateDto();
