@@ -6,8 +6,19 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
 }
-
-<h1 class="text-center">Shifokor oynasi</h1>
+<div class="container-fluid py-2 px-4 d-flex justify-content-end">
+    <div class="d-flex align-items-center">
+        <div class="dropdown">
+            <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: white; border-color: black;">
+                <i class="fa-solid fa-user" style="background-color: white; color: black;"></i>
+                <i class="bi bi-caret-down-fill" style="background-color:white; color:black"></i>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" style="color: red" href="@Url.Action("Login", "Auth")">Profildan Chiqish</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 <form asp-controller="PersonalDoctorReviews" asp-action="Index">
     <div class="container mt-5">
@@ -25,8 +36,8 @@
             </div>
             <!-- LogOut Link -->
             <div class="col-md-4 text-right">
-                <a href="@Url.Action("Login", "Auth")" class="btn btn-outline-danger">
-                    Profildan Chiqish <i class="bi bi-box-arrow-right" style="margin-left: 5px;"></i>
+                <a class="btn btn-success shadow" href="@Url.Action("Create", "PersonalDoctorReviews")">
+                    <i class="fa fa-plus"></i> Yaratish
                 </a>
             </div>
         </div>
