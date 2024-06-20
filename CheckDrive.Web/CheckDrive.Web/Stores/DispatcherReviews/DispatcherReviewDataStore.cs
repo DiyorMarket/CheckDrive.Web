@@ -18,7 +18,7 @@ namespace CheckDrive.Web.Stores.DispatcherReviews
             {
                 query.Append($"pageNumber={pageNumber}");
             }
-            var response = await _api.GetAsync("dispatchers/reviews?" + query.ToString());
+            var response = await _api.GetAsync("dispatchers/reviews?OrderBy=datedesc&" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {
