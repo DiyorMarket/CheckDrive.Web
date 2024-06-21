@@ -72,7 +72,7 @@ namespace CheckDrive.Web.Controllers
             var operatorReviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null, searchString);
 
             var filteredOperatorReviews = operatorReviewsResponse.Data
-                .Where(dr => dr.Date == DateTime.Today)
+                .Where(dr => dr.Date.Value.Date == DateTime.Today)
                 .Where(dr => dr.IsGiven == true)
                 .ToList();
 

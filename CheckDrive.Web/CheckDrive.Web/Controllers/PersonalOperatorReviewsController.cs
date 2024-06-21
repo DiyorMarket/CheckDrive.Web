@@ -104,7 +104,7 @@ namespace CheckDrive.Web.Controllers
                         Comments = null,
                         Date = null,
                         Status = StatusForDto.Unassigned
-                    });
+                    }); 
                 }
             }
 
