@@ -33,7 +33,7 @@
                     }
                     else
                     {
-                        <select asp-for="DriverId" id="driverIdDropdown" class="form-control border border-dark" asp-items="@ViewBag.Drivers"></select>
+                        <select asp-for="DriverId" id="driverIdDropdown" class="form-control border border-dark" asp-items="@(ViewBag.Drivers as SelectList)"></select>
                     }
                 }
             </div>

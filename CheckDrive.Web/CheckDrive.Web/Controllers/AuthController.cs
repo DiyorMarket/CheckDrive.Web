@@ -42,7 +42,7 @@ namespace CheckDrive.Web.Controllers
                     case "4":
                         return RedirectToAction("Index", "PersonalOperatorReviews");
                     case "5":
-                        return RedirectToAction("PersonalIndex", "MechanicHandovers");
+                        return RedirectToAction("Index", "Dashboard");
                     case "6":
                         return RedirectToAction("PersonalIndex", "MechanicHandovers");
                 }
@@ -98,7 +98,7 @@ namespace CheckDrive.Web.Controllers
                         return RedirectToAction("Index", "PersonalOperatorReviews");
                     case "5":
                         TempData["AccountId"] = accountId;
-                        return RedirectToAction("PersonalIndex", "MechanicAcceptances");
+                        return RedirectToAction("Index", "Dashboard");
                     case "6":
                         TempData["AccountId"] = accountId;
                         return RedirectToAction("PersonalIndex", "MechanicHandovers");

@@ -161,11 +161,11 @@ namespace CheckDrive.Web.Controllers
             if (int.TryParse(accountIdStr, out int accountId))
             {
                 var mechanicResponse = await _mechanicDataStore.GetMechanics(accountId);
-                var mechanic = mechanicResponse.Data.First();
+                var mechanic = mechanicResponse.Data.FirstOrDefault();
                 if (mechanic != null)
                 {
                     var filteredDrivers = drivers
-                        .Where(d => d.Value == driverId.ToString())
+                        .Where(d => !driverId.HasValue || d.Value == driverId.ToString())
                         .ToList();
 
                     ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
@@ -182,6 +182,8 @@ namespace CheckDrive.Web.Controllers
 
             return NotFound("Механик не найден для указанного аккаунта.");
         }
+
+
 
 
         [HttpPost]
