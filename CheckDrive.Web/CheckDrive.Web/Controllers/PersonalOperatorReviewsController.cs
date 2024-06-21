@@ -28,7 +28,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString)
         {
-            var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews();
+            var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null,null);
             var mechanicHandoverResponse = await _mechanicHandover.GetMechanicHandoversAsync(pageNumber);
             var cars = await _carDataStore.GetCarsAsync(null, null);
 
@@ -140,7 +140,7 @@ namespace CheckDrive.Web.Controllers
                     new SelectListItem { Value = operatorr.Id.ToString(), Text = $"{operatorr.FirstName} {operatorr.LastName}" }
                 };
 
-            var response = await _operatorReviewDataStore.GetOperatorReviews();
+            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null);
             var oilMarks = response.Data.Select(r => r.OilMarks).Distinct().ToList();
 
             ViewBag.OilMarks = new SelectList(oilMarks);
@@ -200,7 +200,7 @@ namespace CheckDrive.Web.Controllers
 
             var drivers = await GETDrivers();
             var cars = await GETCars();
-            var response = await _operatorReviewDataStore.GetOperatorReviews();
+            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null);
             var oilMarks = response.Data.Select(r => r.OilMarks).Distinct().ToList();
 
             ViewBag.OilMarks = new SelectList(oilMarks);

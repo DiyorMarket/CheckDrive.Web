@@ -97,7 +97,8 @@ namespace CheckDrive.Web.Controllers
                         TempData["AccountId"] = accountId;
                         return RedirectToAction("Index", "PersonalOperatorReviews");
                     case "5":
-                        return RedirectToAction("Index", "Dashboard");
+                        TempData["AccountId"] = accountId;
+                        return RedirectToAction("Index", "MechanicAcceptances");
                     case "6":
                         TempData["AccountId"] = accountId;
                         return RedirectToAction("PersonalIndex", "MechanicHandovers");

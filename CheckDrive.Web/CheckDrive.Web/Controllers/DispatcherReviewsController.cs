@@ -71,7 +71,7 @@ namespace CheckDrive.Web.Controllers
             var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber);
             var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
             var mechanicHandoverResponse = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
-            var operatorResoponse = await _operatorDataStore.GetOperatorReviews();
+            var operatorResoponse = await _operatorDataStore.GetOperatorReviews(null, null);
             var carResponse = await _carDataStore.GetCarsAsync(null, null);
 
             var mechanicAcceptances = mechanicAcceptanceResponse.Data
