@@ -156,6 +156,9 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null,null);
+            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
+
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
 
