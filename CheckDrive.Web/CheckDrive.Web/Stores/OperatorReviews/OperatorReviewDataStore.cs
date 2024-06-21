@@ -3,6 +3,7 @@ using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace CheckDrive.Web.Stores.OperatorReviews
 {
@@ -10,13 +11,24 @@ namespace CheckDrive.Web.Stores.OperatorReviews
     {
         private readonly ApiClient _api = api;
 
-        public async Task<GetOperatorReviewResponse> GetOperatorReviews()
+        public async Task<GetOperatorReviewResponse> GetOperatorReviews(int? pageNumber, string? searchString)
         {
-            var response = await _api.GetAsync("operators/reviews?OrderBy=datedesc");
+            StringBuilder query = new("");
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query.Append($"searchString={searchString}&");
+            }
+
+            if (pageNumber != null)
+            {
+                query.Append($"pageNumber={pageNumber}");
+            }
+            var response = await _api.GetAsync("operators/reviews?OrderBy=datedesc&" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Could not fetch drivers.");
+                throw new Exception("Could not fetch operatorReviews.");
             }
 
             var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
