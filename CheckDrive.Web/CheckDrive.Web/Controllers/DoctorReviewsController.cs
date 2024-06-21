@@ -1,5 +1,4 @@
 ﻿using CheckDrive.ApiContracts.DoctorReview;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.DoctorReviews;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +15,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber)
         {
-            var response = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber,null);
+            var response = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, null);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;

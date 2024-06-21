@@ -12,7 +12,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews();
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null);
 
             if (operatorReviews is null)
             {

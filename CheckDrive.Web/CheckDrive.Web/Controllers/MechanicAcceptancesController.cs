@@ -1,10 +1,10 @@
 using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.MechanicAcceptance;
 using CheckDrive.Web.Stores.Cars;
-using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
 using CheckDrive.Web.Stores.Mechanics;
+using CheckDrive.Web.Stores.OperatorReviews;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -16,15 +16,15 @@ namespace CheckDrive.Web.Controllers
         private readonly IDriverDataStore _driverDataStore;
         private readonly ICarDataStore _carDataStore;
         private readonly IMechanicDataStore _mechanicDataStore;
-        private readonly IDoctorReviewDataStore _doctorReviewDataStore;
+        private readonly IOperatorReviewDataStore _operatorReviewDataStore;
 
-        public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore, IMechanicDataStore mechanicDataStore, IDoctorReviewDataStore doctorReviewDataStore)
+        public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore, IMechanicDataStore mechanicDataStore, IOperatorReviewDataStore operatorReviewDataStore)
         {
             _mechanicAcceptanceDataStore = mechanicAcceptanceDataStore;
             _driverDataStore = driverDataStore;
             _carDataStore = carDataStore;
             _mechanicDataStore = mechanicDataStore;
-            _doctorReviewDataStore = doctorReviewDataStore;
+            _operatorReviewDataStore = operatorReviewDataStore;
         }
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString)
@@ -66,34 +66,34 @@ namespace CheckDrive.Web.Controllers
         }
 
 
-      public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
-{
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null,null);
-            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, searchString);
+        public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
+        {
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null);
+            var operatorReviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null, searchString);
 
-            var filteredDoctorReviews = doctorReviewsResponse.Data
-                .Where(dr => dr.Date.Date == DateTime.Today)
-                .Where(dr => dr.IsHealthy == true)
+            var filteredOperatorReviews = operatorReviewsResponse.Data
+                .Where(dr => dr.Date.Value.Date == DateTime.Today)
+                .Where(dr => dr.IsGiven == true)
                 .ToList();
 
             int pageSize = 10;
             pageNumber = pageNumber ?? 1;
 
-            int totalCount = filteredDoctorReviews.Count;
+            int totalCount = filteredOperatorReviews.Count;
             int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
             bool hasPreviousPage = pageNumber > 1;
             bool hasNextPage = pageNumber < totalPages;
 
-            var paginatedDoctorReviews = filteredDoctorReviews
+            var paginatedOperatorReviews = filteredOperatorReviews
                 .Skip((pageNumber.Value - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
             var mechanicAcceptance = new List<MechanicAcceptanceDto>();
 
-            foreach (var doctor in paginatedDoctorReviews)
+            foreach (var operatorr in paginatedOperatorReviews)
             {
-                var review = response.Data.FirstOrDefault(r => r.DriverId == doctor.DriverId);
+                var review = response.Data.FirstOrDefault(r => r.DriverId == operatorr.DriverId);
                 if (review != null)
                 {
                     if (review.Date.HasValue && review.Date.Value.Date == DateTime.Today)
@@ -101,7 +101,7 @@ namespace CheckDrive.Web.Controllers
                         mechanicAcceptance.Add(new MechanicAcceptanceDto
                         {
                             DriverId = review.DriverId,
-                            DriverName = doctor.DriverName,
+                            DriverName = operatorr.DriverName,
                             MechanicName = review.MechanicName,
                             IsAccepted = review.IsAccepted,
                             Distance = review.Distance,
@@ -113,8 +113,8 @@ namespace CheckDrive.Web.Controllers
                     {
                         mechanicAcceptance.Add(new MechanicAcceptanceDto
                         {
-                            DriverId = doctor.DriverId,
-                            DriverName = doctor.DriverName,
+                            DriverId = operatorr.DriverId,
+                            DriverName = operatorr.DriverName,
                             MechanicName = "",
                             IsAccepted = false,
                             Distance = 0,
@@ -127,8 +127,8 @@ namespace CheckDrive.Web.Controllers
                 {
                     mechanicAcceptance.Add(new MechanicAcceptanceDto
                     {
-                        DriverId = doctor.DriverId,
-                        DriverName = doctor.DriverName,
+                        DriverId = operatorr.DriverId,
+                        DriverName = operatorr.DriverName,
                         MechanicName = "",
                         IsAccepted = false,
                         Distance = 0,
@@ -155,34 +155,48 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null,null);
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null);
             var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
 
-            var healthyDrivers = doctorReviews.Data
-                .Where(dr => dr.IsHealthy.HasValue && dr.IsHealthy.Value && dr.Date.Date == DateTime.Today)
-                .Select(dr => dr.DriverId)
-                .ToList();
 
-            var acceptedDrivers = mechanicAcceptances.Data
-                .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
-                .Select(ma => ma.DriverId)
-                .ToList();
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId");
 
-            var filteredDrivers = drivers
-                .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !acceptedDrivers.Contains(int.Parse(d.Value)))
-                .ToList();
+            if (int.TryParse(accountIdStr, out int accountId))
+            {
+                var mechanicResponse = await _mechanicDataStore.GetMechanics(accountId);
+                var mechanic = mechanicResponse.Data.FirstOrDefault();
+                if (mechanic != null)
+                {
+                    var healthyDrivers = operatorReviews.Data
+                         .Where(dr => dr.IsGiven.HasValue && dr.IsGiven.Value && dr.Date.Value.Date == DateTime.Today)
+                         .Select(dr => dr.DriverId)
+                    .ToList();
 
-            ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
-            ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
-            ViewBag.Cars = new SelectList(cars, "Value", "Text");
+                    var acceptedDrivers = mechanicAcceptances.Data
+                        .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
+                        .Select(ma => ma.DriverId)
+                        .ToList();
 
-            var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
-            ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
-            ViewBag.SelectedDriverId = driverId;
+                    var filteredDrivers = drivers
+                        .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !acceptedDrivers.Contains(int.Parse(d.Value)))
+                        .ToList();
 
-            return View(new MechanicAcceptanceForCreateDto { DriverId = driverId ?? 0 });
+
+                    ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
+                    ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
+                    ViewBag.Cars = new SelectList(cars, "Value", "Text");
+
+                    var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
+                    ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
+                    ViewBag.SelectedDriverId = driverId;
+
+                    return View(new MechanicAcceptanceForCreateDto { DriverId = driverId ?? 0, MechanicId = mechanic.Id });
+                }
+            }
+
+            return NotFound("Механик не найден для указанного аккаунта.");
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]

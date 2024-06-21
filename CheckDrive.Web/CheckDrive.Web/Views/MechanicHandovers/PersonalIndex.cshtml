@@ -6,7 +6,6 @@
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
 }
 
-
 <div class="container-fluid py-2 px-4 d-flex justify-content-end">
     <div class="d-flex align-items-center">
         <div class="dropdown">
@@ -16,32 +15,39 @@
             </button>
             <ul class="dropdown-menu" aria-labelledby="userDropdown">
                 <li><a class="dropdown-item" style="color: red" href="@Url.Action("Login", "Auth")">Profildan Chiqish</a></li>
+                <li><a class="dropdown-item" style="color: green" href="@Url.Action("PersonalIndex", "MechanicAcceptances")">Mexanik(Qabul qiluvchi)</a></li>
             </ul>
         </div>
     </div>
 </div>
 
-<form method="get" action="@Url.Action("PersonalIndex")">
-    <div class="container mt-5">
-        <div class="row justify-content-between align-items-center mb-4">
-            <!-- Search -->
-            <div class="col-md-4">
-                <div class="input-group">
-                    <input type="text" class="form-control rounded-left" placeholder="Haydovchini kiriting ..." name="searchString" value="@ViewBag.SearchString">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
+<div class="container mt-5">
+    <div class="row justify-content-between align-items-center mb-4">
+        <!-- Search -->
+        <div class="col-md-4">
+            <div class="input-group">
+                <input type="text" class="form-control rounded-left" placeholder="Haydovchini kiriting ..." name="searchString" value="@ViewBag.SearchString">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-search"></i>
+                    </button>
                 </div>
             </div>
-            <div class="col-md-4 text-end">
-                <a class="btn btn-success shadow" href="@Url.Action("Create", "MechanicHandovers")">
-                    <i class="fa fa-plus"></i> Yaratish
-                </a>
-            </div>
         </div>
+@*         <!-- Mechanic Link -->
+        <div class="col-md-4 text-center">
+            <a class="btn btn-info shadow" href="@Url.Action("PersonalIndex", "MechanicAcceptances")">
+                <i class="fa fa-link"></i> Mexanik (Qabul qiluvchi) Sahifasi
+            </a>
+        </div> *@
+        <div class="col-md-4 text-end">
+            <a class="btn btn-success shadow" href="@Url.Action("Create", "MechanicHandovers")">
+                <i class="fa fa-plus"></i> Yaratish
+            </a>
+        </div>
+    </div>
 
+    <form method="get" action="@Url.Action("PersonalIndex")">
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="table-responsive">
@@ -140,8 +146,8 @@
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
 
 <style>
     .badge {

@@ -5,7 +5,6 @@ using CheckDrive.Web.Stores.DispatcherReviews;
 using CheckDrive.Web.Stores.MechanicAcceptances;
 using CheckDrive.Web.Stores.MechanicHandovers;
 using CheckDrive.Web.Stores.OperatorReviews;
-using CheckDrive.Web.Stores.Operators;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
@@ -19,9 +18,9 @@ namespace CheckDrive.Web.Controllers
         private readonly ICarDataStore _carDataStore;
 
         public DispatcherReviewsController(
-            IDispatcherReviewDataStore dispatcherReviewDataStore, 
+            IDispatcherReviewDataStore dispatcherReviewDataStore,
             IMechanicAcceptanceDataStore mechanicAcceptanceDataStore,
-            IOperatorReviewDataStore operatorDataStore, 
+            IOperatorReviewDataStore operatorDataStore,
             IMechanicHandoverDataStore mechanicHandoverDataStore,
             ICarDataStore carDataStore)
         {
@@ -35,7 +34,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index(int? pagenumber)
         {
             var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber);
-            
+
 
             if (response is null)
             {
@@ -62,7 +61,7 @@ namespace CheckDrive.Web.Controllers
                 r.DriverName
             }).ToList();
 
-            ViewBag.DispatcherReviews = dispatcherReviewResponse; 
+            ViewBag.DispatcherReviews = dispatcherReviewResponse;
             return View();
         }
 
@@ -71,7 +70,7 @@ namespace CheckDrive.Web.Controllers
             var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber);
             var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
             var mechanicHandoverResponse = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
-            var operatorResoponse = await _operatorDataStore.GetOperatorReviews();
+            var operatorResoponse = await _operatorDataStore.GetOperatorReviews(null, null);
             var carResponse = await _carDataStore.GetCarsAsync(null, null);
 
             var mechanicAcceptances = mechanicAcceptanceResponse.Data
@@ -128,7 +127,7 @@ namespace CheckDrive.Web.Controllers
                             InitialDistance = mechanicHandoverReview.Distance,
                             FinalDistance = mechanicAcceptance.Distance,
                             PouredFuel = operatorReview.OilAmount ?? 0,
-                            OperatorName= operatorReview.OperatorName,
+                            OperatorName = operatorReview.OperatorName,
                             DispatcherName = "",
                             MechanicName = mechanicAcceptance.MechanicName,
                             Date = DateTime.Today,
