@@ -155,6 +155,10 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null);
+            var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
+
+
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
 
@@ -164,9 +168,20 @@ namespace CheckDrive.Web.Controllers
                 var mechanic = mechanicResponse.Data.FirstOrDefault();
                 if (mechanic != null)
                 {
-                    var filteredDrivers = drivers
-                        .Where(d => !driverId.HasValue || d.Value == driverId.ToString())
+                    var healthyDrivers = operatorReviews.Data
+                         .Where(dr => dr.IsGiven.HasValue && dr.IsGiven.Value && dr.Date.Value.Date == DateTime.Today)
+                         .Select(dr => dr.DriverId)
+                    .ToList();
+
+                    var acceptedDrivers = mechanicAcceptances.Data
+                        .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
+                        .Select(ma => ma.DriverId)
                         .ToList();
+
+                    var filteredDrivers = drivers
+                        .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !acceptedDrivers.Contains(int.Parse(d.Value)))
+                        .ToList();
+
 
                     ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
                     ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
@@ -182,9 +197,6 @@ namespace CheckDrive.Web.Controllers
 
             return NotFound("Механик не найден для указанного аккаунта.");
         }
-
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
