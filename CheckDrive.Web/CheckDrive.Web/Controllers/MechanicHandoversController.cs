@@ -1,5 +1,6 @@
 ﻿using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.MechanicHandover;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Drivers;
@@ -164,8 +165,18 @@ namespace CheckDrive.Web.Controllers
                 var mechanic = mechanicResponse.Data.First();
                 if (mechanic != null)
                 {
+                    var healthyDrivers = doctorReviews.Data
+                        .Where(dr => dr.IsHealthy.HasValue && dr.IsHealthy.Value && dr.Date.Date == DateTime.Today)
+                        .Select(dr => dr.DriverId)
+                         .ToList();
+
+                    var handedDrivers = mechanicHandovers.Data
+                        .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
+                        .Select(ma => ma.DriverId)
+                        .ToList();
+
                     var filteredDrivers = drivers
-                        .Where(d => d.Value == driverId.ToString())
+                        .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !handedDrivers.Contains(int.Parse(d.Value)))
                         .ToList();
 
                     ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
