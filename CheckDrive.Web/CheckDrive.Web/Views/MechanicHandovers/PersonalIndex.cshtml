@@ -21,6 +21,7 @@
     </div>
 </div>
 
+<form method="get" action="@Url.Action("PersonalIndex")">
 <div class="container mt-5">
     <div class="row justify-content-between align-items-center mb-4">
         <!-- Search -->
@@ -34,12 +35,6 @@
                 </div>
             </div>
         </div>
-@*         <!-- Mechanic Link -->
-        <div class="col-md-4 text-center">
-            <a class="btn btn-info shadow" href="@Url.Action("PersonalIndex", "MechanicAcceptances")">
-                <i class="fa fa-link"></i> Mexanik (Qabul qiluvchi) Sahifasi
-            </a>
-        </div> *@
         <div class="col-md-4 text-end">
             <a class="btn btn-success shadow" href="@Url.Action("Create", "MechanicHandovers")">
                 <i class="fa fa-plus"></i> Yaratish
@@ -47,9 +42,6 @@
         </div>
     </div>
 
-    <form method="get" action="@Url.Action("PersonalIndex")">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover paper-shadow">
                         <thead>

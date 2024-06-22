@@ -76,7 +76,7 @@ namespace CheckDrive.Web.Controllers
                 .Where(dr => dr.IsHealthy == true)
                 .ToList();
 
-            int pageSize = 10; 
+            int pageSize = 10;
             pageNumber = pageNumber ?? 1;
 
             int totalCount = filteredDoctorReviews.Count;
@@ -94,6 +94,7 @@ namespace CheckDrive.Web.Controllers
             foreach (var doctor in paginatedDoctorReviews)
             {
                 var review = response.Data.FirstOrDefault(r => r.DriverId == doctor.DriverId);
+
                 if (review != null)
                 {
                     if (review.Date.HasValue && review.Date.Value.Date == DateTime.Today)
@@ -131,7 +132,7 @@ namespace CheckDrive.Web.Controllers
                         DriverName = doctor.DriverName,
                         MechanicName = "",
                         IsHanded = false,
-                        Distance = review.Distance,
+                        Distance = 0,
                         Comments = "",
                         Date = null
                     });
@@ -148,6 +149,7 @@ namespace CheckDrive.Web.Controllers
 
             return View(mechanicHandovers);
         }
+
 
 
         public async Task<IActionResult> Create(int? driverId)
