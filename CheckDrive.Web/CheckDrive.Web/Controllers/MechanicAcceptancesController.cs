@@ -1,5 +1,6 @@
 using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.MechanicAcceptance;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
@@ -158,7 +159,6 @@ namespace CheckDrive.Web.Controllers
             var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null);
             var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
 
-
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
 
@@ -169,9 +169,9 @@ namespace CheckDrive.Web.Controllers
                 if (mechanic != null)
                 {
                     var healthyDrivers = operatorReviews.Data
-                         .Where(dr => dr.IsGiven.HasValue && dr.IsGiven.Value && dr.Date.Value.Date == DateTime.Today)
-                         .Select(dr => dr.DriverId)
-                    .ToList();
+                        .Where(dr => dr.IsGiven.HasValue && dr.IsGiven.Value && dr.Date.Value.Date == DateTime.Today)
+                        .Select(dr => dr.DriverId)
+                        .ToList();
 
                     var acceptedDrivers = mechanicAcceptances.Data
                         .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
@@ -182,10 +182,20 @@ namespace CheckDrive.Web.Controllers
                         .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !acceptedDrivers.Contains(int.Parse(d.Value)))
                         .ToList();
 
+                    var usedCarIds = mechanicAcceptances.Data
+                        .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today && ma.IsAccepted == true)
+                        .Select(ma => ma.CarId)
+                        .ToList();
+
+                    var filteredCars = cars
+                        .Where(c => !usedCarIds.Contains(int.Parse(c.Value)))
+                        .ToList();
 
                     ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
                     ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
-                    ViewBag.Cars = new SelectList(cars, "Value", "Text");
+                    ViewBag.Cars = filteredCars.Any()
+                        ? new SelectList(filteredCars, "Value", "Text")
+                        : null;
 
                     var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
                     ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;

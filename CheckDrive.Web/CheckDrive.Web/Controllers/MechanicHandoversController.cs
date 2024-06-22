@@ -152,52 +152,61 @@ namespace CheckDrive.Web.Controllers
 
 
 
-        public async Task<IActionResult> Create(int? driverId)
+      public async Task<IActionResult> Create(int? driverId)
+{
+    var mechanics = await GETMechanics();
+    var drivers = await GETDrivers();
+    var cars = await GETCars();
+
+    var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null);
+    var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
+
+    var accountIdStr = TempData["AccountId"] as string;
+    TempData.Keep("AccountId");
+
+    if (int.TryParse(accountIdStr, out int accountId))
+    {
+        var mechanicResponse = await _mechanicDataStore.GetMechanics(accountId);
+        var mechanic = mechanicResponse.Data.First();
+        if (mechanic != null)
         {
-            var mechanics = await GETMechanics();
-            var drivers = await GETDrivers();
-            var cars = await GETCars();
+            var healthyDrivers = doctorReviews.Data
+                .Where(dr => dr.IsHealthy.HasValue && dr.IsHealthy.Value && dr.Date.Date == DateTime.Today)
+                .Select(dr => dr.DriverId)
+                .ToList();
 
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null,null);
-            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
+            var handedDrivers = mechanicHandovers.Data
+                .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
+                .Select(ma => ma.DriverId)
+                .ToList();
 
-            var accountIdStr = TempData["AccountId"] as string;
-            TempData.Keep("AccountId");
+            var filteredDrivers = drivers
+                .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !handedDrivers.Contains(int.Parse(d.Value)))
+                .ToList();
 
-            if (int.TryParse(accountIdStr, out int accountId))
-            {
-                var mechanicResponse = await _mechanicDataStore.GetMechanics(accountId);
-                var mechanic = mechanicResponse.Data.First();
-                if (mechanic != null)
-                {
-                    var healthyDrivers = doctorReviews.Data
-                        .Where(dr => dr.IsHealthy.HasValue && dr.IsHealthy.Value && dr.Date.Date == DateTime.Today)
-                        .Select(dr => dr.DriverId)
-                         .ToList();
+            var usedCarIds = mechanicHandovers.Data
+                .Where(mh => mh.Date.HasValue && mh.Date.Value.Date == DateTime.Today && mh.IsHanded == true)
+                .Select(mh => mh.CarId)
+                .ToList();
 
-                    var handedDrivers = mechanicHandovers.Data
-                        .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
-                        .Select(ma => ma.DriverId)
-                        .ToList();
+            var filteredCars = cars
+                .Where(c => !usedCarIds.Contains(int.Parse(c.Value)))
+                .ToList();
 
-                    var filteredDrivers = drivers
-                        .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !handedDrivers.Contains(int.Parse(d.Value)))
-                        .ToList();
+            ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
+            ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
+            ViewBag.Cars = new SelectList(filteredCars, "Value", "Text");
 
-                    ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
-                    ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
-                    ViewBag.Cars = new SelectList(cars, "Value", "Text");
+            var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
+            ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
+            ViewBag.SelectedDriverId = driverId;
 
-                    var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
-                    ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
-                    ViewBag.SelectedDriverId = driverId;
-
-                    return View(new MechanicHandoverForCreateDto { DriverId = driverId ?? 0, MechanicId = mechanic.Id });
-                }
-            }
-
-            return NotFound("Механик не найден для указанного аккаунта.");
+            return View(new MechanicHandoverForCreateDto { DriverId = driverId ?? 0, MechanicId = mechanic.Id });
         }
+    }
+
+    return NotFound("Механик не найден для указанного аккаунта.");
+}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
