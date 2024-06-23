@@ -7,15 +7,39 @@
 
 <h1>Shifokor oynasi</h1>
 
+<form asp-controller="DoctorReviews" asp-action="Index">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <!-- Search -->
+            <div class="col-md-4 mb-4">
+                <div class="input-group">
+                    <input type="text" class="form-control rounded-left" placeholder="shifokor yoki haydoshchini izlash..." name="searchString" value="@ViewBag.SearchString">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i> Qidirish
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Date -->
+            <div class="col-md-2 mb-4">
+                <input type="date" name="date" class="form-control">
+             </div>
+        </div>
+    </div>
+</form>
+
+
 <div class="row">
     <div class="col-12">
         <ejs-grid id="operatorReview-list" dataSource="@ViewBag.DoctorsReview" gridLines="Vertical" allowSorting="true">
             <e-grid-columns>
                 <e-grid-column headerText="Id" field="Id" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Shifokor F.I.SH" field="DoctorName" typeof="text" class="customcss"></e-grid-column>
-                <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" typeof="text" class="customcss"></e-grid-column>
-                <e-grid-column headerText="Sog'ligi" field="IsHealthy" typeof="text" class="customcss"></e-grid-column>
-                <e-grid-column headerText="Izoh" field="Comments" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Shifokor F.I.SH" field="DoctorName" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Ro'yxatdan o'tgan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm"></e-grid-column>
+                <e-grid-column headerText="Sog'ligi" field="IsHealthy" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Izoh" field="Comments" typeof="text"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
@@ -36,13 +60,11 @@
                     <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
                 </li>
             }
-
-            <li class="page-item active">
-                <span class="page-link">@ViewBag.CurrentPage</span>
-            </li>
-
             @if (ViewBag.HasNextPage)
             {
+                <li class="page-item active">
+                    <span class="page-link">@ViewBag.CurrentPage</span>
+                </li>
                 <li class="page-item">
                     <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
                 </li>
@@ -55,6 +77,6 @@
         </ul>
     </nav>
     <div class="p-2">
-        <p class="h6 mb-0">@ViewBag.CurrentPage of @ViewBag.PageCount pages (@ViewBag.TotalCount items)</p>
+        <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy doctor ko'riklari soni: @ViewBag.TotalCount)</p>
     </div>
 </div>
