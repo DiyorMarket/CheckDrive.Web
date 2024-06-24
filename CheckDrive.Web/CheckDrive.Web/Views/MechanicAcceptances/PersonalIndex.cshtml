@@ -72,7 +72,7 @@
                                     </td>
                                     <td>@item.MechanicName</td>
                                     <td>
-                                        @if (item.Date != null && item.Date.Value.Date == DateTime.Today)
+                                        @if (item.Date != null && item.Date == DateTime.Today)
                                         {
                                             @if (item.IsAccepted)
                                             {

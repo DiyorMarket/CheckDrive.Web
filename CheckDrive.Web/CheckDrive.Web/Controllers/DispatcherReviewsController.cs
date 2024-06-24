@@ -81,7 +81,7 @@ namespace CheckDrive.Web.Controllers
             var carResponse = await _carDataStore.GetCarsAsync(null, null);
 
             var mechanicAcceptances = mechanicAcceptanceResponse.Data
-                .Where(m => m.Date.Value.Date == DateTime.Today)
+                .Where(m => m.Date == DateTime.Today)
                 .Where(m => m.IsAccepted == true)
                 .ToList();
 
@@ -89,7 +89,7 @@ namespace CheckDrive.Web.Controllers
 
             foreach (var mechanicAcceptance in mechanicAcceptances)
             {
-                var mechanicHandoverReview = mechanicHandoverResponse.Data.FirstOrDefault(m => m.DriverId == mechanicAcceptance.DriverId && m.Date.Value.Date == DateTime.Today);
+                var mechanicHandoverReview = mechanicHandoverResponse.Data.FirstOrDefault(m => m.DriverId == mechanicAcceptance.DriverId && m.Date == DateTime.Today);
                 var operatorReview = operatorResoponse.Data.FirstOrDefault(m => m.DriverId == mechanicAcceptance.DriverId && m.Date.Value.Date == DateTime.Today);
                 var carReview = carResponse.Data.FirstOrDefault(c => c.Id == mechanicAcceptance.CarId);
                 var review = reviewsResponse.Data.FirstOrDefault(r => r.DriverId == mechanicAcceptance.DriverId);
@@ -133,7 +133,7 @@ namespace CheckDrive.Web.Controllers
                             DistanceCovered = mechanicAcceptance.Distance - mechanicHandoverReview.Distance,
                             InitialDistance = mechanicHandoverReview.Distance,
                             FinalDistance = mechanicAcceptance.Distance,
-                            PouredFuel = operatorReview.OilAmount ?? 0,
+                            PouredFuel = 0,
                             OperatorName = operatorReview.OperatorName,
                             DispatcherName = "",
                             MechanicName = mechanicAcceptance.MechanicName,
@@ -159,7 +159,7 @@ namespace CheckDrive.Web.Controllers
                         DistanceCovered = mechanicAcceptance.Distance - mechanicHandoverReview.Distance,
                         InitialDistance = mechanicHandoverReview.Distance,
                         FinalDistance = mechanicAcceptance.Distance,
-                        PouredFuel = operatorReview.OilAmount ?? 0,
+                        PouredFuel = 0,
                         OperatorName = operatorReview.OperatorName,
                         DispatcherName = "",
                         MechanicName = mechanicAcceptance.MechanicName,
@@ -196,7 +196,7 @@ namespace CheckDrive.Web.Controllers
                 var dispatcherResponse = await _dispatcherDataStore.GetDispatchers(accountId);
                 dispatcher = dispatcherResponse.Data.First();
             }
-            var model = new DispatcherReview
+            var model = new DispatcherReviewDtoForCreate
             {
                 DistanceCovered = distanceCovered ?? 0,
                 FuelSpended = fuelSpended ?? 0,
@@ -214,7 +214,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FuelSpended,DistanceCovered,Date,DispatcherId,OperatorId,MechanicId,DriverId")] DispatcherReview dispatcherReview)
+        public async Task<IActionResult> Create([Bind("FuelSpended,DistanceCovered,Date,DispatcherId,OperatorId,MechanicId,DriverId")] DispatcherReviewForCreateDto dispatcherReview)
         {
             if (ModelState.IsValid)
             {
@@ -236,7 +236,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FuelSpended,DistanceCovered,Date,DispatcherId,OperatorId,MechanicId,DriverId")] DispatcherReview dispatcherReview)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FuelSpended,DistanceCovered,Date,DispatcherId,OperatorId,MechanicId,DriverId")] DispatcherReviewForUpdateDto dispatcherReview)
         {
             if (id != dispatcherReview.Id)
             {

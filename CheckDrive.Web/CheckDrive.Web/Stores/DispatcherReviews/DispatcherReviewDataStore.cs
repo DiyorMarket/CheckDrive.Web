@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.DispatcherReview;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -37,15 +38,25 @@ namespace CheckDrive.Web.Stores.DispatcherReviews
 
             return result;
         }
-        public Task<DispatcherReview> GetDispatcherReview(int id)
+        public Task<DispatcherReviewForCreateDto> GetDispatcherReview(int id)
         {
             throw new NotImplementedException();
         }
-        public Task<DispatcherReview> CreateDispatcherReview(DispatcherReview review)
+        public async Task<DispatcherReviewDto> CreateDispatcherReview(DispatcherReviewForCreateDto review)
         {
-            throw new NotImplementedException();
+            var json = JsonConvert.SerializeObject(review);
+            var response = await _api.PostAsync("dispatchers/review", json);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error creating dispatcherReviews.");
+            }
+
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<DispatcherReviewDto>(jsonResponse);
         }
-        public Task<DispatcherReview> UpdateDispatcherReview(int id, DispatcherReview review)
+        public Task<DispatcherReviewForUpdateDto> UpdateDispatcherReview(int id, DispatcherReviewForUpdateDto review)
         {
             throw new NotImplementedException();
         }

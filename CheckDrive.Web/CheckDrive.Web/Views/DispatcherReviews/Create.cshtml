@@ -1,4 +1,4 @@
-﻿@model CheckDrive.Web.Models.DispatcherReview
+﻿@model CheckDrive.Web.Models.DispatcherReviewDtoForCreate
 
 @{
     ViewData["Title"] = "Create";
@@ -18,8 +18,8 @@
             </div>
             <div class="form-group w-50">
                 <label asp-for="FuelSpended" class="control-label"></label>
-                <input asp-for="FuelSpended" class="form-control" />
-                <span asp-validation-for="FuelSpended" class="text-danger"></span>
+                <input asp-for="FuelSpended" class="form-control" id="FuelSpended" type="number" step="0.01" />
+                <span asp-validation-for="FuelSpended" class="text-danger" id="fuelSpendedError"></span>
             </div>
             <div class="form-group w-50">
                 <label asp-for="Date" class="control-label"></label>
@@ -52,3 +52,34 @@
         </form>
     </div>
 </div>
+@section Scripts {
+    <script>
+        document.getElementById('createForm').addEventListener('submit', function (event) {
+            var fuelSpended = document.getElementById('FuelSpended').value;
+            var fuelSpendedError = document.getElementById('fuelSpendedError');
+            var maxDouble = Number.MAX_VALUE;
+
+            // Clear previous error message
+            fuelSpendedError.textContent = '';
+
+            if (fuelSpended < 0 || fuelSpended > maxDouble) {
+                event.preventDefault();
+                fuelSpendedError.textContent = 'Please enter a value between 0 and ' + maxDouble;
+                return false;
+            }
+
+            var distanceCovered = document.getElementById('DistanceCovered').value;
+            var currentDate = new Date().toISOString().split('T')[0];
+
+            if (!distanceCovered) {
+                document.getElementById('DistanceCovered').value = '0';
+            }
+
+            if (!fuelSpended) {
+                document.getElementById('FuelSpended').value = '0';
+            }
+
+            document.getElementById('Date').value = currentDate;
+        });
+    </script>
+}
