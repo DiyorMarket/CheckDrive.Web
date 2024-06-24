@@ -1,6 +1,5 @@
 ﻿using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.MechanicHandover;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Drivers;
@@ -104,11 +103,13 @@ namespace CheckDrive.Web.Controllers
                             DriverId = review.DriverId,
                             DriverName = doctor.DriverName,
                             MechanicName = review.MechanicName,
+                            CarName = review.CarName,
                             IsHanded = review.IsHanded,
                             Distance = review.Distance,
                             Comments = review.Comments,
                             Date = review.Date
                         });
+
                     }
                     else
                     {
@@ -117,8 +118,9 @@ namespace CheckDrive.Web.Controllers
                             DriverId = doctor.DriverId,
                             DriverName = doctor.DriverName,
                             MechanicName = "",
+                            CarName = "",
                             IsHanded = false,
-                            Distance = review.Distance,
+                            Distance = 0,
                             Comments = "",
                             Date = null
                         });
@@ -131,6 +133,7 @@ namespace CheckDrive.Web.Controllers
                         DriverId = doctor.DriverId,
                         DriverName = doctor.DriverName,
                         MechanicName = "",
+                        CarName = "",
                         IsHanded = false,
                         Distance = 0,
                         Comments = "",
@@ -152,61 +155,61 @@ namespace CheckDrive.Web.Controllers
 
 
 
-      public async Task<IActionResult> Create(int? driverId)
-{
-    var mechanics = await GETMechanics();
-    var drivers = await GETDrivers();
-    var cars = await GETCars();
-
-    var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null);
-    var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
-
-    var accountIdStr = TempData["AccountId"] as string;
-    TempData.Keep("AccountId");
-
-    if (int.TryParse(accountIdStr, out int accountId))
-    {
-        var mechanicResponse = await _mechanicDataStore.GetMechanics(accountId);
-        var mechanic = mechanicResponse.Data.First();
-        if (mechanic != null)
+        public async Task<IActionResult> Create(int? driverId)
         {
-            var healthyDrivers = doctorReviews.Data
-                .Where(dr => dr.IsHealthy.HasValue && dr.IsHealthy.Value && dr.Date.Date == DateTime.Today)
-                .Select(dr => dr.DriverId)
-                .ToList();
+            var mechanics = await GETMechanics();
+            var drivers = await GETDrivers();
+            var cars = await GETCars();
 
-            var handedDrivers = mechanicHandovers.Data
-                .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
-                .Select(ma => ma.DriverId)
-                .ToList();
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null);
+            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
 
-            var filteredDrivers = drivers
-                .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !handedDrivers.Contains(int.Parse(d.Value)))
-                .ToList();
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId");
 
-            var usedCarIds = mechanicHandovers.Data
-                .Where(mh => mh.Date.HasValue && mh.Date.Value.Date == DateTime.Today && mh.IsHanded == true)
-                .Select(mh => mh.CarId)
-                .ToList();
+            if (int.TryParse(accountIdStr, out int accountId))
+            {
+                var mechanicResponse = await _mechanicDataStore.GetMechanics(accountId);
+                var mechanic = mechanicResponse.Data.First();
+                if (mechanic != null)
+                {
+                    var healthyDrivers = doctorReviews.Data
+                        .Where(dr => dr.IsHealthy.HasValue && dr.IsHealthy.Value && dr.Date.Date == DateTime.Today)
+                        .Select(dr => dr.DriverId)
+                        .ToList();
 
-            var filteredCars = cars
-                .Where(c => !usedCarIds.Contains(int.Parse(c.Value)))
-                .ToList();
+                    var handedDrivers = mechanicHandovers.Data
+                        .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
+                        .Select(ma => ma.DriverId)
+                        .ToList();
 
-            ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
-            ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
-            ViewBag.Cars = new SelectList(filteredCars, "Value", "Text");
+                    var filteredDrivers = drivers
+                        .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !handedDrivers.Contains(int.Parse(d.Value)))
+                        .ToList();
 
-            var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
-            ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
-            ViewBag.SelectedDriverId = driverId;
+                    var usedCarIds = mechanicHandovers.Data
+                        .Where(mh => mh.Date.HasValue && mh.Date.Value.Date == DateTime.Today && mh.IsHanded == true)
+                        .Select(mh => mh.CarId)
+                        .ToList();
 
-            return View(new MechanicHandoverForCreateDto { DriverId = driverId ?? 0, MechanicId = mechanic.Id });
+                    var filteredCars = cars
+                        .Where(c => !usedCarIds.Contains(int.Parse(c.Value)))
+                        .ToList();
+
+                    ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
+                    ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
+                    ViewBag.Cars = new SelectList(filteredCars, "Value", "Text");
+
+                    var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
+                    ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
+                    ViewBag.SelectedDriverId = driverId;
+
+                    return View(new MechanicHandoverForCreateDto { DriverId = driverId ?? 0, MechanicId = mechanic.Id });
+                }
+            }
+
+            return NotFound("Механик не найден для указанного аккаунта.");
         }
-    }
-
-    return NotFound("Механик не найден для указанного аккаунта.");
-}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
