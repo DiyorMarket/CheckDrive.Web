@@ -1,12 +1,11 @@
 ﻿using CheckDrive.ApiContracts.MechanicHandover;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 
 namespace CheckDrive.Web.Stores.MechanicHandovers
 {
     public interface IMechanicHandoverDataStore
     {
-        Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync(int? pageNumber);
+        Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync(int? pageNumber, string? searchString, DateTime? date);
         Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync();
         Task<MechanicHandoverDto> GetMechanicHandoverAsync(int id);
         Task<MechanicHandoverDto> CreateMechanicHandoverAsync(MechanicHandoverForCreateDto mechanicHandoverForCreateDto);

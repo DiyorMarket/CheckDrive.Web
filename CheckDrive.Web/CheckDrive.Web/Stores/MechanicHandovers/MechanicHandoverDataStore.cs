@@ -15,14 +15,22 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
         {
             _api = apiClient;
         }
-        public async Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync(int? pageNumber)
+        public async Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync(
+            int? pageNumber,
+            string? searchString,
+            DateTime? date)
         {
             StringBuilder query = new("");
 
+            if (date is not null)
+                query.Append($"date={date.Value.ToString("MM/dd/yyyy")}&");
+            
+            if (!string.IsNullOrWhiteSpace(searchString))
+                query.Append($"searchString={searchString}&");
+            
             if (pageNumber != null)
-            {
                 query.Append($"pageNumber={pageNumber}");
-            }
+            
             var response = await _api.GetAsync("mechanics/handovers?OrderBy=datedesc&" + query.ToString());
 
             if (!response.IsSuccessStatusCode)

@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Shifokor oynasi</h1>
+<h1>Shifokor ko'riklari</h1>
 
 <form asp-controller="DoctorReviews" asp-action="Index">
     <div class="row">
@@ -13,7 +13,7 @@
             <!-- Search -->
             <div class="col-md-4 mb-4">
                 <div class="input-group">
-                    <input type="text" class="form-control rounded-left" placeholder="shifokor yoki haydoshchini izlash..." name="searchString" value="@ViewBag.SearchString">
+                    <input type="text" class="form-control rounded-left" placeholder="shifokor yoki haydovchini izlash..." name="searchString" value="@ViewBag.SearchString">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-search"></i> Qidirish
@@ -77,6 +77,6 @@
         </ul>
     </nav>
     <div class="p-2">
-        <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy doctor ko'riklari soni: @ViewBag.TotalCount)</p>
+        <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy doctorlar ko'riklari soni: @ViewBag.TotalCount)</p>
     </div>
 </div>

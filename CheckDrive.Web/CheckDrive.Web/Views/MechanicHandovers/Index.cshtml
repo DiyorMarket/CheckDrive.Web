@@ -5,6 +5,30 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<h1>Mexanik (Topshiruvchi)</h1>
+
+<form asp-controller="MechanicHandovers" asp-action="Index">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <!-- Search -->
+            <div class="col-md-4 mb-4">
+                <div class="input-group">
+                    <input type="text" class="form-control rounded-left" placeholder="mexanik yoki haydoshchini izlash..." name="searchString" value="@ViewBag.SearchString">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i> Qidirish
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Date -->
+            <div class="col-md-2 mb-4">
+                <input type="date" name="date" class="form-control">
+            </div>
+        </div>
+    </div>
+</form>
+
 <div class="row">
     <div class="col-12">
         <ejs-grid id="mechanicHandovers-list" dataSource="@ViewBag.MechanicHandovers" gridLines="Vertical" allowSorting="true">
@@ -14,6 +38,7 @@
                 <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string"></e-grid-column>
                 <e-grid-column headerText="Mashina" field="CarName" template="#template" type="string"></e-grid-column>
                 <e-grid-column headerText="Boshlang'ich' masofa" field="Distance" type="number"></e-grid-column>
+                <e-grid-column headerText="Ro'yxatdan o'tgan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm"></e-grid-column>
                 <e-grid-column headerText="Topshirish" field="IsHanded" type="string"> </e-grid-column>
                 <e-grid-column headerText="Izoh" field="Comments" type="string"></e-grid-column>
                 <e-grid-column headerText="Status" field="Status" type="number"></e-grid-column>
@@ -36,13 +61,11 @@
                     <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
                 </li>
             }
-
-            <li class="page-item active">
-                <span class="page-link">@ViewBag.CurrentPage</span>
-            </li>
-
             @if (ViewBag.HasNextPage)
             {
+                <li class="page-item active">
+                    <span class="page-link">@ViewBag.CurrentPage</span>
+                </li>
                 <li class="page-item">
                     <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
                 </li>
@@ -54,9 +77,8 @@
             }
         </ul>
     </nav>
-
     <div class="p-2">
-        <p class="h6 mb-0">@ViewBag.CurrentPage of @ViewBag.PageCount pages (@ViewBag.TotalCount items)</p>
+        <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy mexaniklar topshirishlari soni: @ViewBag.TotalCount)</p>
     </div>
 </div>
 
