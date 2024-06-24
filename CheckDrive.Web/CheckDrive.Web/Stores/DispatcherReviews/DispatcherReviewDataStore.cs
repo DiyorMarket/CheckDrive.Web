@@ -3,21 +3,28 @@ using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
 using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CheckDrive.Web.Stores.DispatcherReviews
 {
     public class DispatcherReviewDataStore(ApiClient api) : IDispatcherReviewDataStore
     {
         private readonly ApiClient _api = api;
-        public async Task<GetDispatcherReviewResponse> GetDispatcherReviews(int? pageNumber)
+        public async Task<GetDispatcherReviewResponse> GetDispatcherReviews(
+            int? pageNumber, 
+            string? searchString, 
+            DateTime? date)
         {
             StringBuilder query = new("");
 
+            if (date is not null)
+                query.Append($"date={date.Value.ToString("MM/dd/yyyy")}&");
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+                query.Append($"searchString={searchString}&");
+
             if (pageNumber != null)
-            {
                 query.Append($"pageNumber={pageNumber}");
-            }
+
             var response = await _api.GetAsync("dispatchers/reviews?OrderBy=datedesc&" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
