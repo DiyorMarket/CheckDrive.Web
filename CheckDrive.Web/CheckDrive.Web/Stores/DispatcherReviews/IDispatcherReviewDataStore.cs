@@ -1,4 +1,4 @@
-﻿using CheckDrive.Web.Models;
+﻿using CheckDrive.ApiContracts.DispatcherReview;
 using CheckDrive.Web.Responses;
 
 namespace CheckDrive.Web.Stores.DispatcherReviews
@@ -6,9 +6,9 @@ namespace CheckDrive.Web.Stores.DispatcherReviews
     public interface IDispatcherReviewDataStore
     {
         Task<GetDispatcherReviewResponse> GetDispatcherReviews(int? pageNumber, string? searchString, DateTime? date);
-        Task<DispatcherReview> GetDispatcherReview(int id);
-        Task<DispatcherReview> CreateDispatcherReview(DispatcherReview review);
-        Task<DispatcherReview> UpdateDispatcherReview(int id, DispatcherReview review);
+        Task<DispatcherReviewForCreateDto> GetDispatcherReview(int id);
+        Task<DispatcherReviewDto> CreateDispatcherReview(DispatcherReviewForCreateDto review);
+        Task<DispatcherReviewForUpdateDto> UpdateDispatcherReview(int id, DispatcherReviewForUpdateDto review);
         Task DeleteDispatcherReview(int id);
     }
 }

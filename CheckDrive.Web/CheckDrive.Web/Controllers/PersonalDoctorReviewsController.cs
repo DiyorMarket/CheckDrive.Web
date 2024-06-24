@@ -66,7 +66,7 @@ namespace CheckDrive.Web.Controllers
                         DriverId = driver.Id,
                         DriverName = $"{driver.FirstName} {driver.LastName}",
                         DoctorName = "",
-                        IsHealthy = null,
+                        IsHealthy = false,
                         Comments = "",
                         Date = currentDate
                     };
@@ -79,7 +79,7 @@ namespace CheckDrive.Web.Controllers
                     DriverId = driver.Id,
                     DriverName = $"{driver.FirstName} {driver.LastName}",
                     DoctorName = "",
-                    IsHealthy = null,
+                    IsHealthy = false,
                     Comments = "",
                     Date = currentDate
                 }).ToList();
