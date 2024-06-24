@@ -6,7 +6,7 @@ namespace CheckDrive.Web.Stores.DoctorReviews
 {
     public interface IDoctorReviewDataStore
     {
-        Task<GetDoctorReviewResponse> GetDoctorReviewsAsync(int? pageNumber,string? searchString);
+        Task<GetDoctorReviewResponse> GetDoctorReviewsAsync(int? pageNumber,string? searchString,DateTime? date);
         Task<IEnumerable<DoctorReviewDto>>? GetTodayReviewsAsync();
         Task<DoctorReviewDto> GetDoctorReviewAsync(int id);
         Task<DoctorReviewDto> CreateDoctorReviewAsync(DoctorReviewForCreateDto review);

@@ -15,20 +15,22 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
         {
             _api = apiClient;
         }
-        public async Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync(int? pageNumber, string? searchString)
+        public async Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync(
+            int? pageNumber, 
+            string? searchString,
+            DateTime? date)
         {
             StringBuilder query = new StringBuilder();
 
+            if (date is not null)
+                query.Append($"date={date.Value.ToString("MM/dd/yyyy")}&");
+
             if (!string.IsNullOrWhiteSpace(searchString))
-            {
                 query.Append($"searchString={searchString}&");
-            }
 
             if (pageNumber != null)
-            {
                 query.Append($"pageNumber={pageNumber}");
-            }
-
+            
             var response = await _api.GetAsync("mechanics/acceptances?OrderBy=datedesc&" + query.ToString());
 
             if (!response.IsSuccessStatusCode)

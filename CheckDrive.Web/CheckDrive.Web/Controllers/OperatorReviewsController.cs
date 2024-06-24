@@ -1,4 +1,5 @@
-﻿using CheckDrive.ApiContracts.OperatorReview;
+﻿using CheckDrive.ApiContracts;
+using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.OperatorReviews;
 using Microsoft.AspNetCore.Mvc;
@@ -9,17 +10,37 @@ namespace CheckDrive.Web.Controllers
     {
         private readonly IOperatorReviewDataStore _operatorReviewDataStore = operatorReviewDataStore;
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
 
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null);
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, date);
 
-            if (operatorReviews is null)
+            ViewBag.PageSize = operatorReviews.PageSize;
+            ViewBag.PageCount = operatorReviews.TotalPages;
+            ViewBag.TotalCount = operatorReviews.TotalCount;
+            ViewBag.CurrentPage = operatorReviews.PageNumber;
+            ViewBag.HasPreviousPage = operatorReviews.HasPreviousPage;
+            ViewBag.HasNextPage = operatorReviews.HasNextPage;
+
+            var operatorReviewss = operatorReviews.Data.Select(r => new
             {
-                return BadRequest();
-            }
-           
-            ViewBag.OperatorsReview = operatorReviews.Data;
+                r.Id,
+                r.OperatorName,
+                r.DriverName,
+                r.OilAmount,
+                r.Date,
+                r.Comments,
+                Status = ((StatusForDto)r.Status) switch
+                {
+                    StatusForDto.Pending => "Pending",
+                    StatusForDto.Completed => "Completed",
+                    StatusForDto.Rejected => "Rejected",
+                    StatusForDto.Unassigned => "Unassigned",
+                    _ => "Unknown Status"
+                }
+            }).ToList();
+
+            ViewBag.OperatorsReview = operatorReviewss;
             return View();
 
         }

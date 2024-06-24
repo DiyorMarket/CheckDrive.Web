@@ -38,9 +38,9 @@ namespace CheckDrive.Web.Controllers
             _dispatcherDataStore = dispatcherDataStore;
         }
 
-        public async Task<IActionResult> Index(int? pagenumber)
+        public async Task<IActionResult> Index(int? pagenumber, string? searchString, DateTime? date)
         {
-            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber);
+            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, date);
 
 
             if (response is null)
@@ -74,10 +74,10 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(int? pagenumber)
         {
-            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber);
+            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber,null,null);
             var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
             var mechanicHandoverResponse = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
-            var operatorResoponse = await _operatorDataStore.GetOperatorReviews(null, null);
+            var operatorResoponse = await _operatorDataStore.GetOperatorReviews(null, null, null);
             var carResponse = await _carDataStore.GetCarsAsync(null, null);
 
             var mechanicAcceptances = mechanicAcceptanceResponse.Data

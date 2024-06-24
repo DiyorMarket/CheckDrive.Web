@@ -1,6 +1,5 @@
 ﻿using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.MechanicHandover;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Drivers;
@@ -28,10 +27,9 @@ namespace CheckDrive.Web.Controllers
             _doctorReviewDataStore = doctorReviewDataStore;
         }
 
-        public async Task<IActionResult> Index(int? pageNumber)
+        public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber);
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, date);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -68,8 +66,8 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null);
-            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, searchString);
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, null);
+            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, searchString, null);
 
             var filteredDoctorReviews = doctorReviewsResponse.Data
                 .Where(dr => dr.Date.Date == DateTime.Today)
@@ -158,7 +156,7 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null,null);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, null);
             var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
 
             var accountIdStr = TempData["AccountId"] as string;
@@ -173,7 +171,7 @@ namespace CheckDrive.Web.Controllers
                     var healthyDrivers = doctorReviews.Data
                         .Where(dr => dr.IsHealthy.HasValue && dr.IsHealthy.Value && dr.Date.Date == DateTime.Today)
                         .Select(dr => dr.DriverId)
-                         .ToList();
+                        .ToList();
 
                     var handedDrivers = mechanicHandovers.Data
                         .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
@@ -184,9 +182,18 @@ namespace CheckDrive.Web.Controllers
                         .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !handedDrivers.Contains(int.Parse(d.Value)))
                         .ToList();
 
+                    var usedCarIds = mechanicHandovers.Data
+                        .Where(mh => mh.Date.HasValue && mh.Date.Value.Date == DateTime.Today && mh.IsHanded == true)
+                        .Select(mh => mh.CarId)
+                        .ToList();
+
+                    var filteredCars = cars
+                        .Where(c => !usedCarIds.Contains(int.Parse(c.Value)))
+                        .ToList();
+
                     ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
                     ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
-                    ViewBag.Cars = new SelectList(cars, "Value", "Text");
+                    ViewBag.Cars = new SelectList(filteredCars, "Value", "Text");
 
                     var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
                     ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
@@ -205,9 +212,9 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (mechanicHandoverForCreateDto.IsHanded == null)
+                if (mechanicHandoverForCreateDto.IsHanded == false)
                 {
-                    mechanicHandoverForCreateDto.IsHanded = false;
+                    mechanicHandoverForCreateDto.Status = StatusForDto.Rejected;
                 }
 
                 mechanicHandoverForCreateDto.Date = DateTime.Now;

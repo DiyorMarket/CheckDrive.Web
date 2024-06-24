@@ -32,7 +32,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index(int? pageNumber, string? searchString)
         {
             var currentDate = DateTime.Today;
-            var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber,null);
+            var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber,null,null);
             var driversResponse = await _driverDataStore.GetDriversAsync(searchString, pageNumber);
 
             ViewBag.PageSize = driversResponse.PageSize;
