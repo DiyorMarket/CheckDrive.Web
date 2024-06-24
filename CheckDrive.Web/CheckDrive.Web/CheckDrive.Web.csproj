@@ -16,7 +16,6 @@
     <Compile Include="Controllers\CarsController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\DispatcherReviewsController.cs" />
-    <Compile Include="Controllers\DispatchersController.cs" />
     <Compile Include="Controllers\DoctorReviewsController.cs" />
     <Compile Include="Controllers\DoctorsController.cs" />
     <Compile Include="Controllers\DriversController.cs" />

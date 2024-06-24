@@ -1,11 +1,15 @@
-﻿using CheckDrive.ApiContracts.DispatcherReview;
+﻿using CheckDrive.ApiContracts.Dispatcher;
+using CheckDrive.ApiContracts.DispatcherReview;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DispatcherReviews;
+using CheckDrive.Web.Stores.Dispatchers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
 using CheckDrive.Web.Stores.MechanicHandovers;
 using CheckDrive.Web.Stores.OperatorReviews;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
+using Syncfusion.EJ2.PivotView;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -15,6 +19,7 @@ namespace CheckDrive.Web.Controllers
         private readonly IMechanicAcceptanceDataStore _mechanicAcceptanceDataStore;
         private readonly IMechanicHandoverDataStore _mechanicHandoverDataStore;
         private readonly IOperatorReviewDataStore _operatorDataStore;
+        private readonly IDispatcherDataStore _dispatcherDataStore;
         private readonly ICarDataStore _carDataStore;
 
         public DispatcherReviewsController(
@@ -22,6 +27,7 @@ namespace CheckDrive.Web.Controllers
             IMechanicAcceptanceDataStore mechanicAcceptanceDataStore,
             IOperatorReviewDataStore operatorDataStore,
             IMechanicHandoverDataStore mechanicHandoverDataStore,
+            IDispatcherDataStore dispatcherDataStore,
             ICarDataStore carDataStore)
         {
             _dispatcherReviewDataStore = dispatcherReviewDataStore;
@@ -29,6 +35,7 @@ namespace CheckDrive.Web.Controllers
             _operatorDataStore = operatorDataStore;
             _mechanicHandoverDataStore = mechanicHandoverDataStore;
             _carDataStore = carDataStore;
+            _dispatcherDataStore = dispatcherDataStore;
         }
 
         public async Task<IActionResult> Index(int? pagenumber)
@@ -131,7 +138,11 @@ namespace CheckDrive.Web.Controllers
                             DispatcherName = "",
                             MechanicName = mechanicAcceptance.MechanicName,
                             Date = DateTime.Today,
-
+                            DispatcherId = review.DispatcherId,
+                            MechanicAcceptanceId = mechanicAcceptance.Id,
+                            MechanicHandoverId = mechanicHandoverReview.Id,
+                            OperatorId = operatorReview.OperatorId,
+                            MechanicId = mechanicAcceptance.MechanicId
                         });
                     }
                 }
@@ -153,6 +164,11 @@ namespace CheckDrive.Web.Controllers
                         DispatcherName = "",
                         MechanicName = mechanicAcceptance.MechanicName,
                         Date = DateTime.Today,
+                        DispatcherId = review.DispatcherId,
+                        MechanicAcceptanceId = mechanicAcceptance.Id,
+                        MechanicHandoverId = mechanicHandoverReview.Id,
+                        OperatorId = operatorReview.OperatorId,
+                        MechanicId = mechanicAcceptance.MechanicId
                     });
                 }
             }
@@ -170,10 +186,31 @@ namespace CheckDrive.Web.Controllers
             return View(review);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create(double? distanceCovered, double? fuelSpended, int operatorId, int mechanicId, int driverId)
         {
-            return View();
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId");
+            var dispatcher = new DispatcherDto();
+            if (int.TryParse(accountIdStr, out int accountId))
+            {
+                var dispatcherResponse = await _dispatcherDataStore.GetDispatchers(accountId);
+                dispatcher = dispatcherResponse.Data.First();
+            }
+            var model = new DispatcherReview
+            {
+                DistanceCovered = distanceCovered ?? 0,
+                FuelSpended = fuelSpended ?? 0,
+                Date = DateTime.Today,
+                DispatcherId = dispatcher.Id,
+                OperatorId = operatorId,
+                MechanicId = mechanicId,
+                DriverId = driverId
+            };
+
+            return View(model);
         }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
