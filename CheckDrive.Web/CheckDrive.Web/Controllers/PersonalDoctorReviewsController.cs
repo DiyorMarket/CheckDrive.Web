@@ -102,7 +102,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Create(int driverId, string driverName)
         {
             var accountIdStr = TempData["AccountId"] as string;
-            TempData.Keep("AccountId"); // Сохранение значения AccountId между запросами
+            TempData.Keep("AccountId");
 
             if (int.TryParse(accountIdStr, out int accountId))
             {
@@ -118,7 +118,7 @@ namespace CheckDrive.Web.Controllers
                     ViewBag.Doctors = new SelectList(doctors, "Value", "Text");
                     ViewBag.SelectedDriverName = driverName;
                     ViewBag.SelectedDriverId = driverId;
-                    ViewBag.DoctorId = doctor.Id;  // Сохранение doctorId в ViewBag
+                    ViewBag.DoctorId = doctor.Id;
 
                     return View(new DoctorReviewForCreateDto { DriverId = driverId, Date = DateTime.Now, DoctorId = doctor.Id });
                 }

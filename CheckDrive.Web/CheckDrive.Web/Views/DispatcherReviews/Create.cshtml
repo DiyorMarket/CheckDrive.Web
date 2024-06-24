@@ -1,0 +1,54 @@
+﻿@model CheckDrive.Web.Models.DispatcherReview
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+}
+
+<div class="row mt-custom">
+    <div class="col-md-4 offset-md-1 mt-5">
+        <h4>Ro'yxatga olish</h4>
+        <hr class="w-50" />
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group w-50">
+                <label asp-for="DistanceCovered" class="control-label"></label>
+                <input asp-for="DistanceCovered" class="form-control" />
+                <span asp-validation-for="DistanceCovered" class="text-danger"></span>
+            </div>
+            <div class="form-group w-50">
+                <label asp-for="FuelSpended" class="control-label"></label>
+                <input asp-for="FuelSpended" class="form-control" />
+                <span asp-validation-for="FuelSpended" class="text-danger"></span>
+            </div>
+            <div class="form-group w-50">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" readonly />
+            </div>
+            <div class="form-group w-50">
+                <label asp-for="DispatcherId" class="control-label"></label>
+                <input asp-for="DispatcherId" class="form-control" readonly />
+            </div>
+            <div class="form-group w-50">
+                <label asp-for="OperatorId" class="control-label"></label>
+                <input asp-for="OperatorId" class="form-control" readonly />
+            </div>
+            <div class="form-group w-50">
+                <label asp-for="MechanicId" class="control-label"></label>
+                <input asp-for="MechanicId" class="form-control" readonly />
+            </div>
+            <div class="form-group w-50">
+                <label asp-for="DriverId" class="control-label"></label>
+                <input asp-for="DriverId" class="form-control" readonly />
+            </div>
+            <div class="form-group mt-3 w-50">
+                <a asp-action="Index" class="btn btn-outline-info">
+                    <i class="fa-solid fa-arrow-left-long"></i> Orqaga
+                </a>
+                <button class="btn btn-outline-success" type="submit">
+                    <i class="fa fa-plus"></i> Yaratish
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
