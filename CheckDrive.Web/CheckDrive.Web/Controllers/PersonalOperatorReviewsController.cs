@@ -9,8 +9,6 @@ using CheckDrive.Web.Stores.OperatorReviews;
 using CheckDrive.Web.Stores.Operators;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -29,8 +27,8 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString)
         {
-            var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null,null,null);
-            var mechanicHandoverResponse = await _mechanicHandover.GetMechanicHandoversAsync(pageNumber,null,null);
+            var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, null);
+            var mechanicHandoverResponse = await _mechanicHandover.GetMechanicHandoversAsync(pageNumber, null, null);
             var cars = await _carDataStore.GetCarsAsync(null, null);
 
             var mechanicHandovers = mechanicHandoverResponse.Data
@@ -105,7 +103,7 @@ namespace CheckDrive.Web.Controllers
                         Comments = null,
                         Date = null,
                         Status = StatusForDto.Unassigned
-                    }); 
+                    });
                 }
             }
 
@@ -170,7 +168,7 @@ namespace CheckDrive.Web.Controllers
             {
                 model.DriverId = driverId.Value;
                 ViewBag.SelectedDriverName = driverName;
-                ViewBag.DriverId = driverId.Value; 
+                ViewBag.DriverId = driverId.Value;
             }
 
             if (carId.HasValue)
