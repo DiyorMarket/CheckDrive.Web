@@ -168,7 +168,7 @@ namespace CheckDrive.Web.Controllers
             return View(mechanicAcceptance);
         }
 
-        public async Task<IActionResult> Create(int? driverId, int? carId)
+        public async Task<IActionResult> Create(int? driverId, int? carId, string carName)
         {
             var mechanics = await GETMechanics();
             var drivers = await GETDrivers();
@@ -222,16 +222,21 @@ namespace CheckDrive.Web.Controllers
 
                     ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
                     ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
-                    ViewBag.Cars = new SelectList(cars, "Value", "Text", carId);
+
+                    if (string.IsNullOrEmpty(carName))
+                    {
+                        ViewBag.Cars = new SelectList(cars, "Value", "Text", carId);
+                        ViewBag.SelectedCar = cars.FirstOrDefault(c => c.Value == carId.ToString())?.Text;
+                    }
+                    else
+                    {
+                        ViewBag.Cars = carName;
+                        ViewBag.SelectedCarId = carId;
+                    }
 
                     var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
                     ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
                     ViewBag.SelectedDriverId = driverId;
-
-                    if (carId.HasValue)
-                    {
-                        ViewBag.SelectedCar = cars.FirstOrDefault(c => c.Value == carId.ToString())?.Text;
-                    }
 
                     var model = new MechanicAcceptanceForCreateDto
                     {
