@@ -38,9 +38,19 @@ namespace CheckDrive.Web.Stores.DispatcherReviews
 
             return result;
         }
-        public Task<DispatcherReviewForCreateDto> GetDispatcherReview(int id)
+        public async Task<DispatcherReviewDto> GetDispatcherReview(int id)
         {
-            throw new NotImplementedException();
+            var response = await _api.GetAsync($"dispatchers/review/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not fetch dispatcherReviews with id: {id}.");
+            }
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<DispatcherReviewDto>(json);
+
+            return result;
         }
         public async Task<DispatcherReviewDto> CreateDispatcherReview(DispatcherReviewForCreateDto review)
         {

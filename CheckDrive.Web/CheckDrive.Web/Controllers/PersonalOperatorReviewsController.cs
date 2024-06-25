@@ -33,7 +33,7 @@ namespace CheckDrive.Web.Controllers
             var cars = await _carDataStore.GetCarsAsync(null, null);
 
             var mechanicHandovers = mechanicHandoverResponse.Data
-                .Where(m => m.Date.Value.Date == DateTime.Today)
+                .Where(m => m.Date.Date == DateTime.Today)
                 .Where(m => m.IsHanded == true)
                 .ToList();
 

@@ -72,9 +72,9 @@
                                 </td>
                                 <td>@item.MechanicName</td>
                                 <td>
-                                    @if (item.Date != null && item.Date == DateTime.Today)
+                                    @if (!string.IsNullOrEmpty(item.MechanicName))
                                     {
-                                        @if (item.IsHanded)
+                                        @if ((bool)item.IsHanded)
                                         {
                                             <span class="badge bg-success shadow">Topshirildi</span>
                                         }

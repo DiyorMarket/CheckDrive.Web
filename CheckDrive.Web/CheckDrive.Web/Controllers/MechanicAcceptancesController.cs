@@ -43,7 +43,7 @@ namespace CheckDrive.Web.Controllers
             var mechanicAcceptances = response.Data.Select(r => new
             {
                 r.Id,
-                IsAccepted = r.IsAccepted ? "Qabul qilindi" : "Rad etildi",
+                IsAccepted = (bool)r.IsAccepted ? "Qabul qilindi" : "Rad etildi",
                 r.Comments,
                 Status = ((StatusForDto)r.Status) switch
                 {

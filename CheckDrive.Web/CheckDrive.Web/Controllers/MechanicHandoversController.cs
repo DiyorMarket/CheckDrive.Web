@@ -41,7 +41,7 @@ namespace CheckDrive.Web.Controllers
             var mechanicHandovers = response.Data.Select(r => new
             {
                 r.Id,
-                IsHanded = r.IsHanded ? "Topshirildi" : "Topshirilmadi",
+                IsHanded = (bool)r.IsHanded ? "Topshirildi" : "Topshirilmadi",
                 r.Comments,
                 Status = ((StatusForDto)r.Status) switch
                 {
@@ -95,7 +95,7 @@ namespace CheckDrive.Web.Controllers
 
                 if (review != null)
                 {
-                    if (review.Date.HasValue && review.Date.Value.Date == DateTime.Today)
+                    if (review.Date.Date == DateTime.Today)
                     {
                         mechanicHandovers.Add(new MechanicHandoverDto
                         {
@@ -118,7 +118,7 @@ namespace CheckDrive.Web.Controllers
                             IsHanded = false,
                             Distance = review.Distance,
                             Comments = "",
-                            Date = null
+                            Date = DateTime.Today
                         });
                     }
                 }
@@ -132,7 +132,7 @@ namespace CheckDrive.Web.Controllers
                         IsHanded = false,
                         Distance = 0,
                         Comments = "",
-                        Date = null
+                        Date = DateTime.Today
                     });
                 }
             }
@@ -174,7 +174,7 @@ namespace CheckDrive.Web.Controllers
                         .ToList();
 
                     var handedDrivers = mechanicHandovers.Data
-                        .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
+                        .Where(ma => ma.Date.Date == DateTime.Today)
                         .Select(ma => ma.DriverId)
                         .ToList();
 
@@ -183,7 +183,7 @@ namespace CheckDrive.Web.Controllers
                         .ToList();
 
                     var usedCarIds = mechanicHandovers.Data
-                        .Where(mh => mh.Date.HasValue && mh.Date.Value.Date == DateTime.Today && mh.IsHanded == true)
+                        .Where(mh => mh.Date.Date == DateTime.Today && mh.IsHanded == true)
                         .Select(mh => mh.CarId)
                         .ToList();
 
