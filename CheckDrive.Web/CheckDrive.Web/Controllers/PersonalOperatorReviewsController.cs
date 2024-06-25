@@ -10,6 +10,7 @@ using CheckDrive.Web.Stores.Operators;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -136,15 +137,30 @@ namespace CheckDrive.Web.Controllers
                 operatorr = operatorResponse.Data.First();
             }
             var operators = new List<SelectListItem>
-                {
-                    new SelectListItem { Value = operatorr.Id.ToString(), Text = $"{operatorr.FirstName} {operatorr.LastName}" }
-                };
+        {
+            new SelectListItem { Value = operatorr.Id.ToString(), Text = $"{operatorr.FirstName} {operatorr.LastName}" }
+        };
 
             var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, null);
             var oilMarks = response.Data.Select(r => r.OilMarks).Distinct().ToList();
+            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync();
+
+            var healthyDrivers = mechanicHandovers.Data
+                                  .Where(dr => dr.IsHanded == true && dr.Date.Value.Date == DateTime.Today)
+                                  .Select(dr => dr.DriverId)
+                                  .ToList();
+
+            var givedDrivers = response.Data
+                .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
+                .Select(ma => ma.DriverId)
+                .ToList();
+
+            var filteredDrivers = drivers
+                .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !givedDrivers.Contains(int.Parse(d.Value)))
+                .ToList();
 
             ViewBag.OilMarks = new SelectList(oilMarks);
-            ViewBag.Drivers = new SelectList(drivers, "Value", "Text");
+            ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text");
             ViewBag.Operators = operators;
             ViewBag.Cars = new SelectList(cars, "Value", "Text", carId);
 
@@ -154,6 +170,7 @@ namespace CheckDrive.Web.Controllers
             {
                 model.DriverId = driverId.Value;
                 ViewBag.SelectedDriverName = driverName;
+                ViewBag.DriverId = driverId.Value; 
             }
 
             if (carId.HasValue)

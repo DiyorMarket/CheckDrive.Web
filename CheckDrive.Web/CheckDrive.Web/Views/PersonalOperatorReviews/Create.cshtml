@@ -3,62 +3,99 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+
+    bool isDriverDropdownDisabled = ViewBag.SelectedDriverId != null && ViewBag.SelectedDriverId != 0;
+    bool isCarDropdownDisabled = ViewBag.SelectedCarId != null && ViewBag.SelectedCarId != 0;
 }
 
 <div class="row mt-custom">
     <div class="col-md-4 offset-md-1 mt-5">
-        <h4>Ro`yxatga olish</h4>
+        <h4>Ro'yxatga olish</h4>
         <hr class="w-50" />
+
         <form id="operatorReviewForm" asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" name="fuelTankCapacity" value="@ViewBag.FuelTankCapacity" />
             <input type="hidden" name="remainingFuel" value="@ViewBag.RemainingFuel" />
             <input type="hidden" asp-for="DriverId" />
             <input type="hidden" asp-for="CarId" />
-            <div class="form-check form-switch">
-                <input asp-for="IsGiven" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" value="true">
-                <label asp-for="IsGiven" class="form-check-label" for="flexSwitchCheckDefault">@Html.DisplayNameFor(model => model.IsGiven)</label>
-            </div>
 
+            <!-- Driver dropdown -->
             <div class="form-group w-50">
                 <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
-                <select asp-for="DriverId" class="form-control border border-dark" asp-items="@ViewBag.Drivers" disabled>
-                    @if (ViewBag.SelectedDriverName != null)
+                @if (isDriverDropdownDisabled)
+                {
+                    <input type="text" class="form-control" value="@ViewBag.SelectedDriverName" disabled />
+                    <input type="hidden" asp-for="DriverId" value="@ViewBag.SelectedDriverId" />
+                }
+                else
+                {
+                    @if (ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers.Items).Any())
                     {
-                        <option value="@Model.DriverId" selected>@ViewBag.SelectedDriverName</option>
+                        <select id="driverIdDropdown" class="form-control border border-dark" disabled>
+                            <option selected>Haydovchilar mavjud emas</option>
+                        </select>
                     }
-                </select>
+                    else
+                    {
+                        <select asp-for="DriverId" id="driverIdDropdown" class="form-control border border-dark" asp-items="@(ViewBag.Drivers as SelectList)"></select>
+                    }
+                }
             </div>
+
+            <!-- Car dropdown -->
             <div class="form-group w-50">
-                <label asp-for="CarId" class="control-label mt-2">Moshina</label>
-                <select asp-for="CarId" class="form-control border border-dark" asp-items="@ViewBag.Cars" disabled>
-                    @if (ViewBag.SelectedCar != null)
+                <label asp-for="CarId" class="control-label mt-2">Mashina</label>
+                @if (isCarDropdownDisabled)
+                {
+                    <input type="text" class="form-control" value="@ViewBag.SelectedCar" disabled />
+                    <input type="hidden" asp-for="CarId" value="@ViewBag.SelectedCarId" />
+                }
+                else
+                {
+                    @if (ViewBag.Cars == null || !((IEnumerable<SelectListItem>)ViewBag.Cars.Items).Any())
                     {
-                        <option value="@Model.CarId" selected>@ViewBag.SelectedCar</option>
+                        <select class="form-control border border-dark" disabled>
+                            <option selected>Hech qanday mashina mavjud emas</option>
+                        </select>
                     }
-                </select>
+                    else
+                    {
+                        <select asp-for="CarId" id="carIdDropdown" class="form-control border border-dark" asp-items="@(ViewBag.Cars as SelectList)"></select>
+                    }
+                }
             </div>
+
+            <!-- OperatorId dropdown -->
             <div class="form-group w-50">
                 <select asp-for="OperatorId" class="form-control border border-dark d-none" asp-items="@ViewBag.Operators"></select>
             </div>
+
+            <!-- Oil Amount -->
             <div class="form-group w-50">
                 <label asp-for="OilAmount" class="control-label"></label>
                 <input asp-for="OilAmount" class="form-control" id="OilAmount" />
                 <span asp-validation-for="OilAmount" class="text-danger"></span>
             </div>
+
+            <!-- Oil Marks -->
             <div class="form-group w-50">
-                <label asp-for="OilMarks" class="control-label mt-2">Yoqilg`i Markasi</label>
+                <label asp-for="OilMarks" class="control-label mt-2">Yoqilgi Markasi</label>
                 <select asp-for="OilMarks" class="form-control border border-dark" asp-items="@ViewBag.OilMarks"></select>
             </div>
+
+            <!-- Comments -->
             <div class="form-group w-50">
                 <label asp-for="Comments" for="exampleFormControlTextarea1">Izoh</label>
                 <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
             </div>
+
+            <!-- Back Button and Create Button -->
             <div class="form-group mt-3 w-50">
                 <a asp-action="Index" class="btn btn-outline-info">
                     <i class="fa-solid fa-arrow-left-long"></i> Back
                 </a>
-                <button class="btn btn-outline-success" type="submit">
+                <button id="createButton" class="btn btn-outline-success" type="button">
                     <i class="fa fa-plus"></i> Create
                 </button>
             </div>
@@ -66,27 +103,30 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var form = document.getElementById('operatorReviewForm');
-        form.addEventListener('submit', function (event) {
-            var oilAmountInput = document.getElementById('OilAmount');
-            var isGivenInput = document.getElementById('flexSwitchCheckDefault');
-            var fuelTankCapacity = parseFloat('@ViewBag.FuelTankCapacity');
-            var remainingFuel = parseFloat('@ViewBag.RemainingFuel');
 
-            var maxOilAmount = fuelTankCapacity - remainingFuel;
-            var oilAmount = parseFloat(oilAmountInput.value);
-            var isGiven = isGivenInput.checked;
+@section Scripts {
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            var form = document.getElementById('operatorReviewForm');
+            form.addEventListener('submit', function (event) {
+                var oilAmountInput = document.getElementById('OilAmount');
+                var isGivenInput = document.getElementById('flexSwitchCheckDefault');
+                var fuelTankCapacity = parseFloat('@ViewBag.FuelTankCapacity');
+                var remainingFuel = parseFloat('@ViewBag.RemainingFuel');
 
-            if ((oilAmount === 0 && isGiven === true) ||
-                (oilAmount > 0 && isGiven === false)) {
-                event.preventDefault();
-                alert('Siz yoqilg`ini 0 litr berib, berdim tugmasini bostingiz yoki\n Yoqilg`ini berib bermadim tugmasini bostingiz');
-            } else if (oilAmount < 0 || oilAmount > maxOilAmount) {
-                event.preventDefault();
-                alert('Oil amount must be between 0 and ' + maxOilAmount);
-            }
+                var maxOilAmount = fuelTankCapacity - remainingFuel;
+                var oilAmount = parseFloat(oilAmountInput.value);
+                var isGiven = isGivenInput.checked;
+
+                if ((oilAmount === 0 && isGiven === true) ||
+                    (oilAmount > 0 && isGiven === false)) {
+                    event.preventDefault();
+                    alert('Siz yoqilgini 0 litr berib, berdim tugmasini bostingiz yoki\n Yoqilgini berib bermadim tugmasini bostingiz');
+                } else if (oilAmount < 0 || oilAmount > maxOilAmount) {
+                    event.preventDefault();
+                    alert('Oil amount must be between 0 and ' + maxOilAmount);
+                }
+            });
         });
-    });
-</script>
+    </script>
+}
