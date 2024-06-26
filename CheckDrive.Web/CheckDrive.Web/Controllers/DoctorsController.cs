@@ -1,6 +1,5 @@
 ﻿using CheckDrive.ApiContracts.Account;
 using CheckDrive.ApiContracts.Doctor;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Doctors;
 using Microsoft.AspNetCore.Mvc;
 

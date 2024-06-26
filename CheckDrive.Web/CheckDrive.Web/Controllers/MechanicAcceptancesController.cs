@@ -1,6 +1,5 @@
 using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.MechanicAcceptance;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
@@ -28,10 +27,10 @@ namespace CheckDrive.Web.Controllers
             _operatorReviewDataStore = operatorReviewDataStore;
         }
 
-        public async Task<IActionResult> Index(int? pageNumber, string? searchString,DateTime? date)
+        public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
 
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString,date);
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, date);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -70,7 +69,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
             var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, null);
-            var operatorReviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null, searchString,null);
+            var operatorReviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null, searchString, null);
 
             var filteredOperatorReviews = operatorReviewsResponse.Data
                 .Where(dr => dr.Date.Value.Date == DateTime.Today)

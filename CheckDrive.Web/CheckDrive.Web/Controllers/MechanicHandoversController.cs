@@ -116,7 +116,7 @@ namespace CheckDrive.Web.Controllers
                             DriverName = doctor.DriverName,
                             MechanicName = "",
                             IsHanded = false,
-                            Distance = review.Distance,
+                            Distance = 0,
                             Comments = "",
                             Date = DateTime.Today
                         });
