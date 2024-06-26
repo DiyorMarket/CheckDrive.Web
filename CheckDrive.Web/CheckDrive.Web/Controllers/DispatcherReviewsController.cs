@@ -7,9 +7,7 @@ using CheckDrive.Web.Stores.Dispatchers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
 using CheckDrive.Web.Stores.MechanicHandovers;
 using CheckDrive.Web.Stores.OperatorReviews;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
-using Syncfusion.EJ2.PivotView;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -74,7 +72,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(int? pagenumber)
         {
-            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber,null,null);
+            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, null, null);
             var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
             var mechanicHandoverResponse = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
             var operatorResoponse = await _operatorDataStore.GetOperatorReviews(null, null, null);

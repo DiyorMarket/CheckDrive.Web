@@ -34,16 +34,41 @@
                 document.addEventListener('DOMContentLoaded', function () {
                     var driverDropdown = document.getElementById('driverDropdown');
                     var selectedDriverId = @Model.DriverId;
+                    var urlParams = new URLSearchParams(window.location.search);
+                    var driverIdParam = urlParams.has('driverId');
 
-                    if (selectedDriverId !== 0) {
+                    if (driverIdParam) {
                         driverDropdown.disabled = true;
+                    } else if (selectedDriverId !== 0) {
+                        driverDropdown.value = selectedDriverId;
                     }
+
+                    driverDropdown.addEventListener('change', function () {
+                        var driverId = this.value;
+                        $.ajax({
+                            url: '@Url.Action("GetCarByDriverId")',
+                            type: 'GET',
+                            data: { driverId: driverId },
+                            success: function (response) {
+                                if (response.success) {
+                                    var car = response.car;
+                                    var carDropdown = document.getElementById('carDropdown');
+                                    carDropdown.innerHTML = `<option value="${car.id}" selected>${car.model} Sig'imi: ${car.fuelTankCapacity} litr, Qoldig'i: ${car.remainingFuel} litr</option>`;
+                                    document.getElementById('CarId').value = car.id;
+                                } else {
+                                    var carDropdown = document.getElementById('carDropdown');
+                                    carDropdown.innerHTML = `<option value="" selected>No car available</option>`;
+                                    document.getElementById('CarId').value = '';
+                                }
+                            }
+                        });
+                    });
                 });
             </script>
 
             <div class="form-group w-50">
                 <label asp-for="CarId" class="control-label mt-2">Moshina</label>
-                <select asp-for="CarId" class="form-control border border-dark" asp-items="@ViewBag.Cars" disabled>
+                <select asp-for="CarId" class="form-control border border-dark" id="carDropdown">
                     @if (ViewBag.SelectedCar != null)
                     {
                         <option value="@Model.CarId" selected>@ViewBag.SelectedCar</option>
