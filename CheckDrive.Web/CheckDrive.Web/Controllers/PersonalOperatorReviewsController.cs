@@ -1,4 +1,5 @@
 ﻿using CheckDrive.ApiContracts;
+using CheckDrive.ApiContracts.Car;
 using CheckDrive.ApiContracts.Operator;
 using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Models;
@@ -226,9 +227,24 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OilAmount,Comments,Status,Date,OperatorId,DriverId,CarId,OilMarks,IsGiven")] OperatorReviewForCreateDto operatorReview)
         {
+            var car = _carDataStore.GetCarAsync(operatorReview.CarId);
+            var carr = new CarForUpdateDto
+            {
+                Id = operatorReview.CarId,
+                Color = car.Result.Color,
+                FuelTankCapacity = car.Result.FuelTankCapacity,
+                ManufacturedYear = car.Result.ManufacturedYear,
+                MeduimFuelConsumption = car.Result.MeduimFuelConsumption,
+                Model = car.Result.Model,
+                Number = car.Result.Number,
+                RemainingFuel = car.Result.RemainingFuel + operatorReview.OilAmount,
+            };
+
             if (ModelState.IsValid)
             {
                 operatorReview.Date = DateTime.Now;
+
+                await _carDataStore.UpdateCarAsync(operatorReview.CarId, carr);
 
                 double maxOilAmount = await GetMaxOilAmount(operatorReview.CarId);
 

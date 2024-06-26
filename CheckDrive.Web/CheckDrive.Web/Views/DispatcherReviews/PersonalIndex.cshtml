@@ -4,8 +4,19 @@
     ViewData["Title"] = "PersonalIndex";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
 }
-
-<h1 class="text-center">Dispetcher oynasi</h1>
+<div class="container-fluid py-2 px-4 d-flex justify-content-end">
+    <div class="d-flex align-items-center">
+        <div class="dropdown">
+            <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: white; border-color: black;">
+                <i class="fa-solid fa-user" style="background-color: white; color: black;"></i>
+                <i class="bi bi-caret-down-fill" style="background-color:white; color:black"></i>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" style="color: red" href="@Url.Action("Login", "Auth")">Profildan Chiqish</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 <div class="container mt-5" style="max-width: 100%;">
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover paper-shadow" style="width: 100%;">

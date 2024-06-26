@@ -1,4 +1,5 @@
-﻿using CheckDrive.ApiContracts.Dispatcher;
+﻿using CheckDrive.ApiContracts.Car;
+using CheckDrive.ApiContracts.Dispatcher;
 using CheckDrive.ApiContracts.DispatcherReview;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
@@ -220,9 +221,21 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Create([Bind("FuelSpended,DistanceCovered,Date,DispatcherId,OperatorId,MechanicId,DriverId,MechanicHandoverId,MechanicAcceptanceId,CarId, OperatorReviewId")] DispatcherReviewForCreateDto dispatcherReview)
         {
             dispatcherReview.Date = DateTime.Now;
-
+            var car = _carDataStore.GetCarAsync(dispatcherReview.CarId);
+            var carr = new CarForUpdateDto
+            {
+                Id = dispatcherReview.CarId,
+                Color = car.Result.Color,
+                FuelTankCapacity = car.Result.FuelTankCapacity,
+                ManufacturedYear = car.Result.ManufacturedYear,
+                MeduimFuelConsumption = car.Result.MeduimFuelConsumption,
+                Model = car.Result.Model,
+                Number = car.Result.Number,
+                RemainingFuel = car.Result.RemainingFuel - dispatcherReview.FuelSpended,
+            };
             if (ModelState.IsValid)
             {
+                await _carDataStore.UpdateCarAsync(dispatcherReview.CarId, carr);
                 await _dispatcherReviewDataStore.CreateDispatcherReview(dispatcherReview);
                 return RedirectToAction(nameof(Index));
             }
