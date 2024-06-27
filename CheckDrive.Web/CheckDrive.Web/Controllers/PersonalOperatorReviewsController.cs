@@ -1,4 +1,5 @@
 ﻿using CheckDrive.ApiContracts;
+using CheckDrive.ApiContracts.Car;
 using CheckDrive.ApiContracts.Operator;
 using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Models;
@@ -27,12 +28,13 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString)
         {
-            var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null);
-            var mechanicHandoverResponse = await _mechanicHandover.GetMechanicHandoversAsync(pageNumber);
+
+            var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, null);
+            var mechanicHandoverResponse = await _mechanicHandover.GetMechanicHandoversAsync(pageNumber, null, null);
             var cars = await _carDataStore.GetCarsAsync(null, null);
 
             var mechanicHandovers = mechanicHandoverResponse.Data
-                .Where(m => m.Date.Value.Date == DateTime.Today)
+                .Where(m => m.Date.Date == DateTime.Today)
                 .Where(m => m.IsHanded == true)
                 .ToList();
 
@@ -109,7 +111,6 @@ namespace CheckDrive.Web.Controllers
 
             return View(operators);
         }
-
         public async Task<IActionResult> Details(int id)
         {
             var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);
@@ -132,19 +133,53 @@ namespace CheckDrive.Web.Controllers
             if (int.TryParse(accountIdStr, out int accountId))
             {
                 var operatorResponse = await _operatorDataStore.GetOperators(accountId);
-                operatorr = operatorResponse.Data.First();
+                operatorr = operatorResponse.Data.FirstOrDefault();
             }
             var operators = new List<SelectListItem>
-                {
-                    new SelectListItem { Value = operatorr.Id.ToString(), Text = $"{operatorr.FirstName} {operatorr.LastName}" }
-                };
+    {
+        new SelectListItem { Value = operatorr.Id.ToString(), Text = $"{operatorr.FirstName} {operatorr.LastName}" }
+    };
 
-            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null);
+            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, null);
             var oilMarks = response.Data.Select(r => r.OilMarks).Distinct().ToList();
+            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync();
+
+            var healthyDrivers = mechanicHandovers.Data
+                                  .Where(dr => dr.IsHanded == true && dr.Date.Date == DateTime.Today)
+                                  .Select(dr => dr.DriverId)
+                                  .ToList();
+
+            var givedDrivers = response.Data
+                .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
+                .Select(ma => ma.DriverId)
+                .ToList();
+
+            var filteredDrivers = drivers
+                .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !givedDrivers.Contains(int.Parse(d.Value)))
+                .ToList();
 
             ViewBag.OilMarks = new SelectList(oilMarks);
-            ViewBag.Drivers = new SelectList(drivers, "Value", "Text");
+            ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text");
             ViewBag.Operators = operators;
+
+            // Если driverId и carId не переданы, выбираем первого водителя из списка
+            if (!driverId.HasValue && !carId.HasValue && filteredDrivers.Any())
+            {
+                var firstDriverId = int.Parse(filteredDrivers.First().Value);
+                var mechanicHandover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == firstDriverId && m.Date.Date == DateTime.Today);
+
+                if (mechanicHandover != null)
+                {
+                    carId = mechanicHandover.CarId;
+                    var car = await _carDataStore.GetCarAsync(mechanicHandover.CarId);
+                    carModel = car?.Model;
+                    fuelTankCapacity = car?.FuelTankCapacity;
+                    remainingFuel = car?.RemainingFuel;
+                }
+
+                driverId = firstDriverId;
+            }
+
             ViewBag.Cars = new SelectList(cars, "Value", "Text", carId);
 
             var model = new OperatorReviewForCreateDto();
@@ -153,12 +188,13 @@ namespace CheckDrive.Web.Controllers
             {
                 model.DriverId = driverId.Value;
                 ViewBag.SelectedDriverName = driverName;
-            }
+                ViewBag.DriverId = driverId.Value;
 
-            if (carId.HasValue)
-            {
-                model.CarId = carId.Value;
-                ViewBag.SelectedCar = $"{carModel} Sig`imi: {fuelTankCapacity?.ToString() ?? "N/A"} litr, Qoldig`i: {remainingFuel?.ToString() ?? "N/A"} litr";
+                if (carId.HasValue)
+                {
+                    model.CarId = carId.Value;
+                    ViewBag.SelectedCar = $"{carModel} Sig`imi: {fuelTankCapacity?.ToString() ?? "N/A"} litr, Qoldig`i: {remainingFuel?.ToString() ?? "N/A"} litr";
+                }
             }
 
             if (fuelTankCapacity.HasValue && remainingFuel.HasValue)
@@ -171,13 +207,45 @@ namespace CheckDrive.Web.Controllers
         }
 
 
+
+        public async Task<IActionResult> GetCarByDriverId(int driverId)
+        {
+            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync();
+            var handover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == driverId && m.Date.Date == DateTime.Today);
+
+            if (handover != null)
+            {
+                var car = await _carDataStore.GetCarAsync(handover.CarId);
+                return Json(new { success = true, car });
+            }
+            return Json(new { success = false });
+        }
+
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OilAmount,Comments,Status,Date,OperatorId,DriverId,CarId,OilMarks,IsGiven")] OperatorReviewForCreateDto operatorReview)
         {
+            var car = _carDataStore.GetCarAsync(operatorReview.CarId);
+            var carr = new CarForUpdateDto
+            {
+                Id = operatorReview.CarId,
+                Color = car.Result.Color,
+                FuelTankCapacity = car.Result.FuelTankCapacity,
+                ManufacturedYear = car.Result.ManufacturedYear,
+                MeduimFuelConsumption = car.Result.MeduimFuelConsumption,
+                Model = car.Result.Model,
+                Number = car.Result.Number,
+                RemainingFuel = car.Result.RemainingFuel + operatorReview.OilAmount,
+            };
+
             if (ModelState.IsValid)
             {
                 operatorReview.Date = DateTime.Now;
+
+                await _carDataStore.UpdateCarAsync(operatorReview.CarId, carr);
 
                 double maxOilAmount = await GetMaxOilAmount(operatorReview.CarId);
 
@@ -199,7 +267,7 @@ namespace CheckDrive.Web.Controllers
 
             var drivers = await GETDrivers();
             var cars = await GETCars();
-            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null);
+            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, null);
             var oilMarks = response.Data.Select(r => r.OilMarks).Distinct().ToList();
 
             ViewBag.OilMarks = new SelectList(oilMarks);
@@ -208,10 +276,6 @@ namespace CheckDrive.Web.Controllers
 
             return View(operatorReview);
         }
-
-
-
-
         public async Task<IActionResult> Edit(int id)
         {
             var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);

@@ -27,10 +27,9 @@ namespace CheckDrive.Web.Controllers
             _doctorReviewDataStore = doctorReviewDataStore;
         }
 
-        public async Task<IActionResult> Index(int? pageNumber)
+        public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber);
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, date);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -42,7 +41,7 @@ namespace CheckDrive.Web.Controllers
             var mechanicHandovers = response.Data.Select(r => new
             {
                 r.Id,
-                IsHanded = r.IsHanded ? "Topshirildi" : "Topshirilmadi",
+                IsHanded = (bool)r.IsHanded ? "Topshirildi" : "Topshirilmadi",
                 r.Comments,
                 Status = ((StatusForDto)r.Status) switch
                 {
@@ -67,8 +66,8 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null);
-            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, searchString);
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, null);
+            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, searchString, null);
 
             var filteredDoctorReviews = doctorReviewsResponse.Data
                 .Where(dr => dr.Date.Date == DateTime.Today)
@@ -96,7 +95,7 @@ namespace CheckDrive.Web.Controllers
 
                 if (review != null)
                 {
-                    if (review.Date.HasValue && review.Date.Value.Date == DateTime.Today)
+                    if (review.Date.Date == DateTime.Today)
                     {
                         mechanicHandovers.Add(new MechanicHandoverDto
                         {
@@ -122,7 +121,7 @@ namespace CheckDrive.Web.Controllers
                             IsHanded = false,
                             Distance = 0,
                             Comments = "",
-                            Date = null
+                            Date = DateTime.Today
                         });
                     }
                 }
@@ -137,7 +136,7 @@ namespace CheckDrive.Web.Controllers
                         IsHanded = false,
                         Distance = 0,
                         Comments = "",
-                        Date = null
+                        Date = DateTime.Today
                     });
                 }
             }
@@ -161,7 +160,7 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, null);
             var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
 
             var accountIdStr = TempData["AccountId"] as string;
@@ -179,7 +178,8 @@ namespace CheckDrive.Web.Controllers
                         .ToList();
 
                     var handedDrivers = mechanicHandovers.Data
-                        .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
+
+                        .Where(ma => ma.Date.Date == DateTime.Today)
                         .Select(ma => ma.DriverId)
                         .ToList();
 
@@ -188,7 +188,8 @@ namespace CheckDrive.Web.Controllers
                         .ToList();
 
                     var usedCarIds = mechanicHandovers.Data
-                        .Where(mh => mh.Date.HasValue && mh.Date.Value.Date == DateTime.Today && mh.IsHanded == true)
+
+                        .Where(mh => mh.Date.Date == DateTime.Today && mh.IsHanded == true)
                         .Select(mh => mh.CarId)
                         .ToList();
 
@@ -217,9 +218,9 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (mechanicHandoverForCreateDto.IsHanded == null)
+                if (mechanicHandoverForCreateDto.IsHanded == false)
                 {
-                    mechanicHandoverForCreateDto.IsHanded = false;
+                    mechanicHandoverForCreateDto.Status = StatusForDto.Rejected;
                 }
 
                 mechanicHandoverForCreateDto.Date = DateTime.Now;

@@ -73,18 +73,31 @@
                                 </td>
                                 <td>@item.MechanicName</td>
                                 <td>@item.CarName</td>
-                                <td>
-                                    @if (item.Date != null && item.Date.Value.Date == DateTime.Today)
-                                    {
-                                        @if (item.IsAccepted)
+                           
+                                    <td>
+                                    @if (!string.IsNullOrEmpty(item.MechanicName))
                                         {
-                                            <span class="badge bg-success shadow">Qabul qilindi</span>
+                                            @if ((bool)item.IsAccepted)
+                                            {
+                                                <span class="badge bg-success shadow">Qabul qilindi</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger shadow">Rad etildi</span>
+                                            }
                                         }
-                                        else
-                                        {
-                                            <span class="badge bg-danger shadow">Rad etildi</span>
-                                        }
-                                    }
+                                    </td>
+                                    <td>@item.Distance</td>
+                                    <td>@item.Comments</td>
+                                    <td>@item.Date</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    Maʼlumotlar mavjud emas
                                 </td>
                                 <td>@item.Distance</td>
                                 <td>@item.Comments</td>

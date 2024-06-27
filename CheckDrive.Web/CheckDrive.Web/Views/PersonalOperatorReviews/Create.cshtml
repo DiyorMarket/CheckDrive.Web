@@ -7,7 +7,7 @@
 
 <div class="row mt-custom">
     <div class="col-md-4 offset-md-1 mt-5">
-        <h4>Ro`yxatga olish</h4>
+        <h4>Royxatga olish</h4>
         <hr class="w-50" />
         <form id="operatorReviewForm" asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -22,22 +22,61 @@
 
             <div class="form-group w-50">
                 <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
-                <select asp-for="DriverId" class="form-control border border-dark" asp-items="@ViewBag.Drivers" disabled>
+                <select asp-for="DriverId" class="form-control border border-dark" asp-items="@ViewBag.Drivers" id="driverDropdown">
                     @if (ViewBag.SelectedDriverName != null)
                     {
                         <option value="@Model.DriverId" selected>@ViewBag.SelectedDriverName</option>
                     }
                 </select>
             </div>
+
             <div class="form-group w-50">
                 <label asp-for="CarId" class="control-label mt-2">Moshina</label>
-                <select asp-for="CarId" class="form-control border border-dark" asp-items="@ViewBag.Cars" disabled>
+                <select asp-for="CarId" class="form-control border border-dark" id="carDropdown">
                     @if (ViewBag.SelectedCar != null)
                     {
                         <option value="@Model.CarId" selected>@ViewBag.SelectedCar</option>
                     }
                 </select>
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var driverDropdown = document.getElementById('driverDropdown');
+                    var carDropdown = document.getElementById('carDropdown');
+                    var selectedDriverId = @Model.DriverId;
+                    var urlParams = new URLSearchParams(window.location.search);
+                    var driverIdParam = urlParams.has('driverId');
+
+                    if (driverIdParam) {
+                        driverDropdown.disabled = true;
+                        carDropdown.disabled = true;
+                    } else if (selectedDriverId !== 0) {
+                        driverDropdown.value = selectedDriverId;
+                        carDropdown.disabled = true;
+                    }
+
+                    driverDropdown.addEventListener('change', function () {
+                        var driverId = this.value;
+                        $.ajax({
+                            url: '@Url.Action("GetCarByDriverId")',
+                            type: 'GET',
+                            data: { driverId: driverId },
+                            success: function (response) {
+                                if (response.success) {
+                                    var car = response.car;
+                                    carDropdown.innerHTML = `<option value="${car.id}" selected>${car.model} Sig'imi: ${car.fuelTankCapacity} litr, Qoldig'i: ${car.remainingFuel} litr</option>`;
+                                    document.getElementById('CarId').value = car.id;
+                                } else {
+                                    carDropdown.innerHTML = `<option value="" selected>No car available</option>`;
+                                    document.getElementById('CarId').value = '';
+                                }
+                            }
+                        });
+                    });
+                });
+            </script>
+
             <div class="form-group w-50">
                 <select asp-for="OperatorId" class="form-control border border-dark d-none" asp-items="@ViewBag.Operators"></select>
             </div>
@@ -47,7 +86,7 @@
                 <span asp-validation-for="OilAmount" class="text-danger"></span>
             </div>
             <div class="form-group w-50">
-                <label asp-for="OilMarks" class="control-label mt-2">Yoqilg`i Markasi</label>
+                <label asp-for="OilMarks" class="control-label mt-2">Yoqilgi Markasi</label>
                 <select asp-for="OilMarks" class="form-control border border-dark" asp-items="@ViewBag.OilMarks"></select>
             </div>
             <div class="form-group w-50">
@@ -82,7 +121,7 @@
             if ((oilAmount === 0 && isGiven === true) ||
                 (oilAmount > 0 && isGiven === false)) {
                 event.preventDefault();
-                alert('Siz yoqilg`ini 0 litr berib, berdim tugmasini bostingiz yoki\n Yoqilg`ini berib bermadim tugmasini bostingiz');
+                alert('Siz yoqilgini 0 litr berib, berdim tugmasini bostingiz yoki\n Yoqilgini berib bermadim tugmasini bostingiz');
             } else if (oilAmount < 0 || oilAmount > maxOilAmount) {
                 event.preventDefault();
                 alert('Oil amount must be between 0 and ' + maxOilAmount);

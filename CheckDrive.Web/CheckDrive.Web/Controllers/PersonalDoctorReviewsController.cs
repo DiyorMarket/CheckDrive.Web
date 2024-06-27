@@ -1,5 +1,4 @@
-﻿using CheckDrive.ApiContracts.Doctor;
-using CheckDrive.ApiContracts.DoctorReview;
+﻿using CheckDrive.ApiContracts.DoctorReview;
 using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Doctors;
@@ -32,7 +31,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index(int? pageNumber, string? searchString)
         {
             var currentDate = DateTime.Today;
-            var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber,null);
+            var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, null, null);
             var driversResponse = await _driverDataStore.GetDriversAsync(searchString, pageNumber);
 
             ViewBag.PageSize = driversResponse.PageSize;
@@ -66,7 +65,7 @@ namespace CheckDrive.Web.Controllers
                         DriverId = driver.Id,
                         DriverName = $"{driver.FirstName} {driver.LastName}",
                         DoctorName = "",
-                        IsHealthy = null,
+                        IsHealthy = false,
                         Comments = "",
                         Date = currentDate
                     };
@@ -79,7 +78,7 @@ namespace CheckDrive.Web.Controllers
                     DriverId = driver.Id,
                     DriverName = $"{driver.FirstName} {driver.LastName}",
                     DoctorName = "",
-                    IsHealthy = null,
+                    IsHealthy = false,
                     Comments = "",
                     Date = currentDate
                 }).ToList();
@@ -102,7 +101,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Create(int driverId, string driverName)
         {
             var accountIdStr = TempData["AccountId"] as string;
-            TempData.Keep("AccountId"); // Сохранение значения AccountId между запросами
+            TempData.Keep("AccountId");
 
             if (int.TryParse(accountIdStr, out int accountId))
             {
@@ -115,18 +114,21 @@ namespace CheckDrive.Web.Controllers
                 new SelectListItem { Value = doctor.Id.ToString(), Text = $"{doctor.FirstName} {doctor.LastName}" }
             };
 
+                    var driversNotUsedToday = await GetDriversNotUsedToday();
+
                     ViewBag.Doctors = new SelectList(doctors, "Value", "Text");
                     ViewBag.SelectedDriverName = driverName;
                     ViewBag.SelectedDriverId = driverId;
-                    ViewBag.DoctorId = doctor.Id;  // Сохранение doctorId в ViewBag
+                    ViewBag.DoctorId = doctor.Id;
+                    ViewBag.Drivers = new SelectList(driversNotUsedToday, "Value", "Text");
 
                     return View(new DoctorReviewForCreateDto { DriverId = driverId, Date = DateTime.Now, DoctorId = doctor.Id });
                 }
             }
 
-            // Обработка случая, когда врач не найден или accountId недействителен
             return NotFound("Врач не найден для указанного аккаунта.");
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -144,7 +146,7 @@ namespace CheckDrive.Web.Controllers
             ViewBag.SelectedDriverId = doctorReview.DriverId;
 
             var accountIdStr = TempData["AccountId"] as string;
-            TempData.Keep("AccountId"); // Сохранение значения AccountId между запросами
+            TempData.Keep("AccountId");
 
             if (int.TryParse(accountIdStr, out int accountId))
             {
@@ -158,15 +160,12 @@ namespace CheckDrive.Web.Controllers
             };
 
                     ViewBag.Doctors = new SelectList(doctors, "Value", "Text");
-                    ViewBag.DoctorId = doctor.Id;  // Сохранение doctorId в ViewBag при повторном отображении формы
+                    ViewBag.DoctorId = doctor.Id;
                 }
             }
 
             return View(doctorReview);
         }
-
-
-
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -231,6 +230,34 @@ namespace CheckDrive.Web.Controllers
         {
             var doctorReview = await _doctorReviewDataStore.GetDoctorReviewAsync(id);
             return doctorReview != null;
+        }
+        private async Task<List<SelectListItem>> GetDriversNotUsedToday()
+        {
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, null);
+            var today = DateTime.Today;
+            var usedDriverIds = doctorReviews.Data
+                .Where(dr => dr.Date.Date == today)
+                .Select(dr => dr.DriverId)
+                .ToList();
+
+            var drivers = await GETDrivers();
+            var driversNotUsedToday = drivers
+                .Where(d => !usedDriverIds.Contains(int.Parse(d.Value)))
+                .ToList();
+
+            return driversNotUsedToday;
+        }
+        private async Task<List<SelectListItem>> GETDrivers()
+        {
+            var driverResponse = await _driverDataStore.GetDriversAsync(null, null);
+            var drivers = driverResponse.Data
+                .Select(d => new SelectListItem
+                {
+                    Value = d.Id.ToString(),
+                    Text = $"{d.FirstName} {d.LastName}"
+                })
+                .ToList();
+            return drivers;
         }
     }
 
