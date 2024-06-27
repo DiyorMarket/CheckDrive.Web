@@ -28,7 +28,6 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString)
         {
-
             var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, null);
             var mechanicHandoverResponse = await _mechanicHandover.GetMechanicHandoversAsync(pageNumber, null, null);
             var cars = await _carDataStore.GetCarsAsync(null, null);

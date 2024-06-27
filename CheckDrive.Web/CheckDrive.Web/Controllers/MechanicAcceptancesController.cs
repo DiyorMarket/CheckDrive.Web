@@ -1,10 +1,8 @@
 using CheckDrive.ApiContracts;
-using CheckDrive.ApiContracts.Car;
 using CheckDrive.ApiContracts.MechanicAcceptance;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
-using CheckDrive.Web.Stores.MechanicHandovers;
 using CheckDrive.Web.Stores.Mechanics;
 using CheckDrive.Web.Stores.OperatorReviews;
 using Microsoft.AspNetCore.Mvc;
@@ -15,20 +13,18 @@ namespace CheckDrive.Web.Controllers
     public class MechanicAcceptancesController : Controller
     {
         private readonly IMechanicAcceptanceDataStore _mechanicAcceptanceDataStore;
-        private readonly IMechanicHandoverDataStore _mechanicHandoverDataStore;
         private readonly IDriverDataStore _driverDataStore;
         private readonly ICarDataStore _carDataStore;
         private readonly IMechanicDataStore _mechanicDataStore;
         private readonly IOperatorReviewDataStore _operatorReviewDataStore;
 
-        public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore, IMechanicDataStore mechanicDataStore, IOperatorReviewDataStore operatorReviewDataStore, IMechanicHandoverDataStore mechanicHandoverDataStore)
+        public MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore, IMechanicDataStore mechanicDataStore, IOperatorReviewDataStore operatorReviewDataStore)
         {
             _mechanicAcceptanceDataStore = mechanicAcceptanceDataStore;
             _driverDataStore = driverDataStore;
             _carDataStore = carDataStore;
             _mechanicDataStore = mechanicDataStore;
             _operatorReviewDataStore = operatorReviewDataStore;
-            _mechanicHandoverDataStore = mechanicHandoverDataStore;
         }
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
@@ -69,12 +65,9 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
+
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
-            var carHandoversResponse = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
-            var carsResponse = await _carDataStore.GetCarsAsync(null, null);
-
-            var carsDict = carsResponse.Data.ToDictionary(c => c.Id, c => $"{c.Model} ({c.Number})");
             var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, null);
             var operatorReviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null, searchString, null);
 
@@ -101,11 +94,6 @@ namespace CheckDrive.Web.Controllers
             foreach (var operatorr in paginatedOperatorReviews)
             {
                 var review = response.Data.FirstOrDefault(r => r.DriverId == operatorr.DriverId);
-                var carHandover = carHandoversResponse.Data.FirstOrDefault(ch => ch.DriverId == operatorr.DriverId && ch.Date.Value.Date == DateTime.Today);
-
-                int carId = carHandover?.CarId ?? 0;
-                string carName = carId != 0 && carsDict.ContainsKey(carId) ? carsDict[carId] : string.Empty;
-
                 if (review != null)
                 {
                     if (review.Date.HasValue && review.Date.Value.Date == DateTime.Today)
@@ -118,9 +106,7 @@ namespace CheckDrive.Web.Controllers
                             IsAccepted = review.IsAccepted,
                             Distance = review.Distance,
                             Comments = review.Comments,
-                            Date = review.Date,
-                            CarId = carId,
-                            CarName = carName
+                            Date = review.Date
                         });
                     }
                     else
@@ -133,9 +119,7 @@ namespace CheckDrive.Web.Controllers
                             IsAccepted = false,
                             Distance = 0,
                             Comments = "",
-                            Date = null,
-                            CarId = carId,
-                            CarName = carName
+                            Date = null
                         });
                     }
                 }
@@ -149,9 +133,7 @@ namespace CheckDrive.Web.Controllers
                         IsAccepted = false,
                         Distance = 0,
                         Comments = "",
-                        Date = null,
-                        CarId = carId,
-                        CarName = carName
+                        Date = null
                     });
                 }
             }
@@ -167,7 +149,7 @@ namespace CheckDrive.Web.Controllers
             return View(mechanicAcceptance);
         }
 
-        public async Task<IActionResult> Create(int? driverId, int? carId, string carName)
+        public async Task<IActionResult> Create(int? driverId)
         {
             var mechanics = await GETMechanics();
             var drivers = await GETDrivers();
@@ -179,9 +161,6 @@ namespace CheckDrive.Web.Controllers
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
 
-            // Creating a mapping from drivers to cars
-            var driverCarMapping = drivers.ToDictionary(d => int.Parse(d.Value), d => cars.FirstOrDefault(c => c.Value == d.Value)?.Value);
-
             if (int.TryParse(accountIdStr, out int accountId))
             {
                 var mechanicResponse = await _mechanicDataStore.GetMechanics(accountId);
@@ -189,7 +168,7 @@ namespace CheckDrive.Web.Controllers
                 if (mechanic != null)
                 {
                     var healthyDrivers = operatorReviews.Data
-                        .Where(dr => dr.IsGiven.HasValue && dr.IsGiven.Value && dr.Date.HasValue && dr.Date.Value.Date == DateTime.Today)
+                        .Where(dr => dr.IsGiven.HasValue && dr.IsGiven.Value && dr.Date.Value.Date == DateTime.Today)
                         .Select(dr => dr.DriverId)
                         .ToList();
 
@@ -202,53 +181,30 @@ namespace CheckDrive.Web.Controllers
                         .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !acceptedDrivers.Contains(int.Parse(d.Value)))
                         .ToList();
 
-                    if (driverId.HasValue && !carId.HasValue)
-                    {
-                        driverCarMapping.TryGetValue(driverId.Value, out var associatedCarId);
-                        if (int.TryParse(associatedCarId, out int parsedCarId))
-                        {
-                            if (parsedCarId != 1)
-                            {
-                                carId = parsedCarId - 1;
-                            }
-                            else
-                            {
+                    var usedCarIds = mechanicAcceptances.Data
+                        .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today && ma.IsAccepted == true)
+                        .Select(ma => ma.CarId)
+                        .ToList();
 
-                                carId = parsedCarId;
-                            }
-                        }
-                    }
+                    var filteredCars = cars
+                        .Where(c => !usedCarIds.Contains(int.Parse(c.Value)))
+                        .ToList();
 
                     ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
                     ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
-
-                    if (string.IsNullOrEmpty(carName))
-                    {
-                        ViewBag.Cars = new SelectList(cars, "Value", "Text", carId);
-                        ViewBag.SelectedCar = cars.FirstOrDefault(c => c.Value == carId.ToString())?.Text;
-                    }
-                    else
-                    {
-                        ViewBag.Cars = carName;
-                        ViewBag.SelectedCarId = carId;
-                    }
+                    ViewBag.Cars = filteredCars.Any()
+                        ? new SelectList(filteredCars, "Value", "Text")
+                        : null;
 
                     var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
                     ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
                     ViewBag.SelectedDriverId = driverId;
 
-                    var model = new MechanicAcceptanceForCreateDto
-                    {
-                        DriverId = driverId ?? 0,
-                        MechanicId = mechanic.Id,
-                        CarId = carId ?? 0
-                    };
-
-                    return View(model);
+                    return View(new MechanicAcceptanceForCreateDto { DriverId = driverId ?? 0, MechanicId = mechanic.Id });
                 }
             }
 
-            return NotFound("Mechanic not found for the specified account.");
+            return NotFound("Механик не найден для указанного аккаунта.");
         }
 
         [HttpPost]
@@ -272,16 +228,14 @@ namespace CheckDrive.Web.Controllers
             var cars = await GETCars();
             ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
             ViewBag.Drivers = new SelectList(drivers, "Value", "Text", mechanicAcceptanceForCreateDto.DriverId);
-            ViewBag.Cars = new SelectList(cars, "Value", "Text", mechanicAcceptanceForCreateDto.CarId);
+            ViewBag.Cars = new SelectList(cars, "Value", "Text");
 
             var selectedDriverName = drivers.FirstOrDefault(d => d.Value == mechanicAcceptanceForCreateDto.DriverId.ToString())?.Text;
             ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
             ViewBag.SelectedDriverId = mechanicAcceptanceForCreateDto.DriverId;
-            ViewBag.SelectedCar = cars.FirstOrDefault(c => c.Value == mechanicAcceptanceForCreateDto.CarId.ToString())?.Text;
 
             return View(mechanicAcceptanceForCreateDto);
         }
-
 
 
         [HttpPost]

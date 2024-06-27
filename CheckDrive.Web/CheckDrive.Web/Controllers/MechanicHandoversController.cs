@@ -102,13 +102,11 @@ namespace CheckDrive.Web.Controllers
                             DriverId = review.DriverId,
                             DriverName = doctor.DriverName,
                             MechanicName = review.MechanicName,
-                            CarName = review.CarName,
                             IsHanded = review.IsHanded,
                             Distance = review.Distance,
                             Comments = review.Comments,
                             Date = review.Date
                         });
-
                     }
                     else
                     {
@@ -117,7 +115,6 @@ namespace CheckDrive.Web.Controllers
                             DriverId = doctor.DriverId,
                             DriverName = doctor.DriverName,
                             MechanicName = "",
-                            CarName = "",
                             IsHanded = false,
                             Distance = 0,
                             Comments = "",
@@ -132,7 +129,6 @@ namespace CheckDrive.Web.Controllers
                         DriverId = doctor.DriverId,
                         DriverName = doctor.DriverName,
                         MechanicName = "",
-                        CarName = "",
                         IsHanded = false,
                         Distance = 0,
                         Comments = "",
@@ -178,7 +174,6 @@ namespace CheckDrive.Web.Controllers
                         .ToList();
 
                     var handedDrivers = mechanicHandovers.Data
-
                         .Where(ma => ma.Date.Date == DateTime.Today)
                         .Select(ma => ma.DriverId)
                         .ToList();
@@ -188,7 +183,6 @@ namespace CheckDrive.Web.Controllers
                         .ToList();
 
                     var usedCarIds = mechanicHandovers.Data
-
                         .Where(mh => mh.Date.Date == DateTime.Today && mh.IsHanded == true)
                         .Select(mh => mh.CarId)
                         .ToList();
