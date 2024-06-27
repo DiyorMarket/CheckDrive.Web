@@ -1,6 +1,7 @@
 using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.Car;
 using CheckDrive.ApiContracts.MechanicAcceptance;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
@@ -31,10 +32,10 @@ namespace CheckDrive.Web.Controllers
             _mechanicHandoverDataStore = mechanicHandoverDataStore;
         }
 
-        public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
+        public async Task<IActionResult> Index(int? pageNumber, string? searchString)
         {
 
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, date);
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -46,7 +47,7 @@ namespace CheckDrive.Web.Controllers
             var mechanicAcceptances = response.Data.Select(r => new
             {
                 r.Id,
-                IsAccepted = (bool)r.IsAccepted ? "Qabul qilindi" : "Rad etildi",
+                IsAccepted = r.IsAccepted ? "Qabul qilindi" : "Rad etildi",
                 r.Comments,
                 Status = ((StatusForDto)r.Status) switch
                 {
@@ -71,12 +72,12 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null);
+            var operatorReviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null, searchString);
             var carHandoversResponse = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
             var carsResponse = await _carDataStore.GetCarsAsync(null, null);
 
             var carsDict = carsResponse.Data.ToDictionary(c => c.Id, c => $"{c.Model} ({c.Number})");
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, null);
-            var operatorReviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null, searchString, null);
 
             var filteredOperatorReviews = operatorReviewsResponse.Data
                 .Where(dr => dr.Date.Value.Date == DateTime.Today)
@@ -173,7 +174,7 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null, null);
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null);
             var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
 
             var accountIdStr = TempData["AccountId"] as string;

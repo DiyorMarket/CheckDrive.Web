@@ -1,34 +1,32 @@
-﻿using CheckDrive.ApiContracts.Account;
-using CheckDrive.ApiContracts.Doctor;
-using CheckDrive.Web.Models;
-using CheckDrive.Web.Stores.Doctors;
+﻿using CheckDrive.Web.Models;
+using CheckDrive.Web.Stores.Dispatchers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
 {
-    public class DoctorsController : Controller
+    public class DispatchersController : Controller
     {
-        private readonly IDoctorDataStore _doctorDataStore;
+        private readonly IDispatcherDataStore _dispatcherDataStore;
 
-        public DoctorsController(IDoctorDataStore doctorDataStore)
+        public DispatchersController(IDispatcherDataStore dispatcherDataStore)
         {
-            _doctorDataStore = doctorDataStore;
+            _dispatcherDataStore = dispatcherDataStore;
         }
 
         public async Task<IActionResult> Index()
         {
-            var doctors = await _doctorDataStore.GetDoctors();
-            return View(doctors);
+            var dispatchers = await _dispatcherDataStore.GetDispatchers();
+            return View(dispatchers);
         }
 
         public async Task<IActionResult> Details(int id)
         {
-            var doctor = await _doctorDataStore.GetDoctor(id);
-            if (doctor == null)
+            var dispatcher = await _dispatcherDataStore.GetDispatcher(id);
+            if (dispatcher == null)
             {
                 return NotFound();
             }
-            return View(doctor);
+            return View(dispatcher);
         }
 
         public IActionResult Create()
@@ -38,31 +36,31 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AccountId")] DoctorForCreateDto doctor)
+        public async Task<IActionResult> Create([Bind("AccountId")] Dispatcher dispatcher)
         {
             if (ModelState.IsValid)
             {
-                await _doctorDataStore.CreateDoctor(doctor);
+                await _dispatcherDataStore.CreateDispatcher(dispatcher);
                 return RedirectToAction(nameof(Index));
             }
-            return View(doctor);
+            return View(dispatcher);
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            var doctor = await _doctorDataStore.GetDoctor(id);
-            if (doctor == null)
+            var dispatcher = await _dispatcherDataStore.GetDispatcher(id);
+            if (dispatcher == null)
             {
                 return NotFound();
             }
-            return View(doctor);
+            return View(dispatcher);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountId")] AccountForUpdateDto doctor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountId")] Dispatcher dispatcher)
         {
-            if (id != doctor.Id)
+            if (id != dispatcher.Id)
             {
                 return NotFound();
             }
@@ -71,11 +69,11 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    await _doctorDataStore.UpdateDoctor(id, doctor);
+                    await _dispatcherDataStore.UpdateDispatcher(id, dispatcher);
                 }
                 catch (Exception)
                 {
-                    if (!await DoctorExists(id))
+                    if (!await DispatcherExists(id))
                     {
                         return NotFound();
                     }
@@ -86,31 +84,31 @@ namespace CheckDrive.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(doctor);
+            return View(dispatcher);
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var doctor = await _doctorDataStore.GetDoctor(id);
-            if (doctor == null)
+            var dispatcher = await _dispatcherDataStore.GetDispatcher(id);
+            if (dispatcher == null)
             {
                 return NotFound();
             }
-            return View(doctor);
+            return View(dispatcher);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _doctorDataStore.DeleteDoctor(id);
+            await _dispatcherDataStore.DeleteDispatcher(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> DoctorExists(int id)
+        private async Task<bool> DispatcherExists(int id)
         {
-            var doctor = await _doctorDataStore.GetDoctor(id);
-            return doctor != null;
+            var dispatcher = await _dispatcherDataStore.GetDispatcher(id);
+            return dispatcher != null;
         }
     }
 }

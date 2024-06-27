@@ -13,9 +13,9 @@ namespace CheckDrive.Web.Controllers
             _doctorReviewDataStore = doctorReviewDataStore;
         }
 
-        public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-            var response = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, searchString, date);
+            var response = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, null);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -29,7 +29,6 @@ namespace CheckDrive.Web.Controllers
                 r.Id,
                 r.DriverName,
                 r.DoctorName,
-                r.Date,
                 IsHealthy = (bool)r.IsHealthy ? "Sog`lom" : "Kasal",
                 r.Comments
             }).ToList();
