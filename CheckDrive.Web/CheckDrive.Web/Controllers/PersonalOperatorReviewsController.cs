@@ -144,7 +144,7 @@ namespace CheckDrive.Web.Controllers
             var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync();
 
             var healthyDrivers = mechanicHandovers.Data
-                                  .Where(dr => dr.IsHanded == true && dr.Date.Value.Date == DateTime.Today)
+                                  .Where(dr => dr.IsHanded == true && dr.Date.Date == DateTime.Today)
                                   .Select(dr => dr.DriverId)
                                   .ToList();
 
@@ -165,7 +165,7 @@ namespace CheckDrive.Web.Controllers
             if (!driverId.HasValue && !carId.HasValue && filteredDrivers.Any())
             {
                 var firstDriverId = int.Parse(filteredDrivers.First().Value);
-                var mechanicHandover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == firstDriverId && m.Date.Value.Date == DateTime.Today);
+                var mechanicHandover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == firstDriverId && m.Date.Date == DateTime.Today);
 
                 if (mechanicHandover != null)
                 {
@@ -210,7 +210,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> GetCarByDriverId(int driverId)
         {
             var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync();
-            var handover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == driverId && m.Date.Value.Date == DateTime.Today);
+            var handover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == driverId && m.Date.Date == DateTime.Today);
 
             if (handover != null)
             {
