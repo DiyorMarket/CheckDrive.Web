@@ -67,7 +67,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
             var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, null);
-            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, searchString, null);
+            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, searchString, null, 1);
 
             var filteredDoctorReviews = doctorReviewsResponse.Data
                 .Where(dr => dr.Date.Date == DateTime.Today)
@@ -156,7 +156,7 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, null);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, null, 1);
             var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
 
             var accountIdStr = TempData["AccountId"] as string;
