@@ -1,6 +1,4 @@
-﻿using CheckDrive.Web.Constants;
-using CheckDrive.Web.Exceptions;
-using Microsoft.AspNetCore.Mvc;
+﻿using CheckDrive.Web.Exceptions;
 
 namespace CheckDrive.Web.Service
 {
