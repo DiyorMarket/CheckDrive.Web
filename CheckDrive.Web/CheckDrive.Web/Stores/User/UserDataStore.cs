@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Service;
+﻿using CheckDrive.ApiContracts.Account;
+using CheckDrive.Web.Service;
 using CheckDrive.Web.ViewModels;
 using Newtonsoft.Json;
 using System.Text;
@@ -12,7 +13,7 @@ public class UserDataStore : IUserDataStore
     {
         _apiClient = apiClient;
     }
-    public async Task<(bool Success, string Token)> AuthenticateLoginAsync(LoginViewModel loginViewModel)
+    public async Task<(bool Success, string Token)> AuthenticateLoginAsync(AccountForLoginDto loginViewModel)
     {
         var json = JsonConvert.SerializeObject(loginViewModel);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
