@@ -68,6 +68,13 @@ namespace CheckDrive.Web.Controllers
         {
             var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, null, 6);
 
+            ViewBag.PageSize = response.PageSize;
+            ViewBag.PageCount = response.TotalPages;
+            ViewBag.TotalCount = response.TotalCount;
+            ViewBag.CurrentPage = response.PageNumber;
+            ViewBag.HasPreviousPage = response.HasPreviousPage;
+            ViewBag.HasNextPage = response.HasNextPage;
+
             return View(response.Data);
         }
 

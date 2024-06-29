@@ -65,6 +65,13 @@ namespace CheckDrive.Web.Controllers
         {
             var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, null, 4);
 
+            ViewBag.PageSize = reviewsResponse.PageSize;
+            ViewBag.PageCount = reviewsResponse.TotalPages;
+            ViewBag.TotalCount = reviewsResponse.TotalCount;
+            ViewBag.CurrentPage = reviewsResponse.PageNumber;
+            ViewBag.HasPreviousPage = reviewsResponse.HasPreviousPage;
+            ViewBag.HasNextPage = reviewsResponse.HasNextPage;
+
             return View(reviewsResponse.Data);
         }
 
