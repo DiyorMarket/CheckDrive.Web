@@ -179,25 +179,23 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OilAmount,Comments,Status,Date,OperatorId,DriverId,CarId,OilMarks,IsGiven")] OperatorReviewForCreateDto operatorReview)
         {
-            var car = _carDataStore.GetCarAsync(operatorReview.CarId);
-            var carr = new CarForUpdateDto
-            {
-                Id = operatorReview.CarId,
-                Color = car.Result.Color,
-                FuelTankCapacity = car.Result.FuelTankCapacity,
-                ManufacturedYear = car.Result.ManufacturedYear,
-                MeduimFuelConsumption = car.Result.MeduimFuelConsumption,
-                Model = car.Result.Model,
-                Number = car.Result.Number,
-                RemainingFuel = car.Result.RemainingFuel + operatorReview.OilAmount,
-            };
-
+            
             if (ModelState.IsValid)
             {
                 operatorReview.Date = DateTime.Now;
-
-                await _carDataStore.UpdateCarAsync(operatorReview.CarId, carr);
-
+                var car = _carDataStore.GetCarAsync(operatorReview.CarId);
+                var carr = new CarForUpdateDto
+                {
+                    Id = operatorReview.CarId,
+                    Color = car.Result.Color,
+                    FuelTankCapacity = car.Result.FuelTankCapacity,
+                    ManufacturedYear = car.Result.ManufacturedYear,
+                    MeduimFuelConsumption = car.Result.MeduimFuelConsumption,
+                    Model = car.Result.Model,
+                    Number = car.Result.Number,
+                    RemainingFuel = car.Result.RemainingFuel + operatorReview.OilAmount,
+                };
+                
                 double maxOilAmount = await GetMaxOilAmount(operatorReview.CarId);
 
                 if ((operatorReview.OilAmount < 0 && operatorReview.IsGiven == true) ||
@@ -211,19 +209,11 @@ namespace CheckDrive.Web.Controllers
                 }
                 else
                 {
+                    await _carDataStore.UpdateCarAsync(operatorReview.CarId, carr);
                     await _operatorReviewDataStore.CreateOperatorReview(operatorReview);
                     return RedirectToAction(nameof(PersonalIndex));
                 }
             }
-
-            var drivers = await GETDrivers();
-            var cars = await GETCars();
-            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, null, 1);
-            var oilMarks = response.Data.Select(r => r.OilMarks).Distinct().ToList();
-
-            ViewBag.OilMarks = new SelectList(oilMarks);
-            ViewBag.Drivers = new SelectList(drivers, "Value", "Text");
-            ViewBag.Cars = new SelectList(cars, "Value", "Text");
 
             return View(operatorReview);
         }

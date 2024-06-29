@@ -125,13 +125,10 @@ namespace CheckDrive.Web.Controllers
                     ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
                     ViewBag.Cars = new SelectList(cars, "Value", "Text", carId);
 
-                    var selectedDriverName = drivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
-                    ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
-                    ViewBag.SelectedDriverId = driverId;
-
-                    var selectedCar = cars.FirstOrDefault(c => c.Value == carId.ToString())?.Text;
-                    ViewBag.SelectedCar = selectedCar ?? string.Empty;
-                    ViewBag.SelectedCarId = carId;
+                    ViewBag.DriverId = driverId;
+                    ViewBag.CarId = carId;
+                    ViewBag.SelectedDriverName = drivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text ?? string.Empty;
+                    ViewBag.SelectedCar = cars.FirstOrDefault(c => c.Value == carId.ToString())?.Text ?? string.Empty;
 
                     var model = new MechanicAcceptanceForCreateDto
                     {
@@ -146,8 +143,6 @@ namespace CheckDrive.Web.Controllers
 
             return NotFound("Mechanic not found for the specified account.");
         }
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -184,6 +179,7 @@ namespace CheckDrive.Web.Controllers
 
             return View(mechanicAcceptanceForCreateDto);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
