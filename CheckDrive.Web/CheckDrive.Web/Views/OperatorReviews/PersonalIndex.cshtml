@@ -1,0 +1,223 @@
+﻿@model IEnumerable<CheckDrive.ApiContracts.OperatorReview.OperatorReviewDto>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+
+@{
+    ViewData["Title"] = "PersonalIndex";
+    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+}
+<div class="container-fluid py-2 px-4 d-flex justify-content-end">
+    <div class="d-flex align-items-center">
+        <div class="dropdown">
+            <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: white; border-color: black;">
+                <i class="fa-solid fa-user" style="background-color: white; color: black;"></i>
+                <i class="bi bi-caret-down-fill" style="background-color:white; color:black"></i>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" style="color: red" href="@Url.Action("Login", "Auth")">Profildan Chiqish</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<form asp-controller="OperatorReviews" asp-action="PersonalIndex">
+    <div class="container mt-5">
+        <div class="row justify-content-between align-items-center mb-4">
+            <!-- Search -->
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input type="text" class="form-control rounded-left" placeholder="Haydovchini kiriting ..." name="searchString" value="@ViewBag.SearchString">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i> Qidirish
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- LogOut Link -->
+            <div class="col-md-4 d-flex justify-content-end">
+                <a class="btn btn-success shadow" href="@Url.Action("Create", "OperatorReviews")">
+                    <i class="fa fa-plus"></i> Yaratish
+                </a>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover shadow">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Haydovshi F.I.</th>
+                                <th class="text-center">Operator F.I.</th>
+                                <th class="text-center">Moshina markasi</th>
+                                <th class="text-center">Moshina raqami</th>
+                                <th class="text-center">Yoqilg`i sig`imi</th>
+                                <th class="text-center">Yoqilg`i qoldig`i</th>
+                                <th class="text-center">Quyilgan yoqilg`i miqdori</th>
+                                <th class="text-center">Yoqilg`i Markasi</th>
+                                <th class="text-center">Yoqilg`i berildimi?</th>
+                                <th class="text-center comments-column">Izoh</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var review in Model)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        @if (!string.IsNullOrEmpty(review.OperatorName))
+                                        {
+                                            @review.DriverName
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Create"
+                                               asp-route-driverId="@review.DriverId"
+                                               asp-route-driverName="@review.DriverName"
+                                               asp-route-carId="@review.CarId"
+                                               asp-route-carModel="@review.CarModel"
+                                               asp-route-fuelTankCapacity="@review.CarOilCapacity"
+                                               asp-route-remainingFuel="@review.CarOilRemainig">@review.DriverName</a>
+                                        }
+                                    </td>
+                                    <td class="text-center">@review.OperatorName</td>
+                                    <td class="text-center">@review.CarModel</td>
+                                    <td class="text-center">@review.CarNumber</td>
+                                    <td class="text-center">@review.CarOilCapacity</td>
+                                    <td class="text-center">@review.CarOilRemainig</td>
+                                    <td class="text-center">@review.OilAmount</td>
+                                    <td class="text-center">@review.OilMarks</td>
+                                    <td class="text-center">
+                                        @if (review.IsGiven == true)
+                                        {
+                                            <span class="badge bg-success shadow">Berildi</span>
+                                        }
+                                        else if (review.IsGiven == false)
+                                        {
+                                            <span class="badge bg-danger shadow">Berilmadi</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-empty shadow"></span>
+                                        }
+                                    </td>
+                                    <td class="text-center comments-column">@review.Comments</td>
+                                    <td class="text-center">@review.Status</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                @if (ViewBag.HasPreviousPage)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = 1 })" aria-label="First">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
+                                    </li>
+                                }
+                                @if (ViewBag.HasNextPage)
+                                {
+                                    <li class="page-item active">
+                                        <span class="page-link">@ViewBag.CurrentPage</span>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                        <div class="p-2">
+                            <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy ishchilar soni: @ViewBag.TotalCount)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style>
+    .badge {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .bg-success {
+        background-color: #28a745;
+    }
+
+    .bg-danger {
+        background-color: #dc3545;
+    }
+
+    .bg-empty {
+        background-color: gray;
+    }
+
+    .shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .table {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+        .table th, .table td {
+            vertical-align: middle !important;
+        }
+
+    .container {
+        margin-top: 30px;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+    .pagination {
+        justify-content: flex-end;
+    }
+
+    .shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-end {
+        text-align: end !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .mt-5 {
+        margin-top: 3rem !important;
+    }
+
+    .comments-column {
+        max-width: 250px;
+        word-wrap: break-word;
+        white-space: normal;
+    }
+</style>

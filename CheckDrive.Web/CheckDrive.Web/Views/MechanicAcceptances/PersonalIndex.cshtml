@@ -1,0 +1,196 @@
+﻿@model IEnumerable<CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+
+@{
+    ViewData["Title"] = "Mechanic Acceptances (Personal)";
+    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+}
+<div class="container-fluid py-2 px-4 d-flex justify-content-end">
+    <div class="d-flex align-items-center">
+        <div class="dropdown">
+            <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: white; border-color: black;">
+                <i class="fa-solid fa-user" style="background-color: white; color: black;"></i>
+                <i class="bi bi-caret-down-fill" style="background-color:white; color:black"></i>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" style="color: red" href="@Url.Action("Login", "Auth")">Profildan Chiqish</a></li>
+                <li><a class="dropdown-item" style="color: darkblue" href="@Url.Action("PersonalIndex", "MechanicHandovers")">Mexanik(Qabul qiluvchi)</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<form method="get" action="@Url.Action("PersonalIndex")">
+    <div class="container mt-5">
+        <div class="row justify-content-between align-items-center mb-4">
+            <!-- Search -->
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input type="text" class="form-control rounded-left" placeholder="Haydovchini kiriting ..." name="searchString" value="@ViewBag.SearchString">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i> Qidirish
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-end">
+                <a class="btn btn-success shadow" href="@Url.Action("Create", "MechanicAcceptances")">
+                    <i class="fa fa-plus"></i> Yaratish
+                </a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover paper-shadow">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 10%">Haydovchi F.I</th>
+                        <th scope="col" style="width: 10%">Mexanik F.I</th>
+                        <th scope="col" style="width: 15%">Mashina</th>
+                        <th scope="col" style="width: 10%">Qabul qilish</th>
+                        <th scope="col" style="width: 10%">Qabul qilish masofasi</th>
+                        <th scope="col" style="width: 15%">Izoh</th>
+                        <th scope="col" style="width: 10%">Sana</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center vertical-align-middle">
+                                    @if (!string.IsNullOrEmpty(item.MechanicName))
+                                    {
+                                        @item.DriverName
+                                    }
+                                    else
+                                    {
+                                        <a href="/MechanicAcceptances/Create?driverId=@item.DriverId&carName=@item.CarName">@item.DriverName</a>
+                                    }
+                                </td>
+                                <td>@item.MechanicName</td>
+                                <td>@item.CarName</td>
+                                <td>
+                                    @if (item.Date != null && item.Date.Value.Date == DateTime.Today)
+                                    {
+                                        @if ((bool)item.IsAccepted)
+                                        {
+                                            <span class="badge bg-success shadow">Qabul qilindi</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger shadow">Rad etildi</span>
+                                        }
+                                    }
+                                </td>
+                                <td>@item.Distance</td>
+                                <td>@item.Comments</td>
+                                <td>@item.Date?.ToString("dd/MM/yyyy")</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center">
+                                Maʼlumotlar mavjud emas
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-between align-items-center my-2">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        @if (ViewBag.HasPreviousPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = 1 })" aria-label="First">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
+                            </li>
+                        }
+                        @if (ViewBag.HasNextPage)
+                        {
+                            <li class="page-item active">
+                                <span class="page-link">@ViewBag.CurrentPage</span>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+                <div class="p-2">
+                    <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy ishchilar soni: @ViewBag.TotalCount)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style>
+    .badge {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .bg-success {
+        background-color: #28a745;
+    }
+
+    .bg-danger {
+        background-color: #dc3545;
+    }
+
+    .bg-secondary {
+        background-color: #6c757d;
+    }
+
+    .container {
+        margin-top: 30px;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+    .paper-shadow {
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .pagination {
+        justify-content: flex-end;
+    }
+
+    .shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .pagination .page-link {
+        margin-left: 5px;
+    }
+
+    .pagination .page-item.shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>

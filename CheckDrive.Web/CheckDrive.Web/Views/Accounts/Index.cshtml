@@ -1,0 +1,103 @@
+﻿@model CheckDrive.ApiContracts.Account.AccountDto
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Ishchilar</h2>
+
+<form asp-controller="Accounts" asp-action="Index">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <!-- Filter -->
+            <div class="col-md-2 mb-4">
+                <div class="input-group">
+                    <select class="form-control" name="roleId">
+                        @foreach (var role in ViewBag.Roles)
+                        {
+                            <option value="@role.Id" selected="@(role.Id == ViewBag.RoleId)">
+                                @role.Name
+                            </option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <!-- Search -->
+            <div class="col-md-4 ms-lg-3 mb-4">
+                <div class="input-group">
+                    <input type="text" class="form-control rounded-left" placeholder="Ishchini izlash..." name="searchString" value="@ViewBag.SearchString">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i> Qidirish
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Create -->
+            <div class="d-flex col-md mb-4 justify-content-end">
+                  <a class="btn btn-success ml" asp-action="create">
+                        <i class="fa fa-plus"></i> Yaratish
+                  </a>
+             </div>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-12">
+        <ejs-grid id="accounts-list"
+                  dataSource="@ViewBag.Accounts"
+                  gridLines="Vertical"
+                  allowSorting="true">
+            <e-grid-columns>
+                <e-grid-column headerText="Id" field="Id" field="Id" template="#template" typeof="Text"></e-grid-column>
+                <e-grid-column headerText="Ism" field="FirstName" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Familiya" field="LastName" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Telefon raqam" field="PhoneNumber" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Tug'ilgan yil" field="Bithdate" type="date" format="dd-MM-yyyy"></e-grid-column>
+                <e-grid-column headerText="Kasb" field="RoleName" typeof="text"></e-grid-column>
+            </e-grid-columns>
+        </ejs-grid>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center my-3">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            @if (ViewBag.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = 1 })" aria-label="First">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
+                </li>
+            }
+            @if (ViewBag.HasNextPage)
+            {
+                <li class="page-item active">
+                    <span class="page-link">@ViewBag.CurrentPage</span>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+    <div class="p-2">
+        <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy ishchilar soni: @ViewBag.TotalCount)</p>
+    </div>
+</div>
+
+<script id="template" type="text/x-template">
+    <div>
+        <a rel='nofollow' href="accounts/Details/${Id}">${Id}</a>
+    </div>
+</script>

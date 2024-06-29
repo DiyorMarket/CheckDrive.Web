@@ -1,0 +1,109 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    List<Object> menuItems = new List<Object>();
+
+    menuItems.Add(new
+    {
+        text = "Dashboard",
+        url = "/dashboard",
+        iconCss = "fa-solid fa-home",
+    });
+
+    menuItems.Add(new
+    {
+        text = "Ishchilar",
+        separator = true,
+    });
+
+    menuItems.Add(new
+    {
+        text = "Ishchilar",
+        iconCss = "fas fa-users",
+        url = "/accounts"
+    });
+
+    menuItems.Add(new
+    {
+        text = "Avtomobillar",
+        iconCss = "fas fa-car",
+        url = "/cars"
+    });
+
+    menuItems.Add(new
+    {
+        text = "Xizmat ko'rsatish",
+        separator = true,
+    });
+    menuItems.Add(new
+    {
+        text = "Doctor Ko'riklari",
+        iconCss = "fas fa-user-doctor",
+        url = "/doctorreviews"
+    });
+    menuItems.Add(new
+    {
+        text = "Mexanik(Beruvchi)",
+        iconCss = "fa-solid fa-user-gear",
+        url = "/mechanichandovers"
+    });
+    menuItems.Add(new
+    {
+        text = "Mexanik(Qabul qiluvchi)",
+        iconCss = "fa-solid fa-person-chalkboard",
+        url = "/mechanicacceptances"
+    });
+    menuItems.Add(new
+    {
+        text = "Operatorlar",
+        iconCss = "fa-solid fa-user-doctor",
+        url = "/OperatorReviews"
+    });
+    menuItems.Add(new
+    {
+        text = "Dispetcherlar",
+        iconCss = "fa-solid fa-person-chalkboard",
+        url = "/DispatcherReviews"
+    });
+
+}
+
+<ejs-sidebar id="sidebar" width="290px" enableDock dockSize="100px"
+             target=".dock-target" enableGestures="false">
+    <e-content-template>
+
+        <div class="logo-wrapper">
+            <div class="app-logo">
+                <img src='~/images/LogoCheakDrive.png' style="height: 50px; width:50px" />
+            </div>
+            <div class="w-100"></div>
+            <i id="sidebar-toggler" class="fa-solid"></i>
+        </div>
+
+        <div class="profile-wrapper">
+            <i class="fa-solid fa-user"></i>
+            <div class="titles d-flex flex-column ps-3">
+                <h6 class="mb-0" id="loginName">@ViewBag.User</h6>
+            </div>
+        </div>
+
+        <ejs-menu id="menu"
+                  items="menuItems"
+                  orientation="Vertical"
+                  hamburgerMode></ejs-menu>
+    </e-content-template>
+</ejs-sidebar>
+<script>
+    var userLoginName = "JohnDoe";
+
+    document.getElementById("loginName").innerText = userLoginName;
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        dockBar = document.getElementById('sidebar').ej2_instances[0];
+        document.getElementById('sidebar-toggler').onclick = function () {
+            dockBar.toggle();
+        };
+    });
+</script>
