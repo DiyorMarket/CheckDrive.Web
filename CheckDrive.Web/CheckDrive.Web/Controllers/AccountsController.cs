@@ -76,6 +76,8 @@ namespace CheckDrive.Web.Controllers
                 await _accountDataStore.CreateAccountAsync(account);
                 return RedirectToAction(nameof(Index));
             }
+            var roles = await GETRoles();
+            ViewBag.Roles = new SelectList(roles, "Id", "Name");
             return View(account);
         }
 

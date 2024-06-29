@@ -11,10 +11,14 @@ namespace CheckDrive.Web.Stores.DoctorReviews
     {
         private readonly ApiClient _api = api;
 
-        public async Task<GetDoctorReviewResponse> GetDoctorReviewsAsync(int? pageNumber, string? searchString, DateTime? date)
+        public async Task<GetDoctorReviewResponse> GetDoctorReviewsAsync(int? pageNumber, string? searchString, DateTime? date, int? roleId)
         {
             StringBuilder query = new("");
 
+            if (roleId != 0)
+            {
+                query.Append($"roleId={roleId}&");
+            }
             if (date is not null)
             {
                 query.Append($"date={date.Value.ToString("MM/dd/yyyy")}&");
