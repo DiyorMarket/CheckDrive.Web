@@ -33,7 +33,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
 
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, date);
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, date, 1);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -71,100 +71,10 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, null);
-            var operatorReviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null, searchString, null);
-            var carHandoversResponse = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
-            var carsResponse = await _carDataStore.GetCarsAsync(null, null);
 
-            var carsDict = carsResponse.Data.ToDictionary(c => c.Id, c => $"{c.Model} ({c.Number})");
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, null, 6);
 
-            var filteredOperatorReviews = operatorReviewsResponse.Data
-                .Where(dr => dr.Date.Value.Date == DateTime.Today)
-                .Where(dr => dr.IsGiven == true)
-                .ToList();
-
-            int pageSize = 10;
-            pageNumber = pageNumber ?? 1;
-
-            int totalCount = filteredOperatorReviews.Count;
-            int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-            bool hasPreviousPage = pageNumber > 1;
-            bool hasNextPage = pageNumber < totalPages;
-
-            var paginatedOperatorReviews = filteredOperatorReviews
-                .Skip((pageNumber.Value - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            var mechanicAcceptance = new List<MechanicAcceptanceDto>();
-
-            foreach (var operatorr in paginatedOperatorReviews)
-            {
-                var review = response.Data.FirstOrDefault(r => r.DriverId == operatorr.DriverId);
-                var carHandover = carHandoversResponse.Data.FirstOrDefault(ch => ch.DriverId == operatorr.DriverId && ch.Date.Date == DateTime.Today);
-
-                int carId = carHandover?.CarId ?? 0;
-                string carName = carId != 0 && carsDict.ContainsKey(carId) ? carsDict[carId] : string.Empty;
-
-                if (review != null)
-                {
-                    if (review.Date.HasValue && review.Date.Value.Date == DateTime.Today)
-                    {
-                        mechanicAcceptance.Add(new MechanicAcceptanceDto
-                        {
-                            DriverId = review.DriverId,
-                            DriverName = operatorr.DriverName,
-                            MechanicName = review.MechanicName,
-                            IsAccepted = review.IsAccepted,
-                            Distance = review.Distance,
-                            Comments = review.Comments,
-                            Date = review.Date,
-                            CarId = carId,
-                            CarName = carName
-                        });
-                    }
-                    else
-                    {
-                        mechanicAcceptance.Add(new MechanicAcceptanceDto
-                        {
-                            DriverId = operatorr.DriverId,
-                            DriverName = operatorr.DriverName,
-                            MechanicName = "",
-                            IsAccepted = false,
-                            Distance = 0,
-                            Comments = "",
-                            Date = null,
-                            CarId = carId,
-                            CarName = carName
-                        });
-                    }
-                }
-                else
-                {
-                    mechanicAcceptance.Add(new MechanicAcceptanceDto
-                    {
-                        DriverId = operatorr.DriverId,
-                        DriverName = operatorr.DriverName,
-                        MechanicName = "",
-                        IsAccepted = false,
-                        Distance = 0,
-                        Comments = "",
-                        Date = null,
-                        CarId = carId,
-                        CarName = carName
-                    });
-                }
-            }
-
-            ViewBag.PageSize = pageSize;
-            ViewBag.PageCount = totalPages;
-            ViewBag.TotalCount = totalCount;
-            ViewBag.CurrentPage = pageNumber;
-            ViewBag.HasPreviousPage = hasPreviousPage;
-            ViewBag.HasNextPage = hasNextPage;
-            ViewBag.SearchString = searchString;
-
-            return View(mechanicAcceptance);
+            return View(response.Data);
         }
         public async Task<IActionResult> Create(int? driverId, int? carId)
         {
@@ -172,7 +82,7 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null, null);
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null, null, 1);
             var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
 
             var accountIdStr = TempData["AccountId"] as string;

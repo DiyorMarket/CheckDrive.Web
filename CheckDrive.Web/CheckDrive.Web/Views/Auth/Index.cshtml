@@ -19,24 +19,27 @@
         body {
             background: linear-gradient(to bottom right, rgba(0,0,0,0.8), rgba(0,0,0,0.6)), url('your-background-image.jpg') no-repeat center center fixed;
             background-size: cover;
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
+            padding: 40px 60px;
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: #fff;
             margin: 0;
         }
 
         .card {
-            background: rgba(0, 0, 0, 0.8);
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 500px;
-            padding: 30px;
+            opacity: 0.9;
+            width: 550px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, .2);
+            backdrop-filter: blur(20px);
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
             color: #fff;
+            border-radius: 20px;
+            margin: 0 auto;
+            padding: 40px 20px;
         }
 
         .form-outline {
@@ -57,34 +60,27 @@
             }
 
         .input-group-text {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: #fff;
             cursor: pointer;
         }
 
         .btn-hover {
-            width: 100%;
-            font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-            cursor: pointer;
-            margin-top: 20px;
-            height: 50px;
-            text-align: center;
+            background-color: #fff;
             border: none;
-            background-size: 300% 100%;
+            color: #000;
+            transition: all 0.3s ease;
+            margin: 0 auto;
             border-radius: 50px;
-            transition: all .4s ease-in-out;
+            padding: 12px 30px;
+            display: block;
+            text-align: center;
         }
 
-            .btn-hover.color-6 {
-                background-image: linear-gradient(to right, #009245, #FCEE21, #00A8C5, #D9E021);
-                box-shadow: 0 4px 15px 0 rgba(83, 176, 57, 0.75);
+            .btn-hover:hover {
+                background-color: #e6e6e6; 
             }
 
         .text-danger {
-            font-size: 14px;
+            font-size: 12px;
             position: relative;
             top: -10px;
         }
@@ -108,8 +104,8 @@
 </head>
 <body>
     <div class="card">
-        <img src="~/images/Logo.png" class="logo" alt="logo">
-        <h4 class="card-title">Please login to your account</h4>
+        <img src="~/images/LogoCheakDrive.png" class="logo" alt="logo">
+        <h4 class="card-title">Akkauntingizni kiriting</h4>
         <form asp-action="Index" method="post">
             <div class="form-outline">
                 <input type="text" asp-for="Login" id="login" class="form-control" placeholder="Login" />
@@ -124,7 +120,7 @@
                 </div>
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn-hover color-6">Log in</button>
+            <button type="submit" class="btn-hover">Log in</button>
         </form>
     </div>
 

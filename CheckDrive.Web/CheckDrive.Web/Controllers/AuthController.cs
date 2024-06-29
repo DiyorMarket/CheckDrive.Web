@@ -38,9 +38,9 @@ namespace CheckDrive.Web.Controllers
                     case "1":
                         return RedirectToAction("Index", "Dashboard");
                     case "3":
-                        return RedirectToAction("Index", "PersonalDoctorReviews");
+                        return RedirectToAction("PersonalIndex", "DoctorReviews");
                     case "4":
-                        return RedirectToAction("Index", "PersonalOperatorReviews");
+                        return RedirectToAction("PersonalIndex", "OperatorReviews");
                     case "5":
                         return RedirectToAction("PersonalIndex", "DispatcherReviews");
                     case "6":
@@ -92,10 +92,10 @@ namespace CheckDrive.Web.Controllers
                         return RedirectToAction("Index", "Dashboard");
                     case "3":
                         TempData["AccountId"] = accountId;
-                        return RedirectToAction("Index", "PersonalDoctorReviews");
+                        return RedirectToAction("PersonalIndex", "DoctorReviews");
                     case "4":
                         TempData["AccountId"] = accountId;
-                        return RedirectToAction("Index", "PersonalOperatorReviews");
+                        return RedirectToAction("PersonalIndex", "OperatorReviews");
                     case "5":
                         TempData["AccountId"] = accountId;
                         return RedirectToAction("PersonalIndex", "DispatcherReviews");
