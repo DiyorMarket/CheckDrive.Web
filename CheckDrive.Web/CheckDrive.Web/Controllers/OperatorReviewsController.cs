@@ -66,8 +66,26 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _operatorReviewDataStore.CreateOperatorReview(operatorReview);
-                return RedirectToAction(nameof(Index));
+                operatorReview.Date = DateTime.Now;
+
+                await _carDataStore.UpdateCarAsync(operatorReview.CarId, carr);
+
+                double maxOilAmount = await GetMaxOilAmount(operatorReview.CarId);
+
+                if ((operatorReview.OilAmount < 0 && operatorReview.IsGiven == true) ||
+                    (operatorReview.OilAmount > 0 && operatorReview.IsGiven == false))
+                {
+                    ModelState.AddModelError("IsGiven", "Yoqilg`ini berib bermadim tugmasini bostingiz");
+                }
+                else if (operatorReview.OilAmount < 0 || operatorReview.OilAmount > maxOilAmount)
+                {
+                    ModelState.AddModelError("OilAmount", $"Oil amount must be between 0 and {maxOilAmount}.");
+                }
+                else
+                {
+                    await _operatorReviewDataStore.CreateOperatorReview(operatorReview);
+                    return RedirectToAction(nameof(PersonalIndex));
+                }
             }
             return View(operatorReview);
         }

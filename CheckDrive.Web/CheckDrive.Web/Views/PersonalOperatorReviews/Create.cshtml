@@ -94,7 +94,7 @@
                 <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
             </div>
             <div class="form-group mt-3 w-50">
-                <a asp-action="Index" class="btn btn-outline-info">
+                <a asp-action="PersonalIndex" class="btn btn-outline-info">
                     <i class="fa-solid fa-arrow-left-long"></i> Back
                 </a>
                 <button class="btn btn-outline-success" type="submit">
@@ -118,10 +118,10 @@
             var oilAmount = parseFloat(oilAmountInput.value);
             var isGiven = isGivenInput.checked;
 
-            if ((oilAmount === 0 && isGiven === true) ||
+            if ((oilAmount < 0 && isGiven === true) ||
                 (oilAmount > 0 && isGiven === false)) {
                 event.preventDefault();
-                alert('Siz yoqilgini 0 litr berib, berdim tugmasini bostingiz yoki\n Yoqilgini berib bermadim tugmasini bostingiz');
+                alert('Yoqilgini berib bermadim tugmasini bostingiz');
             } else if (oilAmount < 0 || oilAmount > maxOilAmount) {
                 event.preventDefault();
                 alert('Oil amount must be between 0 and ' + maxOilAmount);

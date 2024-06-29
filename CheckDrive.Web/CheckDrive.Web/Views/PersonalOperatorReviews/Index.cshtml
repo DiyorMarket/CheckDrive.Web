@@ -19,7 +19,7 @@
     </div>
 </div>
 
-<form asp-controller="PersonalDoctorReviews" asp-action="Index">
+<form asp-controller="OperatorReviews" asp-action="PersonalIndex">
     <div class="container mt-5">
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
@@ -35,7 +35,7 @@
             </div>
             <!-- LogOut Link -->
             <div class="col-md-4 d-flex justify-content-end">
-                <a class="btn btn-success shadow" href="@Url.Action("Create", "PersonalOperatorReviews")">
+                <a class="btn btn-success shadow" href="@Url.Action("Create", "OperatorReviews")">
                     <i class="fa fa-plus"></i> Yaratish
                 </a>
             </div>
