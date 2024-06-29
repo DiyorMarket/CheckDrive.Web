@@ -5,7 +5,7 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
 {
     public interface IMechanicAcceptanceDataStore
     {
-        Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync(int? pageNumber, string? searchString, DateTime? date);
+        Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync(int? pageNumber, string? searchString, DateTime? date, int? roleId);
         Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync();
         Task<MechanicAcceptanceDto> GetMechanicAcceptanceAsync(int id);
         Task<MechanicAcceptanceDto> CreateMechanicAcceptanceAsync(MechanicAcceptanceForCreateDto acceptanceForCreateDto);

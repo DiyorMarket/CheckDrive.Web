@@ -18,9 +18,13 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
         public async Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync(
             int? pageNumber,
             string? searchString,
-            DateTime? date)
+            DateTime? date,
+            int? roleId)
         {
             StringBuilder query = new("");
+
+            if (roleId != 0)
+                query.Append($"roleId={roleId}&");
 
             if (date is not null)
                 query.Append($"date={date.Value.ToString("MM/dd/yyyy")}&");
