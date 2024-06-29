@@ -161,7 +161,6 @@ namespace CheckDrive.Web.Controllers
             ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text");
             ViewBag.Operators = operators;
 
-            // Если driverId и carId не переданы, выбираем первого водителя из списка
             if (!driverId.HasValue && !carId.HasValue && filteredDrivers.Any())
             {
                 var firstDriverId = int.Parse(filteredDrivers.First().Value);
