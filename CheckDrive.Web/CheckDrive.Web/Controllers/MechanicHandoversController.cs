@@ -29,7 +29,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, date);
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, date, 1);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -66,89 +66,10 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, null);
-            var doctorReviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, searchString, null, 1);
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, null, 6);
 
-            var filteredDoctorReviews = doctorReviewsResponse.Data
-                .Where(dr => dr.Date.Date == DateTime.Today)
-                .Where(dr => dr.IsHealthy == true)
-                .ToList();
-
-            int pageSize = 10;
-            pageNumber = pageNumber ?? 1;
-
-            int totalCount = filteredDoctorReviews.Count;
-            int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-            bool hasPreviousPage = pageNumber > 1;
-            bool hasNextPage = pageNumber < totalPages;
-
-            var paginatedDoctorReviews = filteredDoctorReviews
-                .Skip((pageNumber.Value - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            var mechanicHandovers = new List<MechanicHandoverDto>();
-
-            foreach (var doctor in paginatedDoctorReviews)
-            {
-                var review = response.Data.FirstOrDefault(r => r.DriverId == doctor.DriverId);
-
-                if (review != null)
-                {
-                    if (review.Date.Date == DateTime.Today)
-                    {
-                        mechanicHandovers.Add(new MechanicHandoverDto
-                        {
-                            DriverId = review.DriverId,
-                            DriverName = doctor.DriverName,
-                            MechanicName = review.MechanicName,
-                            IsHanded = review.IsHanded,
-                            Distance = review.Distance,
-                            Comments = review.Comments,
-                            Date = review.Date
-                        });
-                    }
-                    else
-                    {
-                        mechanicHandovers.Add(new MechanicHandoverDto
-                        {
-                            DriverId = doctor.DriverId,
-                            DriverName = doctor.DriverName,
-                            MechanicName = "",
-                            IsHanded = false,
-                            Distance = 0,
-                            Comments = "",
-                            Date = DateTime.Today
-                        });
-                    }
-                }
-                else
-                {
-                    mechanicHandovers.Add(new MechanicHandoverDto
-                    {
-                        DriverId = doctor.DriverId,
-                        DriverName = doctor.DriverName,
-                        MechanicName = "",
-                        IsHanded = false,
-                        Distance = 0,
-                        Comments = "",
-                        Date = DateTime.Today
-                    });
-                }
-            }
-
-            ViewBag.PageSize = pageSize;
-            ViewBag.PageCount = totalPages;
-            ViewBag.TotalCount = totalCount;
-            ViewBag.CurrentPage = pageNumber;
-            ViewBag.HasPreviousPage = hasPreviousPage;
-            ViewBag.HasNextPage = hasNextPage;
-            ViewBag.SearchString = searchString;
-
-            return View(mechanicHandovers);
+            return View(response.Data);
         }
-
-
 
         public async Task<IActionResult> Create(int? driverId)
         {

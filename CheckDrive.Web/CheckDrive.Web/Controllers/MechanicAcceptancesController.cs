@@ -30,7 +30,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
 
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, date);
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, date, 1);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -68,85 +68,9 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, null);
-            var operatorReviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(null, searchString, null);
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, null, 6);
 
-            var filteredOperatorReviews = operatorReviewsResponse.Data
-                .Where(dr => dr.Date.Value.Date == DateTime.Today)
-                .Where(dr => dr.IsGiven == true)
-                .ToList();
-
-            int pageSize = 10;
-            pageNumber = pageNumber ?? 1;
-
-            int totalCount = filteredOperatorReviews.Count;
-            int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-            bool hasPreviousPage = pageNumber > 1;
-            bool hasNextPage = pageNumber < totalPages;
-
-            var paginatedOperatorReviews = filteredOperatorReviews
-                .Skip((pageNumber.Value - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            var mechanicAcceptance = new List<MechanicAcceptanceDto>();
-
-            foreach (var operatorr in paginatedOperatorReviews)
-            {
-                var review = response.Data.FirstOrDefault(r => r.DriverId == operatorr.DriverId);
-                if (review != null)
-                {
-                    if (review.Date.HasValue && review.Date.Value.Date == DateTime.Today)
-                    {
-                        mechanicAcceptance.Add(new MechanicAcceptanceDto
-                        {
-                            DriverId = review.DriverId,
-                            DriverName = operatorr.DriverName,
-                            MechanicName = review.MechanicName,
-                            IsAccepted = review.IsAccepted,
-                            Distance = review.Distance,
-                            Comments = review.Comments,
-                            Date = review.Date
-                        });
-                    }
-                    else
-                    {
-                        mechanicAcceptance.Add(new MechanicAcceptanceDto
-                        {
-                            DriverId = operatorr.DriverId,
-                            DriverName = operatorr.DriverName,
-                            MechanicName = "",
-                            IsAccepted = false,
-                            Distance = 0,
-                            Comments = "",
-                            Date = null
-                        });
-                    }
-                }
-                else
-                {
-                    mechanicAcceptance.Add(new MechanicAcceptanceDto
-                    {
-                        DriverId = operatorr.DriverId,
-                        DriverName = operatorr.DriverName,
-                        MechanicName = "",
-                        IsAccepted = false,
-                        Distance = 0,
-                        Comments = "",
-                        Date = null
-                    });
-                }
-            }
-
-            ViewBag.PageSize = pageSize;
-            ViewBag.PageCount = totalPages;
-            ViewBag.TotalCount = totalCount;
-            ViewBag.CurrentPage = pageNumber;
-            ViewBag.HasPreviousPage = hasPreviousPage;
-            ViewBag.HasNextPage = hasNextPage;
-            ViewBag.SearchString = searchString;
-
-            return View(mechanicAcceptance);
+            return View(response.Data);
         }
 
         public async Task<IActionResult> Create(int? driverId)
@@ -155,7 +79,7 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null, null);
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null, null, 1);
             var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
 
             var accountIdStr = TempData["AccountId"] as string;
