@@ -52,7 +52,14 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> PersonalIndex(int? pageNumber, string? searchString)
         {
             var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, searchString, null, 3);
-            
+
+            ViewBag.PageSize = reviewsResponse.PageSize;
+            ViewBag.PageCount = reviewsResponse.TotalPages;
+            ViewBag.TotalCount = reviewsResponse.TotalCount;
+            ViewBag.CurrentPage = reviewsResponse.PageNumber;
+            ViewBag.HasPreviousPage = reviewsResponse.HasPreviousPage;
+            ViewBag.HasNextPage = reviewsResponse.HasNextPage;
+
             return View(reviewsResponse.Data);
         }
 

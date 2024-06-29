@@ -284,7 +284,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> GetCarByDriverId(int driverId)
         {
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null, null);
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null,null, null, null);
             var operatorr = operatorReviews.Data.FirstOrDefault(m => m.DriverId == driverId && m.Date.Value.Date == DateTime.Today);
 
             if (operatorr != null)
