@@ -1,4 +1,6 @@
 using CheckDrive.ApiContracts;
+using CheckDrive.ApiContracts.Car;
+using CheckDrive.ApiContracts.Mechanic;
 using CheckDrive.ApiContracts.MechanicAcceptance;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Drivers;
@@ -82,119 +84,132 @@ namespace CheckDrive.Web.Controllers
 
             return View(response.Data);
         }
-        public async Task<IActionResult> Create(int? driverId, int? carId, string carName)
+        public async Task<IActionResult> Create(int? driverId, string? driverName, int? carId, string? carModel)
         {
-            var mechanics = await GETMechanics();
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null,null, 1);
-            var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
+            var mechanic = new MechanicDto();
 
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
-
-            // Creating a mapping from drivers to cars
-            var driverCarMapping = drivers.ToDictionary(d => int.Parse(d.Value), d => cars.FirstOrDefault(c => c.Value == d.Value)?.Value);
-
             if (int.TryParse(accountIdStr, out int accountId))
             {
                 var mechanicResponse = await _mechanicDataStore.GetMechanics(accountId);
-                var mechanic = mechanicResponse.Data.FirstOrDefault();
-                if (mechanic != null)
+                mechanic = mechanicResponse.Data.FirstOrDefault();
+            }
+            var mechanics = new List<SelectListItem>
+            {
+                new SelectListItem { Value = mechanic.Id.ToString(), Text = $"{mechanic.FirstName} {mechanic.LastName}" }
+            };
+
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, null, 6);
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null, null, null);
+
+            var healthyDrivers = operatorReviews.Data
+                                  .Where(dr => dr.IsGiven == true && dr.Date.Value.Date == DateTime.Today)
+                                  .Select(dr => dr.DriverId)
+                                  .ToList();
+
+            var acceptedDrivers = response.Data
+                .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
+                .Select(ma => ma.DriverId)
+                .ToList();
+
+            var filteredDrivers = drivers
+                .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !acceptedDrivers.Contains(int.Parse(d.Value)))
+                .ToList();
+
+            ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text");
+            ViewBag.Mechanics = mechanics;
+
+            if (!driverId.HasValue && !carId.HasValue && filteredDrivers.Any())
+            {
+                var firstDriverId = int.Parse(filteredDrivers.First().Value);
+                var operatorReview = operatorReviews.Data.FirstOrDefault(m => m.DriverId == firstDriverId && m.Date.Value.Date == DateTime.Today);
+
+                if (operatorReview != null)
                 {
-                    var healthyDrivers = operatorReviews.Data
-                        .Where(dr => dr.IsGiven.HasValue && dr.IsGiven.Value && dr.Date.HasValue && dr.Date.Value.Date == DateTime.Today)
-                        .Select(dr => dr.DriverId)
-                        .ToList();
+                    carId = operatorReview.CarId;
+                    var car = await _carDataStore.GetCarAsync(operatorReview.CarId);
+                    carModel = car?.Model;
+                }
 
-                    var acceptedDrivers = mechanicAcceptances.Data
-                        .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
-                        .Select(ma => ma.DriverId)
-                        .ToList();
+                driverId = firstDriverId;
+            }
 
-                    var filteredDrivers = drivers
-                        .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !acceptedDrivers.Contains(int.Parse(d.Value)))
-                        .ToList();
+            ViewBag.Cars = new SelectList(cars, "Value", "Text", carId);
 
-                    if (driverId.HasValue && !carId.HasValue)
-                    {
-                        driverCarMapping.TryGetValue(driverId.Value, out var associatedCarId);
-                        if (int.TryParse(associatedCarId, out int parsedCarId))
-                        {
-                            if (parsedCarId != 1)
-                            {
-                                carId = parsedCarId - 1;
-                            }
-                            else
-                            {
+            var model = new MechanicAcceptanceForCreateDto();
 
-                                carId = parsedCarId;
-                            }
-                        }
-                    }
+            if (driverId.HasValue)
+            {
+                model.DriverId = driverId.Value;
+                ViewBag.SelectedDriverName = driverName;
+                ViewBag.DriverId = driverId.Value;
 
-                    ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
-                    ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
-
-                    if (string.IsNullOrEmpty(carName))
-                    {
-                        ViewBag.Cars = new SelectList(cars, "Value", "Text", carId);
-                        ViewBag.SelectedCar = cars.FirstOrDefault(c => c.Value == carId.ToString())?.Text;
-                    }
-                    else
-                    {
-                        ViewBag.Cars = carName;
-                        ViewBag.SelectedCarId = carId;
-                    }
-
-                    var selectedDriverName = filteredDrivers.FirstOrDefault(d => d.Value == driverId.ToString())?.Text;
-                    ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
-                    ViewBag.SelectedDriverId = driverId;
-
-                    var model = new MechanicAcceptanceForCreateDto
-                    {
-                        DriverId = driverId ?? 0,
-                        MechanicId = mechanic.Id,
-                        CarId = carId ?? 0
-                    };
-
-                    return View(model);
+                if (carId.HasValue)
+                {
+                    model.CarId = carId.Value;
+                    ViewBag.SelectedCar = $"{carModel}";
                 }
             }
 
-            return NotFound("Mechanic not found for the specified account.");
+            return View(model);
         }
+
+        public async Task<IActionResult> GetCarByDriverId(int driverId)
+        {
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null, null, null);
+            var operatorr = operatorReviews.Data.FirstOrDefault(m => m.DriverId == driverId && m.Date.HasValue && m.Date.Value.Date == DateTime.Today);
+
+            if (operatorr != null)
+            {
+                var carId = operatorr.CarId;
+                var car = await _carDataStore.GetCarAsync(carId);
+
+                if (car != null)
+                {
+                    return Json(new { success = true, car });
+                }
+            }
+
+            return Json(new { success = false });
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IsAccepted,Comments,MechanicId,Distance,CarId,DriverId")] MechanicAcceptanceForCreateDto mechanicAcceptanceForCreateDto)
+        public async Task<IActionResult> Create([Bind("IsAccepted,Comments,MechanicId,Distance,DriverId,CarId")] MechanicAcceptanceForCreateDto acceptance)
         {
+
             if (ModelState.IsValid)
             {
-                if (mechanicAcceptanceForCreateDto.IsAccepted == null)
+                acceptance.Date = DateTime.Now;
+                var car = _carDataStore.GetCarAsync(acceptance.CarId);
+                var carr = new CarForUpdateDto
                 {
-                    mechanicAcceptanceForCreateDto.IsAccepted = false;
-                }
+                    Id = acceptance.CarId,
+                    Color = car.Result.Color,
+                    Model = car.Result.Model,
+                    Number = car.Result.Number,
+                };
 
-                mechanicAcceptanceForCreateDto.Date = DateTime.Now;
-                await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
-                return RedirectToAction(nameof(PersonalIndex));
+
+                if ((acceptance.Distance < 0 && acceptance.IsAccepted == true) ||
+                    (acceptance.Distance > 0 && acceptance.IsAccepted == false))
+                {
+                    ModelState.AddModelError("IsAccepted", "Qabul qilish masofasini kiritmadingiz");
+                }
+                else
+                {
+                    await _carDataStore.UpdateCarAsync(acceptance.CarId, carr);
+                    await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(acceptance);
+                    return RedirectToAction(nameof(PersonalIndex));
+                }
             }
 
-            var mechanics = await GETMechanics();
-            var drivers = await GETDrivers();
-            var cars = await GETCars();
-            ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
-            ViewBag.Drivers = new SelectList(drivers, "Value", "Text", mechanicAcceptanceForCreateDto.DriverId);
-            ViewBag.Cars = new SelectList(cars, "Value", "Text", mechanicAcceptanceForCreateDto.CarId);
-
-            var selectedDriverName = drivers.FirstOrDefault(d => d.Value == mechanicAcceptanceForCreateDto.DriverId.ToString())?.Text;
-            ViewBag.SelectedDriverName = selectedDriverName ?? string.Empty;
-            ViewBag.SelectedDriverId = mechanicAcceptanceForCreateDto.DriverId;
-            ViewBag.SelectedCar = cars.FirstOrDefault(c => c.Value == mechanicAcceptanceForCreateDto.CarId.ToString())?.Text;
-
-            return View(mechanicAcceptanceForCreateDto);
+            return View(acceptance);
         }
 
 
@@ -293,19 +308,6 @@ namespace CheckDrive.Web.Controllers
                 })
                 .ToList();
             return drivers;
-        }
-
-        public async Task<IActionResult> GetCarByDriverId(int driverId)
-        {
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null,null, null, null);
-            var operatorr = operatorReviews.Data.FirstOrDefault(m => m.DriverId == driverId && m.Date.Value.Date == DateTime.Today);
-
-            if (operatorr != null)
-            {
-                var car = await _carDataStore.GetCarAsync(operatorr.CarId);
-                return Json(new { success = true, car });
-            }
-            return Json(new { success = false });
         }
     }
 }

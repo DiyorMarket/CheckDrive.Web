@@ -16,41 +16,28 @@
                 <input asp-for="IsAccepted" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                 <label asp-for="IsAccepted" class="form-check-label" for="flexSwitchCheckDefault">Qabul qilish</label>
             </div>
+
             <div class="form-group w-50">
                 <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
-                @if (ViewBag.SelectedDriverId != null && ViewBag.SelectedDriverId != 0)
-                {
-                    <input type="text" class="form-control" value="@ViewBag.SelectedDriverName" disabled />
-                    <input type="hidden" asp-for="DriverId" value="@ViewBag.SelectedDriverId" />
-                }
-                else
-                {
-                    @if (ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers.Items).Any())
+                <select asp-for="DriverId" class="form-control border border-dark" asp-items="@ViewBag.Drivers" id="driverDropdown">
+                    @if (ViewBag.SelectedDriverName != null)
                     {
-                        <select id="driverIdDropdown" class="form-control border border-dark" disabled>
-                            <option selected>Haydovchilar mavjud emas</option>
-                        </select>
+                        <option value="@Model.DriverId" selected>@ViewBag.SelectedDriverName</option>
                     }
-                    else
+                </select>
+            </div>
+
+            <div class="form-group w-50">
+                <label asp-for="CarId" class="control-label mt-2">Moshina</label>
+                <select asp-for="CarId" class="form-control border border-dark" id="carDropdown">
+                    @if (ViewBag.SelectedCar != null)
                     {
-                        <select asp-for="DriverId" id="driverIdDropdown" class="form-control border border-dark" asp-items="@(ViewBag.Drivers as SelectList)"></select>
+                        <option value="@Model.CarId" selected>@ViewBag.SelectedCar</option>
                     }
-                }
+                </select>
             </div>
             <div class="form-group w-50">
                 <input type="text" asp-for="MechanicId" class="form-control border border-dark d-none" />
-            </div>
-            <div class="form-group w-50">
-                <label asp-for="CarId" class="control-label mt-2">Mashina</label>
-                @if (ViewBag.Cars is SelectList)
-                {
-                    <select asp-for="CarId" class="form-control border border-dark" asp-items="@(ViewBag.Cars as SelectList)" value="@ViewBag.SelectedCarId" ></select>
-                }
-                else
-                {
-                    <input type="text" class="form-control" value="@ViewBag.Cars"  />
-                    <input type="hidden" asp-for="CarId" value="@ViewBag.SelectedCarId"  />
-                }
             </div>
             <div class="form-group w-50">
                 <label asp-for="Distance" class="control-label mt-2">Qabul qilish masofasi</label>
@@ -72,12 +59,39 @@
     </div>
 </div>
 
-@section Scripts {
-    <script type="text/javascript">
-        var shouldDisable = @ViewBag.SelectedDriverId != null ? "true" : "false";
-        if (shouldDisable === "true") {
-            document.getElementById("driverIdDropdown").setAttribute("disabled", "disabled");
-            document.getElementById("carIdDropdown").setAttribute("disabled", "disabled");
-        }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var driverDropdown = document.getElementById('driverDropdown');
+            var carDropdown = document.getElementById('carDropdown');
+            var selectedDriverId = @Model.DriverId;
+            var urlParams = new URLSearchParams(window.location.search);
+            var driverIdParam = urlParams.has('driverId');
+
+            if (driverIdParam) {
+                driverDropdown.disabled = true;
+                carDropdown.disabled = true;
+            } else if (selectedDriverId !== 0) {
+                driverDropdown.value = selectedDriverId;
+                carDropdown.disabled = true;
+            }
+
+            driverDropdown.addEventListener('change', function () {
+                var driverId = this.value;
+                $.ajax({
+                    url: '@Url.Action("GetCarByDriverId")',
+                    type: 'GET',
+                    data: { driverId: driverId },
+                    success: function (response) {
+                        if (response.success) {
+                            var car = response.car;
+                            carDropdown.innerHTML = `<option value="${car.id}" selected>${car.model} Sig'imi: ${car.fuelTankCapacity} litr, Qoldig'i: ${car.remainingFuel} litr</option>`;
+                            document.getElementById('CarId').value = car.id;
+                        } else {
+                            carDropdown.innerHTML = `<option value="" selected>No car available</option>`;
+                            document.getElementById('CarId').value = '';
+                        }
+                    }
+                });
+            });
+        });
     </script>
-}

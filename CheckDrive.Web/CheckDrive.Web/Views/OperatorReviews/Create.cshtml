@@ -39,44 +39,6 @@
                         }
                     </select>
                 </div>
-
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        var driverDropdown = document.getElementById('driverDropdown');
-                        var carDropdown = document.getElementById('carDropdown');
-                        var selectedDriverId = @Model.DriverId;
-                        var urlParams = new URLSearchParams(window.location.search);
-                        var driverIdParam = urlParams.has('driverId');
-
-                        if (driverIdParam) {
-                            driverDropdown.disabled = true;
-                            carDropdown.disabled = true;
-                        } else if (selectedDriverId !== 0) {
-                            driverDropdown.value = selectedDriverId;
-                            carDropdown.disabled = true;
-                        }
-
-                        driverDropdown.addEventListener('change', function () {
-                            var driverId = this.value;
-                            $.ajax({
-                                url: '@Url.Action("GetCarByDriverId")',
-                                type: 'GET',
-                                data: { driverId: driverId },
-                                success: function (response) {
-                                    if (response.success) {
-                                        var car = response.car;
-                                        carDropdown.innerHTML = `<option value="${car.id}" selected>${car.model} Sig'imi: ${car.fuelTankCapacity} litr, Qoldig'i: ${car.remainingFuel} litr</option>`;
-                                        document.getElementById('CarId').value = car.id;
-                                    } else {
-                                        carDropdown.innerHTML = `<option value="" selected>No car available</option>`;
-                                        document.getElementById('CarId').value = '';
-                                    }
-                                }
-                            });
-                        });
-                    });
-                </script>
-
             <div class="form-group w-50">
                 <select asp-for="OperatorId" class="form-control border border-dark d-none" asp-items="@ViewBag.Operators"></select>
             </div>
@@ -125,6 +87,43 @@
                     event.preventDefault();
                     alert('Oil amount must be between 0 and ' + maxOilAmount);
                 }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var driverDropdown = document.getElementById('driverDropdown');
+            var carDropdown = document.getElementById('carDropdown');
+            var selectedDriverId = @Model.DriverId;
+            var urlParams = new URLSearchParams(window.location.search);
+            var driverIdParam = urlParams.has('driverId');
+
+            if (driverIdParam) {
+                driverDropdown.disabled = true;
+                carDropdown.disabled = true;
+            } else if (selectedDriverId !== 0) {
+                driverDropdown.value = selectedDriverId;
+                carDropdown.disabled = true;
+            }
+
+            driverDropdown.addEventListener('change', function () {
+                var driverId = this.value;
+                $.ajax({
+                    url: '@Url.Action("GetCarByDriverId")',
+                    type: 'GET',
+                    data: { driverId: driverId },
+                    success: function (response) {
+                        if (response.success) {
+                            var car = response.car;
+                            carDropdown.innerHTML = `<option value="${car.id}" selected>${car.model} Sig'imi: ${car.fuelTankCapacity} litr, Qoldig'i: ${car.remainingFuel} litr</option>`;
+                            document.getElementById('CarId').value = car.id;
+                        } else {
+                            carDropdown.innerHTML = `<option value="" selected>No car available</option>`;
+                            document.getElementById('CarId').value = '';
+                        }
+                    }
+                });
             });
         });
     </script>

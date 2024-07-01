@@ -149,7 +149,7 @@ namespace CheckDrive.Web.Controllers
 
             if (driverId.HasValue)
             {
-                model.DriverId = driverId.Value;
+                model.DriverId = driverId.Value;    
                 ViewBag.SelectedDriverName = driverName;
                 ViewBag.DriverId = driverId.Value;
 
