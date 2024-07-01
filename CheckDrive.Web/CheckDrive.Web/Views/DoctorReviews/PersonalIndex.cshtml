@@ -25,7 +25,7 @@
             <!-- Search -->
             <div class="col-md-4">
                 <div class="input-group">
-                    <input type="text" class="form-control rounded-left" placeholder="Haydovchini kiriting ..." name="searchString" value="@ViewBag.SearchString">
+                    <input type="text" class="form-control rounded-left" placeholder="Haydovchini qidirish ..." name="searchString" value="@ViewBag.SearchString">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-search"></i> Qidirish
@@ -47,7 +47,7 @@
                     <table class="table table-bordered table-striped table-hover paper-shadow">
                         <thead>
                             <tr>
-                                <th class="text-center vertical-align-middle">Haydovshi F.I.</th>
+                                <th class="text-center vertical-align-middle">Haydovchi F.I.</th>
                                 <th class="text-center vertical-align-middle">Shifokor F.I.</th>
                                 <th class="text-center vertical-align-middle">Sog`lig`i</th>
                                 <th class="text-center vertical-align-middle">Izoh</th>
@@ -74,11 +74,11 @@
                                         {
                                             @if (review.IsHealthy == true)
                                             {
-                                                <span class="badge bg-success shadow">Healthy</span>
+                                                <span class="badge bg-success shadow">Sog`lom</span>
                                             }
                                             else if (review.IsHealthy == false)
                                             {
-                                                <span class="badge bg-danger shadow">Sick</span>
+                                                <span class="badge bg-danger shadow">Kasal</span>
                                             }
                                         }
                                     </td>
