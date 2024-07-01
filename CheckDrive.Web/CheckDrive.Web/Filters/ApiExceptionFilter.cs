@@ -11,16 +11,12 @@ namespace CheckDrive.Web.Filters
             if (context.Exception is ApiException exception)
             {
                 int statusCode = (int)exception.StatusCode;
-                if (statusCode == 401)
-                {
-                    context.Result = new RedirectToActionResult("Index", "Auth", new { statusCode });
-                }
-
+                context.Result = new RedirectToActionResult("ErrorPage", "Error", new { statusCode });
                 context.ExceptionHandled = true;
             }
             else
             {
-                context.Result = new RedirectToActionResult("Error", "Home", new { statusCode = 500 });
+                context.Result = new RedirectToActionResult("ErrorPage", "Error", new { statusCode = 500 });
                 context.ExceptionHandled = true;
             }
         }
