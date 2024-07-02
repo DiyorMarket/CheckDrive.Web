@@ -94,7 +94,6 @@ namespace CheckDrive.Web.Controllers
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
 
-            // Creating a mapping from drivers to cars
             var driverCarMapping = drivers.ToDictionary(d => int.Parse(d.Value), d => cars.FirstOrDefault(c => c.Value == d.Value)?.Value);
 
             if (int.TryParse(accountIdStr, out int accountId))
