@@ -91,15 +91,11 @@
                 var distance = document.getElementById('Distance').value;
                 var isGivenInput = document.getElementById('flexSwitchCheckDefault');
                 var isGiven = isGivenInput.checked;
+
                 var distanceValue = Number(distance);
 
-                var driversAvailable = document.getElementById('driversAvailable').value;
 
-                if (driversAvailable === "false") {
-                    event.preventDefault();
-                    alert("Haydovchilar mavjud emas!");
-                }
-                else if (distanceValue === 0 && isGiven) {
+                if (distanceValue === 0 && isGiven) {
                     event.preventDefault();
                     alert("Boshlang'ich masofani kiritishingiz shart!");
                 }
