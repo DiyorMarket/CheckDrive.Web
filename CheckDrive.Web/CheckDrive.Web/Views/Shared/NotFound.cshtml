@@ -31,14 +31,16 @@
             right: 20px;
         }
 
-            .button-container button {
+            .button-container a {
+                display: inline-block;
                 padding: 10px 20px;
                 font-size: 16px;
                 cursor: pointer;
                 background-color: #F62D2D;
                 color: white;
+                text-decoration: none;
                 border: none;
-                border-radius: 20px;
+                border-radius: 5px;
             }
     </style>
 </head>
@@ -47,7 +49,7 @@
         <img src="~/images/NotFound.png" alt="Description of the image" />
     </div>
     <div class="button-container">
-        <button href="@Url.Action("Dashboard", "Index")">Bosh Sahifaga Qaytish</button>
+        <a href="@Url.Action("Index", "Dashboard")">Bosh Sahifaga Qaytish</a>
     </div>
 </body>
 </html>
