@@ -4,7 +4,6 @@
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
 }
-
 <div class="row mt-custom">
     <div class="col-md-4 offset-md-1 mt-5">
         <h4>Ro'yxatga olish</h4>
@@ -69,7 +68,11 @@
                 <a asp-action="PersonalIndex" class="btn btn-info">
                     <i class="fa-solid fa-arrow-left-long"></i> Orqaga
                 </a>
-                <button class="btn btn-success" type="submit">
+                @{
+                    bool disableSubmit = ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers.Items).Any();
+                    string submitButtonClass = disableSubmit ? "btn btn-success disabled" : "btn btn-success";
+                }
+                <button class="@submitButtonClass" type="submit" id="submitButton">
                     <i class="fa fa-plus"></i> Yaratish
                 </button>
             </div>
@@ -79,7 +82,7 @@
 
 @section Scripts {
     <script type="text/javascript">
-        var shouldDisable = @((bool)(ViewBag.SelectedDriverId != null)).ToString().ToLower();
+        var shouldDisable = @((bool)(ViewBag.SelectedDriverId != null)).ToString().toLowerCase();
         if (shouldDisable === "true") {
             document.getElementById("driverIdDropdown").setAttribute("disabled", "disabled");
         }
@@ -94,12 +97,10 @@
 
                 var distanceValue = Number(distance);
 
-
                 if (distanceValue === 0 && isGiven) {
                     event.preventDefault();
                     alert("Boshlang'ich masofani kiritishingiz shart!");
-                }
-                else if (distanceValue > 0 && !isGiven) {
+                } else if (distanceValue > 0 && !isGiven) {
                     event.preventDefault();
                     alert("Boshlang'ich masofani kiritib topshirish tugmasini surmadingiz!");
                 }
