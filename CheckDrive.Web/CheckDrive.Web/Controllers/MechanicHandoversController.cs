@@ -1,5 +1,6 @@
 ﻿using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.MechanicHandover;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Drivers;
@@ -146,6 +147,7 @@ namespace CheckDrive.Web.Controllers
                 }
 
                 mechanicHandoverForCreateDto.Date = DateTime.Now;
+                mechanicHandoverForCreateDto.Status = mechanicHandoverForCreateDto.IsHanded ? StatusForDto.Pending : StatusForDto.Rejected;
                 await _mechanicHandoverDataStore.CreateMechanicHandoverAsync(mechanicHandoverForCreateDto);
                 return RedirectToAction(nameof(PersonalIndex));
             }
