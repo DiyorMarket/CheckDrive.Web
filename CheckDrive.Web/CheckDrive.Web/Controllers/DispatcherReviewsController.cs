@@ -71,9 +71,9 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> PersonalIndex(int? pagenumber)
+        public async Task<IActionResult> PersonalIndex(int? pagenumber, string? searchString)
         {
-            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, null, null, 5);
+            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, null, 5);
 
             ViewBag.PageSize = reviewsResponse.PageSize;
             ViewBag.PageCount = reviewsResponse.TotalPages;
