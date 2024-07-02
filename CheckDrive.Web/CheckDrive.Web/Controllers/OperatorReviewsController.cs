@@ -49,11 +49,12 @@ namespace CheckDrive.Web.Controllers
                 r.Comments,
                 Status = ((StatusForDto)r.Status) switch
                 {
-                    StatusForDto.Pending => "Pending",
-                    StatusForDto.Completed => "Completed",
-                    StatusForDto.Rejected => "Rejected",
-                    StatusForDto.Unassigned => "Unassigned",
-                    _ => "Unknown Status"
+                    StatusForDto.Pending => "Kutilmoqda",
+                    StatusForDto.Completed => "Yakunlangan",
+                    StatusForDto.Rejected => "Rad etilgan",
+                    StatusForDto.Unassigned => "Yaratilmagan",
+                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
+                    _ => "No`malum holat"
                 }
             }).ToList();
 
@@ -185,23 +186,22 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OilAmount,Comments,Status,Date,OperatorId,DriverId,CarId,OilMarks,IsGiven")] OperatorReviewForCreateDto operatorReview)
         {
-            
             if (ModelState.IsValid)
             {
                 operatorReview.Date = DateTime.Now;
-                var car = _carDataStore.GetCarAsync(operatorReview.CarId);
+                var car = await _carDataStore.GetCarAsync(operatorReview.CarId);
                 var carr = new CarForUpdateDto
                 {
                     Id = operatorReview.CarId,
-                    Color = car.Result.Color,
-                    FuelTankCapacity = car.Result.FuelTankCapacity,
-                    ManufacturedYear = car.Result.ManufacturedYear,
-                    MeduimFuelConsumption = car.Result.MeduimFuelConsumption,
-                    Model = car.Result.Model,
-                    Number = car.Result.Number,
-                    RemainingFuel = car.Result.RemainingFuel + operatorReview.OilAmount,
+                    Color = car.Color,
+                    FuelTankCapacity = car.FuelTankCapacity,
+                    ManufacturedYear = car.ManufacturedYear,
+                    MeduimFuelConsumption = car.MeduimFuelConsumption,
+                    Model = car.Model,
+                    Number = car.Number,
+                    RemainingFuel = car.RemainingFuel + operatorReview.OilAmount,
                 };
-                
+
                 double maxOilAmount = await GetMaxOilAmount(operatorReview.CarId);
 
                 if ((operatorReview.OilAmount < 0 && operatorReview.IsGiven == true) ||
@@ -215,6 +215,7 @@ namespace CheckDrive.Web.Controllers
                 }
                 else
                 {
+                    operatorReview.Status = operatorReview.IsGiven ? StatusForDto.Pending : StatusForDto.Rejected;
                     await _carDataStore.UpdateCarAsync(operatorReview.CarId, carr);
                     await _operatorReviewDataStore.CreateOperatorReview(operatorReview);
                     return RedirectToAction(nameof(PersonalIndex));

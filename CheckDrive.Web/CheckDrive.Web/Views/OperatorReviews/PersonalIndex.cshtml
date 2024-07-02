@@ -57,7 +57,7 @@
                                 <th class="text-center">Yoqilg`i Markasi</th>
                                 <th class="text-center">Yoqilg`i berildimi?</th>
                                 <th class="text-center comments-column">Izoh</th>
-                                <th class="text-center">Status</th>
+                                <th class="text-center">Holati</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -102,7 +102,32 @@
                                         }
                                     </td>
                                     <td class="text-center comments-column">@review.Comments</td>
-                                    <td class="text-center">@review.Status</td>
+                                    <td class="text-center">
+                                        @if(review.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
+                                        {
+                                            <span class="badge bg-pending shadow">Kutilmoqda</span>
+                                        }
+                                        else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Unassigned)
+                                        {
+                                            <span class="badge bg-unassigned shadow">Yaratilmagan</span>
+                                        }
+                                        else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Completed)
+                                        {
+                                            <span class="badge bg-success shadow">Yakunlangan</span>
+                                        }
+                                        else if (review.Status == CheckDrive.ApiContracts.StatusForDto.RejectedByDriver)
+                                        {
+                                            <span class="badge bg-danger shadow">Haydovchi tomonidan rad etilgan</span>
+                                        }
+                                        else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Rejected)
+                                        {
+                                            <span class="badge bg-danger shadow">Rad etilgan</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-empty shadow">No`malum holat</span>
+                                        }
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -152,6 +177,14 @@
         font-size: 0.8rem;
         padding: 5px 10px;
         border-radius: 5px;
+    }
+
+    .bg-pending{
+        background-color: orange;
+    }
+
+    .bg-unassigned{
+        background-color: slategray;
     }
 
     .bg-success {

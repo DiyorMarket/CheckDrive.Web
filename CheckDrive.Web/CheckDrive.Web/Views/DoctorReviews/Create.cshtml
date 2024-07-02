@@ -35,9 +35,9 @@
                 }
             </div>
             <div class="form-check form-switch mt-3">
-                <input asp-for="IsHealthy" class="form-check-input is-invalid" type="checkbox" role="switch" id="flexSwitchCheckDefault" value="true">
+                <input asp-for="IsHealthy" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" value="true">
                 <label asp-for="IsHealthy" class="form-check-label" for="flexSwitchCheckDefault">Sog`ligi</label>
-                <div id="checkboxError" class="text-danger mt-2"></div>
+                <div id="checkboxError" class="text-danger d-none"></div>
             </div>
             <div class="form-group w-50">
                 <select asp-for="DoctorId" class="form-control border border-dark d-none" asp-items="@ViewBag.Doctors"></select>
@@ -71,9 +71,8 @@
             checkboxError.classList.remove('d-none');
         }
 
-        form.addEventListener('submit', function (event) {
+        form.addEventListener('submit', function () {
             if (!checkbox.checked) {
-                event.preventDefault();  // Prevent form submission
                 checkbox.classList.add('is-invalid');  // Add invalid class
                 checkboxError.classList.remove('d-none');  // Show error message
             } else {
