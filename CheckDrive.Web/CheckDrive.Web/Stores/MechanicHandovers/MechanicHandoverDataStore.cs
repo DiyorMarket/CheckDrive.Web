@@ -19,9 +19,13 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
             int? pageNumber,
             string? searchString,
             DateTime? date,
+            bool? isHanded,
             int? roleId)
         {
             StringBuilder query = new("");
+
+            if (isHanded is not null)
+                query.Append($"isHealthy={isHanded}&");
 
             if (roleId != 0)
                 query.Append($"roleId={roleId}&");

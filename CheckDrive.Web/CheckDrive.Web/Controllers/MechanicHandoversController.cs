@@ -29,7 +29,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, date, 1);
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, date, null, 1);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -66,7 +66,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, null, 6);
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, null, null, 6);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -80,12 +80,11 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Create(int? driverId)
         {
-            var mechanics = await GETMechanics();
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, null, 1);
-            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today, true, 1);
+            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, DateTime.Today, true, 1);
 
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
@@ -97,12 +96,10 @@ namespace CheckDrive.Web.Controllers
                 if (mechanic != null)
                 {
                     var healthyDrivers = doctorReviews.Data
-                        .Where(dr => dr.IsHealthy.HasValue && dr.IsHealthy.Value && dr.Date.Date == DateTime.Today)
                         .Select(dr => dr.DriverId)
                         .ToList();
 
                     var handedDrivers = mechanicHandovers.Data
-                        .Where(ma => ma.Date.Date == DateTime.Today)
                         .Select(ma => ma.DriverId)
                         .ToList();
 
@@ -111,15 +108,12 @@ namespace CheckDrive.Web.Controllers
                         .ToList();
 
                     var usedCarIds = mechanicHandovers.Data
-                        .Where(mh => mh.Date.Date == DateTime.Today && mh.IsHanded == true)
                         .Select(mh => mh.CarId)
                         .ToList();
 
                     var filteredCars = cars
                         .Where(c => !usedCarIds.Contains(int.Parse(c.Value)))
                         .ToList();
-
-                    ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
                     ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
                     ViewBag.Cars = new SelectList(filteredCars, "Value", "Text");
 
@@ -150,10 +144,8 @@ namespace CheckDrive.Web.Controllers
                 return RedirectToAction(nameof(PersonalIndex));
             }
 
-            var mechanics = await GETMechanics();
             var drivers = await GETDrivers();
             var cars = await GETCars();
-            ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
             ViewBag.Drivers = new SelectList(drivers, "Value", "Text", mechanicHandoverForCreateDto.DriverId);
             ViewBag.Cars = new SelectList(cars, "Value", "Text");
 
@@ -226,18 +218,6 @@ namespace CheckDrive.Web.Controllers
             return mechanicAcceptance != null;
         }
 
-        private async Task<List<SelectListItem>> GETMechanics()
-        {
-            var mechanicResponse = await _mechanicDataStore.GetMechanicsAsync();
-            var mechanics = mechanicResponse.Data
-                .Select(d => new SelectListItem
-                {
-                    Value = d.Id.ToString(),
-                    Text = $"{d.FirstName} {d.LastName}"
-                })
-                .ToList();
-            return mechanics;
-        }
         private async Task<List<SelectListItem>> GETCars()
         {
             var carResponse = await _carDataStore.GetCarsAsync(null, null);
