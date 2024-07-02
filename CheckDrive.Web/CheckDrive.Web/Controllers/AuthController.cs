@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Stores.User;
+﻿using CheckDrive.ApiContracts.Account;
+using CheckDrive.Web.Stores.User;
 using CheckDrive.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
@@ -52,14 +53,14 @@ namespace CheckDrive.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(LoginViewModel loginViewModel)
+        public async Task<IActionResult> Index(AccountForLoginDto loginViewModel)
         {
             if (!ModelState.IsValid)
             {
                 return View(loginViewModel);
             }
 
-            var user = new LoginViewModel
+            var user = new AccountForLoginDto
             {
                 Login = loginViewModel.Login,
                 Password = loginViewModel.Password,

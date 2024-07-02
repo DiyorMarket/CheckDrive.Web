@@ -117,10 +117,10 @@
                 var oilAmount = parseFloat(oilAmountInput.value);
                 var isGiven = isGivenInput.checked;
 
-                if ((oilAmount === 0 && isGiven === true) ||
+                if ((oilAmount < 0 && isGiven === true) ||
                     (oilAmount > 0 && isGiven === false)) {
                     event.preventDefault();
-                    alert('Siz yoqilgini 0 litr berib, berdim tugmasini bostingiz yoki\n Yoqilgini berib bermadim tugmasini bostingiz');
+                    alert('Yoqilgini berib bermadim tugmasini bostingiz');
                 } else if (oilAmount < 0 || oilAmount > maxOilAmount) {
                     event.preventDefault();
                     alert('Oil amount must be between 0 and ' + maxOilAmount);

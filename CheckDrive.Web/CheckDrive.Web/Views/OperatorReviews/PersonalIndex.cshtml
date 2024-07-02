@@ -19,7 +19,7 @@
     </div>
 </div>
 
-<form asp-controller="PersonalDoctorReviews" asp-action="Index">
+<form asp-controller="OperatorReviews" asp-action="PersonalIndex">
     <div class="container mt-5">
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
@@ -28,14 +28,14 @@
                     <input type="text" class="form-control rounded-left" placeholder="Haydovchini kiriting ..." name="searchString" value="@ViewBag.SearchString">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-search"></i>
+                            <i class="fa fa-search"></i> Qidirish
                         </button>
                     </div>
                 </div>
             </div>
             <!-- LogOut Link -->
             <div class="col-md-4 d-flex justify-content-end">
-                <a class="btn btn-success shadow" href="@Url.Action("Create", "PersonalOperatorReviews")">
+                <a class="btn btn-success shadow" href="@Url.Action("Create", "OperatorReviews")">
                     <i class="fa fa-plus"></i> Yaratish
                 </a>
             </div>
@@ -107,6 +107,40 @@
                             }
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                @if (ViewBag.HasPreviousPage)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = 1 })" aria-label="First">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
+                                    </li>
+                                }
+                                @if (ViewBag.HasNextPage)
+                                {
+                                    <li class="page-item active">
+                                        <span class="page-link">@ViewBag.CurrentPage</span>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                        <div class="p-2">
+                            <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy ishchilar soni: @ViewBag.TotalCount)</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

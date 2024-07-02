@@ -1,7 +1,4 @@
-﻿using CheckDrive.ApiContracts.Role;
-using CheckDrive.DTOs.Role;
-using CheckDrive.Web.Models;
-using CheckDrive.Web.Stores.Roles;
+﻿using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers

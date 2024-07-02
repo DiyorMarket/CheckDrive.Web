@@ -11,26 +11,24 @@ namespace CheckDrive.Web.Stores.DoctorReviews
     {
         private readonly ApiClient _api = api;
 
-        public async Task<GetDoctorReviewResponse> GetDoctorReviewsAsync(int? pageNumber, string? searchString, DateTime? date, int? roleId)
+        public async Task<GetDoctorReviewResponse> GetDoctorReviewsAsync(int? pageNumber, string? searchString, DateTime? date, bool? isHealthy, int? roleId)
         {
             StringBuilder query = new("");
 
+            if(isHealthy is not null)
+                query.Append($"isHealthy={isHealthy}&");
+
             if (roleId != 0)
-            {
                 query.Append($"roleId={roleId}&");
-            }
+
             if (date is not null)
-            {
                 query.Append($"date={date.Value.ToString("MM/dd/yyyy")}&");
-            }
+
             if (!string.IsNullOrWhiteSpace(searchString))
-            {
                 query.Append($"searchString={searchString}&");
-            }
+
             if (pageNumber != null)
-            {
                 query.Append($"pageNumber={pageNumber}");
-            }
 
             var response = await _api.GetAsync("doctors/reviews?OrderBy=datedesc&" + query.ToString());
 
