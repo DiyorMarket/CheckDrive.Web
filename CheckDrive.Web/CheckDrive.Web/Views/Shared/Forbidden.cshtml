@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Forbidden";
+    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            position: relative;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            text-align: center;
+            padding-top: 50px; /* Add 50 pixels padding at the top */
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .button-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+
+            .button-container a {
+                display: inline-block;
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+                background-color: #F62D2D;
+                color: white;
+                text-decoration: none;
+                border: none;
+                border-radius: 5px;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="~/images/Forbidden.png"/>
+    </div>
+    <div class="button-container">
+        <a href="@Url.Action("Login", "Auth")">Login</a>
+    </div>
+</body>
+</html>
