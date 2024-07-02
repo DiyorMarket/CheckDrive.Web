@@ -33,7 +33,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
 
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, date, 1);
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, date, null, 1);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -71,7 +71,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, null, 6);
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, null, null, 6);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -88,13 +88,12 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null,null, 1);
-            var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync();
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today, true, 1);
+            var mechanicAcceptances = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today, true, 1);
 
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
 
-            // Creating a mapping from drivers to cars
             var driverCarMapping = drivers.ToDictionary(d => int.Parse(d.Value), d => cars.FirstOrDefault(c => c.Value == d.Value)?.Value);
 
             if (int.TryParse(accountIdStr, out int accountId))
@@ -104,12 +103,10 @@ namespace CheckDrive.Web.Controllers
                 if (mechanic != null)
                 {
                     var healthyDrivers = operatorReviews.Data
-                        .Where(dr => dr.IsGiven.HasValue && dr.IsGiven.Value && dr.Date.HasValue && dr.Date.Value.Date == DateTime.Today)
                         .Select(dr => dr.DriverId)
                         .ToList();
 
                     var acceptedDrivers = mechanicAcceptances.Data
-                        .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
                         .Select(ma => ma.DriverId)
                         .ToList();
 
@@ -297,8 +294,8 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> GetCarByDriverId(int driverId)
         {
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null,null, null, null);
-            var operatorr = operatorReviews.Data.FirstOrDefault(m => m.DriverId == driverId && m.Date.Value.Date == DateTime.Today);
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null,null, DateTime.Today, true, 1);
+            var operatorr = operatorReviews.Data.FirstOrDefault(m => m.DriverId == driverId);
 
             if (operatorr != null)
             {
