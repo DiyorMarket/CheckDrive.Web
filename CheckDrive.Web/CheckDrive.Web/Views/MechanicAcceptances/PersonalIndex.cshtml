@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div class="col-md-4 text-end">
-                <a class="btn btn-success shadow" href="@Url.Action("Create", "MechanicAcceptances")">
+                <a class="btn btn-success shadow" href="@Url.Action("CreateByButton", "MechanicAcceptances")">
                     <i class="fa fa-plus"></i> Yaratish
                 </a>
             </div>
@@ -69,7 +69,7 @@
                                     }
                                     else
                                     {
-                                        <a href="/MechanicAcceptances/Create?driverId=@item.DriverId&carId=@item.CarId">@item.DriverName</a>
+                                        <a href="/MechanicAcceptances/CreateByLink?driverId=@item.DriverId&carId=@item.CarId&carName=@item.CarName&driverName=@item.DriverName">@item.DriverName</a>
                                     }
                                 </td>
                                 <td>@item.MechanicName</td>
