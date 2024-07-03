@@ -1,5 +1,6 @@
 using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.Car;
+using CheckDrive.ApiContracts.Driver;
 using CheckDrive.ApiContracts.Mechanic;
 using CheckDrive.ApiContracts.MechanicAcceptance;
 using CheckDrive.Web.Stores.Cars;
@@ -10,6 +11,7 @@ using CheckDrive.Web.Stores.Mechanics;
 using CheckDrive.Web.Stores.OperatorReviews;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Net;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -84,78 +86,33 @@ namespace CheckDrive.Web.Controllers
 
             return View(response.Data);
         }
-        public async Task<IActionResult> Create(int? driverId, string? driverName, int? carId, string? carModel)
+        public async Task<IActionResult> Create()
         {
-            var drivers = await GETDrivers();
-            var cars = await GETCars();
+            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Now, null, true);
+            var operatorItems = operatorResponse.Data;
+            var drivers = new List<DriverDto>();
 
-            var mechanic = new MechanicDto();
-
-            var accountIdStr = TempData["AccountId"] as string;
-            TempData.Keep("AccountId");
-            if (int.TryParse(accountIdStr, out int accountId))
+            foreach(var operatorReview in operatorItems)
             {
-                var mechanicResponse = await _mechanicDataStore.GetMechanics(accountId);
-                mechanic = mechanicResponse.Data.FirstOrDefault();
-            }
-            var mechanics = new List<SelectListItem>
-            {
-                new SelectListItem { Value = mechanic.Id.ToString(), Text = $"{mechanic.FirstName} {mechanic.LastName}" }
-            };
-
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, null, 6);
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(null, null, null, null);
-
-            var healthyDrivers = operatorReviews.Data
-                                  .Where(dr => dr.IsGiven == true && dr.Date.Value.Date == DateTime.Today)
-                                  .Select(dr => dr.DriverId)
-                                  .ToList();
-
-            var acceptedDrivers = response.Data
-                .Where(ma => ma.Date.HasValue && ma.Date.Value.Date == DateTime.Today)
-                .Select(ma => ma.DriverId)
-                .ToList();
-
-            var filteredDrivers = drivers
-                .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !acceptedDrivers.Contains(int.Parse(d.Value)))
-                .ToList();
-
-            ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text");
-            ViewBag.Mechanics = mechanics;
-
-            if (!driverId.HasValue && !carId.HasValue && filteredDrivers.Any())
-            {
-                var firstDriverId = int.Parse(filteredDrivers.First().Value);
-                var operatorReview = operatorReviews.Data.FirstOrDefault(m => m.DriverId == firstDriverId && m.Date.Value.Date == DateTime.Today);
-
-                if (operatorReview != null)
-                {
-                    carId = operatorReview.CarId;
-                    var car = await _carDataStore.GetCarAsync(operatorReview.CarId);
-                    carModel = car?.Model;
-                }
-
-                driverId = firstDriverId;
+                var driver = await _driverDataStore.GetDriverAsync(operatorReview.DriverId);
+                drivers.Add(driver);
             }
 
-            ViewBag.Cars = new SelectList(cars, "Value", "Text", carId);
 
-            var model = new MechanicAcceptanceForCreateDto();
+        }
 
-            if (driverId.HasValue)
-            {
-                model.DriverId = driverId.Value;
-                ViewBag.SelectedDriverName = driverName;
-                ViewBag.DriverId = driverId.Value;
+        public async Task<IActionResult> CreateForLink(int driverId, string? driverName, int carId, string? carModel)
+        {
+            var driver = new DriverDto();
+            var car = new CarDto();
 
-                if (carId.HasValue)
-                {
-                    model.CarId = carId.Value;
-                    ViewBag.SelectedCar = $"{carModel}";
-                }
-            }
+            driver = await _driverDataStore.GetDriverAsync(driverId);
+            car = await _carDataStore.GetCarAsync(carId);
 
-            return View(model);
+            ViewBag.DriverName = $"{driver.FirstName} {driver.LastName}";
+            ViewBag.Car = $"{car.Model} {car.Number}";
+
+            return View();
         }
 
         public async Task<IActionResult> GetCarByDriverId(int driverId)
@@ -183,33 +140,6 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Create([Bind("IsAccepted,Comments,MechanicId,Distance,DriverId,CarId")] MechanicAcceptanceForCreateDto acceptance)
         {
 
-            if (ModelState.IsValid)
-            {
-                acceptance.Date = DateTime.Now;
-                var car = _carDataStore.GetCarAsync(acceptance.CarId);
-                var carr = new CarForUpdateDto
-                {
-                    Id = acceptance.CarId,
-                    Color = car.Result.Color,
-                    Model = car.Result.Model,
-                    Number = car.Result.Number,
-                };
-
-
-                if ((acceptance.Distance < 0 && acceptance.IsAccepted == true) ||
-                    (acceptance.Distance > 0 && acceptance.IsAccepted == false))
-                {
-                    ModelState.AddModelError("IsAccepted", "Qabul qilish masofasini kiritmadingiz");
-                }
-                else
-                {
-                    await _carDataStore.UpdateCarAsync(acceptance.CarId, carr);
-                    await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(acceptance);
-                    return RedirectToAction(nameof(PersonalIndex));
-                }
-            }
-
-            return View(acceptance);
         }
 
 
