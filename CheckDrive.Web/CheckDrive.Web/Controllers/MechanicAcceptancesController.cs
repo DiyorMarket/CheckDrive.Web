@@ -175,6 +175,7 @@ namespace CheckDrive.Web.Controllers
                 }
 
                 mechanicAcceptanceForCreateDto.Date = DateTime.Now;
+                mechanicAcceptanceForCreateDto.Status = mechanicAcceptanceForCreateDto.IsAccepted ? StatusForDto.Pending : StatusForDto.Rejected;
                 await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
                 return RedirectToAction(nameof(PersonalIndex));
             }
