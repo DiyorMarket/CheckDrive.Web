@@ -12,51 +12,41 @@
         <form asp-action="Create" method="post" id="createForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group w-50">
-                <label asp-for="DistanceCovered" class="control-label"></label>
+                <label asp-for="DistanceCovered" class="control-label">Bosib o`tilgan masofa</label>
                 <input asp-for="DistanceCovered" class="form-control" />
                 <span asp-validation-for="DistanceCovered" class="text-danger"></span>
             </div>
             <div class="form-group w-50">
-                <label asp-for="FuelSpended" class="control-label"></label>
+                <label asp-for="FuelSpended" class="control-label">Sariflangan yoqilg`i</label>
                 <input asp-for="FuelSpended" class="form-control" id="FuelSpended" />
                 <span asp-validation-for="FuelSpended" class="text-danger" id="fuelSpendedError"></span>
             </div>
             <div class="form-group w-50">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" readonly />
                 <input asp-for="Date" type="hidden" id="hiddenDate" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="DispatcherId" class="control-label"></label>
-                <input asp-for="DispatcherId" class="form-control" readonly />
+                <input asp-for="DispatcherId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="OperatorId" class="control-label"></label>
-                <input asp-for="OperatorId" class="form-control" readonly />
+                <input asp-for="OperatorId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="MechanicId" class="control-label"></label>
-                <input asp-for="MechanicId" class="form-control" readonly />
+                <input asp-for="MechanicId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="DriverId" class="control-label"></label>
-                <input asp-for="DriverId" class="form-control" readonly />
+                <input asp-for="DriverId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="CarId" class="control-label"></label>
-                <input asp-for="CarId" class="form-control" readonly />
+                <input asp-for="CarId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="MechanicHandoverId" class="control-label"></label>
-                <input asp-for="MechanicHandoverId" class="form-control" readonly />
+                <input asp-for="MechanicHandoverId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="MechanicAcceptanceId" class="control-label"></label>
-                <input asp-for="MechanicAcceptanceId" class="form-control" readonly />
+                <input asp-for="MechanicAcceptanceId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="OperatorReviewId" class="control-label"></label>
-                <input asp-for="OperatorReviewId" class="form-control" readonly />
+                <input asp-for="OperatorReviewId" type="hidden" />
             </div>
             <div class="form-group mt-3 w-50">
                 <a asp-action="PersonalIndex" class="btn btn-outline-info">

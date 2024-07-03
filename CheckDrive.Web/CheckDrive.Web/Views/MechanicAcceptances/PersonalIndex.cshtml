@@ -52,6 +52,7 @@
                         <th scope="col" style="width: 10%">Qabul qilish masofasi</th>
                         <th scope="col" style="width: 15%">Izoh</th>
                         <th scope="col" style="width: 10%">Sana</th>
+                        <th scope="col" style="width: 10%">Holati</th>
 
                     </tr>
                 </thead>
@@ -89,6 +90,32 @@
                                 <td>@item.Distance</td>
                                 <td>@item.Comments</td>
                                 <td>@item.Date?.ToString("dd/MM/yyyy")</td>
+                                <td class="text-center">
+                                    @if (item.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
+                                    {
+                                        <span class="badge bg-pending shadow">Kutilmoqda</span>
+                                    }
+                                    else if (item.Status == CheckDrive.ApiContracts.StatusForDto.Unassigned)
+                                    {
+                                        <span class="badge bg-unassigned shadow">Yaratilmagan</span>
+                                    }
+                                    else if (item.Status == CheckDrive.ApiContracts.StatusForDto.Completed)
+                                    {
+                                        <span class="badge bg-success shadow">Yakunlangan</span>
+                                    }
+                                    else if (item.Status == CheckDrive.ApiContracts.StatusForDto.RejectedByDriver)
+                                    {
+                                        <span class="badge bg-danger shadow">Haydovchi tomonidan rad etilgan</span>
+                                    }
+                                    else if (item.Status == CheckDrive.ApiContracts.StatusForDto.Rejected)
+                                    {
+                                        <span class="badge bg-danger shadow">Rad etilgan</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-empty shadow">No`malum holat</span>
+                                    }
+                                </td>
                             </tr>
                         }
                     }
@@ -145,6 +172,14 @@
         font-size: 0.8rem;
         padding: 5px 10px;
         border-radius: 5px;
+    }
+
+    .bg-pending {
+        background-color: orange;
+    }
+
+    .bg-unassigned {
+        background-color: slategray;
     }
 
     .bg-success {
