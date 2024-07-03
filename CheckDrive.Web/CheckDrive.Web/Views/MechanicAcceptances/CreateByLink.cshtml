@@ -1,7 +1,7 @@
 ﻿@model CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceForCreateDto
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "CreateByLink";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
 }
 
@@ -12,54 +12,38 @@
 
         <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group w-50 mt-2">
-                <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
-                @if (ViewBag.SelectedDriverId != null && ViewBag.SelectedDriverId != 0)
-                {
-                    <input type="text" class="form-control" value="@ViewBag.SelectedDriverName" disabled />
-                    <input type="hidden" asp-for="DriverId" value="@ViewBag.SelectedDriverId" />
-                }
-                else
-                {
-                    @if (ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers.Items).Any())
-                    {
-                        <select id="driverIdDropdown" class="form-control border border-dark" disabled>
-                            <option selected>Haydovchilar mavjud emas</option>
-                        </select>
-                    }
-                    else
-                    {
-                        <select asp-for="DriverId" id="driverIdDropdown" class="form-control border border-dark" asp-items="@(ViewBag.Drivers as SelectList)"></select>
-                    }
-                }
+                <label class="control-label mt-2">Haydovchi</label>
+                <input type="text" class="form-control" value="@ViewBag.DriverName" disabled />
+                <input type="hidden" asp-for="DriverId" value="@ViewBag.DriverId" />
             </div>
+
             <div class="form-group w-50">
-                <input type="text" asp-for="MechanicId" class="form-control border border-dark d-none" />
+                <input type="text" asp-for="MechanicId" class="form-control border border-dark d-none" value="@ViewBag.MechanicId" />
             </div>
+
             <div class="form-group w-50 mt-2">
-                <label asp-for="CarId" class="control-label mt-2">Mashina</label>
-                @if (ViewBag.Cars is SelectList)
-                {
-                    <select asp-for="CarId" class="form-control border border-dark" asp-items="@(ViewBag.Cars as SelectList)" value="@ViewBag.SelectedCarId"></select>
-                }
-                else
-                {
-                    <input type="text" class="form-control" value="@ViewBag.Cars" />
-                    <input type="hidden" asp-for="CarId" value="@ViewBag.SelectedCarId" />
-                }
+                <label class="control-label mt-2">Mashina</label>
+                <input type="text" class="form-control" value="@ViewBag.CarName" disabled />
+                <input type="hidden" asp-for="CarId" value="@ViewBag.CarId" />
             </div>
+
             <div class="form-check form-switch mt-3">
                 <input asp-for="IsAccepted" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                 <label asp-for="IsAccepted" class="form-check-label" for="flexSwitchCheckDefault">Qabul qilish</label>
             </div>
+
             <div class="form-group w-50 mt-2">
                 <label asp-for="Distance" class="control-label mt-2">Qabul qilish masofasi</label>
                 <input asp-for="Distance" class="form-control" type="number" min="0" step="1" />
             </div>
+
             <div class="form-group w-50 mt-2">
                 <label asp-for="Comments" class="control-label mt-2">Izoh</label>
                 <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
             </div>
+
             <div class="form-group mt-3 w-50 mt-2">
                 <a asp-action="PersonalIndex" class="btn btn-outline-info">
                     <i class="fa-solid fa-arrow-left-long"></i> Orqaga
@@ -88,17 +72,9 @@
                 }
             }
 
-            // Initialize the highlight on page load
             toggleCheckboxHighlight();
 
-            // Add change event listener to toggle the highlight
             checkbox.addEventListener('change', toggleCheckboxHighlight);
-
-            var shouldDisable = '@ViewBag.SelectedDriverId' != '' ? "true" : "false";
-            if (shouldDisable === "true") {
-                document.getElementById("driverIdDropdown").setAttribute("disabled", "disabled");
-                document.getElementById("carIdDropdown").setAttribute("disabled", "disabled");
-            }
         });
     </script>
 }
