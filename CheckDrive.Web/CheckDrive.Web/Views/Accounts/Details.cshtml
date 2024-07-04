@@ -4,65 +4,107 @@
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div>
-    <h4>Ishchi ma'lumoti</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            Ism:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class="col-sm-2">
-            Familiya:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt class="col-sm-2">
-            Tug'ilgan kun:
-        </dt>
-        <dd class="col-sm-10">
-            @(Model.Bithdate.ToString("yyyy-MM-dd"))
-        </dd>
-        <dt class="col-sm-2">
-            Telefon raqam:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-        <dt class="col-sm-2">
-            Electron pochta:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Login)
-        </dd>
-        <dt class="col-sm-2">
-            Parol:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Password)
-        </dd>
-        <dt class="col-sm-2">
-            Kasb:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RoleName)
-        </dd>
-    </dl>
+
+
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">Ma`lumot</button>
+        <button class="nav-link" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" type="button" role="tab" aria-controls="nav-history" aria-selected="false">Ish tarixi</button>
+    </div>
+
+
+ <div id="detailsBlock" class="mt-3">
+        <dl class="row">
+            <dt class="col-sm-2">
+                Ism:
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+            <dt class="col-sm-2">
+                Familiya:
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.LastName)
+            </dd>
+            <dt class="col-sm-2">
+                Tug'ilgan kun:
+            </dt>
+            <dd class="col-sm-10">
+                @(Model.Bithdate.ToString("yyyy-MM-dd"))
+            </dd>
+            <dt class="col-sm-2">
+                Telefon raqam:
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </dd>
+            <dt class="col-sm-2">
+                Electron pochta:
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Login)
+            </dd>
+            <dt class="col-sm-2">
+                Parol:
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Password)
+            </dd>
+            <dt class="col-sm-2">
+                Kasb:
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.RoleName)
+            </dd>
+            <div class="mt-4">
+                <a asp-action="Index" class="btn btn-outline-info">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Orqaga
+                </a>
+                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">
+                    <i class="fa-solid fa-pen"></i>
+                    Tahrirlash
+                </a>
+                <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-outline-danger">
+                    <i class="fa-solid fa-trash"></i>
+                    O'chirish
+                </a>
+            </div>
+        </dl>
 </div>
-<div class="mt-4">
-    <a asp-action="Index" class="btn btn-outline-info">
-        <i class="fa-solid fa-arrow-left"></i>
-        Orqaga
-    </a>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">
-        <i class="fa-solid fa-pen"></i>
-        Tahrirlash
-    </a>
-    <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-outline-danger">
-        <i class="fa-solid fa-trash"></i>
-        O'chirish
-    </a>
+
+<div id="historyBlock">
+    <div class="col-12">
+        <ejs-grid id="customers-list"
+                  dataSource="@ViewBag.DriverHistories"
+                  gridLines="Vertical"
+                  allowSorting="true">
+            <e-grid-columns>
+                <e-grid-column headerText="Sana" field="Date" format="dd/MM/yyyy" typeof="date"></e-grid-column>
+                <e-grid-column headerText="Doktor Ko'rik" field="IsHealthy"  typeof="text"></e-grid-column>
+                <e-grid-column headerText="Mexanik (Topshirish)" field="IsHanded" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Operator" field="IsGiven" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Mexanik (Qabul qilish)" field="IsAccepted" typeof="text"></e-grid-column>
+            </e-grid-columns>
+        </ejs-grid>
+    </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#detailsBlock").show();
+        $("#historyBlock").hide();
+
+        $("#nav-details-tab").click(function () {
+            $("#detailsBlock").show();
+            $("#historyBlock").hide();
+        });
+
+        $("#nav-history-tab").click(function () {
+            $("#detailsBlock").hide();
+            $("#historyBlock").show();
+        });
+    });
+</script>
+
