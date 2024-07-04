@@ -19,9 +19,13 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
             int? pageNumber, 
             string? searchString,
             DateTime? date,
+            bool? isAccepted,
             int? roleId)
         {
             StringBuilder query = new StringBuilder();
+
+            if (isAccepted is not null)
+                query.Append($"isHealthy={isAccepted}&");
 
             if (roleId != 0)
                 query.Append($"roleId={roleId}&");

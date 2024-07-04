@@ -25,7 +25,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-            var response = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, searchString, date, 1);
+            var response = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, searchString, date, null, 1);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -51,7 +51,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(int? pageNumber, string? searchString)
         {
-            var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, searchString, null, 3);
+            var reviewsResponse = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, searchString, null, null, 3);
 
             ViewBag.PageSize = reviewsResponse.PageSize;
             ViewBag.PageCount = reviewsResponse.TotalPages;
@@ -208,7 +208,7 @@ namespace CheckDrive.Web.Controllers
 
         private async Task<List<SelectListItem>> GetDriversNotUsedToday()
         {
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, null, 1);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, null, null, 1);
             var today = DateTime.Today;
             var usedDriverIds = doctorReviews.Data
                 .Where(dr => dr.Date.Date == today)

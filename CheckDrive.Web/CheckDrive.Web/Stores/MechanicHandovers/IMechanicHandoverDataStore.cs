@@ -5,7 +5,7 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
 {
     public interface IMechanicHandoverDataStore
     {
-        Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync(int? pageNumber, string? searchString, DateTime? date, int? roleId);
+        Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync(int? pageNumber, string? searchString, DateTime? date, bool? isHanded, int? roleId);
         Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync();
         Task<MechanicHandoverDto> GetMechanicHandoverAsync(int id);
         Task<MechanicHandoverDto> CreateMechanicHandoverAsync(MechanicHandoverForCreateDto mechanicHandoverForCreateDto);
