@@ -79,11 +79,11 @@
                                     {
                                         @if ((bool)item.IsHanded)
                                         {
-                                            <span class="badge bg-success shadow">Topshirildi</span>
+                                            <span class="badge bg-success ">Topshirildi</span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-danger shadow">Topshirilmadi</span>
+                                            <span class="badge bg-danger ">Topshirilmadi</span>
                                         }
                                     }
                                 </td>
@@ -93,27 +93,27 @@
                                 <td class="text-center">
                                     @if (item.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
                                     {
-                                        <span class="badge bg-pending shadow">Kutilmoqda</span>
+                                        <span class="badge bg-pending ">Kutilmoqda</span>
                                     }
                                     else if (item.Status == CheckDrive.ApiContracts.StatusForDto.Unassigned)
                                     {
-                                        <span class="badge bg-unassigned shadow">Yaratilmagan</span>
+                                        <span class="badge bg-unassigned ">Yaratilmagan</span>
                                     }
                                     else if (item.Status == CheckDrive.ApiContracts.StatusForDto.Completed)
                                     {
-                                        <span class="badge bg-success shadow">Yakunlangan</span>
+                                        <span class="badge bg-success ">Yakunlangan</span>
                                     }
                                     else if (item.Status == CheckDrive.ApiContracts.StatusForDto.RejectedByDriver)
                                     {
-                                        <span class="badge bg-danger shadow">Haydovchi tomonidan rad etilgan</span>
+                                        <span class="badge bg-danger ">Haydovchi tomonidan rad etilgan</span>
                                     }
                                     else if (item.Status == CheckDrive.ApiContracts.StatusForDto.Rejected)
                                     {
-                                        <span class="badge bg-danger shadow">Rad etilgan</span>
+                                        <span class="badge bg-danger ">Rad etilgan</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-empty shadow">No`malum holat</span>
+                                        <span class="badge bg-empty ">No`malum holat</span>
                                     }
                                 </td>
                             </tr>
