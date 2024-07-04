@@ -61,72 +61,83 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var review in Model)
+                            @if(Model != null && Model.Any())
+                            {
+                                @foreach (var review in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            @if (!string.IsNullOrEmpty(review.OperatorName))
+                                            {
+                                                @review.DriverName
+                                            }
+                                            else
+                                            {
+                                                <a asp-action="Create"
+                                                   asp-route-driverId="@review.DriverId"
+                                                   asp-route-driverName="@review.DriverName"
+                                                   asp-route-carId="@review.CarId"
+                                                   asp-route-carModel="@review.CarModel"
+                                                   asp-route-fuelTankCapacity="@review.CarOilCapacity"
+                                                   asp-route-remainingFuel="@review.CarOilRemainig">@review.DriverName</a>
+                                            }
+                                        </td>
+                                        <td class="text-center">@review.OperatorName</td>
+                                        <td class="text-center">@review.CarModel</td>
+                                        <td class="text-center">@review.CarNumber</td>
+                                        <td class="text-center">@review.CarOilCapacity</td>
+                                        <td class="text-center">@review.CarOilRemainig</td>
+                                        <td class="text-center">@review.OilAmount</td>
+                                        <td class="text-center">@review.OilMarks</td>
+                                        <td class="text-center">
+                                            @if (review.IsGiven == true)
+                                            {
+                                                <span class="badge bg-success shadow">Berildi</span>
+                                            }
+                                            else if (review.IsGiven == false)
+                                            {
+                                                <span class="badge bg-danger shadow">Berilmadi</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-empty shadow"></span>
+                                            }
+                                        </td>
+                                        <td class="text-center comments-column">@review.Comments</td>
+                                        <td class="text-center">
+                                            @if (review.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
+                                            {
+                                                <span class="badge bg-pending shadow">Kutilmoqda</span>
+                                            }
+                                            else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Unassigned)
+                                            {
+                                                <span class="badge bg-unassigned shadow">Yaratilmagan</span>
+                                            }
+                                            else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Completed)
+                                            {
+                                                <span class="badge bg-success shadow">Yakunlangan</span>
+                                            }
+                                            else if (review.Status == CheckDrive.ApiContracts.StatusForDto.RejectedByDriver)
+                                            {
+                                                <span class="badge bg-danger shadow">Haydovchi tomonidan rad etilgan</span>
+                                            }
+                                            else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Rejected)
+                                            {
+                                                <span class="badge bg-danger shadow">Rad etilgan</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-empty shadow">No`malum holat</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
                             {
                                 <tr>
-                                    <td class="text-center">
-                                        @if (!string.IsNullOrEmpty(review.OperatorName))
-                                        {
-                                            @review.DriverName
-                                        }
-                                        else
-                                        {
-                                            <a asp-action="Create"
-                                               asp-route-driverId="@review.DriverId"
-                                               asp-route-driverName="@review.DriverName"
-                                               asp-route-carId="@review.CarId"
-                                               asp-route-carModel="@review.CarModel"
-                                               asp-route-fuelTankCapacity="@review.CarOilCapacity"
-                                               asp-route-remainingFuel="@review.CarOilRemainig">@review.DriverName</a>
-                                        }
-                                    </td>
-                                    <td class="text-center">@review.OperatorName</td>
-                                    <td class="text-center">@review.CarModel</td>
-                                    <td class="text-center">@review.CarNumber</td>
-                                    <td class="text-center">@review.CarOilCapacity</td>
-                                    <td class="text-center">@review.CarOilRemainig</td>
-                                    <td class="text-center">@review.OilAmount</td>
-                                    <td class="text-center">@review.OilMarks</td>
-                                    <td class="text-center">
-                                        @if (review.IsGiven == true)
-                                        {
-                                            <span class="badge bg-success shadow">Berildi</span>
-                                        }
-                                        else if (review.IsGiven == false)
-                                        {
-                                            <span class="badge bg-danger shadow">Berilmadi</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-empty shadow"></span>
-                                        }
-                                    </td>
-                                    <td class="text-center comments-column">@review.Comments</td>
-                                    <td class="text-center">
-                                        @if(review.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
-                                        {
-                                            <span class="badge bg-pending shadow">Kutilmoqda</span>
-                                        }
-                                        else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Unassigned)
-                                        {
-                                            <span class="badge bg-unassigned shadow">Yaratilmagan</span>
-                                        }
-                                        else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Completed)
-                                        {
-                                            <span class="badge bg-success shadow">Yakunlangan</span>
-                                        }
-                                        else if (review.Status == CheckDrive.ApiContracts.StatusForDto.RejectedByDriver)
-                                        {
-                                            <span class="badge bg-danger shadow">Haydovchi tomonidan rad etilgan</span>
-                                        }
-                                        else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Rejected)
-                                        {
-                                            <span class="badge bg-danger shadow">Rad etilgan</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-empty shadow">No`malum holat</span>
-                                        }
+                                    <td colspan="11" class="text-center">
+                                        Maʼlumotlar mavjud emas
                                     </td>
                                 </tr>
                             }

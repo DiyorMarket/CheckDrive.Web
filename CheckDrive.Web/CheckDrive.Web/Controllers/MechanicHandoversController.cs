@@ -85,7 +85,7 @@ namespace CheckDrive.Web.Controllers
             var cars = await GETCars();
 
             var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today, true, 1);
-            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, DateTime.Today, true, 1);
+            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, DateTime.Today, "Completed", 1);
 
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");

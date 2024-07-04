@@ -55,35 +55,46 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var review in Model)
+                            @if(Model != null && Model.Any())
+                            {
+                                @foreach (var review in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center vertical-align-middle">
+                                            @if (!string.IsNullOrEmpty(review.DoctorName))
+                                            {
+                                                @review.DriverName
+                                            }
+                                            else
+                                            {
+                                                <a href="/DoctorReviews/Create?driverId=@review.DriverId&driverName=@review.DriverName">@review.DriverName</a>
+                                            }
+                                        </td>
+                                        <td class="text-center vertical-align-middle">@review.DoctorName</td>
+                                        <td class="text-center vertical-align-middle">
+                                            @if (!string.IsNullOrEmpty(review.DoctorName))
+                                            {
+                                                @if (review.IsHealthy == true)
+                                                {
+                                                    <span class="badge bg-success shadow">Sog`lom</span>
+                                                }
+                                                else if (review.IsHealthy == false)
+                                                {
+                                                    <span class="badge bg-danger shadow">Kasal</span>
+                                                }
+                                            }
+                                        </td>
+                                        <td class="text-center vertical-align-middle">@review.Comments</td>
+                                        <td class="text-center vertical-align-middle">@review.Date</td>
+                                    </tr>
+                                }
+                            }
+                            else
                             {
                                 <tr>
-                                    <td class="text-center vertical-align-middle">
-                                        @if (!string.IsNullOrEmpty(review.DoctorName))
-                                        {
-                                            @review.DriverName
-                                        }
-                                        else
-                                        {
-                                            <a href="/DoctorReviews/Create?driverId=@review.DriverId&driverName=@review.DriverName">@review.DriverName</a>
-                                        }
+                                    <td colspan="5" class="text-center">
+                                        Maʼlumotlar mavjud emas
                                     </td>
-                                    <td class="text-center vertical-align-middle">@review.DoctorName</td>
-                                    <td class="text-center vertical-align-middle">
-                                        @if (!string.IsNullOrEmpty(review.DoctorName))
-                                        {
-                                            @if (review.IsHealthy == true)
-                                            {
-                                                <span class="badge bg-success shadow">Sog`lom</span>
-                                            }
-                                            else if (review.IsHealthy == false)
-                                            {
-                                                <span class="badge bg-danger shadow">Kasal</span>
-                                            }
-                                        }
-                                    </td>
-                                    <td class="text-center vertical-align-middle">@review.Comments</td>
-                                    <td class="text-center vertical-align-middle">@review.Date</td>
                                 </tr>
                             }
                         </tbody>
