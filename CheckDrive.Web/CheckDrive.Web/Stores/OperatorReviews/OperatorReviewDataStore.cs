@@ -15,13 +15,13 @@ namespace CheckDrive.Web.Stores.OperatorReviews
             int? pageNumber,
             string? searchString,
             DateTime? date,
-            bool? isGiven,
+            string? status,
             int? roleId)
         {
             StringBuilder query = new("");
 
-            if (isGiven is not null)
-                query.Append($"isGiven={isGiven}&");
+            if (!string.IsNullOrWhiteSpace(status))
+                query.Append($"status={status}&");
 
             if (roleId != 0)
                 query.Append($"roleId={roleId}&");

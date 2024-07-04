@@ -106,7 +106,7 @@ namespace CheckDrive.Web.Controllers
                 new SelectListItem { Value = operatorr.Id.ToString(), Text = $"{operatorr.FirstName} {operatorr.LastName}" }
             };
 
-            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today, true, 1);
+            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today, "Completed", 1);
             var oilMarks = GetOilMarks();
             var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today, null, 1);
 
@@ -171,7 +171,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> GetCarByDriverId(int driverId)
         {
-            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today, true, 1);
+            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today, "Completed", 1);
             var handover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == driverId);
 
             if (handover != null)

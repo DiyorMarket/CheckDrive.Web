@@ -37,42 +37,55 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var review in Model)
+                @if(Model != null && Model.Any())
+                {
+                    @foreach (var review in Model)
+                    {
+                        <tr>
+                            <td class="text-center vertical-align-middle">@review.DriverName</td>
+                            <td class="text-center vertical-align-middle">@review.CarName</td>
+                            <td class="text-center vertical-align-middle">@review.CarMeduimFuelConsumption</td>
+                            <td class="text-center vertical-align-middle">
+                                @if (!string.IsNullOrEmpty(review.DispatcherName))
+                                {
+                                    @review.DistanceCovered
+                                    ;
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Create", new {distanceCovered = review.DistanceCovered, fuelSpended = review.FuelSpended, operatorId = review.OperatorId, mechanicId = review.MechanicId, driverId = review.DriverId, mechanicHandoverId = review.MechanicHandoverId, mechanicAcceptanceId = review.MechanicAcceptanceId, carId = review.CarId, operatorReviewId = review.OperatorReviewId })">
+                                        @review.DistanceCovered
+                                    </a>
+                                }
+                            </td>
+                            <td class="text-center vertical-align-middle">@review.InitialDistance</td>
+                            <td class="text-center vertical-align-middle">@review.FinalDistance</td>
+                            <td class="text-center vertical-align-middle">
+                                @if (!string.IsNullOrEmpty(review.DispatcherName))
+                                {
+                                    @review.FuelSpended
+                                    ;
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Create", new {distanceCovered = review.DistanceCovered, fuelSpended = review.FuelSpended, operatorId = review.OperatorId, mechanicId = review.MechanicId, driverId = review.DriverId, mechanicHandoverId = review.MechanicHandoverId, mechanicAcceptanceId = review.MechanicAcceptanceId, carId = review.CarId, operatorReviewId = review.OperatorReviewId })">
+                                        @review.FuelSpended
+                                    </a>
+                                }
+                            </td>
+                            <td class="text-center vertical-align-middle">@review.PouredFuel</td>
+                            <td class="text-center vertical-align-middle">@review.OperatorName</td>
+                            <td class="text-center vertical-align-middle">@review.MechanicName</td>
+                            <td class="text-center vertical-align-middle">@review.Date</td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td class="text-center vertical-align-middle">@review.DriverName</td>
-                        <td class="text-center vertical-align-middle">@review.CarName</td>
-                        <td class="text-center vertical-align-middle">@review.CarMeduimFuelConsumption</td>
-                        <td class="text-center vertical-align-middle">
-                            @if (!string.IsNullOrEmpty(review.DispatcherName))
-                            {
-                                @review.DistanceCovered;
-                            }
-                            else
-                            {
-                                <a href="@Url.Action("Create", new {distanceCovered = review.DistanceCovered, fuelSpended = review.FuelSpended, operatorId = review.OperatorId, mechanicId = review.MechanicId, driverId = review.DriverId, mechanicHandoverId = review.MechanicHandoverId, mechanicAcceptanceId = review.MechanicAcceptanceId, carId = review.CarId, operatorReviewId = review.OperatorReviewId })">
-                                    @review.DistanceCovered
-                                </a>
-                            }
+                        <td colspan="6" class="text-center">
+                            Maʼlumotlar mavjud emas
                         </td>
-                        <td class="text-center vertical-align-middle">@review.InitialDistance</td>
-                        <td class="text-center vertical-align-middle">@review.FinalDistance</td>
-                        <td class="text-center vertical-align-middle">
-                            @if (!string.IsNullOrEmpty(review.DispatcherName))
-                            {
-                                @review.FuelSpended;
-                            }
-                            else
-                            {
-                                <a href="@Url.Action("Create", new {distanceCovered = review.DistanceCovered, fuelSpended = review.FuelSpended, operatorId = review.OperatorId, mechanicId = review.MechanicId, driverId = review.DriverId, mechanicHandoverId = review.MechanicHandoverId, mechanicAcceptanceId = review.MechanicAcceptanceId, carId = review.CarId, operatorReviewId = review.OperatorReviewId })">
-                                    @review.FuelSpended
-                                </a>
-                            }
-                        </td>
-                        <td class="text-center vertical-align-middle">@review.PouredFuel</td>
-                        <td class="text-center vertical-align-middle">@review.OperatorName</td>
-                        <td class="text-center vertical-align-middle">@review.MechanicName</td>
-                        <td class="text-center vertical-align-middle">@review.Date</td>
                     </tr>
                 }
             </tbody>

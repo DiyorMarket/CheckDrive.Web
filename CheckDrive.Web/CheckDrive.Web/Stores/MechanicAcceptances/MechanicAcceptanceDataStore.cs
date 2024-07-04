@@ -1,4 +1,5 @@
 ﻿using CheckDrive.ApiContracts.MechanicAcceptance;
+using CheckDrive.DTOs;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
@@ -19,13 +20,13 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
             int? pageNumber, 
             string? searchString,
             DateTime? date,
-            bool? isAccepted,
+            string? status,
             int? roleId)
         {
             StringBuilder query = new StringBuilder();
 
-            if (isAccepted is not null)
-                query.Append($"isHealthy={isAccepted}&");
+            if (!string.IsNullOrWhiteSpace(status))
+                query.Append($"status={status}&");
 
             if (roleId != 0)
                 query.Append($"roleId={roleId}&");

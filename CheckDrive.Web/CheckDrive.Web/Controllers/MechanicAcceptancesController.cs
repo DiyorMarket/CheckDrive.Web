@@ -14,14 +14,11 @@ using System.Linq;
 
 namespace CheckDrive.Web.Controllers
 {
-    public class MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore, IMechanicDataStore mechanicDataStore, IOperatorReviewDataStore operatorReviewDataStore, IMechanicHandoverDataStore mechanicHandoverDataStore) : Controller
+    public class MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, IMechanicDataStore mechanicDataStore, IOperatorReviewDataStore operatorReviewDataStore) : Controller
     {
         private readonly IMechanicAcceptanceDataStore _mechanicAcceptanceDataStore = mechanicAcceptanceDataStore;
-        private readonly IDriverDataStore _driverDataStore = driverDataStore;
-        private readonly ICarDataStore _carDataStore = carDataStore;
         private readonly IMechanicDataStore _mechanicDataStore = mechanicDataStore;
         private readonly IOperatorReviewDataStore _operatorReviewDataStore = operatorReviewDataStore;
-        private readonly IMechanicHandoverDataStore _mechanicHandoverDataStore = mechanicHandoverDataStore;
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
@@ -77,7 +74,7 @@ namespace CheckDrive.Web.Controllers
         }
         public async Task<IActionResult> CreateByButton()
         {
-            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today, true, 1);
+            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today, "Completed", 1);
             var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today, null, null);
 
             var mechanicDriverIds = mechanicAcceptanceResponse.Data.Select(ma => ma.DriverId).ToHashSet();
