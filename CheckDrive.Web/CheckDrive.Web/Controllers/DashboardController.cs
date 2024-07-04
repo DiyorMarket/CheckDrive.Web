@@ -33,7 +33,6 @@ namespace CheckDrive.Web.Controllers
             ViewBag.DriversCount = summary.DriversCount;
 
             ViewBag.EmployeesCountByRole = dashboard.EmployeesCountByRoles;
-
             ViewBag.SplineChartData = dashboard.SplineCharts;
         }
     }

@@ -1,6 +1,5 @@
 ﻿using CheckDrive.ApiContracts.Account;
 using CheckDrive.Web.Stores.User;
-using CheckDrive.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

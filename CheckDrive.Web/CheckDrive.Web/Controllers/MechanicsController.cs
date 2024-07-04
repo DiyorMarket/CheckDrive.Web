@@ -12,13 +12,11 @@ namespace CheckDrive.Web.Controllers
         {
             _mechanicDataStore = mechanicDataStore;
         }
-
         public async Task<IActionResult> Index()
         {
             var mechanics = await _mechanicDataStore.GetMechanicsAsync();
             return View(mechanics);
         }
-
         public async Task<IActionResult> Details(int id)
         {
             var mechanic = await _mechanicDataStore.GetMechanicAsync(id);
@@ -28,12 +26,11 @@ namespace CheckDrive.Web.Controllers
             }
             return View(mechanic);
         }
-
         public IActionResult Create()
         {
             return View();
         }
-
+     
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AccountId")] Mechanic mechanic)
@@ -45,7 +42,6 @@ namespace CheckDrive.Web.Controllers
             }
             return View(mechanic);
         }
-
         public async Task<IActionResult> Edit(int id)
         {
             var mechanic = await _mechanicDataStore.GetMechanicAsync(id);
@@ -86,7 +82,6 @@ namespace CheckDrive.Web.Controllers
             }
             return View(mechanic);
         }
-
         public async Task<IActionResult> Delete(int id)
         {
             var mechanic = await _mechanicDataStore.GetMechanicAsync(id);
@@ -104,7 +99,6 @@ namespace CheckDrive.Web.Controllers
             await _mechanicDataStore.DeleteMechanicAsync(id);
             return RedirectToAction(nameof(Index));
         }
-
         private async Task<bool> MechanicExists(int id)
         {
             var mechanic = await _mechanicDataStore.GetMechanicAsync(id);
