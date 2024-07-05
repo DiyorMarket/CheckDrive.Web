@@ -1,6 +1,5 @@
 ﻿using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.MechanicHandover;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Drivers;
@@ -85,7 +84,7 @@ namespace CheckDrive.Web.Controllers
             var cars = await GETCars();
 
             var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today, true, 1);
-            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, DateTime.Today, "Completed", 1);
+            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, DateTime.Today, null, 1);
 
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
@@ -158,9 +157,6 @@ namespace CheckDrive.Web.Controllers
             return View(mechanicHandoverForCreateDto);
         }
 
-
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, MechanicHandoverForUpdateDto mechanicHandover)
@@ -213,13 +209,11 @@ namespace CheckDrive.Web.Controllers
             await _mechanicHandoverDataStore.DeleteMechanicHandoverAsync(id);
             return RedirectToAction(nameof(Index));
         }
-
         private async Task<bool> MechanicHandoverExists(int id)
         {
             var mechanicAcceptance = await _mechanicHandoverDataStore.GetMechanicHandoverAsync(id);
             return mechanicAcceptance != null;
         }
-
         private async Task<List<SelectListItem>> GETCars()
         {
             var carResponse = await _carDataStore.GetCarsAsync(null, null);
@@ -232,7 +226,6 @@ namespace CheckDrive.Web.Controllers
                 .ToList();
             return cars;
         }
-
         private async Task<List<SelectListItem>> GETDrivers()
         {
             var driverResponse = await _driverDataStore.GetDriversAsync(null, null);

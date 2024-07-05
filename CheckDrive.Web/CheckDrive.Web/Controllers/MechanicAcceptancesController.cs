@@ -1,16 +1,10 @@
 using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.Mechanic;
 using CheckDrive.ApiContracts.MechanicAcceptance;
-using CheckDrive.Web.Stores.Cars;
-using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
-using CheckDrive.Web.Stores.MechanicHandovers;
 using CheckDrive.Web.Stores.Mechanics;
 using CheckDrive.Web.Stores.OperatorReviews;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using NuGet.Versioning;
-using System.Linq;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -58,7 +52,6 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
-
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
             var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, null, null, 6);
@@ -95,7 +88,6 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IsAccepted,Comments,MechanicId,Distance,CarId,DriverId")] MechanicAcceptanceForCreateDto mechanicAcceptanceForCreateDto)
@@ -115,7 +107,6 @@ namespace CheckDrive.Web.Controllers
 
             return View(mechanicAcceptanceForCreateDto);
         }
-
         public async Task<IActionResult> CreateByLink(int driverId, int carId, string carName, string driverName)
         {
             var accountIdStr = TempData["AccountId"] as string;
@@ -167,7 +158,6 @@ namespace CheckDrive.Web.Controllers
 
             return View(mechanicAcceptance);
         }
-
         public async Task<IActionResult> Delete(int id)
         {
             var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);

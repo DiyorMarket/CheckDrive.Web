@@ -62,7 +62,6 @@ namespace CheckDrive.Web.Controllers
             return View();
 
         }
-
         public async Task<IActionResult> PersonalIndex(int? pageNumber, string? searchString)
         {
             var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, null, null, 4);
@@ -76,7 +75,6 @@ namespace CheckDrive.Web.Controllers
 
             return View(reviewsResponse.Data);
         }
-
         public async Task<IActionResult> Details(int id)
         {
             var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);
@@ -86,7 +84,6 @@ namespace CheckDrive.Web.Controllers
             }
             return View(operatorReview);
         }
-
         public async Task<IActionResult> Create(int? driverId, string? driverName, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel)
         {
             var drivers = await GETDrivers();
@@ -168,7 +165,6 @@ namespace CheckDrive.Web.Controllers
 
             return View(model);
         }
-
         public async Task<IActionResult> GetCarByDriverId(int driverId)
         {
             var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today, "Completed", 1);
@@ -224,7 +220,6 @@ namespace CheckDrive.Web.Controllers
 
             return View(operatorReview);
         }
-
         public async Task<IActionResult> Edit(int id)
         {
             var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);
@@ -265,7 +260,6 @@ namespace CheckDrive.Web.Controllers
             }
             return View(operatorReview);
         }
-
         public async Task<IActionResult> Delete(int id)
         {
             var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);
@@ -283,13 +277,11 @@ namespace CheckDrive.Web.Controllers
             await _operatorReviewDataStore.DeleteOperatorReview(id);
             return RedirectToAction(nameof(Index));
         }
-
         private async Task<bool> OperatorReviewExists(int id)
         {
             var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);
             return operatorReview != null;
         }
-
         private async Task<List<SelectListItem>> GETDrivers()
         {
             var driverResponse = await _driverDataStore.GetDriversAsync(null, null);
@@ -302,7 +294,6 @@ namespace CheckDrive.Web.Controllers
                 .ToList();
             return drivers;
         }
-
         private async Task<List<SelectListItem>> GETCars()
         {
             var carResponse = await _carDataStore.GetCarsAsync(null, null);
@@ -315,13 +306,11 @@ namespace CheckDrive.Web.Controllers
                 .ToList();
             return cars;
         }
-
         private async Task<double> GetMaxOilAmount(int carId)
         {
             var car = await _carDataStore.GetCarAsync(carId);
             return car.FuelTankCapacity - car.RemainingFuel;
         }
-
         private List<string> GetOilMarks()
         {
             return Enum.GetValues(typeof(OilMarksForDto))

@@ -1,5 +1,4 @@
-﻿using CheckDrive.Web.Stores.Cars;
-using CheckDrive.Web.Stores.Dashbord;
+﻿using CheckDrive.Web.Stores.Dashbord;
 using CheckDrive.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,7 +33,6 @@ namespace CheckDrive.Web.Controllers
             ViewBag.DriversCount = summary.DriversCount;
 
             ViewBag.EmployeesCountByRole = dashboard.EmployeesCountByRoles;
-
             ViewBag.SplineChartData = dashboard.SplineCharts;
         }
     }
