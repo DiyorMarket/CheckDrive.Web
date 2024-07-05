@@ -24,15 +24,12 @@
         <div class="d-flex align-items-center">
         </div>
         <div class="d-flex align-items-center">
-            <div class="dropdown">
-                <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: white; border-color: black;">
-                    <i class="fa-solid fa-user" style="background-color: white; color: black;"></i>
-                    <i class="bi bi-caret-down-fill" style="background-color:white; color:black"></i>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="userDropdown">                   
-                    <li><a class="dropdown-item" style="color: red" href="@Url.Action("Login", "Auth")">Profildan Chiqish</a></li>
-                </ul>
-            </div>
+            <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
+                <span class="logout-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </span>
+                Chiqish
+            </button>
         </div>
     </div>
 
