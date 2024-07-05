@@ -33,7 +33,7 @@
     <div class="col-12">
         <ejs-grid id="operatorReview-list" dataSource="@ViewBag.OperatorsReview" gridLines="Vertical" allowSorting="true">
             <e-grid-columns>
-                <e-grid-column headerText="Id" field="Id" typeof="text" width="50"></e-grid-column>
+                <e-grid-column headerText="Id" field="Id" typeof="text" template="#templat" width="50"></e-grid-column>
                 <e-grid-column headerText="Operator F.I.SH" field="OperatorName" typeof="text" class="customcss"></e-grid-column>
                 <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" typeof="text" class="customcss"></e-grid-column>
                 <e-grid-column headerText="Yoqilg'i miqdori" field="OilAmount" typeof="text" class="customcss"></e-grid-column>
@@ -80,8 +80,8 @@
     </div>
 </div>
 
-<script id="template" type="text/x-template">
+<script id="templat" type="text/x-templat">
     <div>
-        <a href="/Cars/DetailsForMechanicHandover/${CarId}">${CarName}</a>
+        <a rel='nofollow' href="OperatorReviews/Details/${Id}">${Id}</a>
     </div>
 </script>

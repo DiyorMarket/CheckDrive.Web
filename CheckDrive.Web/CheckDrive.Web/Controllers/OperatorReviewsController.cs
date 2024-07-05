@@ -78,10 +78,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);
-            if (operatorReview == null)
-            {
-                return NotFound();
-            }
+
             return View(operatorReview);
         }
         public async Task<IActionResult> Create(int? driverId, string? driverName, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel)
