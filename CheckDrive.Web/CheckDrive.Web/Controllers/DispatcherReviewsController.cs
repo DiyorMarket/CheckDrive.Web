@@ -87,10 +87,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var review = await _dispatcherReviewDataStore.GetDispatcherReview(id);
-            if (review == null)
-            {
-                return NotFound();
-            }
+
             return View(review);
         }
 
