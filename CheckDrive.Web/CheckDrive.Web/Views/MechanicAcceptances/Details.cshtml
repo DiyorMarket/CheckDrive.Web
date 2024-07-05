@@ -1,40 +1,39 @@
-﻿@model CheckDrive.ApiContracts.MechanicHandover.MechanicHandoverDto
+﻿@model CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto
 
 @{
     ViewData["Title"] = "Details";
 }
 
-
 <div>
-    <h4>Mexanik (Topshirish) ma'lumotari</h4>
+    <h4>Mexanik (Qabul qilish) ma'lumotlari</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
+        <dt class = "col-sm-2">
             Mexanik F.I.SH:
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.MechanicName)
         </dd>
-        <dt class="col-sm-2">
+        <dt class = "col-sm-2">
             Haydovchi F.I.SH:
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.DriverName)
         </dd>
-        <dt class="col-sm-2">
+        <dt class = "col-sm-2">
             Avtomobil:
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CarName)
         </dd>
         <dt class="col-sm-2">
-            Topshirish:
+            Qabul qilish:
         </dt>
-        <dd class = "col-sm-10">
-            @(Model.IsHanded.HasValue ? (Model.IsHanded.Value ? "Topshirildi" : "Topshirilmadi"): "N/A")
+        <dd class="col-sm-10">
+            @(Model.IsAccepted.HasValue ? (Model.IsAccepted.Value ? "Qabul qilindi" : "Qabul qilinmadi") : "N/A")
         </dd>
         <dt class="col-sm-2">
-            Topshirish masofasi:
+            Qabul qilish masofasi:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Distance)
@@ -43,12 +42,12 @@
             Vaqt:
         </dt>
         <dd class="col-sm-10">
-            @(Model.Date.ToString("yyyy-MM-dd | HH:mm"))
+            @(Model.Date.HasValue ? Model.Date.Value.ToString("yyyy-MM-dd | HH:mm") : "Date not available")
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Izoh:
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Comments)
         </dd>
     </dl>
