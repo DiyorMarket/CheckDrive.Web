@@ -127,6 +127,16 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Edit(int id)
+        {
+            var review = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
+            if (review == null)
+            {
+                return NotFound();
+            }
+            return View(review);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, MechanicAcceptanceForUpdateDto mechanicAcceptance)
