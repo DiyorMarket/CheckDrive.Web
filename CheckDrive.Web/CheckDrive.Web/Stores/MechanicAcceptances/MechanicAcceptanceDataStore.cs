@@ -91,9 +91,24 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
 
             return JsonConvert.DeserializeObject<MechanicAcceptanceDto>(jsonResponse);
         }
-        Task<MechanicAcceptanceDto> IMechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(int id)
+        async Task<MechanicAcceptanceDto> IMechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(int id)
         {
-            throw new NotImplementedException();
+            var response = await _api.GetAsync($"mechanics/acceptance/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not fetch account with id: {id}.");
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<MechanicAcceptanceDto>(json);
+
+            if (result == null)
+            {
+                throw new Exception($"Deserialization of MechanicAcceptanceDto failed for id: {id}.");
+            }
+
+            return result;
         }
 
         Task<MechanicAcceptanceDto> IMechanicAcceptanceDataStore.UpdateMechanicAcceptanceAsync(int id, MechanicAcceptanceForUpdateDto mechanicAcceptanceForUpdateDto)

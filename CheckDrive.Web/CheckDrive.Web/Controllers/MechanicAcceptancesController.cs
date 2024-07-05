@@ -181,5 +181,12 @@ namespace CheckDrive.Web.Controllers
             var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
             return mechanicAcceptance != null;
         }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var mechanicAcceptence = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
+
+            return View(mechanicAcceptence);
+        }
     }
 }
