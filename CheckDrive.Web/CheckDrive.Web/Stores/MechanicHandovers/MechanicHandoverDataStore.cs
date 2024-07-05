@@ -85,9 +85,19 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
             throw new NotImplementedException();
         }
 
-        public Task<MechanicHandoverDto> GetMechanicHandoverAsync(int id)
+        public async Task<MechanicHandoverDto> GetMechanicHandoverAsync(int id)
         {
-            throw new NotImplementedException();
+            var response = await _api.GetAsync($"mechanics/handover/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not fetch account with id: {id}.");
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<MechanicHandoverDto>(json);
+
+            return result;
         }
         public Task<MechanicHandoverDto> UpdateMechanicHandoverAsync(int id, MechanicHandoverForUpdateDto mechanicHandover)
         {
