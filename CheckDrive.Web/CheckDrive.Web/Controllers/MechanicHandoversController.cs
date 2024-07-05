@@ -238,5 +238,12 @@ namespace CheckDrive.Web.Controllers
                 .ToList();
             return drivers;
         }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var mechanicHandover = await _mechanicHandoverDataStore.GetMechanicHandoverAsync(id);
+
+            return View(mechanicHandover);
+        }
     }
 }
