@@ -1,30 +1,36 @@
 ﻿@model CheckDrive.ApiContracts.OperatorReview.OperatorReviewDto
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Delete";
 }
 
+<h1 class="align-items-baseline" style="margin-top: 100px">O'chirish</h1>
+<hr />
 
+<h3 style="color:grey;">
+    Haqiqatan ham buni oʻchirib tashlamoqchimisiz?
+    O'chirsangiz bu mashina ishtirok etgan barcha ma'lumotlar ham o'chiriladi!!!
+</h3>
 <div>
-    <h4>Operator ma'lumotlari</h4>
+    <h4>OperatorReview</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Operator F.I.SH:
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.OperatorName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Haydovchi F.I.SH
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DriverName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Avtomobil:
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CarModel)
         </dd>
         <dt class="col-sm-2">
@@ -39,10 +45,10 @@
         <dd class="col-sm-10">
             @(Model.IsGiven.HasValue ? (Model.IsGiven.Value ? "Quyildi" : "Quyilmadi") : "N/A")
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Yoqilg'i miqdori:
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.OilAmount)
         </dd>
         <dt class="col-sm-2">
@@ -64,18 +70,17 @@
             @Html.DisplayFor(model => model.CarOilCapacity)
         </dd>
     </dl>
-</div>
-<div class="mt-4">
-    <a asp-action="Index" class="btn btn-outline-info">
-        <i class="fa-solid fa-arrow-left"></i>
-        Orqaga
-    </a>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">
-        <i class="fa-solid fa-pen"></i>
-        Tahrirlash
-    </a>
-    <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-outline-danger">
-        <i class="fa-solid fa-trash"></i>
-        O'chirish
-    </a>
+    
+    <form asp-action="Delete">
+        <div class="form-group">
+            <a asp-action="Index" class="btn btn-outline-info">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                Orqaga
+            </a>
+            <button asp-route-itemid="@Model.Id" class="btn btn-outline-danger">
+                <i class="fa-solid fa-trash"></i>
+                O'chirish
+            </button>
+        </div>
+    </form>
 </div>
