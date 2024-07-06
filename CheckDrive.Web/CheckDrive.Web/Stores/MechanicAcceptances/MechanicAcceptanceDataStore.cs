@@ -1,6 +1,4 @@
 ﻿using CheckDrive.ApiContracts.MechanicAcceptance;
-using CheckDrive.DTOs;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -71,11 +69,6 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
         {
             throw new NotImplementedException();
         }
-
-        public Task<MechanicAcceptance> GetMechanicAcceptanceAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
         
         public async  Task<MechanicAcceptanceDto> CreateMechanicAcceptanceAsync(MechanicAcceptanceForCreateDto acceptanceForCreateDto)
         {
@@ -91,7 +84,8 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
 
             return JsonConvert.DeserializeObject<MechanicAcceptanceDto>(jsonResponse);
         }
-        async Task<MechanicAcceptanceDto> IMechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(int id)
+
+        public async Task<MechanicAcceptanceDto> GetMechanicAcceptanceAsync(int id)
         {
             var response = await _api.GetAsync($"mechanics/acceptance/{id}");
 
@@ -111,9 +105,19 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
             return result;
         }
 
-        Task<MechanicAcceptanceDto> IMechanicAcceptanceDataStore.UpdateMechanicAcceptanceAsync(int id, MechanicAcceptanceForUpdateDto mechanicAcceptanceForUpdateDto)
+        public async Task<MechanicAcceptanceDto> UpdateMechanicAcceptanceAsync(int id, MechanicAcceptanceForUpdateDto mechanicAcceptanceForUpdateDto)
         {
-            throw new NotImplementedException();
+            var json = JsonConvert.SerializeObject(mechanicAcceptanceForUpdateDto);
+            var response = await _api.PutAsync($"mechanics/acceptance/{mechanicAcceptanceForUpdateDto.Id}", json);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error updating MechanicHandovers.");   
+            }
+
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<MechanicAcceptanceDto>(jsonResponse);
         }
     }
 }

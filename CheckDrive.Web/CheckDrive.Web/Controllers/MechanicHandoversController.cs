@@ -165,6 +165,36 @@ namespace CheckDrive.Web.Controllers
             {
                 return NotFound();
             }
+
+            var drivers = await _driverDataStore.GetDriversAsync();
+            var cars = await _carDataStore.GetCarsAsync(null, null);
+
+            ViewBag.DriverSelectList = new SelectList(drivers.Data.Select(driver => new
+            {
+                Id = driver.Id,
+                DisplayText = $"{driver.FirstName} {driver.LastName}"
+            }), "Id", "DisplayText");
+
+            ViewBag.CarSelectList = new SelectList(cars.Data.Select(car => new
+            {
+                Id = car.Id,
+                DisplayText = $"{car.Model} ({car.Number})"
+            }), "Id", "DisplayText");
+
+            ViewBag.Status = Enum.GetValues(typeof(StatusForDto)).Cast<StatusForDto>().Select(e => new SelectListItem
+            {
+                Value = e.ToString(),
+                Text = e switch
+                {
+                    StatusForDto.Pending => "Kutilmoqda",
+                    StatusForDto.Completed => "Yakunlangan",
+                    StatusForDto.Rejected => "Rad etilgan",
+                    StatusForDto.Unassigned => "Yaratilmagan",
+                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
+                    _ => "No`malum holat"
+                }
+            }).ToList();
+
             return View(review);
         }
 

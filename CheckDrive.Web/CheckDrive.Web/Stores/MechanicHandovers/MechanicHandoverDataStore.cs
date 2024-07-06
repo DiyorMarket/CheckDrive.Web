@@ -99,9 +99,19 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
 
             return result;
         }
-        public Task<MechanicHandoverDto> UpdateMechanicHandoverAsync(int id, MechanicHandoverForUpdateDto mechanicHandover)
+        public async Task<MechanicHandoverDto> UpdateMechanicHandoverAsync(int id, MechanicHandoverForUpdateDto mechanicHandover)
         {
-            throw new NotImplementedException();
+            var json = JsonConvert.SerializeObject(mechanicHandover);
+            var response = await _api.PutAsync($"mechanics/handover/{mechanicHandover.Id}", json);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error updating MechanicHandovers.");
+            }
+
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<MechanicHandoverDto>(jsonResponse);
         }
     }
 }
