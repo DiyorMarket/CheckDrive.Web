@@ -3,13 +3,25 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    bool noDriversAvailable = ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers.Items).Any();
+
+
 }
 
 <div class="row mt-custom">
     <div class="col-md-4 offset-md-1 mt-5">
         <h4>Ro`yxatga olish</h4>
         <hr class="w-50" />
+       
+        @if (noDriversAvailable)
+        {
+            <div class="alert alert-warning">
+                <strong>Diqqat!</strong> Hozirda mavjud haydovchilar yo'q. Iltimos, keyinroq qayta urinib ko'ring.
+            </div>
+        }
+
         <form id="doctorReviewForm" asp-action="Create" method="post">
+            <fieldset @(noDriversAvailable ? "disabled" : "")>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group w-50 mt-3">
                 <label asp-for="DriverId">Haydovchi F.I.</label>
@@ -25,7 +37,7 @@
                     @if (ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers).Any())
                     {
                         <select class="form-control border border-dark" disabled>
-                            <option selected>There are no available drivers</option>
+                            <option selected>Haydovchilar mavjud emas</option>
                         </select>
                     }
                     else
@@ -47,11 +59,12 @@
                 <label asp-for="Comments" for="exampleFormControlTextarea1">Izoh</label>
                 <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
             </div>
+                </fieldset>
             <div class="form-group mt-3 w-50 mt-3">
-                <a asp-action="PersonalIndex" class="btn btn-outline-info">
+                <a asp-action="PersonalIndex" class="btn btn-info">
                     <i class="fa-solid fa-arrow-left-long"></i> Orqaga
                 </a>
-                <button class="btn btn-success" type="submit">
+                <button class="btn btn-success" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
                     <i class="fa fa-plus"></i> Yaratish
                 </button>
             </div>
@@ -65,7 +78,6 @@
         var checkbox = document.getElementById('flexSwitchCheckDefault');
         var checkboxError = document.getElementById('checkboxError');
 
-        // Check initially if the checkbox is not checked
         if (!checkbox.checked) {
             checkbox.classList.add('is-invalid');
             checkboxError.classList.remove('d-none');
@@ -81,7 +93,6 @@
             }
         });
 
-        // Remove invalid class and error message when checkbox is checked
         checkbox.addEventListener('change', function () {
             if (checkbox.checked) {
                 checkbox.classList.remove('is-invalid');
@@ -99,4 +110,16 @@
         border-color: red !important;
         background-color: #f8d7da !important;
     }
+
+
+    fieldset[disabled] .form-control,
+    fieldset[disabled] .btn {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+    }
+
+        fieldset[disabled] .form-control:disabled,
+        fieldset[disabled] .btn:disabled {
+            opacity: 1;
+        }
 </style>

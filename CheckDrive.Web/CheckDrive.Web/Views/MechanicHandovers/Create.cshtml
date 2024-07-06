@@ -3,76 +3,83 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    bool noDriversAvailable = ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers.Items).Any();
+    bool noCarsAvailable = ViewBag.Cars == null || !((IEnumerable<SelectListItem>)ViewBag.Cars.Items).Any();
 }
+
 <div class="row mt-custom">
     <div class="col-md-4 offset-md-1 mt-5">
         <h4>Ro'yxatga olish</h4>
         <hr class="w-50" />
 
+        @if (noDriversAvailable)
+        {
+            <div class="alert alert-warning">
+                <strong>Diqqat!</strong> Hozirda mavjud haydovchilar yo'q. Iltimos, keyinroq qayta urinib ko'ring.
+            </div>
+        }
+
         <form id="mechanicHandoverForm" asp-action="Create" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group w-50 mt-3">
-                <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
-                @if (ViewBag.SelectedDriverId != null && ViewBag.SelectedDriverId != 0)
-                {
-                    <input type="text" class="form-control" value="@ViewBag.SelectedDriverName" disabled />
-                    <input type="hidden" asp-for="DriverId" value="@ViewBag.SelectedDriverId" />
-                }
-                else
-                {
-                    @if (ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers.Items).Any())
+            <fieldset @(noDriversAvailable ? "disabled" : "")>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group w-50 mt-3">
+                    <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
+                    @if (ViewBag.SelectedDriverId != null && ViewBag.SelectedDriverId != 0)
                     {
-                        <select id="driverIdDropdown" class="form-control border border-dark" disabled>
-                            <option selected>Haydovchilar mavjud emas</option>
-                        </select>
-                        <input type="hidden" id="driversAvailable" value="false" />
+                        <input type="text" class="form-control" value="@ViewBag.SelectedDriverName" disabled />
+                        <input type="hidden" asp-for="DriverId" value="@ViewBag.SelectedDriverId" />
                     }
                     else
                     {
-                        <select asp-for="DriverId" id="driverIdDropdown" class="form-control border border-dark" asp-items="@ViewBag.Drivers"></select>
-                        <input type="hidden" id="driversAvailable" value="true" />
+                        @if (noDriversAvailable)
+                        {
+                            <select id="driverIdDropdown" class="form-control border border-dark" disabled>
+                                <option selected>Haydovchilar mavjud emas</option>
+                            </select>
+                        }
+                        else
+                        {
+                            <select asp-for="DriverId" id="driverIdDropdown" class="form-control border border-dark" asp-items="@ViewBag.Drivers"></select>
+                        }
                     }
-                }
-            </div>
-            <div class="form-group w-50 mt-3">
-                <input type="text" asp-for="MechanicId" class="form-control border border-dark d-none" />
-            </div>
-            <div class="form-group w-50 mt-3">
-                <label asp-for="CarId" class="control-label mt-2">Mashina</label>
-                @if (ViewBag.Cars == null || !((IEnumerable<SelectListItem>)ViewBag.Cars.Items).Any())
-                {
-                    <select class="form-control border border-dark" disabled>
-                        <option selected>Mashinalar mavjud emas</option>
-                    </select>
-                }
-                else
-                {
-                    <select asp-for="CarId" class="form-control border border-dark" asp-items="@ViewBag.Cars"></select>
-                }
-            </div>
-            <div class="form-check form-switch mt-3">
-                <input asp-for="IsHanded" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                <label asp-for="IsHanded" class="form-check-label" for="flexSwitchCheckDefault">Topshirish</label>
-            </div>
-            <div class="form-group w-50 mt-3">
-                <label asp-for="Distance" class="control-label mt-2">Boshlang'ich' masofasi</label>
-                <input asp-for="Distance" class="form-control" type="number" min="0" step="1" />
-                <span asp-validation-for="Distance" class="text-danger"></span>
-            </div>
+                </div>
+                <div class="form-group w-50 mt-3">
+                    <input type="hidden" asp-for="MechanicId" class="form-control border border-dark d-none" />
+                </div>
+                <div class="form-group w-50 mt-3">
+                    <label asp-for="CarId" class="control-label mt-2">Mashina</label>
+                    @if (noCarsAvailable)
+                    {
+                        <select class="form-control border border-dark" disabled>
+                            <option selected>Mashinalar mavjud emas</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <select asp-for="CarId" class="form-control border border-dark" asp-items="@ViewBag.Cars"></select>
+                    }
+                </div>
+                <div class="form-check form-switch mt-3">
+                    <input asp-for="IsHanded" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label asp-for="IsHanded" class="form-check-label" for="flexSwitchCheckDefault">Topshirish</label>
+                </div>
+                <div class="form-group w-50 mt-3">
+                    <label asp-for="Distance" class="control-label mt-2">Boshlang'ich masofasi</label>
+                    <input asp-for="Distance" class="form-control" type="number" min="0" step="1" />
+                    <span asp-validation-for="Distance" class="text-danger"></span>
+                </div>
 
-            <div class="form-group w-50 mt-3">
-                <label asp-for="Comments" class="control-label mt-2">Izoh</label>
-                <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
-            </div>
+                <div class="form-group w-50 mt-3">
+                    <label asp-for="Comments" class="control-label mt-2">Izoh</label>
+                    <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
+                </div>
+            </fieldset>
+
             <div class="form-group mt-3 w-50 mt-3">
-                <a asp-action="PersonalIndex" class="btn btn-outline-info">
+                <a asp-action="PersonalIndex" class="btn btn-info">
                     <i class="fa-solid fa-arrow-left-long"></i> Orqaga
                 </a>
-                @{
-                    bool disableSubmit = ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers.Items).Any();
-                    string submitButtonClass = disableSubmit ? "btn btn-success disabled" : "btn btn-success";
-                }
-                <button class="@submitButtonClass" type="submit" id="submitButton">
+                <button class="btn btn-success" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
                     <i class="fa fa-plus"></i> Yaratish
                 </button>
             </div>
@@ -82,12 +89,6 @@
 
 @section Scripts {
     <script type="text/javascript">
-        var shouldDisable = @((bool)(ViewBag.SelectedDriverId != null)).ToString().toLowerCase();
-        if (shouldDisable === "true") {
-            document.getElementById("driverIdDropdown").setAttribute("disabled", "disabled");
-        }
-    </script>
-    <script>
         document.addEventListener('DOMContentLoaded', function () {
             var form = document.getElementById('mechanicHandoverForm');
             var checkbox = document.getElementById('flexSwitchCheckDefault');
@@ -103,11 +104,11 @@
                 }
             }
 
-            toggleCheckboxHighlight(); // Initial check
+            toggleCheckboxHighlight();
             checkbox.addEventListener('change', toggleCheckboxHighlight);
 
             form.addEventListener('submit', function (event) {
-                var distance = document.getElementById('Distance').value;
+                var distance = document.querySelector('input[name="Distance"]').value;
                 var isGiven = checkbox.checked;
                 var distanceValue = Number(distance);
 
@@ -132,4 +133,15 @@
     .text-danger {
         color: red !important;
     }
+
+    fieldset[disabled] .form-control,
+    fieldset[disabled] .btn {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+    }
+
+        fieldset[disabled] .form-control:disabled,
+        fieldset[disabled] .btn:disabled {
+            opacity: 1;
+        }
 </style>
