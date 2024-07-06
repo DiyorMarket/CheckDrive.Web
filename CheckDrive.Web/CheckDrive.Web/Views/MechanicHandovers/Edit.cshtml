@@ -1,7 +1,8 @@
-﻿@model CheckDrive.Web.Models.MechanicHandover
+﻿@model CheckDrive.ApiContracts.MechanicHandover.MechanicHandoverDto
 
 @{
     ViewData["Title"] = "Edit";
+    bool isGivenNullable = Model.IsHanded ?? false;
 }
 
 <h1>Edit</h1>
@@ -12,15 +13,10 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsHanded" /> @Html.DisplayNameFor(model => model.IsHanded)
-                </label>
+            <div class="form-check form-switch mt-3">
+                <input class="form-check-input" type="checkbox" @(isGivenNullable ? "checked" : "") onchange="document.getElementById('IsGiven').value = this.checked.toString()" />
+                <label class="form-check-label">Berildimi?</label>
+                <input type="hidden" id="IsGiven" name="IsGiven" value="@isGivenNullable.ToString()" />
             </div>
             <div class="form-group">
                 <label asp-for="Comments" class="control-label"></label>
@@ -29,7 +25,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
+                <select asp-for="Status" class="form-control" asp-items="ViewBag.Status"></select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -37,29 +33,26 @@
                 <input asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="MechanicId" class="control-label"></label>
-                <input asp-for="MechanicId" class="form-control" />
-                <span asp-validation-for="MechanicId" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="MechanicId" />
             <div class="form-group">
                 <label asp-for="CarId" class="control-label"></label>
-                <input asp-for="CarId" class="form-control" />
+                <select asp-for="CarId" class="form-control" asp-items="ViewBag.CarSelectList"></select>
                 <span asp-validation-for="CarId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DriverId" class="control-label"></label>
-                <input asp-for="DriverId" class="form-control" />
+                <select asp-for="DriverId" class="form-control" asp-items="ViewBag.DriverSelectList"></select>
                 <span asp-validation-for="DriverId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="form-group mt-3">
+                <a asp-action="Details" asp-route-id="@Model?.Id" class="btn btn-outline-info">
+                    <i class="fa-solid fa-arrow-left-long"></i>
+                    Orqaga
+                </a>
+                <button class="btn btn-outline-success">
+                    <i class="fa fa-pencil"></i> Saqlash
+                </button>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-

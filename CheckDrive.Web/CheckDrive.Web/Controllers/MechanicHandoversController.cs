@@ -45,11 +45,12 @@ namespace CheckDrive.Web.Controllers
                 r.Comments,
                 Status = ((StatusForDto)r.Status) switch
                 {
-                    StatusForDto.Pending => "Pending",
-                    StatusForDto.Completed => "Completed",
-                    StatusForDto.Rejected => "Rejected",
-                    StatusForDto.Unassigned => "Unassigned",
-                    _ => "Unknown Status"
+                    StatusForDto.Pending => "Kutilmoqda",
+                    StatusForDto.Completed => "Yakunlangan",
+                    StatusForDto.Rejected => "Rad etilgan",
+                    StatusForDto.Unassigned => "Yaratilmagan",
+                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
+                    _ => "No`malum holat"
                 },
                 r.Date,
                 r.Distance,
@@ -160,13 +161,36 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var review = await _mechanicHandoverDataStore.GetMechanicHandoverAsync(id);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today, true, null);
+            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, DateTime.Today, null, null);
+            var mechanics = mechanicHandovers.Data.ToList();
+            mechanics.Remove(review);
+            var cars = await _carDataStore.GetCarsAsync(null, null);
+
+            var driverIds = mechanics.Select(x => x.DriverId).ToList();
+            var carIds = mechanics.Where(x => x.Status == StatusForDto.Completed || x.Status == StatusForDto.Pending).Select(x => x.CarId).ToList();
+            carIds.Remove(review.Id);
+            var filteredDrivers = doctorReviews.Data.Where(x => !driverIds.Contains(x.DriverId)).ToList();
+            var filteredCars = cars.Data.Where(x => !carIds.Contains(x.Id));
 
             if (review == null)
             {
                 return NotFound();
             }
+
+            ViewBag.Status = Enum.GetValues(typeof(StatusForDto)).Cast<StatusForDto>().Select(e => new SelectListItem
+            {
+                Value = e.ToString(),
+                Text = e.ToString()
+            }).ToList();
+
+            ViewBag.DriverSelectList = new SelectList(filteredDrivers, "DriverId", "DriverName");
+            ViewBag.CarSelectList = new SelectList(filteredCars, "Id", "Model");
+
             return View(review);
         }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
