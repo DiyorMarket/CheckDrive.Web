@@ -144,8 +144,8 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var review = await _doctorReviewDataStore.GetDoctorReviewAsync(id);
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today, null, null);
-            var doctorReviewsForDoctor = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today, null, 3);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, review.Date.Date, null, null);
+            var doctorReviewsForDoctor = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, review.Date.Date, null, 3);
 
             var driverIds = doctorReviews.Data.Select(ma => ma.DriverId).ToHashSet();
             var filteredDoctorResponse = doctorReviewsForDoctor.Data.Where(or => !driverIds.Contains(or.DriverId)).ToList();
