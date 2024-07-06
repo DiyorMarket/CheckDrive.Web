@@ -161,8 +161,8 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var review = await _mechanicHandoverDataStore.GetMechanicHandoverAsync(id);
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today, true, null);
-            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, DateTime.Today, null, null);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, review.Date.Date, true, null);
+            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, review.Date.Date, null, null);
             var mechanics = mechanicHandovers.Data.ToList();
             mechanics.Remove(review);
             var cars = await _carDataStore.GetCarsAsync(null, null);
