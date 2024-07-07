@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<CheckDrive.ApiContracts.MechanicHandover.MechanicHandoverDto>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="~/css/LogOutButtun.css" asp-append-version="true" />
+
 @{
     ViewData["Title"] = "Mechanic Handovers (Personal)";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
@@ -8,12 +8,16 @@
 
 <div class="container-fluid py-2 px-4 d-flex justify-content-end">
     <div class="d-flex align-items-center">
-        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
-            <span class="logout-icon">
-                <i class="fas fa-sign-out-alt"></i>
-            </span>
-            Chiqish
-        </button>
+        <div class="dropdown">
+            <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: white; border-color: black;">
+                <i class="fa-solid fa-user" style="background-color: white; color: black;"></i>
+                <i class="bi bi-caret-down-fill" style="background-color:white; color:black"></i>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" style="color: red" href="@Url.Action("Login", "Auth")">Profildan Chiqish</a></li>
+                <li><a class="dropdown-item" style="color: green" href="@Url.Action("PersonalIndex", "MechanicAcceptances")">Mexanik(Qabul qiluvchi)</a></li>
+            </ul>
+        </div>
     </div>
 </div>
 
