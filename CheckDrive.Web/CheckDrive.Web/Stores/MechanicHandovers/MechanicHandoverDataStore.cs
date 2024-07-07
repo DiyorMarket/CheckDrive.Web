@@ -80,11 +80,6 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
             return JsonConvert.DeserializeObject<MechanicHandoverDto>(jsonResponse);
         }
 
-        public Task DeleteMechanicHandoverAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<MechanicHandoverDto> GetMechanicHandoverAsync(int id)
         {
             var response = await _api.GetAsync($"mechanics/handover/{id}");
@@ -113,5 +108,14 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
 
             return JsonConvert.DeserializeObject<MechanicHandoverDto>(jsonResponse);
         }
+        public async Task DeleteMechanicHandoverAsync(int id)
+        {
+            var response = await _api.DeleteAsync($"mechanics/handover/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not delete Mechanic acceptance with id: {id}.");
+            }
+        }
+
     }
 }

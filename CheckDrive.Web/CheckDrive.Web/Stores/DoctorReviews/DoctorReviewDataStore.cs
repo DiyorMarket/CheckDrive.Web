@@ -110,7 +110,7 @@ namespace CheckDrive.Web.Stores.DoctorReviews
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Could not delete customers with id: {id}.");
+                throw new Exception($"Could not delete Doctor reviews with id: {id}.");
             }
         }
     }

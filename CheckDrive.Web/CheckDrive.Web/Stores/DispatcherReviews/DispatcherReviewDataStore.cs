@@ -75,9 +75,13 @@ namespace CheckDrive.Web.Stores.DispatcherReviews
             throw new NotImplementedException();
         }
 
-        public Task DeleteDispatcherReview(int id)
+        public async Task DeleteDispatcherReview(int id)
         {
-            throw new NotImplementedException();
+            var response = await _api.DeleteAsync($"dispatchers/review/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not delete Dispatcher reviews with id: {id}.");
+            }
         }
     }
 }
