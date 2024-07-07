@@ -106,7 +106,12 @@ namespace CheckDrive.Web.Stores.DoctorReviews
 
         public async Task DeleteDoctorReviewAsync(int id)
         {
-            throw new NotImplementedException();
+            var response = await _api.DeleteAsync($"doctors/review/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not delete customers with id: {id}.");
+            }
         }
     }
 }
