@@ -45,11 +45,12 @@ namespace CheckDrive.Web.Controllers
                 r.Comments,
                 Status = ((StatusForDto)r.Status) switch
                 {
-                    StatusForDto.Pending => "Pending",
-                    StatusForDto.Completed => "Completed",
-                    StatusForDto.Rejected => "Rejected",
-                    StatusForDto.Unassigned => "Unassigned",
-                    _ => "Unknown Status"
+                    StatusForDto.Pending => "Kutilmoqda",
+                    StatusForDto.Completed => "Yakunlangan",
+                    StatusForDto.Rejected => "Rad etilgan",
+                    StatusForDto.Unassigned => "Yaratilmagan",
+                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
+                    _ => "No`malum holat"
                 },
                 r.Date,
                 r.Distance,

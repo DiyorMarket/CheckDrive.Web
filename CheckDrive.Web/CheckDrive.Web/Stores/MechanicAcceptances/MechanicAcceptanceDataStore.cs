@@ -65,11 +65,7 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
 
             return result;
         }
-        public Task DeleteMechanicAcceptanceAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-        
+   
         public async  Task<MechanicAcceptanceDto> CreateMechanicAcceptanceAsync(MechanicAcceptanceForCreateDto acceptanceForCreateDto)
         {
             var json = JsonConvert.SerializeObject(acceptanceForCreateDto);
@@ -118,6 +114,15 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
             var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
             return JsonConvert.DeserializeObject<MechanicAcceptanceDto>(jsonResponse);
+        }
+
+        public async Task DeleteMechanicAcceptanceAsync(int id)
+        {
+            var response = await _api.DeleteAsync($"mechanics/acceptance/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not delete Mechanic acceptance with id: {id}.");
+            }
         }
     }
 }

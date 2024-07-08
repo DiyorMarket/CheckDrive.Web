@@ -70,14 +70,28 @@ namespace CheckDrive.Web.Stores.DispatcherReviews
 
             return JsonConvert.DeserializeObject<DispatcherReviewDto>(jsonResponse);
         }
-        public Task<DispatcherReviewForUpdateDto> UpdateDispatcherReview(int id, DispatcherReviewForUpdateDto review)
+        public async Task<DispatcherReviewDto> UpdateDispatcherReview(int id, DispatcherReviewForUpdateDto review)
         {
-            throw new NotImplementedException();
+            var json = JsonConvert.SerializeObject(review);
+            var response = await _api.PutAsync($"dispatchers/review/{id}", json);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error updating dispatcherReviews.");
+            }
+
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<DispatcherReviewDto>(jsonResponse);
         }
 
-        public Task DeleteDispatcherReview(int id)
+        public async Task DeleteDispatcherReview(int id)
         {
-            throw new NotImplementedException();
+            var response = await _api.DeleteAsync($"dispatchers/review/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not delete Dispatcher reviews with id: {id}.");
+            }
         }
     }
 }

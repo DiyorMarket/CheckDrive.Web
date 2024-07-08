@@ -94,8 +94,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Bithdate,RoleId")]
-            AccountForUpdateDto account)
+        public async Task<IActionResult> Edit(int id, AccountForUpdateDto account)
         {
             if (ModelState.IsValid)
             {
