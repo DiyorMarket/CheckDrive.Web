@@ -27,9 +27,12 @@
         }
 
         .button-container {
-            position: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
             bottom: 20px;
-            right: 20px;
+            width: 100%;
         }
 
             .button-container a {
@@ -47,7 +50,7 @@
 </head>
 <body>
     <div class="container">
-        <img src="~/images/Unauthorized.png" />
+        <img src="~/images/Unauthorize.png" />
     </div>
     <div class="button-container">
         <a href="@Url.Action("Login", "Auth")">Loginga qaytish</a>

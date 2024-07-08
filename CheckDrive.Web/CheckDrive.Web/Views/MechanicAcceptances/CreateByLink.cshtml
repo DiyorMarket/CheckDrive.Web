@@ -10,7 +10,7 @@
         <h4>Ro'yxatga olish</h4>
         <hr class="w-50" />
 
-        <form asp-action="Create" method="post">
+        <form asp-action="Create" method="post" id="createFormByLink">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group w-50 mt-2">
@@ -45,7 +45,7 @@
             </div>
 
             <div class="form-group mt-3 w-50 mt-2">
-                <a asp-action="PersonalIndex" class="btn btn-outline-info">
+                <a asp-action="PersonalIndex" class="btn btn-info">
                     <i class="fa-solid fa-arrow-left-long"></i> Orqaga
                 </a>
                 <button class="btn btn-success" type="submit">
@@ -59,6 +59,7 @@
 @section Scripts {
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function () {
+            var form = document.getElementById('createFormByLink');
             var checkbox = document.getElementById('flexSwitchCheckDefault');
             var checkboxLabel = document.querySelector('label[for="flexSwitchCheckDefault"]');
 
@@ -75,6 +76,20 @@
             toggleCheckboxHighlight();
 
             checkbox.addEventListener('change', toggleCheckboxHighlight);
+
+            form.addEventListener('submit', function (event) {
+                var distance = document.querySelector('input[name="Distance"]').value;
+                var isGiven = checkbox.checked;
+                var distanceValue = Number(distance);
+
+                if (distanceValue === 0 && isGiven) {
+                    event.preventDefault();
+                    alert("Qabul qilish masofanisini kiritishingiz shart!");
+                } else if (distanceValue > 0 && !isGiven) {
+                    event.preventDefault();
+                    alert("Qabul qilish masofanisini kiritib qabul qilish tugmasini surmadingiz!");
+                }
+            });
         });
     </script>
 }

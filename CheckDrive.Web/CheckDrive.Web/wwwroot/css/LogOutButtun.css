@@ -1,0 +1,31 @@
+﻿.logout-btn {
+    background-color: #1657d9; /* pink background color */
+    border: none; /* no border */
+    color: white; /* white text color */
+    padding: 5px 10px 5px 40px; /* increased left padding to make room for the icon */
+    text-align: center; /* center the text */
+    text-decoration: none; /* no underline */
+    display: inline-block; /* inline-block display */
+    font-size: 14px; /* text size */
+    border-radius: 50px; /* rounded corners */
+    cursor: pointer; /* pointer cursor on hover */
+    position: relative; /* relative position for the icon */
+}
+
+    .logout-btn .logout-icon {
+        background-color: #033bab; /* dark red background for the icon */
+        border-radius: 50%; /* circular icon */
+        padding: 8px; /* padding inside the icon */
+        position: absolute; /* absolute position */
+        left: 0px; /* move icon to the start of the button */
+        top: 50%; /* vertically center */
+        transform: translateY(-50%); /* adjust vertical centering */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .logout-btn .logout-icon i {
+            color: white; /* white color for the icon */
+            font-size: 12px; /* icon size */
+        }

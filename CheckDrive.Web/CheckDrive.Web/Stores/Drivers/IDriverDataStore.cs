@@ -9,6 +9,7 @@ namespace CheckDrive.Web.Stores.Drivers
         Task<GetDriverResponse> GetDriversAsync(string? searchString,int? pageNumber);
         Task<GetDriverResponse> GetDriversAsync();
         Task<DriverDto> GetDriverAsync(int id);
+        Task<IEnumerable<DriverHistoryDto>> GetDriverHistories(int Id);
         Task<DriverDto> CreateDriverAsync(DriverForCreateDto driverForCreate);
         Task<DriverDto> UpdateDriverAsync(int id, AccountForUpdateDto driverForUpdate);
         Task DeleteDriverAsync(int id);
