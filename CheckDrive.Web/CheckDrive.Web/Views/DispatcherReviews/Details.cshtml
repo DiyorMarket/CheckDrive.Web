@@ -1,0 +1,80 @@
+﻿@model CheckDrive.ApiContracts.DispatcherReview.DispatcherReviewDto
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div>
+    <h4>Dispetcher</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Dispetcher F.I.SH:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DispatcherName)
+        </dd>
+        <dt class = "col-sm-2">
+            Haydovchi F.I.SH:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DriverName)
+        </dd>
+        <dt class = "col-sm-2">
+            Mexanik F.I.SH:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MechanicName)
+        </dd>
+        <dt class = "col-sm-2">
+            Operator F.I.SH:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OperatorName)
+        </dd>
+        <dt class = "col-sm-2">
+            Ro'yxatga olingan vaqt:
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.Date.ToString("yyyy-MM-dd | HH:mm"))
+        </dd>
+        <dt class = "col-sm-2">
+            Avtomobil:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CarName)
+        </dd>
+        <dt class = "col-sm-2">
+            O'rtacha yoqilg'i sarfi:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CarMeduimFuelConsumption)
+        </dd>
+        <dt class = "col-sm-2">
+            Bosib o'tilgan masofa:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DistanceCovered)
+        </dd>
+        <dt class = "col-sm-2">
+            Sarflangan yoqilg'i:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FuelSpended)
+        </dd>
+    </dl>
+</div>
+<div class="mt-4">
+    <a asp-action="Index" class="btn btn-outline-info">
+        <i class="fa-solid fa-arrow-left"></i>
+        Orqaga
+    </a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">
+        <i class="fa-solid fa-pen"></i>
+        Tahrirlash
+    </a>
+    <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-outline-danger">
+        <i class="fa-solid fa-trash"></i>
+        O'chirish
+    </a>
+</div>

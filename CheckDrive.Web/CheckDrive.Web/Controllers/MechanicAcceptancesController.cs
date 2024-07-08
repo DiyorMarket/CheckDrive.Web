@@ -1,18 +1,28 @@
 using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.Mechanic;
 using CheckDrive.ApiContracts.MechanicAcceptance;
+using CheckDrive.Web.Stores.Cars;
+using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
 using CheckDrive.Web.Stores.Mechanics;
 using CheckDrive.Web.Stores.OperatorReviews;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CheckDrive.Web.Controllers
 {
-    public class MechanicAcceptancesController(IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, IMechanicDataStore mechanicDataStore, IOperatorReviewDataStore operatorReviewDataStore) : Controller
+    public class MechanicAcceptancesController(
+        IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, 
+        IMechanicDataStore mechanicDataStore, 
+        IOperatorReviewDataStore operatorReviewDataStore,
+        ICarDataStore carDataStore,
+        IDriverDataStore driverDataStore) : Controller
     {
         private readonly IMechanicAcceptanceDataStore _mechanicAcceptanceDataStore = mechanicAcceptanceDataStore;
         private readonly IMechanicDataStore _mechanicDataStore = mechanicDataStore;
         private readonly IOperatorReviewDataStore _operatorReviewDataStore = operatorReviewDataStore;
+        private readonly ICarDataStore _carDataStore = carDataStore;
+        private readonly IDriverDataStore _driverDataStore = driverDataStore;
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
@@ -33,11 +43,12 @@ namespace CheckDrive.Web.Controllers
                 r.Comments,
                 Status = ((StatusForDto)r.Status) switch
                 {
-                    StatusForDto.Pending => "Pending",
-                    StatusForDto.Completed => "Completed",
-                    StatusForDto.Rejected => "Rejected",
-                    StatusForDto.Unassigned => "Unassigned",
-                    _ => "Unknown Status"
+                    StatusForDto.Pending => "Kutilmoqda",
+                    StatusForDto.Completed => "Yakunlangan",
+                    StatusForDto.Rejected => "Rad etilgan",
+                    StatusForDto.Unassigned => "Yaratilmagan",
+                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
+                    _ => "No`malum holat"
                 },
                 r.Date,
                 r.Distance,
@@ -127,6 +138,45 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Edit(int id)
+        {
+            var review = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
+
+            var drivers = await _driverDataStore.GetDriversAsync();
+            var cars = await _carDataStore.GetCarsAsync(null, null);
+
+            ViewBag.DriverSelectList = new SelectList(drivers.Data.Select(driver => new
+            {
+                Id = driver.Id,
+                DisplayText = $"{driver.FirstName} {driver.LastName}"
+            }), "Id", "DisplayText");
+
+            ViewBag.CarSelectList = new SelectList(cars.Data.Select(car => new
+            {
+                Id = car.Id,
+                DisplayText = $"{car.Model} ({car.Number})"
+            }), "Id", "DisplayText");
+
+            ViewBag.Status = Enum.GetValues(typeof(StatusForDto)).Cast<StatusForDto>().Select(e => new SelectListItem
+            {
+                Value = e.ToString(),
+                Text = e switch
+                {
+                    StatusForDto.Pending => "Kutilmoqda",
+                    StatusForDto.Completed => "Yakunlangan",
+                    StatusForDto.Rejected => "Rad etilgan",
+                    StatusForDto.Unassigned => "Yaratilmagan",
+                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
+                    _ => "No`malum holat"
+                }
+            }).ToList();
+            if (review == null)
+            {
+                return NotFound();
+            }
+            return View(review);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, MechanicAcceptanceForUpdateDto mechanicAcceptance)
@@ -180,6 +230,13 @@ namespace CheckDrive.Web.Controllers
         {
             var mechanicAcceptance = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
             return mechanicAcceptance != null;
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var mechanicAcceptence = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
+
+            return View(mechanicAcceptence);
         }
     }
 }

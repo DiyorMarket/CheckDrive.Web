@@ -1,69 +1,76 @@
-﻿@model CheckDrive.ApiContracts.Account.AccountDto
+﻿@model CheckDrive.ApiContracts.OperatorReview.OperatorReviewDto
 
 @{
     ViewData["Title"] = "Delete";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1 class="align-items-baseline" style="margin-top: 100px">O'chirish</h1>
 <hr />
 
-<h3 style="color:grey;">Haqiqatan ham buni oʻchirib tashlamoqchimisiz? 
-     O'chirsangiz bu shaxs ishtirok etgan barcha ma'lumotlar ham o'chiriladi!!!
+<h3 style="color:grey;">
+    Haqiqatan ham buni oʻchirib tashlamoqchimisiz?
+    O'chirsangiz bu mashina ishtirok etgan barcha ma'lumotlar ham o'chiriladi!!!
 </h3>
 <div>
-    <hr/>
+    <h4>OperatorReview</h4>
+    <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            Id:
+            Operator F.I.SH:
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Id)
+            @Html.DisplayFor(model => model.OperatorName)
         </dd>
         <dt class="col-sm-2">
-            Ism:
+            Haydovchi F.I.SH
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
+            @Html.DisplayFor(model => model.DriverName)
         </dd>
         <dt class="col-sm-2">
-            Familiya:
+            Avtomobil:
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
+            @Html.DisplayFor(model => model.CarModel)
         </dd>
         <dt class="col-sm-2">
-            Tug'ilgan kun:
+            Davlat raqami:
         </dt>
         <dd class="col-sm-10">
-            @(Model.Bithdate.ToString("yyyy-MM-dd"))
+            @Html.DisplayFor(model => model.CarNumber)
         </dd>
         <dt class="col-sm-2">
-            Telefon raqam:
+            Yoqilg'i quyish:
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
+            @(Model.IsGiven.HasValue ? (Model.IsGiven.Value ? "Quyildi" : "Quyilmadi") : "N/A")
         </dd>
         <dt class="col-sm-2">
-            Login:
+            Yoqilg'i miqdori:
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Login)
+            @Html.DisplayFor(model => model.OilAmount)
         </dd>
         <dt class="col-sm-2">
-            Parol:
+            Yoqilg'i markasi:
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Password)
+            @Html.DisplayFor(model => model.OilMarks)
         </dd>
         <dt class="col-sm-2">
-            Kasb:
+            Izoh:
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RoleName)
+            @Html.DisplayFor(model => model.Comments)
+        </dd>
+        <dt class="col-sm-2">
+            Avtomobil yoqilg'i sig'imi:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CarOilCapacity)
         </dd>
     </dl>
-    <!-- Buttons -->
+    
     <form asp-action="Delete">
         <div class="form-group">
             <a asp-action="Index" class="btn btn-outline-info">

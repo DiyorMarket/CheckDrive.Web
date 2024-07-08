@@ -78,10 +78,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);
-            if (operatorReview == null)
-            {
-                return NotFound();
-            }
+
             return View(operatorReview);
         }
         public async Task<IActionResult> Create(int? driverId, string? driverName, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel)
@@ -227,6 +224,41 @@ namespace CheckDrive.Web.Controllers
             {
                 return NotFound();
             }
+            var drivers = await _driverDataStore.GetDriversAsync();
+            var cars = await _carDataStore.GetCarsAsync(null, null);
+
+            ViewBag.DriverSelectList = new SelectList(drivers.Data.Select(driver => new
+            {
+                Id = driver.Id,
+                DisplayText = $"{driver.FirstName} {driver.LastName}"
+            }), "Id", "DisplayText");
+
+            ViewBag.CarSelectList = new SelectList(cars.Data.Select(car => new
+            {
+                Id = car.Id,
+                DisplayText = $"{car.Model} ({car.Number})"
+            }), "Id", "DisplayText");
+
+            ViewBag.OilMarks = Enum.GetValues(typeof(OilMarksForDto)).Cast<OilMarksForDto>().Select(e => new SelectListItem
+            {
+                Value = e.ToString(),
+                Text = e.ToString()
+            });
+
+            ViewBag.Status = Enum.GetValues(typeof(StatusForDto)).Cast<StatusForDto>().Select(e => new SelectListItem
+            {
+                Value = e.ToString(),
+                Text = e switch
+                {
+                    StatusForDto.Pending => "Kutilmoqda",
+                    StatusForDto.Completed => "Yakunlangan",
+                    StatusForDto.Rejected => "Rad etilgan",
+                    StatusForDto.Unassigned => "Yaratilmagan",
+                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
+                    _ => "No`malum holat"
+                }
+            }).ToList();
+
             return View(operatorReview);
         }
 

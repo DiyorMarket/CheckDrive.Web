@@ -78,14 +78,18 @@ namespace CheckDrive.Web.Stores.OperatorReviews
             return JsonConvert.DeserializeObject<OperatorReviewDto>(jsonResponse);
         }
 
-        public Task DeleteOperatorReview(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<OperatorReview> UpdateOperatorReview(int id, OperatorReview operatorReview)
         {
             throw new NotImplementedException();
+        }
+        public async Task DeleteOperatorReview(int id)
+        {
+
+            var response = await _api.DeleteAsync($"operators/review/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not delete Operator reviews with id: {id}.");
+            }
         }
     }
 }

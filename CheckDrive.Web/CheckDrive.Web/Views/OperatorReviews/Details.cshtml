@@ -1,0 +1,87 @@
+﻿@model CheckDrive.ApiContracts.OperatorReview.OperatorReviewDto
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<div>
+    <h4>Operator ma'lumotlari</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Operator F.I.SH:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OperatorName)
+        </dd>
+        <dt class = "col-sm-2">
+            Haydovchi F.I.SH:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DriverName)
+        </dd>
+        <dt class = "col-sm-2">
+            Avtomobil:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CarModel)
+        </dd>
+        <dt class="col-sm-2">
+            Davlat raqami:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CarNumber)
+        </dd>
+        <dt class="col-sm-2">
+            Yoqilg'i quyish:
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.IsGiven.HasValue ? (Model.IsGiven.Value ? "Quyildi" : "Quyilmadi") : "N/A")
+        </dd>
+        <dt class = "col-sm-2">
+            Yoqilg'i miqdori:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OilAmount)
+        </dd>
+        <dt class="col-sm-2">
+            Yoqilg'i markasi:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OilMarks)
+        </dd>
+        <dt class="col-sm-2">
+            Izoh:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Comments)
+        </dd>
+        <dt class="col-sm-2">
+            Avtomobil yoqilg'i sig'imi:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CarOilCapacity)
+        </dd>
+        <dt class="col-sm-2">
+            Holati:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+    </dl>
+</div>
+<div class="mt-4">
+    <a asp-action="Index" class="btn btn-outline-info">
+        <i class="fa-solid fa-arrow-left"></i>
+        Orqaga
+    </a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">
+        <i class="fa-solid fa-pen"></i>
+        Tahrirlash
+    </a>
+    <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-outline-danger">
+        <i class="fa-solid fa-trash"></i>
+        O'chirish
+    </a>
+</div>

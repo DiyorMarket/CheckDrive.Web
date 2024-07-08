@@ -36,6 +36,20 @@ namespace CheckDrive.Web.Stores.Drivers
                 throw new Exception("Could not fetch drivers.");
             }
 
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<GetDriverResponse>(json);
+
+            return result;
+        }
+
+        public async Task<GetDriverResponse> GetDriversAsync()
+        {
+            var response = await _api.GetAsync("drivers?");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch drivers.");
+            }
 
             var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<GetDriverResponse>(json);

@@ -1,52 +1,63 @@
-﻿@model CheckDrive.ApiContracts.DoctorReview.DoctorReviewDto
+﻿@model CheckDrive.ApiContracts.MechanicHandover.MechanicHandoverDto
 
 @{
     ViewData["Title"] = "Details";
 }
 
 <div>
-    <h4>Shifokor ko`rigi haqida ma'lumot</h4>
+    <h4>Mexanik (Topshirish) ma'lumotari</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            Id:
+            Mexanik F.I.SH:
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Id)
+            @Html.DisplayFor(model => model.MechanicName)
         </dd>
         <dt class="col-sm-2">
-            Haydovchi F.I.:
+            Haydovchi F.I.SH:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DriverName)
         </dd>
         <dt class="col-sm-2">
-            Shifokor F.I.:
+            Avtomobil:
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DoctorName)
+            @Html.DisplayFor(model => model.CarName)
         </dd>
         <dt class="col-sm-2">
-            Sog`lig`i:
+            Topshirish:
+        </dt>
+        <dd class = "col-sm-10">
+            @(Model.IsHanded.HasValue ? (Model.IsHanded.Value ? "Topshirildi" : "Topshirilmadi"): "N/A")
+        </dd>
+        <dt class="col-sm-2">
+            Topshirish masofasi:
         </dt>
         <dd class="col-sm-10">
-            @(Model.IsHealthy.HasValue ? (Model.IsHealthy.Value ? "Sog`lom" : "Kasal") : "N/A")
+            @Html.DisplayFor(model => model.Distance)
         </dd>
         <dt class="col-sm-2">
+            Vaqt:
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.Date.ToString("yyyy-MM-dd | HH:mm"))
+        </dd>
+        <dt class = "col-sm-2">
             Izoh:
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Comments)
         </dd>
         <dt class="col-sm-2">
-            Sana:
+            Holati:
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Date)
+            @Html.DisplayFor(model => model.Status)
         </dd>
     </dl>
 </div>
-
 <div class="mt-4">
     <a asp-action="Index" class="btn btn-outline-info">
         <i class="fa-solid fa-arrow-left"></i>

@@ -80,18 +80,42 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
             return JsonConvert.DeserializeObject<MechanicHandoverDto>(jsonResponse);
         }
 
-        public Task DeleteMechanicHandoverAsync(int id)
+        public async Task<MechanicHandoverDto> GetMechanicHandoverAsync(int id)
         {
-            throw new NotImplementedException();
+            var response = await _api.GetAsync($"mechanics/handover/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not fetch account with id: {id}.");
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<MechanicHandoverDto>(json);
+
+            return result;
+        }
+        public async Task<MechanicHandoverDto> UpdateMechanicHandoverAsync(int id, MechanicHandoverForUpdateDto mechanicHandover)
+        {
+            var json = JsonConvert.SerializeObject(mechanicHandover);
+            var response = await _api.PutAsync($"mechanics/handover/{mechanicHandover.Id}", json);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error updating MechanicHandovers.");
+            }
+
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<MechanicHandoverDto>(jsonResponse);
+        }
+        public async Task DeleteMechanicHandoverAsync(int id)
+        {
+            var response = await _api.DeleteAsync($"mechanics/handover/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not delete Mechanic acceptance with id: {id}.");
+            }
         }
 
-        public Task<MechanicHandoverDto> GetMechanicHandoverAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-        public Task<MechanicHandoverDto> UpdateMechanicHandoverAsync(int id, MechanicHandoverForUpdateDto mechanicHandover)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

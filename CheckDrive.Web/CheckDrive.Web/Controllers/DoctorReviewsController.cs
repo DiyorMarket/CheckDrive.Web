@@ -144,19 +144,17 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var review = await _doctorReviewDataStore.GetDoctorReviewAsync(id);
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today, null, null);
-            var doctorReviewsForDoctor = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today, null, 3);
-
-            var driverIds = doctorReviews.Data.Select(ma => ma.DriverId).ToHashSet();
-            var filteredDoctorResponse = doctorReviewsForDoctor.Data.Where(or => !driverIds.Contains(or.DriverId)).ToList();
-            filteredDoctorResponse.Add(review);
-
+            var drivers = await _driverDataStore.GetDriversAsync();
+            var driverss = drivers.Data.ToList();
             if (review == null)
             {
                 return NotFound();
             }
-
-            ViewBag.DriverSelectList = new SelectList(filteredDoctorResponse, "DriverId", "DriverName", review.DriverId);
+            ViewBag.DriverSelectList = new SelectList(driverss.Select(driver => new
+            {
+                Id = driver.Id,
+                DisplayText = $"{driver.FirstName} {driver.LastName}"
+            }), "Id", "DisplayText");
 
             return View(review);
         }
