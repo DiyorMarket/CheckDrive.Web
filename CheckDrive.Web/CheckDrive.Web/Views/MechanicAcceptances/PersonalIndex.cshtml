@@ -6,17 +6,23 @@
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
 }
 <div class="container-fluid py-2 px-4 d-flex justify-content-end">
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center gap-2">
         <div class="dropdown">
-            <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: white; border-color: black;">
+            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:white; border-color:black; width:55px">
                 <i class="fa-solid fa-user" style="background-color: white; color: black;"></i>
-                <i class="fa-solid fa-arrow-down" style="background-color:white; color:black"></i>
+                <i class="bi bi-caret-down-fill" style="background-color:white; color:black"></i>
             </button>
             <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" style="color: red" href="@Url.Action("Login", "Auth")">Profildan Chiqish</a></li>
                 <li><a class="dropdown-item" style="color: darkblue" href="@Url.Action("PersonalIndex", "MechanicHandovers")">Mexanik(Topshiruvchi)</a></li>
             </ul>
         </div>
+        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
+            <span class="logout-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </span>
+            Chiqish
+        </button>
+        
     </div>
 </div>
 
