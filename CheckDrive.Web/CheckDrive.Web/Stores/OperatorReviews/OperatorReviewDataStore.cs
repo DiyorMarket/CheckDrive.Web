@@ -78,9 +78,19 @@ namespace CheckDrive.Web.Stores.OperatorReviews
             return JsonConvert.DeserializeObject<OperatorReviewDto>(jsonResponse);
         }
 
-        public Task<OperatorReview> UpdateOperatorReview(int id, OperatorReview operatorReview)
+        public async Task<OperatorReviewDto> UpdateOperatorReview(int id, OperatorReviewForUpdateDto operatorReview)
         {
-            throw new NotImplementedException();
+            var json = JsonConvert.SerializeObject(operatorReview);
+            var response = await _api.PutAsync($"operators/review/{operatorReview.Id}", json);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error updating operatorReviews.");
+            }
+
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<OperatorReviewDto>(jsonResponse);
         }
         public async Task DeleteOperatorReview(int id)
         {

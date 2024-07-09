@@ -45,6 +45,7 @@
                 <label asp-for="Comments" class="control-label mt-2">Izoh</label>
                 <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
             </div>
+            <input type="hidden" asp-for="MechanicId" />
             <div class="form-group mt-3">
                 <a asp-action="Details" asp-route-id="@Model?.Id" class="btn btn-outline-info">
                     <i class="fa-solid fa-arrow-left-long"></i>

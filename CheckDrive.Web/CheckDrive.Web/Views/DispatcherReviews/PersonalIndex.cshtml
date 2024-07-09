@@ -43,10 +43,9 @@
                             <td class="text-center vertical-align-middle">@review.CarName</td>
                             <td class="text-center vertical-align-middle">@review.CarMeduimFuelConsumption</td>
                             <td class="text-center vertical-align-middle">
-                                @if (!string.IsNullOrEmpty(review.DispatcherName))
+                                @if (review.DispatcherId != 0)
                                 {
-                                    @review.DistanceCovered
-                                    ;
+                                    @review.DistanceCovered;
                                 }
                                 else
                                 {
@@ -58,10 +57,9 @@
                             <td class="text-center vertical-align-middle">@review.InitialDistance</td>
                             <td class="text-center vertical-align-middle">@review.FinalDistance</td>
                             <td class="text-center vertical-align-middle">
-                                @if (!string.IsNullOrEmpty(review.DispatcherName))
+                                @if (review.DispatcherId != 0)
                                 {
-                                    @review.FuelSpended
-                                    ;
+                                    @review.FuelSpended;
                                 }
                                 else
                                 {
