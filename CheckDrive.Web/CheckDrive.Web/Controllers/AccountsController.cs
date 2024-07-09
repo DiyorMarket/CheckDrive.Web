@@ -62,20 +62,7 @@ namespace CheckDrive.Web.Controllers
 
             var accountHistories = await _driverDataStore.GetDriverHistories(id);
 
-            var accounts = accountHistories.Select(r => new
-            {
-                r.Date,
-                IsHanded = (bool)r.IsHanded ? "Berildi" : "Berilmadi",
-                IsAccepted = (bool)r.IsAccepted ? "Qabul qilingan" : "Qabul qilinmagan",
-                IsGiven = (bool)r.IsGiven ? "Quyildi" : "Quyilmadi",
-                IsHealthy = (bool)r.IsHealthy ? "Sog`lom" : "Kasal",
-                r.DoctorReviewId,
-                r.MechanicAcceptanceId,
-                r.MechanicHandoverId,
-                r.OperatorReviewId,
-            }).ToList();
-
-            ViewBag.DriverHistories = accounts;
+            ViewBag.DriverHistories = accountHistories;
 
             return View(account);
         }

@@ -5,88 +5,102 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <button class="nav-link active" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">Ma`lumot</button>
-        <button class="nav-link" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" type="button" role="tab" aria-controls="nav-history" aria-selected="false">Ish tarixi</button>
-    </div>
-
-
- <div id="detailsBlock" class="mt-3">
-        <dl class="row">
-            <dt class="col-sm-2">
-                Ism:
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.FirstName)
-            </dd>
-            <dt class="col-sm-2">
-                Familiya:
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.LastName)
-            </dd>
-            <dt class="col-sm-2">
-                Tug'ilgan kun:
-            </dt>
-            <dd class="col-sm-10">
-                @(Model.Bithdate.ToString("yyyy-MM-dd"))
-            </dd>
-            <dt class="col-sm-2">
-                Telefon raqam:
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.PhoneNumber)
-            </dd>
-            <dt class="col-sm-2">
-                Electron pochta:
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Login)
-            </dd>
-            <dt class="col-sm-2">
-                Parol:
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Password)
-            </dd>
-            <dt class="col-sm-2">
-                Kasb:
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.RoleName)
-            </dd>
-            <div class="mt-4">
-                <a asp-action="Index" class="btn btn-outline-info">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    Orqaga
-                </a>
-                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">
-                    <i class="fa-solid fa-pen"></i>
-                    Tahrirlash
-                </a>
-                <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-outline-danger">
-                    <i class="fa-solid fa-trash"></i>
-                    O'chirish
-                </a>
-            </div>
-        </dl>
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">Ma'lumot</button>
+    <button class="nav-link" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" type="button" role="tab" aria-controls="nav-history" aria-selected="false">Ish tarixi</button>
 </div>
 
-<div id="historyBlock">
-    <div class="col-12">
-        <ejs-grid id="customers-list"
-                  dataSource="@ViewBag.DriverHistories"
-                  gridLines="Vertical"
-                  allowSorting="true">
-            <e-grid-columns>
-                <e-grid-column headerText="Sana" field="Date" format="dd/MM/yyyy" typeof="date"></e-grid-column>
-                <e-grid-column headerText="Doktor Ko'rik" field="IsHealthy"  typeof="text"></e-grid-column>
-                <e-grid-column headerText="Mexanik (Topshirish)" field="IsHanded" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Operator" field="IsGiven" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Mexanik (Qabul qilish)" field="IsAccepted" typeof="text"></e-grid-column>
-            </e-grid-columns>
-        </ejs-grid>
+<div id="detailsBlock" class="mt-3">
+    <dl class="row">
+        <dt class="col-sm-2 font-weight-normal">Ism:</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.FirstName)</dd>
+        <dt class="col-sm-2 font-weight-normal">Familiya:</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.LastName)</dd>
+        <dt class="col-sm-2 font-weight-normal">Tug'ilgan kun:</dt>
+        <dd class="col-sm-10">@(Model.Bithdate.ToString("yyyy-MM-dd"))</dd>
+        <dt class="col-sm-2 font-weight-normal">Telefon raqam:</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.PhoneNumber)</dd>
+        <dt class="col-sm-2 font-weight-normal">Electron pochta:</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Login)</dd>
+        <dt class="col-sm-2 font-weight-normal">Parol:</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Password)</dd>
+        <dt class="col-sm-2 font-weight-normal">Kasb:</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.RoleName)</dd>
+        <div class="mt-4">
+            <a asp-action="Index" class="btn btn-outline-info">
+                <i class="fa-solid fa-arrow-left"></i> Orqaga
+            </a>
+            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">
+                <i class="fa-solid fa-pen"></i> Tahrirlash
+            </a>
+            <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-outline-danger">
+                <i class="fa-solid fa-trash"></i> O'chirish
+            </a>
+        </div>
+    </dl>
+</div>
+
+<div id="historyBlock" class="container mt-3">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover paper-shadow">
+            <thead>
+                <tr>
+                    <th>Sana</th>
+                    <th>Doktor Ko'rik</th>
+                    <th>Mexanik (Topshirish)</th>
+                    <th>Operator</th>
+                    <th>Mexanik (Qabul qilish)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var history in ViewBag.DriverHistories)
+                {
+                    <tr>
+                        <td>@history.Date.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @if (history.IsHealthy)
+                            {
+                                <a class="badge bg-success" href="/path/to/details/@history.DoctorReviewId">Sog`lom</a>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Kasal</span>
+                            }
+                        </td>
+                        <td>
+                            @if (history.IsHanded)
+                            {
+                                <a class="badge bg-success" href="/path/to/details/@history.MechanicHandoverId">Berildi</a>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Berilmadi</span>
+                            }
+                        </td>
+                        <td>
+                            @if (history.IsGiven)
+                            {
+                                <a class="badge bg-success" href="/path/to/details/@history.OperatorReviewId">Quyildi</a>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Quyilmadi</span>
+                            }
+                        </td>
+                        <td>
+                            @if (history.IsAccepted)
+                            {
+                                <a class="badge bg-success" href="/path/to/details/@history.MechanicAcceptanceId">Qabul qilindi</a>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Qabul qilinmadi</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -107,4 +121,57 @@
         });
     });
 </script>
+<style>
+    .badge {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
 
+    .bg-success {
+        background-color: #28a745;
+    }
+
+    .bg-danger {
+        background-color: #dc3545;
+    }
+
+    .container {
+        margin-top: 30px;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+    .paper-shadow {
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .pagination {
+        justify-content: flex-end;
+    }
+
+    .shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .pagination .page-link {
+        margin-left: 5px;
+    }
+
+    .pagination .page-item.shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .font-weight-normal {
+        font-weight: normal;
+    }
+</style>
