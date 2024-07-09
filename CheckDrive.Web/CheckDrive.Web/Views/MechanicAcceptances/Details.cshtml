@@ -1,4 +1,5 @@
-﻿@model CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto
+﻿@using CheckDrive.ApiContracts
+@model CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto
 
 @{
     ViewData["Title"] = "Details";
@@ -49,6 +50,20 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Comments)
+        </dd>
+        <dd class="col-sm-10">
+            @{
+                string statusUzbek = Model.Status switch
+                {
+                    StatusForDto.Pending => "Kutilmoqda",
+                    StatusForDto.Completed => "Bajarilgan",
+                    StatusForDto.Rejected => "Rad etilgan",
+                    StatusForDto.Unassigned => "Tayinlanmagan",
+                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
+                    _ => "Noma'lum"
+                };
+            }
+            @statusUzbek
         </dd>
     </dl>
 </div>

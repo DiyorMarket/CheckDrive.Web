@@ -1,4 +1,5 @@
-﻿@model CheckDrive.ApiContracts.MechanicHandover.MechanicHandoverDto
+﻿@using CheckDrive.ApiContracts
+@model CheckDrive.ApiContracts.MechanicHandover.MechanicHandoverDto
 
 @{
     ViewData["Title"] = "Details";
@@ -54,7 +55,18 @@
             Holati:
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Status)
+            @{
+                string statusUzbek = Model.Status switch
+                {
+                    StatusForDto.Pending => "Kutilmoqda",
+                    StatusForDto.Completed => "Bajarilgan",
+                    StatusForDto.Rejected => "Rad etilgan",
+                    StatusForDto.Unassigned => "Tayinlanmagan",
+                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
+                    _ => "Noma'lum"
+                };
+            }
+            @statusUzbek
         </dd>
     </dl>
 </div>
