@@ -145,7 +145,7 @@ namespace CheckDrive.Web.Controllers
             {
                 await _carDataStore.UpdateCarAsync(dispatcherReview.CarId, carr);
                 await _dispatcherReviewDataStore.CreateDispatcherReview(dispatcherReview);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(PersonalIndex));
             }
             return View(dispatcherReview);
         }

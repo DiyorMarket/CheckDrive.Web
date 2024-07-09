@@ -45,7 +45,9 @@ namespace CheckDrive.Web.Controllers
                 r.OperatorName,
                 r.DriverName,
                 r.OilAmount,
+                CarModel = $"{r.CarModel} ({r.CarNumber})",
                 r.Date,
+                IsGiven = (bool)r.IsGiven ? "Quyildi" : "Quyilmadi",
                 r.Comments,
                 Status = ((StatusForDto)r.Status) switch
                 {
@@ -209,8 +211,8 @@ namespace CheckDrive.Web.Controllers
                 else
                 {
                     operatorReview.Status = operatorReview.IsGiven ? StatusForDto.Pending : StatusForDto.Rejected;
-                    await _carDataStore.UpdateCarAsync(operatorReview.CarId, carr);
                     await _operatorReviewDataStore.CreateOperatorReview(operatorReview);
+                    await _carDataStore.UpdateCarAsync(operatorReview.CarId, carr);
                     return RedirectToAction(nameof(PersonalIndex));
                 }
             }
@@ -224,6 +226,7 @@ namespace CheckDrive.Web.Controllers
             {
                 return NotFound();
             }
+
             var drivers = await _driverDataStore.GetDriversAsync();
             var cars = await _carDataStore.GetCarsAsync(null, null);
 
@@ -264,7 +267,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OilAmount,Comments,Status,Date,OperatorId,DriverId")] OperatorReview operatorReview)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,OilAmount,Comments,Status,Date,OperatorId,DriverId,IsGiven,CarId")] OperatorReviewForUpdateDto operatorReview)
         {
             if (id != operatorReview.Id)
             {
@@ -275,6 +278,22 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
+                    var existingReview = await _operatorReviewDataStore.GetOperatorReview(operatorReview.Id);
+                    var car = await _carDataStore.GetCarAsync(operatorReview.CarId);
+
+                    var updatedCar = new CarForUpdateDto
+                    {
+                        Id = operatorReview.CarId,
+                        Color = car.Color,
+                        FuelTankCapacity = car.FuelTankCapacity,
+                        ManufacturedYear = car.ManufacturedYear,
+                        MeduimFuelConsumption = car.MeduimFuelConsumption,
+                        Model = car.Model,
+                        Number = car.Number,
+                        RemainingFuel = car.RemainingFuel - (double)existingReview.OilAmount + operatorReview.OilAmount,
+                    };
+
+                    await _carDataStore.UpdateCarAsync(updatedCar.Id, updatedCar);
                     await _operatorReviewDataStore.UpdateOperatorReview(id, operatorReview);
                 }
                 catch (Exception)
@@ -290,11 +309,32 @@ namespace CheckDrive.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             return View(operatorReview);
         }
+
+        private async Task<bool> OperatorReviewExists(int id)
+        {
+            var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);
+            return operatorReview != null;
+        }
+
         public async Task<IActionResult> Delete(int id)
         {
             var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);
+            var car = await _carDataStore.GetCarAsync(operatorReview.CarId);
+            var carr = new CarForUpdateDto
+            {
+                Id = operatorReview.CarId,
+                Color = car.Color,
+                FuelTankCapacity = car.FuelTankCapacity,
+                ManufacturedYear = car.ManufacturedYear,
+                MeduimFuelConsumption = car.MeduimFuelConsumption,
+                Model = car.Model,
+                Number = car.Number,
+                RemainingFuel = car.RemainingFuel - (double)operatorReview.OilAmount,
+            };
+            await _carDataStore.UpdateCarAsync(operatorReview.CarId, carr);
             if (operatorReview == null)
             {
                 return NotFound();
@@ -309,11 +349,7 @@ namespace CheckDrive.Web.Controllers
             await _operatorReviewDataStore.DeleteOperatorReview(id);
             return RedirectToAction(nameof(Index));
         }
-        private async Task<bool> OperatorReviewExists(int id)
-        {
-            var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);
-            return operatorReview != null;
-        }
+
         private async Task<List<SelectListItem>> GETDrivers()
         {
             var driverResponse = await _driverDataStore.GetDriversAsync(null, null);
