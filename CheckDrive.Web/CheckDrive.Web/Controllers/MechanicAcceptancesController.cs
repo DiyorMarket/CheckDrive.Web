@@ -46,7 +46,7 @@ namespace CheckDrive.Web.Controllers
                     StatusForDto.Pending => "Kutilmoqda",
                     StatusForDto.Completed => "Yakunlangan",
                     StatusForDto.Rejected => "Rad etilgan",
-                    StatusForDto.Unassigned => "Yaratilmagan",
+                    StatusForDto.Unassigned => "Tayinlanmagan",
                     StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
                     _ => "No`malum holat"
                 },
@@ -165,7 +165,7 @@ namespace CheckDrive.Web.Controllers
                     StatusForDto.Pending => "Kutilmoqda",
                     StatusForDto.Completed => "Yakunlangan",
                     StatusForDto.Rejected => "Rad etilgan",
-                    StatusForDto.Unassigned => "Yaratilmagan",
+                    StatusForDto.Unassigned => "Tayinlanmagan",
                     StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
                     _ => "No`malum holat"
                 }

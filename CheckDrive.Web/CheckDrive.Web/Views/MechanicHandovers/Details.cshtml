@@ -59,7 +59,7 @@
                 string statusUzbek = Model.Status switch
                 {
                     StatusForDto.Pending => "Kutilmoqda",
-                    StatusForDto.Completed => "Bajarilgan",
+                    StatusForDto.Completed => "Yakunlangan",
                     StatusForDto.Rejected => "Rad etilgan",
                     StatusForDto.Unassigned => "Tayinlanmagan",
                     StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
@@ -78,9 +78,5 @@
     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">
         <i class="fa-solid fa-pen"></i>
         Tahrirlash
-    </a>
-    <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-outline-danger">
-        <i class="fa-solid fa-trash"></i>
-        O'chirish
     </a>
 </div>
