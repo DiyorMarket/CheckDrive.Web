@@ -35,10 +35,16 @@ public class AuthController : Controller
             var roleId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
             var accountId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
             int accountIds = Int32.Parse(accountId);
-
-            TempData["UserName"] = _accountDataStore.GetAccountAsync(accountIds)
-                .Result.FirstName;
-            TempData.Keep("UserName");
+            try
+            {
+                TempData["UserName"] = _accountDataStore.GetAccountAsync(accountIds)
+                    .Result.FirstName;
+                TempData.Keep("UserName");
+            }
+            catch (Exception ex) 
+            {
+                return RedirectToAction("Login", "Auth");
+            }
 
             switch (roleId)
             {

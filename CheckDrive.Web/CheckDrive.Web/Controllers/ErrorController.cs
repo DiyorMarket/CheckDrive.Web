@@ -16,6 +16,7 @@ namespace CheckDrive.Web.Controllers
                 401 => RedirectToAction(nameof(Unauthorized)),
                 403 => RedirectToAction(nameof(Forbidden)),
                 404 => RedirectToAction(nameof(NotFound)),
+                409 => RedirectToAction(nameof(Error409)),
                 _ => RedirectToAction(nameof(InternalServerError)),
             };
         }
@@ -39,6 +40,9 @@ namespace CheckDrive.Web.Controllers
         {
             return View();
         }
-
+        public IActionResult Error409()
+        {
+            return View();
+        }
     }
 }
