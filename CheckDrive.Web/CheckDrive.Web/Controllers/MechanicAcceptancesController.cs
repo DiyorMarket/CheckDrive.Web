@@ -142,8 +142,8 @@ namespace CheckDrive.Web.Controllers
         {
             var review = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
 
-            var drivers = await _driverDataStore.GetDriversAsync();
-            var cars = await _carDataStore.GetCarsAsync(null, null);
+            var drivers = await _driverDataStore.GetDriversAsync(1);
+            var cars = await _carDataStore.GetCarsAsync(1);
 
             ViewBag.DriverSelectList = new SelectList(drivers.Data.Select(driver => new
             {
