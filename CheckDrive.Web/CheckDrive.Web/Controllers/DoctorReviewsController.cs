@@ -144,7 +144,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var review = await _doctorReviewDataStore.GetDoctorReviewAsync(id);
-            var drivers = await _driverDataStore.GetDriversAsync();
+            var drivers = await _driverDataStore.GetDriversAsync(1);
             var driverss = drivers.Data.ToList();
             if (review == null)
             {

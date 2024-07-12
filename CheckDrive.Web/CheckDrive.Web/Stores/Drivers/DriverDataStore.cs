@@ -42,9 +42,13 @@ namespace CheckDrive.Web.Stores.Drivers
             return result;
         }
 
-        public async Task<GetDriverResponse> GetDriversAsync()
+        public async Task<GetDriverResponse> GetDriversAsync(int? roleId)
         {
-            var response = await _api.GetAsync("drivers?");
+            StringBuilder query = new("");
+
+            if (roleId != 0)
+                query.Append($"roleId={roleId}&");
+            var response = await _api.GetAsync("drivers?" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
             {
