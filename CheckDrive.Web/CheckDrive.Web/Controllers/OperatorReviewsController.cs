@@ -206,7 +206,7 @@ namespace CheckDrive.Web.Controllers
                 }
                 else if (operatorReview.OilAmount < 0 || operatorReview.OilAmount > maxOilAmount)
                 {
-                    ModelState.AddModelError("OilAmount", $"Oil amount must be between 0 and {maxOilAmount}.");
+                    ModelState.AddModelError("OilAmount", $"Yoqilg`i miqdori 0 va {maxOilAmount} orasida bo`lishi kerak");
                 }
                 else
                 {
