@@ -20,7 +20,7 @@
         <dd class="col-sm-10">@(Model.Bithdate.ToString("yyyy-MM-dd"))</dd>
         <dt class="col-sm-2 font-weight-normal">Telefon raqam:</dt>
         <dd class="col-sm-10">@Html.DisplayFor(model => model.PhoneNumber)</dd>
-        <dt class="col-sm-2 font-weight-normal">Electron pochta:</dt>
+        <dt class="col-sm-2 font-weight-normal">Login:</dt>
         <dd class="col-sm-10">@Html.DisplayFor(model => model.Login)</dd>
         <dt class="col-sm-2 font-weight-normal">Parol:</dt>
         <dd class="col-sm-10">@Html.DisplayFor(model => model.Password)</dd>
@@ -41,68 +41,76 @@
 </div>
 
 <div id="historyBlock" class="container mt-3">
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover paper-shadow">
-            <thead>
-                <tr>
-                    <th>Sana</th>
-                    <th>Doktor Ko'rik</th>
-                    <th>Mexanik (Topshirish)</th>
-                    <th>Operator</th>
-                    <th>Mexanik (Qabul qilish)</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var history in ViewBag.DriverHistories)
-                {
+    @if (ViewBag.DriverHistories != null && ViewBag.DriverHistories.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover paper-shadow">
+                <thead>
                     <tr>
-                        <td>@history.Date.ToString("dd/MM/yyyy")</td>
-                        <td>
-                            @if (history.IsHealthy)
-                            {
-                                <a class="badge bg-success" href="/path/to/details/@history.DoctorReviewId">Sog`lom</a>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">Kasal</span>
-                            }
-                        </td>
-                        <td>
-                            @if (history.IsHanded)
-                            {
-                                <a class="badge bg-success" href="/path/to/details/@history.MechanicHandoverId">Berildi</a>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">Berilmadi</span>
-                            }
-                        </td>
-                        <td>
-                            @if (history.IsGiven)
-                            {
-                                <a class="badge bg-success" href="/path/to/details/@history.OperatorReviewId">Quyildi</a>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">Quyilmadi</span>
-                            }
-                        </td>
-                        <td>
-                            @if (history.IsAccepted)
-                            {
-                                <a class="badge bg-success" href="/path/to/details/@history.MechanicAcceptanceId">Qabul qilindi</a>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">Qabul qilinmadi</span>
-                            }
-                        </td>
+                        <th>Sana</th>
+                        <th>Doktor Ko'rik</th>
+                        <th>Mexanik (Topshirish)</th>
+                        <th>Operator</th>
+                        <th>Mexanik (Qabul qilish)</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @foreach (var history in ViewBag.DriverHistories)
+                    {
+                        <tr>
+                            <td>@history.Date.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @if (history.IsHealthy)
+                                {
+                                    <a class="badge bg-success" href="/DoctorReviews/details/@history.DoctorReviewId">Sog`lom</a>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Kasal</span>
+                                }
+                            </td>
+                            <td>
+                                @if (history.IsHanded)
+                                {
+                                    <a class="badge bg-success" href="/MechanicHandovers/details/@history.MechanicHandoverId">Berildi</a>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Berilmadi</span>
+                                }
+                            </td>
+                            <td>
+                                @if (history.IsGiven)
+                                {
+                                    <a class="badge bg-success" href="/OperatorReviews/details/@history.OperatorReviewId">Quyildi</a>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Quyilmadi</span>
+                                }
+                            </td>
+                            <td>
+                                @if (history.IsAccepted)
+                                {
+                                    <a class="badge bg-success" href="/MechanicAcceptances/details/@history.MechanicAcceptanceId">Qabul qilindi</a>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Qabul qilinmadi</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>Tarixiy ma'lumotlar mavjud emas.</p>
+    }
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
