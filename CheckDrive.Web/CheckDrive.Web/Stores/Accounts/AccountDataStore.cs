@@ -1,4 +1,8 @@
 ﻿using CheckDrive.ApiContracts.Account;
+using CheckDrive.ApiContracts.DispatcherReview;
+using CheckDrive.ApiContracts.DoctorReview;
+using CheckDrive.ApiContracts.Mechanic;
+using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -106,6 +110,67 @@ namespace CheckDrive.Web.Stores.Accounts
             {
                 throw new Exception($"Could not delete account with id: {id}.");
             }
+        }
+
+        public async Task<IEnumerable<DoctorReviewDto>> GetDoctorHistories(int Id)
+        {
+            var response = await _api.GetAsync($"doctors/review/doctorHistories?accountId={Id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception();
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<IEnumerable<DoctorReviewDto>>(json);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<OperatorReviewDto>> GetOperatorHistories(int Id)
+        {
+            var response = await _api.GetAsync($"operators/review/operatorHistories?accountId={Id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception();
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<IEnumerable<OperatorReviewDto>>(json);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<MechanicHistororiesDto>> GetMechanicHistories(int Id)
+        {
+            var response = await _api.GetAsync($"mechanics/mechanicHistories?accountId={Id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception();
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<IEnumerable<MechanicHistororiesDto>>(json);
+
+            return result;
+        }
+
+        public async Task<IEnumerable<DispatcherReviewDto>> GetDispatcherHistories(int Id)
+        {
+            var response = await _api.GetAsync($"dispatchers/dispatcherHistories?accountId={Id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception();
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<IEnumerable<DispatcherReviewDto>>(json);
+
+
+            return result;
         }
     }
 }
