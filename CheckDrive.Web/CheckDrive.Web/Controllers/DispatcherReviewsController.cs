@@ -11,6 +11,7 @@ using CheckDrive.Web.Stores.MechanicHandovers;
 using CheckDrive.Web.Stores.OperatorReviews;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Syncfusion.EJ2.Grids;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -107,6 +108,7 @@ namespace CheckDrive.Web.Controllers
                 var dispatcherResponse = await _dispatcherDataStore.GetDispatchers(accountId);
                 dispatcher = dispatcherResponse.Data.First();
             }
+
             var model = new DispatcherReviewForCreateDto
             {
                 DistanceCovered = distanceCovered ?? 0,
@@ -121,7 +123,9 @@ namespace CheckDrive.Web.Controllers
                 MechanicHandoverId = mechanicHandoverId,
                 OperatorReviewId = operatorReviewId
             };
-
+            var car = _carDataStore.GetCarAsync(carId);
+            var fuelRemaining = car.Result.RemainingFuel;
+            ViewBag.FuelRemaining = fuelRemaining;
             return View(model);
         }
 
@@ -148,6 +152,9 @@ namespace CheckDrive.Web.Controllers
                 await _dispatcherReviewDataStore.CreateDispatcherReview(dispatcherReview);
                 return RedirectToAction(nameof(PersonalIndex));
             }
+            var care = _carDataStore.GetCarAsync(dispatcherReview.CarId);
+            var fuelRemaining = care.Result.RemainingFuel;
+            ViewBag.FuelRemaining = fuelRemaining;
             return View(dispatcherReview);
         }
 

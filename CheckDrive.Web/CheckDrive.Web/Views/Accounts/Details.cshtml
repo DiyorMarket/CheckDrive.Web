@@ -1,5 +1,5 @@
-﻿@model CheckDrive.ApiContracts.Account.AccountDto
-
+﻿@using CheckDrive.ApiContracts
+@model CheckDrive.ApiContracts.Account.AccountDto
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -105,9 +105,225 @@
             </table>
         </div>
     }
+    @if (ViewBag.DoctorHistories != null && ViewBag.DoctorHistories.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover paper-shadow">
+                <thead>
+                    <tr>
+                        <th>Sana</th>
+                        <th>Haydovchi F.I.SH</th>
+                        <th>Health Status</th>
+                        <th>Izoh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var history in ViewBag.DoctorHistories)
+                    {
+                        <tr>
+                            <td>@history.Date.ToString("dd/MM/yyyy")</td>
+                            <td>@history.DriverName</td>
+                            <td>
+                                @if (history.IsHealthy == true)
+                                {
+                                    <span class="badge bg-success">Sog'lom'</span>
+                                }
+                                else if (history.IsHealthy == false)
+                                {
+                                    <span class="badge bg-danger">Kasal</span>
+                                }
+                            </td>
+                            <td>@history.Comments</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    @if (ViewBag.OperatorHistories != null && ViewBag.OperatorHistories.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover paper-shadow">
+                <thead>
+                    <tr>
+                        <th>Sana</th>
+                        <th>Haydovchi F.I.SH</th>
+                        <th>Quyildimi</th>
+                        <th>Yoqilg'i hajmi</th>
+                        <th>Yoqilg'i markasi</th>
+                        <th>Avtomobil model</th>
+                        <th>Avtomobil raqami</th>
+                        <th>Status</th>
+                        <th>Izoh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var history in ViewBag.OperatorHistories)
+                    {
+                        <tr>
+                            <td>@history.Date.ToString("dd/MM/yyyy")</td>
+                            <td>@history.DriverName</td>
+                            <td>
+                                @if (history.IsGiven == true)
+                                {
+                                    <span class="badge bg-success">Quyildi</span>
+                                }
+                                else if (history.IsGiven == false)
+                                {
+                                    <span class="badge bg-danger">Quyilmadi</span>
+                                }
+                            </td>
+                            @if (history.IsGiven == true)
+                            {
+                                <td>@history.OilAmount</td>
+                                <td>@history.OilMarks</td>
+                            }
+                            else
+                            {
+                                <td colspan="2" class="text-center">-</td>
+                            }
+                            <td>@history.CarModel</td>
+                            <td>@history.CarNumber</td>
+                            <td>
+                                @switch (history.Status)
+                                {
+                                    case StatusForDto.Pending:
+                                        <span class="badge bg-warning">Kutilmoqda</span>
+                                        break;
+                                    case StatusForDto.Completed:
+                                        <span class="badge bg-success">Bajarildi</span>
+                                        break;
+                                    case StatusForDto.Rejected:
+                                        <span class="badge bg-danger">Rad etildi</span>
+                                        break;
+                                    case StatusForDto.Unassigned:
+                                        <span class="badge bg-secondary">Belgilangan emas</span>
+                                        break;
+                                    case StatusForDto.RejectedByDriver:
+                                        <span class="badge bg-danger">Haydovchi tomonidan rad etildi</span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-secondary">Noma'lum</span>
+                                        break;
+                                }
+                            <td>@history.Comments</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    @if (ViewBag.MechanicHistories != null && ViewBag.MechanicHistories.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover paper-shadow">
+                <thead>
+                    <tr>
+                        <th>Sana</th>
+                        <th>Haydovchi F.I.SH</th>
+                        <th>Pozitsiya</th>
+                        <th>Holati tekshirilgan</th>
+                        <th>Avtomobil ismi</th>
+                        <th>Masofa</th>
+                        <th>Izoh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var history in ViewBag.MechanicHistories)
+                    {
+                        <tr>
+                            <td>@history.Date?.ToString("dd/MM/yyyy")</td>
+                            <td>@history.DriverName</td>
+                            <td>
+                                @if (history.Position == "Topshiruvchi")
+                                {
+                                    <span>Topshiruvchi</span>
+                                }
+                                else
+                                {
+                                    <span>Qabul qilivchi</span>
+                                }
+                            </td>
+                            <td>
+                                @if (history.Position == "Topshiruvchi")
+                                {
+                                    @if (history.IsChecked == true)
+                                    {
+                                        <span class="badge bg-success">Topshirdi</span>
+                                    }
+                                    else if (history.IsChecked == false)
+                                    {
+                                        <span class="badge bg-danger">Topshirmadi</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Noma'lum</span>
+                                    }
+                                }
+                                else
+                                {
+                                    @if (history.IsChecked == true)
+                                    {
+                                        <span class="badge bg-success">Qabul qilindi</span>
+                                    }
+                                    else if (history.IsChecked == false)
+                                    {
+                                        <span class="badge bg-danger">Qabul qilinmadi</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Noma'lum</span>
+                                    }
+                                }
+                            </td>
+                            <td>@history.CarName</td>
+                            <td>@history.Distance</td>
+                            <td>@history.Comments</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    @if (ViewBag.DispatcherHistories != null && ViewBag.DispatcherHistories.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover paper-shadow">
+                <thead>
+                    <tr>
+                        <th>Sana</th>
+                        <th>Haydovchi ismi</th>
+                        <th>Yoqilg'i sarflandi</th>
+                        <th>Yurilgan masofa</th>
+                        <th>Boshlang'ich masofa</th>
+                        <th>Yakuniy masofa</th>
+                        <th>Quyilgan yoqilg'i</th>
+                        <th>Avtomobil ismi</th>
+                        <th>Avtomobilning o'rtacha sarfi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var review in ViewBag.DispatcherHistories)
+                    {
+                        <tr>
+                            <td>@review.Date.ToString("dd/MM/yyyy")</td>
+                            <td>@review.DriverName</td>
+                            <td>@review.FuelSpended</td>
+                            <td>@review.DistanceCovered</td>
+                            <td>@review.InitialDistance</td>
+                            <td>@review.FinalDistance</td>        
+                            <td>@review.PouredFuel</td>                        
+                            <td>@review.CarName</td>
+                            <td>@review.CarMeduimFuelConsumption</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
     else
     {
-        <p>Tarixiy ma'lumotlar mavjud emas.</p>
+        <p>Tarixda ma'lumotlar mavjud emas.</p>
     }
 </div>
 
