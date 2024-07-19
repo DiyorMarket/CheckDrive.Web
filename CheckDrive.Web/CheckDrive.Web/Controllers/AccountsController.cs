@@ -5,6 +5,7 @@ using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Principal;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -79,8 +80,8 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _accountDataStore.CreateAccountAsync(account);
-                return RedirectToAction(nameof(Index));
+                var newAccount = await _accountDataStore.CreateAccountAsync(account);
+                return RedirectToAction("Details", new {id = newAccount.Id});
             }
             var roles = await GETRoles();
             ViewBag.Roles = new SelectList(roles, "Id", "Name");
@@ -103,8 +104,8 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _accountDataStore.UpdateAccountAsync(id, account);
-                return RedirectToAction(nameof(Index));
+                var newAccount = await _accountDataStore.UpdateAccountAsync(id, account);
+                return RedirectToAction("Details", new { id = newAccount.Id });
             }
             return View(account);
         }

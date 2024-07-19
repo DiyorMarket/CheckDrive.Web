@@ -1,6 +1,7 @@
 ﻿using CheckDrive.ApiContracts.Car;
 using CheckDrive.Web.Stores.Cars;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Principal;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -70,8 +71,8 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _carDataStore.CreateCarAsync(car);
-                return RedirectToAction(nameof(Index));
+                var newCar = await _carDataStore.CreateCarAsync(car);
+                return RedirectToAction("Details", new { id = newCar.Id });
             }
             return View(car);
         }
@@ -92,8 +93,8 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _carDataStore.UpdateCarAsync(id, car);
-                return RedirectToAction(nameof(Index));
+                var newCar = await _carDataStore.UpdateCarAsync(id, car);
+                return RedirectToAction("Details", new { id = newCar.Id });
             }
             return View(car);
         }
