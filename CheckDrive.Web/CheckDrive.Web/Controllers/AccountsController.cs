@@ -79,8 +79,8 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _accountDataStore.CreateAccountAsync(account);
-                return RedirectToAction(nameof(Details));
+                var newAccount = await _accountDataStore.CreateAccountAsync(account);
+                return RedirectToAction("Details", new { id = newAccount.Id });
             }
             var roles = await GETRoles();
             ViewBag.Roles = new SelectList(roles, "Id", "Name");
@@ -103,8 +103,8 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _accountDataStore.UpdateAccountAsync(id, account);
-                return RedirectToAction(nameof(Details));
+                var newAccount = await _accountDataStore.UpdateAccountAsync(id, account);
+                return RedirectToAction("Details",new {id = newAccount.Id});
             }
             return View(account);
         }

@@ -93,6 +93,8 @@
             var form = document.getElementById('mechanicHandoverForm');
             var checkbox = document.getElementById('flexSwitchCheckDefault');
             var checkboxLabel = document.querySelector('label[for="flexSwitchCheckDefault"]');
+            var carDropdown = document.getElementById('driverIdDropdown'); // Assuming carDropdown has id `carIdDropdown`
+            var distanceInput = document.querySelector('input[name="Distance"]');
 
             function toggleCheckboxHighlight() {
                 if (!checkbox.checked) {
@@ -106,6 +108,20 @@
 
             toggleCheckboxHighlight();
             checkbox.addEventListener('change', toggleCheckboxHighlight);
+
+            carDropdown.addEventListener('change', function () {
+                var selectedCarId = carDropdown.value;
+                if (selectedCarId) {
+                    fetch(`/MechanicHandoversController/GetCarDetails?carId=${selectedCarId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.Mileage !== undefined) {
+                                distanceInput.value = data.Mileage;
+                            }
+                        })
+                        .catch(error => console.error('Error fetching car details:', error));
+                }
+            });
 
             form.addEventListener('submit', function (event) {
                 var distance = document.querySelector('input[name="Distance"]').value;

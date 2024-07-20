@@ -1,6 +1,7 @@
 ﻿using CheckDrive.ApiContracts.Car;
 using CheckDrive.Web.Stores.Cars;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Principal;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -66,12 +67,12 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Model,Color,Number,RemainingFuel,MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear")] CarForCreateDto car)
+        public async Task<IActionResult> Create([Bind("Model,Color,Number,RemainingFuel,Mileage, MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear")] CarForCreateDto car)
         {
             if (ModelState.IsValid)
             {
-                await _carDataStore.CreateCarAsync(car);
-                return RedirectToAction(nameof(Details));
+                var newcar = await _carDataStore.CreateCarAsync(car);
+                return RedirectToAction("Details", new { id = newcar.Id });
             }
             return View(car);
         }
@@ -88,12 +89,12 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Model,Color,Number,RemainingFuel,MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear")] CarForUpdateDto car)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Model,Color,Number,RemainingFuel,Mileage, MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear")] CarForUpdateDto car)
         {
             if (ModelState.IsValid)
             {
-                await _carDataStore.UpdateCarAsync(id, car);
-                return RedirectToAction(nameof(Details));
+                var newcar = await _carDataStore.UpdateCarAsync(id, car);
+                return RedirectToAction("Details", new { id = newcar.Id });
             }
             return View(car);
         }

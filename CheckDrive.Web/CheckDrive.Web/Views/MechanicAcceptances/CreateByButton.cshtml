@@ -33,7 +33,7 @@
                             <option value="">Haydovchini tanlang</option>
                             @foreach (var driver in ViewBag.FilteredOperatorResponse)
                             {
-                                <option value="@driver.DriverId" data-carid="@driver.CarId" data-carname="@driver.CarModel (@driver.CarNumber)">@driver.DriverName</option>
+                                <option value="@driver.DriverId" data-carid="@driver.CarId" data-carname="@driver.CarModel (@driver.CarNumber)" data-mileage="@driver.CarMileage">@driver.DriverName</option>
                             }
                         }
                     </select>
@@ -45,28 +45,30 @@
                     <label asp-for="CarId" class="control-label mt-2">Mashina</label>
                     <select asp-for="CarId" class="form-control border border-dark" id="carSelect"></select>
                 </div>
-                <div class="form-check form-switch mt-3">
-                    <input asp-for="IsAccepted" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                    <label asp-for="IsAccepted" class="form-check-label" for="flexSwitchCheckDefault">Qabul qilish</label>
-                </div>
                 <div class="form-group w-50 mt-2">
                     <label asp-for="Distance" class="control-label mt-2">Qabul qilish masofasi</label>
                     <input asp-for="Distance" class="form-control" type="number" min="0" step="1" />
+                    <span asp-validation-for="Distance" class="text-danger"></span>
+                    <!-- Placeholder for validation message -->
+                    <span class="distance-validation-message text-danger"></span>
                 </div>
                 <div class="form-group w-50 mt-2">
                     <label asp-for="Comments" class="control-label mt-2">Izoh</label>
                     <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
                 </div>
+                <div class="form-check form-switch mt-3">
+                    <input asp-for="IsAccepted" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label asp-for="IsAccepted" class="form-check-label" for="flexSwitchCheckDefault">Soz?</label>
+                </div>
+                <div class="form-group mt-3 w-50 mt-2">
+                    <a asp-action="PersonalIndex" class="btn btn-info">
+                        <i class="fa-solid fa-arrow-left-long"></i> Orqaga
+                    </a>
+                    <button id="createButton" class="btn btn-success" type="submit">
+                        <i class="fa fa-plus"></i> Yaratish
+                    </button>
+                </div>
             </fieldset>
-
-            <div class="form-group mt-3 w-50 mt-3">
-                <a asp-action="PersonalIndex" class="btn btn-info">
-                    <i class="fa-solid fa-arrow-left-long"></i> Orqaga
-                </a>
-                <button class="btn btn-success" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
-                    <i class="fa fa-plus"></i> Yaratish
-                </button>
-            </div>
         </form>
     </div>
 </div>
@@ -76,59 +78,66 @@
         document.addEventListener('DOMContentLoaded', function () {
             var driverSelect = document.getElementById('driverSelect');
             var carSelect = document.getElementById('carSelect');
-            var form = document.getElementById('createFormByButton');
-            var checkbox = document.getElementById('flexSwitchCheckDefault');
-            var checkboxLabel = document.querySelector('label[for="flexSwitchCheckDefault"]');
+            var distanceInput = document.querySelector('input[name="Distance"]');
+            var createButton = document.getElementById('createButton');
+            var mileage = 0;
 
-            if (!driverSelect.disabled) {
-                driverSelect.addEventListener('change', function () {
-                    var selectedOption = driverSelect.options[driverSelect.selectedIndex];
-                    var carId = selectedOption.getAttribute('data-carid');
-                    var carName = selectedOption.getAttribute('data-carname');
+            driverSelect.addEventListener('change', function () {
+                var selectedOption = driverSelect.options[driverSelect.selectedIndex];
+                var carId = selectedOption.getAttribute('data-carid');
+                var carName = selectedOption.getAttribute('data-carname');
+                mileage = parseInt(selectedOption.getAttribute('data-mileage'));
 
-                    carSelect.innerHTML = '';
+                carSelect.innerHTML = '';
 
-                    if (carId && carName) {
-                        var option = document.createElement('option');
-                        option.value = carId;
-                        option.textContent = carName;
-                        carSelect.appendChild(option);
-                    }
-
-                    carSelect.disabled = false;
-                });
-
-                function toggleCheckboxHighlight() {
-                    if (!checkbox.checked) {
-                        checkbox.classList.add('border-danger');
-                        checkboxLabel.classList.add('text-danger');
-                    } else {
-                        checkbox.classList.remove('border-danger');
-                        checkboxLabel.classList.remove('text-danger');
-                    }
+                if (carId && carName) {
+                    var option = document.createElement('option');
+                    option.value = carId;
+                    option.textContent = carName;
+                    carSelect.appendChild(option);
                 }
 
-                toggleCheckboxHighlight();
+                carSelect.disabled = false;
+                validateDistance();
+            });
 
-                checkbox.addEventListener('change', toggleCheckboxHighlight);
+            distanceInput.addEventListener('input', function () {
+                validateDistance();
+            });
 
-                form.addEventListener('submit', function (event) {
-                    var distance = document.querySelector('input[name="Distance"]').value;
-                    var isGiven = checkbox.checked;
-                    var distanceValue = Number(distance);
+            function validateDistance() {
+                var distance = Number(distanceInput.value);
+                if (distance < mileage) {
+                    distanceInput.classList.add('is-invalid');
+                    showValidationMessage(`Qabul qilish masofasi avtomobilning oxirgi kiritilgan masofasidan ${mileage} km kam bo'lishi mumkin emas!`);
+                    createButton.disabled = true;
+                } else {
+                    distanceInput.classList.remove('is-invalid');
+                    clearValidationMessage();
+                    createButton.disabled = false;
+                }
+            }
 
-                    if (distanceValue === 0 && isGiven) {
-                        event.preventDefault();
-                        alert("Qabul qilish masofanisini kiritishingiz shart!");
-                    } else if (distanceValue > 0 && !isGiven) {
-                        event.preventDefault();
-                        alert("Qabul qilish masofanisini kiritib topshirish tugmasini surmadingiz!");
-                    }
-                });
+            function showValidationMessage(message) {
+                var errorSpan = document.querySelector('.distance-validation-message');
+                if (!errorSpan) {
+                    errorSpan = document.createElement('span');
+                    errorSpan.className = 'distance-validation-message text-danger';
+                    distanceInput.parentNode.appendChild(errorSpan);
+                }
+                errorSpan.textContent = message;
+            }
+
+            function clearValidationMessage() {
+                var errorSpan = document.querySelector('.distance-validation-message');
+                if (errorSpan) {
+                    errorSpan.textContent = '';
+                }
             }
         });
     </script>
 }
+
 <style>
     .border-danger {
         border: 2px solid red !important;

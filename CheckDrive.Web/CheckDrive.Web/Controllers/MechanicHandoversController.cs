@@ -287,5 +287,16 @@ namespace CheckDrive.Web.Controllers
 
             return View(mechanicHandover);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCarDetails(int carId)
+        {
+            var car = await _carDataStore.GetCarAsync(carId);
+            if (car != null)
+            {
+                return Json(new { Mileage = car.Mileage });
+            }
+            return NotFound();
+        }
     }
 }
