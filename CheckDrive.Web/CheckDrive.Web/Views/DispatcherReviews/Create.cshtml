@@ -12,51 +12,46 @@
         <form asp-action="Create" method="post" id="createForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group w-50">
-                <label asp-for="DistanceCovered" class="control-label"></label>
+                <label asp-for="DistanceCovered" class="control-label">Bosib otilgan masofa</label>
                 <input asp-for="DistanceCovered" class="form-control" />
                 <span asp-validation-for="DistanceCovered" class="text-danger"></span>
             </div>
             <div class="form-group w-50">
-                <label asp-for="FuelSpended" class="control-label"></label>
+                <label class="control-label">Avtomobil bakidagi yoqilg`i miqdori</label>
+                <input type="text" class="form-control" value="@ViewBag.FuelRemaining" disabled />
+                <input type="hidden" id="FuelRemaining" name="FuelRemaining" value="@ViewBag.FuelRemaining" />
+            </div>
+            <div class="form-group w-50">
+                <label asp-for="FuelSpended" class="control-label">Sariflangan yoqilgi</label>
                 <input asp-for="FuelSpended" class="form-control" id="FuelSpended" />
                 <span asp-validation-for="FuelSpended" class="text-danger" id="fuelSpendedError"></span>
             </div>
             <div class="form-group w-50">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" readonly />
                 <input asp-for="Date" type="hidden" id="hiddenDate" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="DispatcherId" class="control-label"></label>
-                <input asp-for="DispatcherId" class="form-control" readonly />
+                <input asp-for="DispatcherId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="OperatorId" class="control-label"></label>
-                <input asp-for="OperatorId" class="form-control" readonly />
+                <input asp-for="OperatorId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="MechanicId" class="control-label"></label>
-                <input asp-for="MechanicId" class="form-control" readonly />
+                <input asp-for="MechanicId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="DriverId" class="control-label"></label>
-                <input asp-for="DriverId" class="form-control" readonly />
+                <input asp-for="DriverId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="CarId" class="control-label"></label>
-                <input asp-for="CarId" class="form-control" readonly />
+                <input asp-for="CarId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="MechanicHandoverId" class="control-label"></label>
-                <input asp-for="MechanicHandoverId" class="form-control" readonly />
+                <input asp-for="MechanicHandoverId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="MechanicAcceptanceId" class="control-label"></label>
-                <input asp-for="MechanicAcceptanceId" class="form-control" readonly />
+                <input asp-for="MechanicAcceptanceId" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="OperatorReviewId" class="control-label"></label>
-                <input asp-for="OperatorReviewId" class="form-control" readonly />
+                <input asp-for="OperatorReviewId" type="hidden" />
             </div>
             <div class="form-group mt-3 w-50">
                 <a asp-action="PersonalIndex" class="btn btn-outline-info">
@@ -73,15 +68,15 @@
 @section Scripts {
     <script>
         document.getElementById('createForm').addEventListener('submit', function (event) {
-            var fuelSpended = document.getElementById('FuelSpended').value;
+            var fuelSpended = parseFloat(document.getElementById('FuelSpended').value);
             var fuelSpendedError = document.getElementById('fuelSpendedError');
-            var maxDouble = Number.MAX_VALUE;
+            var fuelRemaining = parseFloat(document.getElementById('FuelRemaining').value);
 
             fuelSpendedError.textContent = '';
 
-            if (fuelSpended < 0 || fuelSpended > maxDouble) {
+            if (isNaN(fuelSpended) || fuelSpended < 0 || fuelSpended > fuelRemaining) {
                 event.preventDefault();
-                fuelSpendedError.textContent = 'Musbat son kiriting';
+                fuelSpendedError.textContent = 'Sariflangan yoqilgi miqdori 0 va ' + fuelRemaining + ' orasida bo\'lishi kerak';
                 return false;
             }
 

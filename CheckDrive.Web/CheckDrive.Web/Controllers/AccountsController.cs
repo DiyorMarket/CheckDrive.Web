@@ -1,9 +1,11 @@
 ﻿using CheckDrive.ApiContracts.Account;
 using CheckDrive.ApiContracts.Role;
 using CheckDrive.Web.Stores.Accounts;
+using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Principal;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -11,10 +13,14 @@ namespace CheckDrive.Web.Controllers
     {
         private readonly IAccountDataStore _accountDataStore;
         private readonly IRoleDataStore _roleStore;
-        public AccountsController(IAccountDataStore accountDataStore, IRoleDataStore roleDataStore)
+        private readonly IDriverDataStore _driverDataStore;
+        public AccountsController(IAccountDataStore accountDataStore,
+            IRoleDataStore roleDataStore,
+            IDriverDataStore driverDataStore)
         {
             _roleStore = roleDataStore;
             _accountDataStore = accountDataStore;
+            _driverDataStore = driverDataStore;
         }
 
         public async Task<IActionResult> Index(string? searchString, int? roleId, DateTime? birthDate, int? pageNumber)
@@ -54,9 +60,29 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var account = await _accountDataStore.GetAccountAsync(id);
-            if (account == null)
+
+            switch (account.RoleId)
             {
-                return NotFound();
+                case 2:
+                    var driverHistories = await _driverDataStore.GetDriverHistories(id);
+                    ViewBag.DriverHistories = driverHistories;
+                    return View(account);
+                case 3:
+                    var doctorHistories = await _accountDataStore.GetDoctorHistories(id);
+                    ViewBag.DoctorHistories = doctorHistories;
+                    return View(account);
+                case 4:
+                    var operatorHistories = await _accountDataStore.GetOperatorHistories(id);
+                    ViewBag.OperatorHistories = operatorHistories;
+                    return View(account);
+                case 5:
+                    var dispatcherHistories = await _accountDataStore.GetDispatcherHistories(id);
+                    ViewBag.DispatcherHistories = dispatcherHistories;
+                    return View(account);
+                case 6:
+                    var mechanicHistories = await _accountDataStore.GetMechanicHistories(id);
+                    ViewBag.MechanicHistories = mechanicHistories;
+                    return View(account);
             }
             return View(account);
         }
@@ -73,8 +99,8 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _accountDataStore.CreateAccountAsync(account);
-                return RedirectToAction(nameof(Index));
+                var newAccount = await _accountDataStore.CreateAccountAsync(account);
+                return RedirectToAction("Details", new {id = newAccount.Id});
             }
             var roles = await GETRoles();
             ViewBag.Roles = new SelectList(roles, "Id", "Name");
@@ -88,19 +114,17 @@ namespace CheckDrive.Web.Controllers
             {
                 return NotFound();
             }
-
             return View(account);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Bithdate,RoleId")]
-            AccountForUpdateDto account)
+        public async Task<IActionResult> Edit(int id, AccountForUpdateDto account)
         {
             if (ModelState.IsValid)
             {
-                await _accountDataStore.UpdateAccountAsync(id, account);
-                return RedirectToAction(nameof(Index));
+                var newAccount = await _accountDataStore.UpdateAccountAsync(id, account);
+                return RedirectToAction("Details", new { id = newAccount.Id });
             }
             return View(account);
         }

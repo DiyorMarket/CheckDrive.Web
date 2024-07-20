@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }       
 
-<h1>Operator</h1>
+<h1>Operator Xizmatlari</h1>
 
 <form asp-controller="OperatorReviews" asp-action="Index">
     <div class="row">
@@ -33,11 +33,13 @@
     <div class="col-12">
         <ejs-grid id="operatorReview-list" dataSource="@ViewBag.OperatorsReview" gridLines="Vertical" allowSorting="true">
             <e-grid-columns>
-                <e-grid-column headerText="Id" field="Id" typeof="text" width="50"></e-grid-column>
+                <e-grid-column headerText="Id" field="Id" typeof="text" template="#templat" width="50"></e-grid-column>
                 <e-grid-column headerText="Operator F.I.SH" field="OperatorName" typeof="text" class="customcss"></e-grid-column>
                 <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Mashina" field="CarModel" type="string"></e-grid-column>
                 <e-grid-column headerText="Yoqilg'i miqdori" field="OilAmount" typeof="text" class="customcss"></e-grid-column>
                 <e-grid-column headerText="Ro'yxatdan o'tgan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm"></e-grid-column>
+                <e-grid-column headerText="Quyildimi" field="IsGiven" type="string"> </e-grid-column>
                 <e-grid-column headerText="Izoh" field="Comments" typeof="text" class="customcss"></e-grid-column>
                 <e-grid-column headerText="Status" field="Status" typeof="text" class="customcss"></e-grid-column>
             </e-grid-columns>
@@ -80,8 +82,8 @@
     </div>
 </div>
 
-<script id="template" type="text/x-template">
+<script id="templat" type="text/x-templat">
     <div>
-        <a href="/Cars/DetailsForMechanicHandover/${CarId}">${CarName}</a>
+        <a rel='nofollow' href="OperatorReviews/Details/${Id}">${Id}</a>
     </div>
 </script>

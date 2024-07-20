@@ -7,17 +7,23 @@
 }
 
 <div class="container-fluid py-2 px-4 d-flex justify-content-end">
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center gap-2">
         <div class="dropdown">
-            <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: white; border-color: black;">
+            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:white; border-color:black; width:55px">
                 <i class="fa-solid fa-user" style="background-color: white; color: black;"></i>
                 <i class="bi bi-caret-down-fill" style="background-color:white; color:black"></i>
             </button>
-            <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" style="color: red" href="@Url.Action("Login", "Auth")">Profildan Chiqish</a></li>
+            <ul class="dropdown-menu dropdown-menu-sm" aria-labelledby="userDropdown">
                 <li><a class="dropdown-item" style="color: green" href="@Url.Action("PersonalIndex", "MechanicAcceptances")">Mexanik(Qabul qiluvchi)</a></li>
             </ul>
         </div>
+        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
+            <span class="logout-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </span>
+            Chiqish
+        </button>
+        
     </div>
 </div>
 
@@ -53,6 +59,7 @@
                         <th scope="col" style="width: 20%">Boshlang'ich masofa</th>
                         <th scope="col" style="width: 38%">Izoh</th>
                         <th scope="col" style="width: 15%">Sana</th>
+                        <th scope="col" style="width: 15%">Holati</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,17 +85,43 @@
                                     {
                                         @if ((bool)item.IsHanded)
                                         {
-                                            <span class="badge bg-success shadow">Topshirildi</span>
+                                            <span class="badge bg-success ">Topshirildi</span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-danger shadow">Topshirilmadi</span>
+                                            <span class="badge bg-danger ">Topshirilmadi</span>
                                         }
                                     }
                                 </td>
                                 <td>@item.Distance</td>
                                 <td>@item.Comments</td>
                                 <td>@item.Date</td>
+                                <td class="text-center">
+                                    @if (item.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
+                                    {
+                                        <span class="badge bg-pending ">Kutilmoqda</span>
+                                    }
+                                    else if (item.Status == CheckDrive.ApiContracts.StatusForDto.Unassigned)
+                                    {
+                                        <span class="badge bg-unassigned ">Tayinlanmagan</span>
+                                    }
+                                    else if (item.Status == CheckDrive.ApiContracts.StatusForDto.Completed)
+                                    {
+                                        <span class="badge bg-success ">Yakunlangan</span>
+                                    }
+                                    else if (item.Status == CheckDrive.ApiContracts.StatusForDto.RejectedByDriver)
+                                    {
+                                        <span class="badge bg-danger ">Haydovchi tomonidan rad etilgan</span>
+                                    }
+                                    else if (item.Status == CheckDrive.ApiContracts.StatusForDto.Rejected)
+                                    {
+                                        <span class="badge bg-danger ">Rad etilgan</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-empty ">No`malum holat</span>
+                                    }
+                                </td>
                             </tr>
                         }
                     }
@@ -147,6 +180,14 @@
         border-radius: 5px;
     }
 
+    .bg-pending {
+        background-color: orange;
+    }
+
+    .bg-unassigned {
+        background-color: slategray;
+    }
+
     .bg-success {
         background-color: #28a745;
     }
@@ -193,4 +234,5 @@
     .pagination .page-item.shadow {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+
 </style>

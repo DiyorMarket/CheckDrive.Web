@@ -8,7 +8,7 @@ namespace CheckDrive.Web.Stores.DispatcherReviews
         Task<GetDispatcherReviewResponse> GetDispatcherReviews(int? pageNumber, string? searchString, DateTime? date, int? roleId);
         Task<DispatcherReviewDto> GetDispatcherReview(int id);
         Task<DispatcherReviewDto> CreateDispatcherReview(DispatcherReviewForCreateDto review);
-        Task<DispatcherReviewForUpdateDto> UpdateDispatcherReview(int id, DispatcherReviewForUpdateDto review);
+        Task<DispatcherReviewDto> UpdateDispatcherReview(int id, DispatcherReviewForUpdateDto review);
         Task DeleteDispatcherReview(int id);
     }
 }

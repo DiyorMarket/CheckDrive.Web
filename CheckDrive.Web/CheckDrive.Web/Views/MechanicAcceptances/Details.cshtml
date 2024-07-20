@@ -1,0 +1,79 @@
+﻿@using CheckDrive.ApiContracts
+@model CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div>
+    <h4>Mexanik (Qabul qilish) ma'lumotlari</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Mexanik F.I.SH:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MechanicName)
+        </dd>
+        <dt class = "col-sm-2">
+            Haydovchi F.I.SH:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DriverName)
+        </dd>
+        <dt class = "col-sm-2">
+            Avtomobil:
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CarName)
+        </dd>
+        <dt class="col-sm-2">
+            Qabul qilish:
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.IsAccepted.HasValue ? (Model.IsAccepted.Value ? "Qabul qilindi" : "Qabul qilinmadi") : "N/A")
+        </dd>
+        <dt class="col-sm-2">
+            Qabul qilish masofasi:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Distance)
+        </dd>
+        <dt class="col-sm-2">
+            Vaqt:
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.Date.HasValue ? Model.Date.Value.ToString("yyyy-MM-dd | HH:mm") : "Date not available")
+        </dd>
+        <dt class="col-sm-2">
+            Izoh:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Comments)
+        </dd>
+        <dd class="col-sm-10">
+            @{
+                string statusUzbek = Model.Status switch
+                {
+                    StatusForDto.Pending => "Kutilmoqda",
+                    StatusForDto.Completed => "Yakunlangan",
+                    StatusForDto.Rejected => "Rad etilgan",
+                    StatusForDto.Unassigned => "Tayinlanmagan",
+                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
+                    _ => "Noma'lum"
+                };
+            }
+            @statusUzbek
+        </dd>
+    </dl>
+</div>
+<div class="mt-4">
+    <a asp-action="Index" class="btn btn-outline-info">
+        <i class="fa-solid fa-arrow-left"></i>
+        Orqaga
+    </a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">
+        <i class="fa-solid fa-pen"></i>
+        Tahrirlash
+    </a>
+</div>

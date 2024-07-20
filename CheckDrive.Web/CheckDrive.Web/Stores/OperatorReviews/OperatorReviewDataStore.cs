@@ -15,9 +15,13 @@ namespace CheckDrive.Web.Stores.OperatorReviews
             int? pageNumber,
             string? searchString,
             DateTime? date,
+            string? status,
             int? roleId)
         {
             StringBuilder query = new("");
+
+            if (!string.IsNullOrWhiteSpace(status))
+                query.Append($"status={status}&");
 
             if (roleId != 0)
                 query.Append($"roleId={roleId}&");
@@ -74,14 +78,28 @@ namespace CheckDrive.Web.Stores.OperatorReviews
             return JsonConvert.DeserializeObject<OperatorReviewDto>(jsonResponse);
         }
 
-        public Task DeleteOperatorReview(int id)
+        public async Task<OperatorReviewDto> UpdateOperatorReview(int id, OperatorReviewForUpdateDto operatorReview)
         {
-            throw new NotImplementedException();
-        }
+            var json = JsonConvert.SerializeObject(operatorReview);
+            var response = await _api.PutAsync($"operators/review/{operatorReview.Id}", json);
 
-        public Task<OperatorReview> UpdateOperatorReview(int id, OperatorReview operatorReview)
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error updating operatorReviews.");
+            }
+
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<OperatorReviewDto>(jsonResponse);
+        }
+        public async Task DeleteOperatorReview(int id)
         {
-            throw new NotImplementedException();
+
+            var response = await _api.DeleteAsync($"operators/review/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not delete Operator reviews with id: {id}.");
+            }
         }
     }
 }

@@ -29,7 +29,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, date, 1);
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, date, null, 1);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -45,11 +45,12 @@ namespace CheckDrive.Web.Controllers
                 r.Comments,
                 Status = ((StatusForDto)r.Status) switch
                 {
-                    StatusForDto.Pending => "Pending",
-                    StatusForDto.Completed => "Completed",
-                    StatusForDto.Rejected => "Rejected",
-                    StatusForDto.Unassigned => "Unassigned",
-                    _ => "Unknown Status"
+                    StatusForDto.Pending => "Kutilmoqda",
+                    StatusForDto.Completed => "Yakunlangan",
+                    StatusForDto.Rejected => "Rad etilgan",
+                    StatusForDto.Unassigned => "Tayinlanmagan",
+                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
+                    _ => "No`malum holat"
                 },
                 r.Date,
                 r.Distance,
@@ -66,7 +67,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, null, 6);
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, null, null, 6);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -80,12 +81,11 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Create(int? driverId)
         {
-            var mechanics = await GETMechanics();
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, null, 1);
-            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync();
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today, true, 1);
+            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, DateTime.Today, null, 1);
 
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
@@ -97,12 +97,10 @@ namespace CheckDrive.Web.Controllers
                 if (mechanic != null)
                 {
                     var healthyDrivers = doctorReviews.Data
-                        .Where(dr => dr.IsHealthy.HasValue && dr.IsHealthy.Value && dr.Date.Date == DateTime.Today)
                         .Select(dr => dr.DriverId)
                         .ToList();
 
                     var handedDrivers = mechanicHandovers.Data
-                        .Where(ma => ma.Date.Date == DateTime.Today)
                         .Select(ma => ma.DriverId)
                         .ToList();
 
@@ -111,15 +109,12 @@ namespace CheckDrive.Web.Controllers
                         .ToList();
 
                     var usedCarIds = mechanicHandovers.Data
-                        .Where(mh => mh.Date.Date == DateTime.Today && mh.IsHanded == true)
                         .Select(mh => mh.CarId)
                         .ToList();
 
                     var filteredCars = cars
                         .Where(c => !usedCarIds.Contains(int.Parse(c.Value)))
                         .ToList();
-
-                    ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
                     ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text", driverId);
                     ViewBag.Cars = new SelectList(filteredCars, "Value", "Text");
 
@@ -146,14 +141,13 @@ namespace CheckDrive.Web.Controllers
                 }
 
                 mechanicHandoverForCreateDto.Date = DateTime.Now;
+                mechanicHandoverForCreateDto.Status = mechanicHandoverForCreateDto.IsHanded ? StatusForDto.Pending : StatusForDto.Rejected;
                 await _mechanicHandoverDataStore.CreateMechanicHandoverAsync(mechanicHandoverForCreateDto);
                 return RedirectToAction(nameof(PersonalIndex));
             }
 
-            var mechanics = await GETMechanics();
             var drivers = await GETDrivers();
             var cars = await GETCars();
-            ViewBag.Mechanics = new SelectList(mechanics, "Value", "Text");
             ViewBag.Drivers = new SelectList(drivers, "Value", "Text", mechanicHandoverForCreateDto.DriverId);
             ViewBag.Cars = new SelectList(cars, "Value", "Text");
 
@@ -164,8 +158,46 @@ namespace CheckDrive.Web.Controllers
             return View(mechanicHandoverForCreateDto);
         }
 
+        public async Task<IActionResult> Edit(int id)
+        {
+            var review = await _mechanicHandoverDataStore.GetMechanicHandoverAsync(id);
 
+            if (review == null)
+            {
+                return NotFound();
+            }
 
+            var drivers = await _driverDataStore.GetDriversAsync(1);
+            var cars = await _carDataStore.GetCarsAsync(1);
+
+            ViewBag.DriverSelectList = new SelectList(drivers.Data.Select(driver => new
+            {
+                Id = driver.Id,
+                DisplayText = $"{driver.FirstName} {driver.LastName}"
+            }), "Id", "DisplayText");
+
+            ViewBag.CarSelectList = new SelectList(cars.Data.Select(car => new
+            {
+                Id = car.Id,
+                DisplayText = $"{car.Model} ({car.Number})"
+            }), "Id", "DisplayText");
+
+            ViewBag.Status = Enum.GetValues(typeof(StatusForDto)).Cast<StatusForDto>().Select(e => new SelectListItem
+            {
+                Value = e.ToString(),
+                Text = e switch
+                {
+                    StatusForDto.Pending => "Kutilmoqda",
+                    StatusForDto.Completed => "Yakunlangan",
+                    StatusForDto.Rejected => "Rad etilgan",
+                    StatusForDto.Unassigned => "Tayinlanmagan",
+                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
+                    _ => "No`malum holat"
+                }
+            }).ToList();
+
+            return View(review);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -219,28 +251,14 @@ namespace CheckDrive.Web.Controllers
             await _mechanicHandoverDataStore.DeleteMechanicHandoverAsync(id);
             return RedirectToAction(nameof(Index));
         }
-
         private async Task<bool> MechanicHandoverExists(int id)
         {
             var mechanicAcceptance = await _mechanicHandoverDataStore.GetMechanicHandoverAsync(id);
             return mechanicAcceptance != null;
         }
-
-        private async Task<List<SelectListItem>> GETMechanics()
-        {
-            var mechanicResponse = await _mechanicDataStore.GetMechanicsAsync();
-            var mechanics = mechanicResponse.Data
-                .Select(d => new SelectListItem
-                {
-                    Value = d.Id.ToString(),
-                    Text = $"{d.FirstName} {d.LastName}"
-                })
-                .ToList();
-            return mechanics;
-        }
         private async Task<List<SelectListItem>> GETCars()
         {
-            var carResponse = await _carDataStore.GetCarsAsync(null, null);
+            var carResponse = await _carDataStore.GetCarsAsync(1);
             var cars = carResponse.Data
                 .Select(c => new SelectListItem
                 {
@@ -250,10 +268,9 @@ namespace CheckDrive.Web.Controllers
                 .ToList();
             return cars;
         }
-
         private async Task<List<SelectListItem>> GETDrivers()
         {
-            var driverResponse = await _driverDataStore.GetDriversAsync(null, null);
+            var driverResponse = await _driverDataStore.GetDriversAsync(1);
             var drivers = driverResponse.Data
                 .Select(d => new SelectListItem
                 {
@@ -262,6 +279,13 @@ namespace CheckDrive.Web.Controllers
                 })
                 .ToList();
             return drivers;
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var mechanicHandover = await _mechanicHandoverDataStore.GetMechanicHandoverAsync(id);
+
+            return View(mechanicHandover);
         }
     }
 }

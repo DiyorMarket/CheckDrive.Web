@@ -42,6 +42,27 @@ namespace CheckDrive.Web.Stores.Cars
             return result;
         }
 
+        public async Task<GetCarResponse> GetCarsAsync(int? roleId)
+
+        {
+            StringBuilder query = new("");
+
+            if (roleId != 0)
+                query.Append($"roleId={roleId}&");
+
+            var response = await _api.GetAsync("cars?" + query.ToString());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch cars.");
+            }
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<GetCarResponse>(json);
+
+            return result;
+        }
+
         public async Task<CarDto> GetCarAsync(int id)
         {
             var response = await _api.GetAsync($"cars/{id}");

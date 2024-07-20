@@ -1,0 +1,151 @@
+﻿@model CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceForCreateDto
+
+@{
+    ViewData["Title"] = "CreateByButton";
+    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    bool noDriversAvailable = ViewBag.FilteredOperatorResponse == null || !((IEnumerable<dynamic>)ViewBag.FilteredOperatorResponse).Any();
+}
+
+<div class="row mt-custom">
+    <div class="col-md-4 offset-md-1 mt-5">
+        <h4>Ro'yxatga olish</h4>
+        <hr class="w-50" />
+
+        @if (noDriversAvailable)
+        {
+            <div class="alert alert-warning">
+                <strong>Diqqat!</strong> Hozirda mavjud haydovchilar yo'q. Iltimos, keyinroq qayta urinib ko'ring.
+            </div>
+        }
+
+        <form asp-action="Create" method="post" id="createFormByButton">
+            <fieldset @(noDriversAvailable ? "disabled" : "")>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group w-50 mt-2">
+                    <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
+                    <select asp-for="DriverId" class="form-control border border-dark" id="driverSelect">
+                        @if (noDriversAvailable)
+                        {
+                            <option value="">Haydovchilar mavjud emas</option>
+                        }
+                        else
+                        {
+                            <option value="">Haydovchini tanlang</option>
+                            @foreach (var driver in ViewBag.FilteredOperatorResponse)
+                            {
+                                <option value="@driver.DriverId" data-carid="@driver.CarId" data-carname="@driver.CarModel (@driver.CarNumber)">@driver.DriverName</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group w-50">
+                    <input type="hidden" asp-for="MechanicId" class="form-control border border-dark" value="@ViewBag.MechanicId" />
+                </div>
+                <div class="form-group w-50 mt-2">
+                    <label asp-for="CarId" class="control-label mt-2">Mashina</label>
+                    <select asp-for="CarId" class="form-control border border-dark" id="carSelect"></select>
+                </div>
+                <div class="form-check form-switch mt-3">
+                    <input asp-for="IsAccepted" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label asp-for="IsAccepted" class="form-check-label" for="flexSwitchCheckDefault">Qabul qilish</label>
+                </div>
+                <div class="form-group w-50 mt-2">
+                    <label asp-for="Distance" class="control-label mt-2">Qabul qilish masofasi</label>
+                    <input asp-for="Distance" class="form-control" type="number" min="0" step="1" />
+                </div>
+                <div class="form-group w-50 mt-2">
+                    <label asp-for="Comments" class="control-label mt-2">Izoh</label>
+                    <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
+                </div>
+            </fieldset>
+
+            <div class="form-group mt-3 w-50 mt-3">
+                <a asp-action="PersonalIndex" class="btn btn-outline-info">
+                    <i class="fa-solid fa-arrow-left-long"></i> Orqaga
+                </a>
+                <button class="btn btn-success" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
+                    <i class="fa fa-plus"></i> Yaratish
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            var driverSelect = document.getElementById('driverSelect');
+            var carSelect = document.getElementById('carSelect');
+            var form = document.getElementById('createFormByButton');
+            var checkbox = document.getElementById('flexSwitchCheckDefault');
+            var checkboxLabel = document.querySelector('label[for="flexSwitchCheckDefault"]');
+
+            if (!driverSelect.disabled) {
+                driverSelect.addEventListener('change', function () {
+                    var selectedOption = driverSelect.options[driverSelect.selectedIndex];
+                    var carId = selectedOption.getAttribute('data-carid');
+                    var carName = selectedOption.getAttribute('data-carname');
+
+                    carSelect.innerHTML = '';
+
+                    if (carId && carName) {
+                        var option = document.createElement('option');
+                        option.value = carId;
+                        option.textContent = carName;
+                        carSelect.appendChild(option);
+                    }
+
+                    carSelect.disabled = false;
+                });
+
+                function toggleCheckboxHighlight() {
+                    if (!checkbox.checked) {
+                        checkbox.classList.add('border-danger');
+                        checkboxLabel.classList.add('text-danger');
+                    } else {
+                        checkbox.classList.remove('border-danger');
+                        checkboxLabel.classList.remove('text-danger');
+                    }
+                }
+
+                toggleCheckboxHighlight();
+
+                checkbox.addEventListener('change', toggleCheckboxHighlight);
+
+                form.addEventListener('submit', function (event) {
+                    var distance = document.querySelector('input[name="Distance"]').value;
+                    var isGiven = checkbox.checked;
+                    var distanceValue = Number(distance);
+
+                    if (distanceValue === 0 && isGiven) {
+                        event.preventDefault();
+                        alert("Qabul qilish masofanisini kiritishingiz shart!");
+                    } else if (distanceValue > 0 && !isGiven) {
+                        event.preventDefault();
+                        alert("Qabul qilish masofanisini kiritib topshirish tugmasini surmadingiz!");
+                    }
+                });
+            }
+        });
+    </script>
+}
+<style>
+    .border-danger {
+        border: 2px solid red !important;
+    }
+
+    .text-danger {
+        color: red !important;
+    }
+
+    fieldset[disabled] .form-control,
+    fieldset[disabled] .btn {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+    }
+
+        fieldset[disabled] .form-control:disabled,
+        fieldset[disabled] .btn:disabled {
+            opacity: 1;
+        }
+</style>

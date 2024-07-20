@@ -11,6 +11,7 @@
     <Content Remove="Controllers\**" />
     <EmbeddedResource Remove="Controllers\**" />
     <None Remove="Controllers\**" />
+    <Content Remove="wwwroot\css\LogOutButtun.css" />
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\CarsController.cs" />
@@ -19,6 +20,7 @@
     <Compile Include="Controllers\DoctorReviewsController.cs" />
     <Compile Include="Controllers\DoctorsController.cs" />
     <Compile Include="Controllers\DriversController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\MechanicAcceptancesController.cs" />
     <Compile Include="Controllers\MechanicHandoversController.cs" />
@@ -26,7 +28,8 @@
     <Compile Include="Controllers\OperatorReviewsController.cs" />
     <Compile Include="Controllers\OperatorsController.cs" />
     <Compile Include="Controllers\TechniciansController.cs" />
-    <PackageReference Include="CheckDrive.ApiContracts" Version="1.3.5" />
+    <None Include="wwwroot\css\LogOutButtun.css" />
+    <PackageReference Include="CheckDrive.ApiContracts" Version="1.3.9" />
     <PackageReference Include="CheckDrive.DTOs" Version="1.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />

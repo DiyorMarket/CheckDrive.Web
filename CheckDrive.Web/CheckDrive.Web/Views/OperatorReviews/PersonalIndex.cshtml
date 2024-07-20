@@ -1,21 +1,18 @@
 ﻿@model IEnumerable<CheckDrive.ApiContracts.OperatorReview.OperatorReviewDto>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
-
+<link rel="stylesheet" href="~/css/LogOutButtun.css" asp-append-version="true" />
 @{
     ViewData["Title"] = "PersonalIndex";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
 }
 <div class="container-fluid py-2 px-4 d-flex justify-content-end">
     <div class="d-flex align-items-center">
-        <div class="dropdown">
-            <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: white; border-color: black;">
-                <i class="fa-solid fa-user" style="background-color: white; color: black;"></i>
-                <i class="bi bi-caret-down-fill" style="background-color:white; color:black"></i>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" style="color: red" href="@Url.Action("Login", "Auth")">Profildan Chiqish</a></li>
-            </ul>
-        </div>
+        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
+            <span class="logout-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </span>
+            Chiqish
+        </button>
     </div>
 </div>
 
@@ -47,7 +44,7 @@
                     <table class="table table-bordered table-striped table-hover shadow">
                         <thead>
                             <tr>
-                                <th class="text-center">Haydovshi F.I.</th>
+                                <th class="text-center">Haydovchi F.I.</th>
                                 <th class="text-center">Operator F.I.</th>
                                 <th class="text-center">Moshina markasi</th>
                                 <th class="text-center">Moshina raqami</th>
@@ -57,52 +54,88 @@
                                 <th class="text-center">Yoqilg`i Markasi</th>
                                 <th class="text-center">Yoqilg`i berildimi?</th>
                                 <th class="text-center comments-column">Izoh</th>
-                                <th class="text-center">Status</th>
+                                <th class="text-center">Holati</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var review in Model)
+                            @if(Model != null && Model.Any())
+                            {
+                                @foreach (var review in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            @if (!string.IsNullOrEmpty(review.OperatorName))
+                                            {
+                                                @review.DriverName
+                                            }
+                                            else
+                                            {
+                                                <a asp-action="Create"
+                                                   asp-route-driverId="@review.DriverId"
+                                                   asp-route-driverName="@review.DriverName"
+                                                   asp-route-carId="@review.CarId"
+                                                   asp-route-carModel="@review.CarModel"
+                                                   asp-route-fuelTankCapacity="@review.CarOilCapacity"
+                                                   asp-route-remainingFuel="@review.CarOilRemainig">@review.DriverName</a>
+                                            }
+                                        </td>
+                                        <td class="text-center">@review.OperatorName</td>
+                                        <td class="text-center">@review.CarModel</td>
+                                        <td class="text-center">@review.CarNumber</td>
+                                        <td class="text-center">@review.CarOilCapacity</td>
+                                        <td class="text-center">@review.CarOilRemainig</td>
+                                        <td class="text-center">@review.OilAmount</td>
+                                        <td class="text-center">@review.OilMarks</td>
+                                        <td class="text-center">
+                                            @if (review.IsGiven == true)
+                                            {
+                                                <span class="badge bg-success shadow">Berildi</span>
+                                            }
+                                            else if (review.IsGiven == false)
+                                            {
+                                                <span class="badge bg-danger shadow">Berilmadi</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-empty shadow"></span>
+                                            }
+                                        </td>
+                                        <td class="text-center comments-column">@review.Comments</td>
+                                        <td class="text-center">
+                                            @if (review.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
+                                            {
+                                                <span class="badge bg-pending shadow">Kutilmoqda</span>
+                                            }
+                                            else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Unassigned)
+                                            {
+                                                <span class="badge bg-unassigned shadow">Tayinlanmagan</span>
+                                            }
+                                            else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Completed)
+                                            {
+                                                <span class="badge bg-success shadow">Yakunlangan</span>
+                                            }
+                                            else if (review.Status == CheckDrive.ApiContracts.StatusForDto.RejectedByDriver)
+                                            {
+                                                <span class="badge bg-danger shadow">Haydovchi tomonidan rad etilgan</span>
+                                            }
+                                            else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Rejected)
+                                            {
+                                                <span class="badge bg-danger shadow">Rad etilgan</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-empty shadow">No`malum holat</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
                             {
                                 <tr>
-                                    <td class="text-center">
-                                        @if (!string.IsNullOrEmpty(review.OperatorName))
-                                        {
-                                            @review.DriverName
-                                        }
-                                        else
-                                        {
-                                            <a asp-action="Create"
-                                               asp-route-driverId="@review.DriverId"
-                                               asp-route-driverName="@review.DriverName"
-                                               asp-route-carId="@review.CarId"
-                                               asp-route-carModel="@review.CarModel"
-                                               asp-route-fuelTankCapacity="@review.CarOilCapacity"
-                                               asp-route-remainingFuel="@review.CarOilRemainig">@review.DriverName</a>
-                                        }
+                                    <td colspan="11" class="text-center">
+                                        Maʼlumotlar mavjud emas
                                     </td>
-                                    <td class="text-center">@review.OperatorName</td>
-                                    <td class="text-center">@review.CarModel</td>
-                                    <td class="text-center">@review.CarNumber</td>
-                                    <td class="text-center">@review.CarOilCapacity</td>
-                                    <td class="text-center">@review.CarOilRemainig</td>
-                                    <td class="text-center">@review.OilAmount</td>
-                                    <td class="text-center">@review.OilMarks</td>
-                                    <td class="text-center">
-                                        @if (review.IsGiven == true)
-                                        {
-                                            <span class="badge bg-success shadow">Berildi</span>
-                                        }
-                                        else if (review.IsGiven == false)
-                                        {
-                                            <span class="badge bg-danger shadow">Berilmadi</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-empty shadow"></span>
-                                        }
-                                    </td>
-                                    <td class="text-center comments-column">@review.Comments</td>
-                                    <td class="text-center">@review.Status</td>
                                 </tr>
                             }
                         </tbody>
@@ -152,6 +185,14 @@
         font-size: 0.8rem;
         padding: 5px 10px;
         border-radius: 5px;
+    }
+
+    .bg-pending{
+        background-color: orange;
+    }
+
+    .bg-unassigned{
+        background-color: slategray;
     }
 
     .bg-success {

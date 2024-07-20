@@ -6,17 +6,23 @@
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
 }
 <div class="container-fluid py-2 px-4 d-flex justify-content-end">
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center gap-2">
         <div class="dropdown">
-            <button class="btn btn-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: white; border-color: black;">
+            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:white; border-color:black; width:55px">
                 <i class="fa-solid fa-user" style="background-color: white; color: black;"></i>
                 <i class="bi bi-caret-down-fill" style="background-color:white; color:black"></i>
             </button>
             <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" style="color: red" href="@Url.Action("Login", "Auth")">Profildan Chiqish</a></li>
-                <li><a class="dropdown-item" style="color: darkblue" href="@Url.Action("PersonalIndex", "MechanicHandovers")">Mexanik(Qabul qiluvchi)</a></li>
+                <li><a class="dropdown-item" style="color: darkblue" href="@Url.Action("PersonalIndex", "MechanicHandovers")">Mexanik(Topshiruvchi)</a></li>
             </ul>
         </div>
+        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
+            <span class="logout-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </span>
+            Chiqish
+        </button>
+        
     </div>
 </div>
 
@@ -35,7 +41,7 @@
                 </div>
             </div>
             <div class="col-md-4 text-end">
-                <a class="btn btn-success shadow" href="@Url.Action("Create", "MechanicAcceptances")">
+                <a class="btn btn-success shadow" href="@Url.Action("CreateByButton", "MechanicAcceptances")">
                     <i class="fa fa-plus"></i> Yaratish
                 </a>
             </div>
@@ -52,6 +58,7 @@
                         <th scope="col" style="width: 10%">Qabul qilish masofasi</th>
                         <th scope="col" style="width: 15%">Izoh</th>
                         <th scope="col" style="width: 10%">Sana</th>
+                        <th scope="col" style="width: 10%">Holati</th>
 
                     </tr>
                 </thead>
@@ -68,7 +75,7 @@
                                     }
                                     else
                                     {
-                                        <a href="/MechanicAcceptances/Create?driverId=@item.DriverId&carName=@item.CarName">@item.DriverName</a>
+                                        <a href="/MechanicAcceptances/CreateByLink?driverId=@item.DriverId&carId=@item.CarId&carName=@item.CarName&driverName=@item.DriverName">@item.DriverName</a>
                                     }
                                 </td>
                                 <td>@item.MechanicName</td>
@@ -78,17 +85,43 @@
                                     {
                                         @if ((bool)item.IsAccepted)
                                         {
-                                            <span class="badge bg-success shadow">Qabul qilindi</span>
+                                            <span class="badge bg-success ">Qabul qilindi</span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-danger shadow">Rad etildi</span>
+                                            <span class="badge bg-danger ">Rad etildi</span>
                                         }
                                     }
                                 </td>
                                 <td>@item.Distance</td>
                                 <td>@item.Comments</td>
                                 <td>@item.Date?.ToString("dd/MM/yyyy")</td>
+                                <td class="text-center">
+                                    @if (item.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
+                                    {
+                                        <span class="badge bg-pending ">Kutilmoqda</span>
+                                    }
+                                    else if (item.Status == CheckDrive.ApiContracts.StatusForDto.Unassigned)
+                                    {
+                                        <span class="badge bg-unassigned ">Tayinlanmagan</span>
+                                    }
+                                    else if (item.Status == CheckDrive.ApiContracts.StatusForDto.Completed)
+                                    {
+                                        <span class="badge bg-success ">Yakunlangan</span>
+                                    }
+                                    else if (item.Status == CheckDrive.ApiContracts.StatusForDto.RejectedByDriver)
+                                    {
+                                        <span class="badge bg-danger ">Haydovchi tomonidan rad etilgan</span>
+                                    }
+                                    else if (item.Status == CheckDrive.ApiContracts.StatusForDto.Rejected)
+                                    {
+                                        <span class="badge bg-danger ">Rad etilgan</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-empty ">No`malum holat</span>
+                                    }
+                                </td>
                             </tr>
                         }
                     }
@@ -145,6 +178,14 @@
         font-size: 0.8rem;
         padding: 5px 10px;
         border-radius: 5px;
+    }
+
+    .bg-pending {
+        background-color: orange;
+    }
+
+    .bg-unassigned {
+        background-color: slategray;
     }
 
     .bg-success {

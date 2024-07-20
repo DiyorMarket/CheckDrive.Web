@@ -36,13 +36,13 @@
             <div class="col-12">
                 <ejs-grid id="mechanicAcceptances-list" dataSource="@ViewBag.MechanicAcceptances" gridLines="Vertical" allowSorting="true">
                     <e-grid-columns>
-                        <e-grid-column headerText="Id" field="Id" type="number"></e-grid-column>
+                        <e-grid-column headerText="Id" field="Id" template="#templat" type="number" width="60"></e-grid-column>
                         <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" type="string"></e-grid-column>
                         <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string"></e-grid-column>
                         <e-grid-column headerText="Mashina" field="CarName" template="#template" type="string"></e-grid-column>
-                        <e-grid-column headerText="Qabul qilish masofasi" field="Distance" type="number"></e-grid-column>
+                        <e-grid-column headerText="Qabul qilish masofasi" field="Distance" type="number" width="90"></e-grid-column>
                         <e-grid-column headerText="Ro'yxatdan o'tgan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm"></e-grid-column>
-                        <e-grid-column headerText="Qabul qilish" field="IsAccepted" type="string"></e-grid-column>
+                        <e-grid-column headerText="Qabul qilish" field="IsAccepted" type="string" width="100"></e-grid-column>
                         <e-grid-column headerText="Izoh" field="Comments" type="string"></e-grid-column>
                         <e-grid-column headerText="Status" field="Status" type="string"></e-grid-column>
                     </e-grid-columns>
@@ -90,5 +90,10 @@
 <script id="template" type="text/x-template">
     <div>
         <a href="/Cars/DetailsForMechanicAcceptance/${CarId}">${CarName}</a>
+    </div>
+</script>
+<script id="templat" type="text/x-templat">
+    <div>
+        <a rel='nofollow' href="MechanicAcceptances/Details/${Id}">${Id}</a>
     </div>
 </script>

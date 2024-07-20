@@ -1,5 +1,4 @@
 ﻿using CheckDrive.ApiContracts.MechanicAcceptance;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -19,9 +18,13 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
             int? pageNumber, 
             string? searchString,
             DateTime? date,
+            string? status,
             int? roleId)
         {
             StringBuilder query = new StringBuilder();
+
+            if (!string.IsNullOrWhiteSpace(status))
+                query.Append($"status={status}&");
 
             if (roleId != 0)
                 query.Append($"roleId={roleId}&");
@@ -62,16 +65,7 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
 
             return result;
         }
-        public Task DeleteMechanicAcceptanceAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<MechanicAcceptance> GetMechanicAcceptanceAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-        
+   
         public async  Task<MechanicAcceptanceDto> CreateMechanicAcceptanceAsync(MechanicAcceptanceForCreateDto acceptanceForCreateDto)
         {
             var json = JsonConvert.SerializeObject(acceptanceForCreateDto);
@@ -86,14 +80,49 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
 
             return JsonConvert.DeserializeObject<MechanicAcceptanceDto>(jsonResponse);
         }
-        Task<MechanicAcceptanceDto> IMechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(int id)
+
+        public async Task<MechanicAcceptanceDto> GetMechanicAcceptanceAsync(int id)
         {
-            throw new NotImplementedException();
+            var response = await _api.GetAsync($"mechanics/acceptance/{id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not fetch account with id: {id}.");
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<MechanicAcceptanceDto>(json);
+
+            if (result == null)
+            {
+                throw new Exception($"Deserialization of MechanicAcceptanceDto failed for id: {id}.");
+            }
+
+            return result;
         }
 
-        Task<MechanicAcceptanceDto> IMechanicAcceptanceDataStore.UpdateMechanicAcceptanceAsync(int id, MechanicAcceptanceForUpdateDto mechanicAcceptanceForUpdateDto)
+        public async Task<MechanicAcceptanceDto> UpdateMechanicAcceptanceAsync(int id, MechanicAcceptanceForUpdateDto mechanicAcceptanceForUpdateDto)
         {
-            throw new NotImplementedException();
+            var json = JsonConvert.SerializeObject(mechanicAcceptanceForUpdateDto);
+            var response = await _api.PutAsync($"mechanics/acceptance/{mechanicAcceptanceForUpdateDto.Id}", json);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Error updating MechanicHandovers.");   
+            }
+
+            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return JsonConvert.DeserializeObject<MechanicAcceptanceDto>(jsonResponse);
+        }
+
+        public async Task DeleteMechanicAcceptanceAsync(int id)
+        {
+            var response = await _api.DeleteAsync($"mechanics/acceptance/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Could not delete Mechanic acceptance with id: {id}.");
+            }
         }
     }
 }

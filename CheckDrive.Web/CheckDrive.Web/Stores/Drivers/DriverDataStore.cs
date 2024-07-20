@@ -16,7 +16,7 @@ namespace CheckDrive.Web.Stores.Drivers
             _api = apiClient;
         }
 
-        public async Task<GetDriverResponse> GetDriversAsync(string? searchString,int? pageNumber)
+        public async Task<GetDriverResponse> GetDriversAsync(string? searchString, int? pageNumber)
         {
             StringBuilder query = new("");
 
@@ -36,9 +36,41 @@ namespace CheckDrive.Web.Stores.Drivers
                 throw new Exception("Could not fetch drivers.");
             }
 
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<GetDriverResponse>(json);
+
+            return result;
+        }
+
+        public async Task<GetDriverResponse> GetDriversAsync(int? roleId)
+        {
+            StringBuilder query = new("");
+
+            if (roleId != 0)
+                query.Append($"roleId={roleId}&");
+            var response = await _api.GetAsync("drivers?" + query.ToString());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch drivers.");
+            }
 
             var json = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<GetDriverResponse>(json);
+
+            return result;
+        }
+        public async Task<IEnumerable<DriverHistoryDto>> GetDriverHistories(int Id)
+        {
+            var response = await _api.GetAsync($"drivers/driverHistories?driverId={Id}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception();
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<IEnumerable<DriverHistoryDto>>(json);
 
             return result;
         }

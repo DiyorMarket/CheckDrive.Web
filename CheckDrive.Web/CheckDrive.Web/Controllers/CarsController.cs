@@ -1,7 +1,7 @@
 ﻿using CheckDrive.ApiContracts.Car;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Principal;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -14,9 +14,9 @@ namespace CheckDrive.Web.Controllers
             _carDataStore = carDataStore;
         }
 
-        public async Task<IActionResult> Index(string? searchString,int? pageNumber)
+        public async Task<IActionResult> Index(string? searchString, int? pageNumber)
         {
-            var cars = await _carDataStore.GetCarsAsync(searchString,pageNumber);
+            var cars = await _carDataStore.GetCarsAsync(searchString, pageNumber);
 
             ViewBag.SearchString = searchString;
             ViewBag.Cars = cars.Data;
@@ -71,8 +71,8 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _carDataStore.CreateCarAsync(car);
-                return RedirectToAction(nameof(Index));
+                var newCar = await _carDataStore.CreateCarAsync(car);
+                return RedirectToAction("Details", new { id = newCar.Id });
             }
             return View(car);
         }
@@ -93,8 +93,8 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _carDataStore.UpdateCarAsync(id, car);
-                return RedirectToAction(nameof(Index));
+                var newCar = await _carDataStore.UpdateCarAsync(id, car);
+                return RedirectToAction("Details", new { id = newCar.Id });
             }
             return View(car);
         }

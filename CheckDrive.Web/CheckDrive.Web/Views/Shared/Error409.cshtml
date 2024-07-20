@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Unauthorized";
+    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            position: relative;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            text-align: center;
+            padding-top: 50px; /* Add 50 pixels padding at the top */
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+        }
+
+            .button-container a {
+                display: inline-block;
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+                background-color: #007bff;
+                color: white;
+                text-decoration: none;
+                border: none;
+                border-radius: 5px;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="~/images/Error409.png" />
+    </div>
+    <div class="button-container">
+        <a href="@Url.Action("Login", "Auth")">Loginga qaytish</a>
+    </div>
+</body>
+</html>

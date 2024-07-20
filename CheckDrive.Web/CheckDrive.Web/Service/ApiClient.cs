@@ -5,7 +5,6 @@ namespace CheckDrive.Web.Service
     public class ApiClient
     {
         private const string baseUrl = "http://miraziz-001-site1.ctempurl.com/api";
-
         private readonly HttpClient _client = new();
         private readonly IHttpContextAccessor _contextAccessor;
 

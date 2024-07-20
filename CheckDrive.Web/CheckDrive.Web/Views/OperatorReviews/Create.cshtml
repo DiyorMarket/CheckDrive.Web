@@ -1,112 +1,141 @@
-﻿    @model CheckDrive.ApiContracts.OperatorReview.OperatorReviewForCreateDto
+﻿@model CheckDrive.ApiContracts.OperatorReview.OperatorReviewForCreateDto
 
-    @{
-        ViewData["Title"] = "Create";
-        Layout = "~/Views/Shared/_PersonalLayout.cshtml";
-    }
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    bool noDriversAvailable = ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers.Items).Any();
+}
 
-    <div class="row mt-custom">
-        <div class="col-md-4 offset-md-1 mt-5">
-            <h4>Royxatga olish</h4>
-            <hr class="w-50" />
-            <form id="operatorReviewForm" asp-action="Create" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" name="fuelTankCapacity" value="@ViewBag.FuelTankCapacity" />
-                <input type="hidden" name="remainingFuel" value="@ViewBag.RemainingFuel" />
-                <input type="hidden" asp-for="DriverId" />
-                <input type="hidden" asp-for="CarId" />
-                <div class="form-check form-switch">
-                    <input asp-for="IsGiven" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" value="true">
-                    <label asp-for="IsGiven" class="form-check-label" for="flexSwitchCheckDefault">@Html.DisplayNameFor(model => model.IsGiven)</label>
-                </div>
+<div class="row mt-custom">
+    <div class="col-md-4 offset-md-1 mt-5">
+        <h4>Royxatga olish</h4>
+        <hr class="w-60" />
 
-                <div class="form-group w-50">
-                    <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
-                    <select asp-for="DriverId" class="form-control border border-dark" asp-items="@ViewBag.Drivers" id="driverDropdown">
-                        @if (ViewBag.SelectedDriverName != null)
-                        {
-                            <option value="@Model.DriverId" selected>@ViewBag.SelectedDriverName</option>
-                        }
-                    </select>
-                </div>
+        @if (noDriversAvailable)
+        {
+            <div class="alert alert-warning">
+                <strong>Diqqat!</strong> Hozirda mavjud haydovchilar yo'q. Iltimos, keyinroq qayta urinib ko'ring.
+            </div>
+        }
 
-                <div class="form-group w-50">
-                    <label asp-for="CarId" class="control-label mt-2">Moshina</label>
-                    <select asp-for="CarId" class="form-control border border-dark" id="carDropdown">
-                        @if (ViewBag.SelectedCar != null)
-                        {
-                            <option value="@Model.CarId" selected>@ViewBag.SelectedCar</option>
-                        }
-                    </select>
-                </div>
+        <form id="operatorReviewForm" asp-action="Create" method="post">
+            <fieldset @(noDriversAvailable ? "disabled" : "")>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="fuelTankCapacity" value="@ViewBag.FuelTankCapacity" />
+            <input type="hidden" name="remainingFuel" value="@ViewBag.RemainingFuel" />
+            <input type="hidden" asp-for="DriverId" />
+            <input type="hidden" asp-for="CarId" />
+            <div class="form-group w-60">
+                <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
+                <select asp-for="DriverId" class="form-control border border-dark" asp-items="@ViewBag.Drivers" id="driverDropdown">
+                    @if (ViewBag.SelectedDriverName != null)
+                    {
+                        <option value="@Model.DriverId" selected>@ViewBag.SelectedDriverName</option>
+                    }
+                </select>
+            </div>
 
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        var driverDropdown = document.getElementById('driverDropdown');
-                        var carDropdown = document.getElementById('carDropdown');
-                        var selectedDriverId = @Model.DriverId;
-                        var urlParams = new URLSearchParams(window.location.search);
-                        var driverIdParam = urlParams.has('driverId');
+            <div class="form-group w-60">
+                <label asp-for="CarId" class="control-label mt-2">Moshina</label>
+                <select asp-for="CarId" class="form-control border border-dark" id="carDropdown">
+                    @if (ViewBag.SelectedCar != null)
+                    {
+                        <option value="@Model.CarId" selected>@ViewBag.SelectedCar</option>
+                    }
+                </select>
+            </div>
+            <div class="form-check form-switch mt-3">
+                <input asp-for="IsGiven" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" value="true">
+                <label asp-for="IsGiven" class="form-check-label" for="flexSwitchCheckDefault">Yoqilg`i quyildimi?</label>
+            </div>
 
-                        if (driverIdParam) {
-                            driverDropdown.disabled = true;
-                            carDropdown.disabled = true;
-                        } else if (selectedDriverId !== 0) {
-                            driverDropdown.value = selectedDriverId;
-                            carDropdown.disabled = true;
-                        }
-
-                        driverDropdown.addEventListener('change', function () {
-                            var driverId = this.value;
-                            $.ajax({
-                                url: '@Url.Action("GetCarByDriverId")',
-                                type: 'GET',
-                                data: { driverId: driverId },
-                                success: function (response) {
-                                    if (response.success) {
-                                        var car = response.car;
-                                        carDropdown.innerHTML = `<option value="${car.id}" selected>${car.model} Sig'imi: ${car.fuelTankCapacity} litr, Qoldig'i: ${car.remainingFuel} litr</option>`;
-                                        document.getElementById('CarId').value = car.id;
-                                    } else {
-                                        carDropdown.innerHTML = `<option value="" selected>No car available</option>`;
-                                        document.getElementById('CarId').value = '';
-                                    }
-                                }
-                            });
-                        });
-                    });
-                </script>
-
-            <div class="form-group w-50">
+            <div class="form-group w-60">
                 <select asp-for="OperatorId" class="form-control border border-dark d-none" asp-items="@ViewBag.Operators"></select>
             </div>
-            <div class="form-group w-50">
-                <label asp-for="OilAmount" class="control-label"></label>
+            <div class="form-group w-60">
+                <label asp-for="OilAmount" class="control-label">Yoqilg`i miqdori</label>
                 <input asp-for="OilAmount" class="form-control" id="OilAmount" />
                 <span asp-validation-for="OilAmount" class="text-danger"></span>
             </div>
-            <div class="form-group w-50">
+            <div class="form-group w-60">
                 <label asp-for="OilMarks" class="control-label mt-2">Yoqilgi Markasi</label>
                 <select asp-for="OilMarks" class="form-control border border-dark" asp-items="@ViewBag.OilMarks"></select>
             </div>
-            <div class="form-group w-50">
+            <div class="form-group w-60 mt-3">
                 <label asp-for="Comments" for="exampleFormControlTextarea1">Izoh</label>
                 <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
             </div>
-            <div class="form-group mt-3 w-50">
+        </fieldset>
+
+            <div class="form-group mt-3 w-60">
                 <a asp-action="PersonalIndex" class="btn btn-outline-info">
-                    <i class="fa-solid fa-arrow-left-long"></i> Back
+                    <i class="fa-solid fa-arrow-left-long"></i> Orqaga
                 </a>
-                <button class="btn btn-outline-success" type="submit">
-                    <i class="fa fa-plus"></i> Create
+                <button class="btn btn-success" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
+                    <i class="fa fa-plus"></i> Yaratish
                 </button>
             </div>
         </form>
     </div>
 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var driverDropdown = document.getElementById('driverDropdown');
+            var carDropdown = document.getElementById('carDropdown');
+            var selectedDriverId = @Model.DriverId;
+            var urlParams = new URLSearchParams(window.location.search);
+            var driverIdParam = urlParams.has('driverId');
+
+            if (driverIdParam) {
+                driverDropdown.disabled = true;
+                carDropdown.disabled = true;
+            } else if (selectedDriverId !== 0) {
+                driverDropdown.value = selectedDriverId;
+                carDropdown.disabled = true;
+            }
+
+            driverDropdown.addEventListener('change', function () {
+                var driverId = this.value;
+                $.ajax({
+                    url: '@Url.Action("GetCarByDriverId")',
+                    type: 'GET',
+                    data: { driverId: driverId },
+                    success: function (response) {
+                        if (response.success) {
+                            var car = response.car;
+                            carDropdown.innerHTML = `<option value="${car.id}" selected>${car.model} Sig'imi: ${car.fuelTankCapacity} litr, Qoldig'i: ${car.remainingFuel} litr</option>`;
+                            document.getElementById('CarId').value = car.id;
+                        } else {
+                            carDropdown.innerHTML = `<option value="" selected>No car available</option>`;
+                            document.getElementById('CarId').value = '';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var form = document.getElementById('operatorReviewForm');
+            var checkbox = document.getElementById('flexSwitchCheckDefault');
+            var checkboxLabel = document.querySelector('label[for="flexSwitchCheckDefault"]');
+
+            function toggleCheckboxHighlight() {
+                if (!checkbox.checked) {
+                    checkbox.classList.add('border-danger');
+                    checkboxLabel.classList.add('text-danger');
+                } else {
+                    checkbox.classList.remove('border-danger');
+                    checkboxLabel.classList.remove('text-danger');
+                }
+            }
+
+            toggleCheckboxHighlight();
+            checkbox.addEventListener('change', toggleCheckboxHighlight);
+
             form.addEventListener('submit', function (event) {
                 var oilAmountInput = document.getElementById('OilAmount');
                 var isGivenInput = document.getElementById('flexSwitchCheckDefault');
@@ -117,14 +146,36 @@
                 var oilAmount = parseFloat(oilAmountInput.value);
                 var isGiven = isGivenInput.checked;
 
-                if ((oilAmount === 0 && isGiven === true) ||
+                if ((oilAmount < 0 && isGiven === true) ||
                     (oilAmount > 0 && isGiven === false)) {
                     event.preventDefault();
-                    alert('Siz yoqilgini 0 litr berib, berdim tugmasini bostingiz yoki\n Yoqilgini berib bermadim tugmasini bostingiz');
+                    alert('Yoqilgini berib bermadim tugmasini bostingiz');
                 } else if (oilAmount < 0 || oilAmount > maxOilAmount) {
                     event.preventDefault();
-                    alert('Oil amount must be between 0 and ' + maxOilAmount);
+                    alert('Yoqilg`i miqdori 0 va ' + maxOilAmount + ' orasida bo`lishi kerak');
                 }
             });
         });
     </script>
+</div>
+
+<style>
+    .border-danger {
+        border: 2px solid red !important;
+    }
+
+    .text-danger {
+        color: red !important;
+    }
+
+    fieldset[disabled] .form-control,
+    fieldset[disabled] .btn {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+    }
+
+        fieldset[disabled] .form-control:disabled,
+        fieldset[disabled] .btn:disabled {
+            opacity: 1;
+        }
+</style>

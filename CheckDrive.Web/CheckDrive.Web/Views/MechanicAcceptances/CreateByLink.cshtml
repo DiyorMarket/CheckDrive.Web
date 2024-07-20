@@ -1,0 +1,105 @@
+﻿@model CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceForCreateDto
+
+@{
+    ViewData["Title"] = "CreateByLink";
+    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+}
+
+<div class="row mt-custom">
+    <div class="col-md-4 offset-md-1 mt-5">
+        <h4>Ro'yxatga olish</h4>
+        <hr class="w-50" />
+
+        <form asp-action="Create" method="post" id="createFormByLink">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group w-50 mt-2">
+                <label class="control-label mt-2">Haydovchi</label>
+                <input type="text" class="form-control" value="@ViewBag.DriverName" disabled />
+                <input type="hidden" asp-for="DriverId" value="@ViewBag.DriverId" />
+            </div>
+
+            <div class="form-group w-50">
+                <input type="text" asp-for="MechanicId" class="form-control border border-dark d-none" value="@ViewBag.MechanicId" />
+            </div>
+
+            <div class="form-group w-50 mt-2">
+                <label class="control-label mt-2">Mashina</label>
+                <input type="text" class="form-control" value="@ViewBag.CarName" disabled />
+                <input type="hidden" asp-for="CarId" value="@ViewBag.CarId" />
+            </div>
+
+            <div class="form-check form-switch mt-3">
+                <input asp-for="IsAccepted" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                <label asp-for="IsAccepted" class="form-check-label" for="flexSwitchCheckDefault">Qabul qilish</label>
+            </div>
+
+            <div class="form-group w-50 mt-2">
+                <label asp-for="Distance" class="control-label mt-2">Qabul qilish masofasi</label>
+                <input asp-for="Distance" class="form-control" type="number" min="0" step="1" />
+            </div>
+
+            <div class="form-group w-50 mt-2">
+                <label asp-for="Comments" class="control-label mt-2">Izoh</label>
+                <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
+            </div>
+
+            <div class="form-group mt-3 w-50 mt-2">
+                <a asp-action="PersonalIndex" class="btn btn-outline-info">
+                    <i class="fa-solid fa-arrow-left-long"></i> Orqaga
+                </a>
+                <button class="btn btn-success" type="submit">
+                    <i class="fa fa-plus"></i> Yaratish
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            var form = document.getElementById('createFormByLink');
+            var checkbox = document.getElementById('flexSwitchCheckDefault');
+            var checkboxLabel = document.querySelector('label[for="flexSwitchCheckDefault"]');
+
+            function toggleCheckboxHighlight() {
+                if (!checkbox.checked) {
+                    checkbox.classList.add('border-danger');
+                    checkboxLabel.classList.add('text-danger');
+                } else {
+                    checkbox.classList.remove('border-danger');
+                    checkboxLabel.classList.remove('text-danger');
+                }
+            }
+
+            toggleCheckboxHighlight();
+
+            checkbox.addEventListener('change', toggleCheckboxHighlight);
+
+            form.addEventListener('submit', function (event) {
+                var distance = document.querySelector('input[name="Distance"]').value;
+                var isGiven = checkbox.checked;
+                var distanceValue = Number(distance);
+
+                if (distanceValue === 0 && isGiven) {
+                    event.preventDefault();
+                    alert("Qabul qilish masofanisini kiritishingiz shart!");
+                } else if (distanceValue > 0 && !isGiven) {
+                    event.preventDefault();
+                    alert("Qabul qilish masofanisini kiritib qabul qilish tugmasini surmadingiz!");
+                }
+            });
+        });
+    </script>
+}
+
+<style>
+    .border-danger {
+        border: 2px solid red !important;
+    }
+
+    .text-danger {
+        color: red !important;
+    }
+</style>

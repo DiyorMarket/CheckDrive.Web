@@ -1,0 +1,73 @@
+﻿@model CheckDrive.ApiContracts.MechanicHandover.MechanicHandoverDto
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1 class="align-items-baseline" style="margin-top: 100px">O'chirish</h1>
+<hr />
+
+<h3 style="color:grey;">
+    Haqiqatan ham buni oʻchirib tashlamoqchimisiz?
+    O'chirsangiz bu ma`lumotni qayta tiklay olmaysiz!!!
+</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Mexanik F.I.SH:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MechanicName)
+        </dd>
+        <dt class="col-sm-2">
+            Haydovchi F.I.SH:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DriverName)
+        </dd>
+        <dt class="col-sm-2">
+            Avtomobil:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CarName)
+        </dd>
+        <dt class="col-sm-2">
+            Topshirish:
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.IsHanded.HasValue ? (Model.IsHanded.Value ? "Topshirildi" : "Topshirilmadi") : "N/A")
+        </dd>
+        <dt class="col-sm-2">
+            Topshirish masofasi:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Distance)
+        </dd>
+        <dt class="col-sm-2">
+            Vaqt:
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.Date.ToString("yyyy-MM-dd | HH:mm"))
+        </dd>
+        <dt class="col-sm-2">
+            Izoh:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Comments)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-group">
+            <a asp-action="Index" class="btn btn-outline-info">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                Orqaga
+            </a>
+            <button asp-route-itemid="@Model.Id" class="btn btn-outline-danger">
+                <i class="fa-solid fa-trash"></i>
+                O'chirish
+            </button>
+        </div>
+    </form>
+</div>
