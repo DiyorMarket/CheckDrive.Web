@@ -105,7 +105,7 @@
             </table>
         </div>
     }
-    @if (ViewBag.DoctorHistories != null && ViewBag.DoctorHistories.Count > 0)
+    else if (ViewBag.DoctorHistories != null && ViewBag.DoctorHistories.Count > 0)
     {
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover paper-shadow">
@@ -140,7 +140,7 @@
             </table>
         </div>
     }
-    @if (ViewBag.OperatorHistories != null && ViewBag.OperatorHistories.Count > 0)
+    else if (ViewBag.OperatorHistories != null && ViewBag.OperatorHistories.Count > 0)
     {
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover paper-shadow">
@@ -213,7 +213,7 @@
             </table>
         </div>
     }
-    @if (ViewBag.MechanicHistories != null && ViewBag.MechanicHistories.Count > 0)
+    else if (ViewBag.MechanicHistories != null && ViewBag.MechanicHistories.Count > 0)
     {
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover paper-shadow">
@@ -285,7 +285,7 @@
             </table>
         </div>
     }
-    @if (ViewBag.DispatcherHistories != null && ViewBag.DispatcherHistories.Count > 0)
+    else if (ViewBag.DispatcherHistories != null && ViewBag.DispatcherHistories.Count > 0)
     {
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover paper-shadow">
