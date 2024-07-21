@@ -12,6 +12,7 @@
     <EmbeddedResource Remove="Controllers\**" />
     <None Remove="Controllers\**" />
     <Content Remove="wwwroot\css\LogOutButtun.css" />
+    <_ContentIncludedByDefault Remove="appsettings.Production.json" />
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\CarsController.cs" />

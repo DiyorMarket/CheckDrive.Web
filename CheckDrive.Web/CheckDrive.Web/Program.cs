@@ -2,7 +2,6 @@ using CheckDrive.Web.Constants;
 using CheckDrive.Web.Extensions;
 using CheckDrive.Web.Filters;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

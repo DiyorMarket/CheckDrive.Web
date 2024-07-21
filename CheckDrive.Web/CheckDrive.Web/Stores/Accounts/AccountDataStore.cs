@@ -56,9 +56,8 @@ namespace CheckDrive.Web.Stores.Accounts
         }
 
         public async Task<AccountDto> GetAccountAsync(int id)
-
         {
-            var response = await _api.GetAsync($"accounts/{id}");
+            var response = await _api.GetAsync($"/accounts/{id}");
 
             if (!response.IsSuccessStatusCode)
             {

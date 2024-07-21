@@ -3,6 +3,6 @@
     public static class Configurations
     {
         public const string JwtToken = "JwtToken";
-        public const string SynfusionLicenseKey = "Mgo+DSMBMAY9C3t2UFhhQlJBfVldWnxLflFyVWRTelx6cF1WESFaRnZdRl1mSH1TfkBgWXhXeXdV";
+        public const string SynfusionLicenseKey = "Mgo+DSMBMAY9C3t2UFhhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5UdERiXX1ZcHNXRGFa";
     }
 }
