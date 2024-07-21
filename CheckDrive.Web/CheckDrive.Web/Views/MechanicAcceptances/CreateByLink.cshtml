@@ -70,6 +70,9 @@
             var checkbox = document.getElementById('flexSwitchCheckDefault');
             var checkboxLabel = document.querySelector('label[for="flexSwitchCheckDefault"]');
 
+            // Set the distance input to the car's mileage when the page loads
+            distanceInput.value = mileage;
+
             function toggleCheckboxHighlight() {
                 if (!checkbox.checked) {
                     checkbox.classList.add('border-danger');

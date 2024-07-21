@@ -50,15 +50,19 @@
                     <label asp-for="CarId" class="control-label mt-2">Mashina</label>
                     @if (noCarsAvailable)
                     {
-                        <select class="form-control border border-dark" disabled>
+                        <select id="carIdDropdown" class="form-control border border-dark" disabled>
                             <option selected>Mashinalar mavjud emas</option>
                         </select>
                     }
                     else
                     {
-                        <select asp-for="CarId" class="form-control border border-dark" asp-items="@ViewBag.Cars"></select>
+                        <select asp-for="CarId" id="carIdDropdown" class="form-control border border-dark" asp-items="@ViewBag.Cars">
+                            <option value="" selected>Avtomobil tanlang</option>
+                        </select>
                     }
                 </div>
+
+
                 <div class="form-check form-switch mt-3">
                     <input asp-for="IsHanded" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                     <label asp-for="IsHanded" class="form-check-label" for="flexSwitchCheckDefault">Topshirish</label>
@@ -68,6 +72,7 @@
                     <input asp-for="Distance" class="form-control" type="number" min="0" step="1" />
                     <span asp-validation-for="Distance" class="text-danger"></span>
                 </div>
+
 
                 <div class="form-group w-50 mt-3">
                     <label asp-for="Comments" class="control-label mt-2">Izoh</label>
@@ -93,8 +98,9 @@
             var form = document.getElementById('mechanicHandoverForm');
             var checkbox = document.getElementById('flexSwitchCheckDefault');
             var checkboxLabel = document.querySelector('label[for="flexSwitchCheckDefault"]');
-            var carDropdown = document.getElementById('driverIdDropdown'); // Assuming carDropdown has id `carIdDropdown`
+            var carDropdown = document.getElementById('carIdDropdown');
             var distanceInput = document.querySelector('input[name="Distance"]');
+            var mileage = 0;
 
             function toggleCheckboxHighlight() {
                 if (!checkbox.checked) {
@@ -112,11 +118,13 @@
             carDropdown.addEventListener('change', function () {
                 var selectedCarId = carDropdown.value;
                 if (selectedCarId) {
-                    fetch(`/MechanicHandoversController/GetCarDetails?carId=${selectedCarId}`)
+                    fetch(`/MechanicHandovers/GetCarDetails?carId=${selectedCarId}`)
                         .then(response => response.json())
                         .then(data => {
-                            if (data && data.Mileage !== undefined) {
-                                distanceInput.value = data.Mileage;
+                            if (data && data.mileage !== undefined) {
+                                mileage = data.mileage;
+                                distanceInput.value = mileage;
+                                distanceInput.setAttribute('min', mileage);
                             }
                         })
                         .catch(error => console.error('Error fetching car details:', error));
@@ -124,16 +132,15 @@
             });
 
             form.addEventListener('submit', function (event) {
-                var distance = document.querySelector('input[name="Distance"]').value;
+                var distanceValue = Number(distanceInput.value);
                 var isGiven = checkbox.checked;
-                var distanceValue = Number(distance);
 
-                if (distanceValue === 0 && isGiven) {
+                if (distanceValue < mileage) {
+                    event.preventDefault();
+                    alert("Masofa mashinaning mavjud yurgan masofasidan kam bo'lishi mumkin emas!");
+                } else if (distanceValue === 0 && isGiven) {
                     event.preventDefault();
                     alert("Boshlang'ich masofani kiritishingiz shart!");
-                } else if (distanceValue > 0 && !isGiven) {
-                    event.preventDefault();
-                    alert("Boshlang'ich masofani kiritib topshirish tugmasini surmadingiz!");
                 }
             });
         });

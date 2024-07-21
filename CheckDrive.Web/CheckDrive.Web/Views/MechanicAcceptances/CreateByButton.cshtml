@@ -43,13 +43,13 @@
                 </div>
                 <div class="form-group w-50 mt-2">
                     <label asp-for="CarId" class="control-label mt-2">Mashina</label>
-                    <select asp-for="CarId" class="form-control border border-dark" id="carSelect"></select>
+                    <select asp-for="CarId" class="form-control border border-dark" id="carSelect" disabled>
+                    </select>
                 </div>
                 <div class="form-group w-50 mt-2">
                     <label asp-for="Distance" class="control-label mt-2">Qabul qilish masofasi</label>
                     <input asp-for="Distance" class="form-control" type="number" min="0" step="1" />
                     <span asp-validation-for="Distance" class="text-danger"></span>
-                    <!-- Placeholder for validation message -->
                     <span class="distance-validation-message text-danger"></span>
                 </div>
                 <div class="form-group w-50 mt-2">
@@ -88,16 +88,18 @@
                 var carName = selectedOption.getAttribute('data-carname');
                 mileage = parseInt(selectedOption.getAttribute('data-mileage'));
 
-                carSelect.innerHTML = '';
+                carSelect.innerHTML = '<option value="">Avtomobil tanlang</option>'; // Add default option
 
                 if (carId && carName) {
                     var option = document.createElement('option');
                     option.value = carId;
                     option.textContent = carName;
                     carSelect.appendChild(option);
+                    carSelect.value = carId; // Set the car dropdown to the selected car
                 }
 
-                carSelect.disabled = false;
+                carSelect.disabled = true; // Ensure carSelect is always disabled
+                distanceInput.value = mileage; // Set distance to car's mileage
                 validateDistance();
             });
 
