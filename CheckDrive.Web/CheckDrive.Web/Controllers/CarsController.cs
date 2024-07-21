@@ -67,7 +67,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Model,Color,Number,RemainingFuel,MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear")] CarForCreateDto car)
+        public async Task<IActionResult> Create([Bind("Model,Color,Number,RemainingFuel,Mileage, MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear")] CarForCreateDto car)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Model,Color,Number,RemainingFuel,MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear")] CarForUpdateDto car)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Model,Color,Number,RemainingFuel,Mileage, MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear")] CarForUpdateDto car)
         {
             if (ModelState.IsValid)
             {

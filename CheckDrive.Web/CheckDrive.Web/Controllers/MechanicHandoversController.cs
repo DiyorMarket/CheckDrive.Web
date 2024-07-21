@@ -135,15 +135,25 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (mechanicHandoverForCreateDto.IsHanded == false)
+                // Fetch the selected car's details
+                var car = await _carDataStore.GetCarAsync(mechanicHandoverForCreateDto.CarId);
+                if (car != null && mechanicHandoverForCreateDto.Distance < car.Mileage)
                 {
-                    mechanicHandoverForCreateDto.Status = StatusForDto.Rejected;
+                    ModelState.AddModelError("Distance", "Masofa mashinaning mavjud yurgan masofasidan kam bo'lishi mumkin emas!");
                 }
 
-                mechanicHandoverForCreateDto.Date = DateTime.Now;
-                mechanicHandoverForCreateDto.Status = mechanicHandoverForCreateDto.IsHanded ? StatusForDto.Pending : StatusForDto.Rejected;
-                await _mechanicHandoverDataStore.CreateMechanicHandoverAsync(mechanicHandoverForCreateDto);
-                return RedirectToAction(nameof(PersonalIndex));
+                if (ModelState.IsValid)
+                {
+                    if (mechanicHandoverForCreateDto.IsHanded == false)
+                    {
+                        mechanicHandoverForCreateDto.Status = StatusForDto.Rejected;
+                    }
+
+                    mechanicHandoverForCreateDto.Date = DateTime.Now;
+                    mechanicHandoverForCreateDto.Status = mechanicHandoverForCreateDto.IsHanded ? StatusForDto.Pending : StatusForDto.Rejected;
+                    await _mechanicHandoverDataStore.CreateMechanicHandoverAsync(mechanicHandoverForCreateDto);
+                    return RedirectToAction(nameof(PersonalIndex));
+                }
             }
 
             var drivers = await GETDrivers();
@@ -157,6 +167,7 @@ namespace CheckDrive.Web.Controllers
 
             return View(mechanicHandoverForCreateDto);
         }
+
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -287,5 +298,21 @@ namespace CheckDrive.Web.Controllers
 
             return View(mechanicHandover);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCarDetails(int carId)
+        {
+            var car = await _carDataStore.GetCarAsync(carId); 
+            if (car != null)
+            {
+                var carDetails = new
+                {
+                    mileage = car.Mileage
+                };
+                return Json(carDetails);
+            }
+            return NotFound();
+        }
+
     }
 }

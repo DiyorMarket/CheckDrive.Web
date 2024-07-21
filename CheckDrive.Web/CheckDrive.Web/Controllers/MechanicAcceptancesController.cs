@@ -12,8 +12,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace CheckDrive.Web.Controllers
 {
     public class MechanicAcceptancesController(
-        IMechanicAcceptanceDataStore mechanicAcceptanceDataStore, 
-        IMechanicDataStore mechanicDataStore, 
+        IMechanicAcceptanceDataStore mechanicAcceptanceDataStore,
+        IMechanicDataStore mechanicDataStore,
         IOperatorReviewDataStore operatorReviewDataStore,
         ICarDataStore carDataStore,
         IDriverDataStore driverDataStore) : Controller
@@ -76,13 +76,28 @@ namespace CheckDrive.Web.Controllers
 
             return View(response.Data);
         }
+
         public async Task<IActionResult> CreateByButton()
         {
             var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today, "Completed", 1);
             var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today, null, null);
+            var carData = await _carDataStore.GetCarsAsync(1);
+
+            var carMileageDictionary = carData.Data.ToDictionary(car => car.Id, car => car.Mileage);
 
             var mechanicDriverIds = mechanicAcceptanceResponse.Data.Select(ma => ma.DriverId).ToHashSet();
-            var filteredOperatorResponse = operatorResponse.Data.Where(or => !mechanicDriverIds.Contains(or.DriverId)).ToList();
+            var filteredOperatorResponse = operatorResponse.Data
+                .Where(or => !mechanicDriverIds.Contains(or.DriverId))
+                .Select(or => new
+                {
+                    or.DriverId,
+                    or.CarId,
+                    or.CarModel,
+                    or.CarNumber,
+                    or.DriverName,
+                    CarMileage = carMileageDictionary.ContainsKey(or.CarId) ? carMileageDictionary[or.CarId] : 0
+                })
+                .ToList();
 
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
@@ -95,9 +110,11 @@ namespace CheckDrive.Web.Controllers
             ViewBag.MechanicId = mechanic.Id;
 
             ViewBag.FilteredOperatorResponse = filteredOperatorResponse;
+            ViewBag.CarData = carData;
 
             return View();
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -105,19 +122,47 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (mechanicAcceptanceForCreateDto.IsAccepted == null)
+                var car = await _carDataStore.GetCarAsync(mechanicAcceptanceForCreateDto.CarId);
+                if (car == null)
                 {
-                    mechanicAcceptanceForCreateDto.IsAccepted = false;
+                    ModelState.AddModelError(string.Empty, "Avtomobil mavjud emas !");
                 }
+                else
+                {
 
-                mechanicAcceptanceForCreateDto.Date = DateTime.Now;
-                mechanicAcceptanceForCreateDto.Status = mechanicAcceptanceForCreateDto.IsAccepted ? StatusForDto.Pending : StatusForDto.Rejected;
-                await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
-                return RedirectToAction(nameof(PersonalIndex));
+                    if (ModelState.IsValid)
+                    {
+                        if (mechanicAcceptanceForCreateDto.IsAccepted == null)
+                        {
+                            mechanicAcceptanceForCreateDto.IsAccepted = false;
+                        }
+
+                        mechanicAcceptanceForCreateDto.Date = DateTime.Now;
+                        mechanicAcceptanceForCreateDto.Status = mechanicAcceptanceForCreateDto.IsAccepted ? StatusForDto.Pending : StatusForDto.Rejected;
+                        await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
+                        return RedirectToAction(nameof(PersonalIndex));
+                    }
+                }
             }
 
-            return View(mechanicAcceptanceForCreateDto);
+            // In case of any validation errors, return the view with the model to display errors
+            var carData = await _carDataStore.GetCarsAsync(1);
+            ViewBag.CarData = carData;
+
+            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today, "Completed", 1);
+            var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today, null, null);
+
+            var mechanicDriverIds = mechanicAcceptanceResponse.Data.Select(ma => ma.DriverId).ToHashSet();
+            var filteredOperatorResponse = operatorResponse.Data.Where(or => !mechanicDriverIds.Contains(or.DriverId)).ToList();
+
+            ViewBag.FilteredOperatorResponse = filteredOperatorResponse;
+
+            return View("CreateByButton", mechanicAcceptanceForCreateDto);
         }
+
+
+
+
         public async Task<IActionResult> CreateByLink(int driverId, int carId, string carName, string driverName)
         {
             var accountIdStr = TempData["AccountId"] as string;
@@ -129,6 +174,10 @@ namespace CheckDrive.Web.Controllers
                 mechanic = mechanicResponse.Data.FirstOrDefault();
             }
 
+            var car = await _carDataStore.GetCarAsync(carId);
+            var mileage = car?.Mileage ?? 0;
+
+            ViewBag.Mileage = mileage;
             ViewBag.MechanicId = mechanic.Id;
             ViewBag.CarId = carId;
             ViewBag.DriverId = driverId;
@@ -137,6 +186,7 @@ namespace CheckDrive.Web.Controllers
 
             return View();
         }
+
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -179,13 +229,13 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, MechanicAcceptanceForUpdateDto mechanicAcceptance)
+        public async Task<IActionResult> Edit(int id, ApiContracts.MechanicAcceptance.MechanicAcceptanceForUpdateDto mechanicAcceptance)
         {
             if (id != mechanicAcceptance.Id)
             {
                 return NotFound();
             }
-            
+
             if (ModelState.IsValid)
             {
                 try
@@ -237,6 +287,17 @@ namespace CheckDrive.Web.Controllers
             var mechanicAcceptence = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
 
             return View(mechanicAcceptence);
+        }
+
+        [HttpGet("api/cars/{id}")]
+        public async Task<IActionResult> GetCar(int id)
+        {
+            var car = await _carDataStore.GetCarAsync(id);
+            if (car == null)
+            {
+                return NotFound();
+            }
+            return Ok(new { mileage = car.Mileage });
         }
     }
 }
