@@ -105,10 +105,6 @@ public class AuthController : Controller
             var accountId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
             int accountIds = Int32.Parse(accountId);
 
-            TempData["UserName"] = _accountDataStore.GetAccountAsync(accountIds)
-                .Result.FirstName;
-            TempData.Keep("UserName");
-
             switch (roleId)
             {
                 case "1":
