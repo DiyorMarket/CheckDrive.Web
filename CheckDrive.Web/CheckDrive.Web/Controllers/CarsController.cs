@@ -71,8 +71,8 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var newcar = await _carDataStore.CreateCarAsync(car);
-                return RedirectToAction("Details", new { id = newcar.Id });
+                var newCar = await _carDataStore.CreateCarAsync(car);
+                return RedirectToAction("Details", new { id = newCar.Id });
             }
             return View(car);
         }
@@ -93,8 +93,8 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var newcar = await _carDataStore.UpdateCarAsync(id, car);
-                return RedirectToAction("Details", new { id = newcar.Id });
+                var newCar = await _carDataStore.UpdateCarAsync(id, car);
+                return RedirectToAction("Details", new { id = newCar.Id });
             }
             return View(car);
         }

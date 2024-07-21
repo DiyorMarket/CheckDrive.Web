@@ -5,6 +5,7 @@ using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Principal;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -58,12 +59,31 @@ namespace CheckDrive.Web.Controllers
         }
         public async Task<IActionResult> Details(int id)
         {
-            var account = await _accountDataStore.GetAccountAsync(id);  
+            var account = await _accountDataStore.GetAccountAsync(id);
 
-            var accountHistories = await _driverDataStore.GetDriverHistories(id);
-
-            ViewBag.DriverHistories = accountHistories;
-
+            switch (account.RoleId)
+            {
+                case 2:
+                    var driverHistories = await _driverDataStore.GetDriverHistories(id);
+                    ViewBag.DriverHistories = driverHistories;
+                    return View(account);
+                case 3:
+                    var doctorHistories = await _accountDataStore.GetDoctorHistories(id);
+                    ViewBag.DoctorHistories = doctorHistories;
+                    return View(account);
+                case 4:
+                    var operatorHistories = await _accountDataStore.GetOperatorHistories(id);
+                    ViewBag.OperatorHistories = operatorHistories;
+                    return View(account);
+                case 5:
+                    var dispatcherHistories = await _accountDataStore.GetDispatcherHistories(id);
+                    ViewBag.DispatcherHistories = dispatcherHistories;
+                    return View(account);
+                case 6:
+                    var mechanicHistories = await _accountDataStore.GetMechanicHistories(id);
+                    ViewBag.MechanicHistories = mechanicHistories;
+                    return View(account);
+            }
             return View(account);
         }
         public async Task<IActionResult> Create()
@@ -80,7 +100,7 @@ namespace CheckDrive.Web.Controllers
             if (ModelState.IsValid)
             {
                 var newAccount = await _accountDataStore.CreateAccountAsync(account);
-                return RedirectToAction("Details", new { id = newAccount.Id });
+                return RedirectToAction("Details", new {id = newAccount.Id});
             }
             var roles = await GETRoles();
             ViewBag.Roles = new SelectList(roles, "Id", "Name");
@@ -102,7 +122,7 @@ namespace CheckDrive.Web.Controllers
             if (ModelState.IsValid)
             {
                 var newAccount = await _accountDataStore.UpdateAccountAsync(id, account);
-                return RedirectToAction("Details",new {id = newAccount.Id});
+                return RedirectToAction("Details", new { id = newAccount.Id });
             }
             return View(account);
         }
