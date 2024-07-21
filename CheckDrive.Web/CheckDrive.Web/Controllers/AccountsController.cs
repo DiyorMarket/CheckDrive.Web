@@ -90,16 +90,14 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var account = await _accountDataStore.GetAccountAsync(id);
-            if (account == null)
-            {
-                return NotFound();
-            }
+
             return View(account);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AccountForUpdateDto account)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Bithdate,RoleId")]
+            AccountForUpdateDto account)
         {
             if (ModelState.IsValid)
             {
