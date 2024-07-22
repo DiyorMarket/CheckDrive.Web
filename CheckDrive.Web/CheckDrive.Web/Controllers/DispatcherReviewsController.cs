@@ -1,6 +1,7 @@
 ﻿using CheckDrive.ApiContracts.Car;
 using CheckDrive.ApiContracts.Dispatcher;
 using CheckDrive.ApiContracts.DispatcherReview;
+using CheckDrive.Web.Extensions;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DispatcherReviews;
@@ -45,7 +46,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pagenumber, string? searchString, DateTime? date)
         {
-            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, date, 1);
+            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, DateTime.Now.ToTashkentTime(), 1);
 
 
             if (response is null)
@@ -113,7 +114,7 @@ namespace CheckDrive.Web.Controllers
             {
                 DistanceCovered = distanceCovered ?? 0,
                 FuelSpended = fuelSpended ?? 0,
-                Date = DateTime.Now,
+                Date = DateTime.Now.ToTashkentTime(),
                 DispatcherId = dispatcher.Id,
                 OperatorId = operatorId,
                 MechanicId = mechanicId,
@@ -133,7 +134,7 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FuelSpended,DistanceCovered,Date,DispatcherId,OperatorId,MechanicId,DriverId,MechanicHandoverId,MechanicAcceptanceId,CarId, OperatorReviewId")] DispatcherReviewForCreateDto dispatcherReview)
         {
-            dispatcherReview.Date = DateTime.Now;
+            dispatcherReview.Date = DateTime.Now.ToTashkentTime();
             var car = _carDataStore.GetCarAsync(dispatcherReview.CarId);
             var carr = new CarForUpdateDto
             {

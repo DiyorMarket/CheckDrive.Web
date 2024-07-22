@@ -1,4 +1,5 @@
 ﻿using CheckDrive.ApiContracts.DoctorReview;
+using CheckDrive.Web.Extensions;
 using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Doctors;
@@ -25,7 +26,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-            var response = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, searchString, date, null, 1);
+            var response = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, searchString, DateTime.Now.ToTashkentTime(), null, 1);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -97,7 +98,7 @@ namespace CheckDrive.Web.Controllers
                     ViewBag.DoctorId = doctor.Id;
                     ViewBag.Drivers = new SelectList(driversNotUsedToday, "Value", "Text");
 
-                    return View(new DoctorReviewForCreateDto { DriverId = driverId, Date = DateTime.Now, DoctorId = doctor.Id });
+                    return View(new DoctorReviewForCreateDto { DriverId = driverId, Date = DateTime.Now.ToTashkentTime(), DoctorId = doctor.Id });
                 }
             }
 
@@ -110,7 +111,7 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                doctorReview.Date = DateTime.Now;
+                doctorReview.Date = DateTime.Now.ToTashkentTime();
                 await _doctorReviewDataStore.CreateDoctorReviewAsync(doctorReview);
                 return RedirectToAction(nameof(PersonalIndex));
             }
@@ -217,7 +218,7 @@ namespace CheckDrive.Web.Controllers
         private async Task<List<SelectListItem>> GetDriversNotUsedToday()
         {
             var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, null, null, 1);
-            var today = DateTime.Today;
+            var today = DateTime.Today.ToTashkentTime();
             var usedDriverIds = doctorReviews.Data
                 .Where(dr => dr.Date.Date == today)
                 .Select(dr => dr.DriverId)
