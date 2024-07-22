@@ -85,8 +85,8 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today.ToTashkentTime(), true, 1);
-            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), null, 1);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today.ToTashkentTime(), true, 10);
+            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), null, 10);
 
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
@@ -110,6 +110,7 @@ namespace CheckDrive.Web.Controllers
                         .ToList();
 
                     var usedCarIds = mechanicHandovers.Data
+                        .Where(mh => mh.Status != StatusForDto.RejectedByDriver)
                         .Select(mh => mh.CarId)
                         .ToList();
 

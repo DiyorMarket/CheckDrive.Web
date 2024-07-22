@@ -86,9 +86,9 @@ namespace CheckDrive.Web.Controllers
                 if (doctor != null)
                 {
                     var doctors = new List<SelectListItem>
-            {
-                new SelectListItem { Value = doctor.Id.ToString(), Text = $"{doctor.FirstName} {doctor.LastName}" }
-            };
+                    {
+                        new SelectListItem { Value = doctor.Id.ToString(), Text = $"{doctor.FirstName} {doctor.LastName}" }
+                    };
 
                     var driversNotUsedToday = await GetDriversNotUsedToday();
 
@@ -217,7 +217,7 @@ namespace CheckDrive.Web.Controllers
 
         private async Task<List<SelectListItem>> GetDriversNotUsedToday()
         {
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, null, null, 1);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.UtcNow.Date, null, 10);
             var today = DateTime.Today.ToTashkentTime();
             var usedDriverIds = doctorReviews.Data
                 .Where(dr => dr.Date.Date == today)
@@ -233,7 +233,7 @@ namespace CheckDrive.Web.Controllers
         }
         private async Task<List<SelectListItem>> GETDrivers()
         {
-            var driverResponse = await _driverDataStore.GetDriversAsync(null, null);
+            var driverResponse = await _driverDataStore.GetDriversAsync(1);
             var drivers = driverResponse.Data
                 .Select(d => new SelectListItem
                 {
