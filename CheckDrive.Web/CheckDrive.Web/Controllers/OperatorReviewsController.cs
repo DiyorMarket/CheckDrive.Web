@@ -193,6 +193,7 @@ namespace CheckDrive.Web.Controllers
                     FuelTankCapacity = car.FuelTankCapacity,
                     ManufacturedYear = car.ManufacturedYear,
                     MeduimFuelConsumption = car.MeduimFuelConsumption,
+                    Mileage = car.Mileage,
                     Model = car.Model,
                     Number = car.Number,
                     RemainingFuel = car.RemainingFuel + operatorReview.OilAmount,
