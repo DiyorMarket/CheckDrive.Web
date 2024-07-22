@@ -116,7 +116,6 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IsAccepted,Comments,MechanicId,Distance,CarId,DriverId")] MechanicAcceptanceForCreateDto mechanicAcceptanceForCreateDto)
@@ -130,23 +129,19 @@ namespace CheckDrive.Web.Controllers
                 }
                 else
                 {
-
-                    if (ModelState.IsValid)
+                    if (mechanicAcceptanceForCreateDto.IsAccepted == null)
                     {
-                        if (mechanicAcceptanceForCreateDto.IsAccepted == null)
-                        {
-                            mechanicAcceptanceForCreateDto.IsAccepted = false;
-                        }
-
-                        mechanicAcceptanceForCreateDto.Date = DateTime.Now.ToTashkentTime();
-                        mechanicAcceptanceForCreateDto.Status = mechanicAcceptanceForCreateDto.IsAccepted ? StatusForDto.Pending : StatusForDto.Rejected;
-                        await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
-                        return RedirectToAction(nameof(PersonalIndex));
+                        mechanicAcceptanceForCreateDto.IsAccepted = false;
                     }
+
+                    mechanicAcceptanceForCreateDto.Date = DateTime.Now.ToTashkentTime();
+                    mechanicAcceptanceForCreateDto.Status = mechanicAcceptanceForCreateDto.IsAccepted ? StatusForDto.Pending : StatusForDto.Rejected;
+                    await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
+                    return RedirectToAction(nameof(PersonalIndex));
                 }
             }
 
-            // In case of any validation errors, return the view with the model to display errors
+            // Handle validation errors and re-populate view data
             var carData = await _carDataStore.GetCarsAsync(1);
             ViewBag.CarData = carData;
 
@@ -160,7 +155,6 @@ namespace CheckDrive.Web.Controllers
 
             return View("CreateByButton", mechanicAcceptanceForCreateDto);
         }
-
 
 
 
