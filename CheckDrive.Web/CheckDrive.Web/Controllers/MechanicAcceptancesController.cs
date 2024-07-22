@@ -290,15 +290,19 @@ namespace CheckDrive.Web.Controllers
             return View(mechanicAcceptence);
         }
 
-        [HttpGet("api/cars/{id}")]
-        public async Task<IActionResult> GetCar(int id)
+        [HttpGet]
+        public async Task<IActionResult> GetCarDetails(int carId)
         {
-            var car = await _carDataStore.GetCarAsync(id);
-            if (car == null)
+            var car = await _carDataStore.GetCarAsync(carId); // Ensure you have a method to fetch car details by ID
+            if (car != null)
             {
-                return NotFound();
+                var carDetails = new
+                {
+                    mileage = car.Mileage
+                };  
+                return Json(carDetails);
             }
-            return Ok(new { mileage = car.Mileage });
+            return NotFound();
         }
     }
 }
