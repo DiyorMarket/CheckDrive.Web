@@ -3,7 +3,6 @@ using CheckDrive.ApiContracts.Car;
 using CheckDrive.ApiContracts.Operator;
 using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Extensions;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicHandovers;
@@ -103,9 +102,9 @@ namespace CheckDrive.Web.Controllers
                 new SelectListItem { Value = operatorr.Id.ToString(), Text = $"{operatorr.FirstName} {operatorr.LastName}" }
             };
 
-            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), null, 1);
+            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), null, 10);
             var oilMarks = GetOilMarks();
-            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1);
+            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), "Completed", 10);
 
             var healthyDrivers = mechanicHandovers.Data
                                   .Select(dr => dr.DriverId)
@@ -167,7 +166,7 @@ namespace CheckDrive.Web.Controllers
         }
         public async Task<IActionResult> GetCarByDriverId(int driverId)
         {
-            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1);
+            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), "Completed", 10);
             var handover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == driverId);
 
             if (handover != null)
