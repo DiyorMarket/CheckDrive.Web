@@ -13,7 +13,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group w-50">
                 <label asp-for="DistanceCovered" class="control-label">Bosib otilgan masofa</label>
-                <input asp-for="DistanceCovered" class="form-control" />
+                <input asp-for="DistanceCovered" class="form-control" type="number" />
                 <span asp-validation-for="DistanceCovered" class="text-danger"></span>
             </div>
             <div class="form-group w-50">
@@ -23,7 +23,7 @@
             </div>
             <div class="form-group w-50">
                 <label asp-for="FuelSpended" class="control-label">Sariflangan yoqilgi</label>
-                <input asp-for="FuelSpended" class="form-control" id="FuelSpended" />
+                <input asp-for="FuelSpended" class="form-control" id="FuelSpended" type="number" />
                 <span asp-validation-for="FuelSpended" class="text-danger" id="fuelSpendedError"></span>
             </div>
             <div class="form-group w-50">
