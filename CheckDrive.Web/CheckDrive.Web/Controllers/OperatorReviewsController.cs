@@ -95,7 +95,7 @@ namespace CheckDrive.Web.Controllers
             if (int.TryParse(accountIdStr, out int accountId))
             {
                 var operatorResponse = await _operatorDataStore.GetOperators(accountId);
-                operatorr = operatorResponse.Data.FirstOrDefault();
+                operatorr = operatorResponse.Data.First();
             }
             var operators = new List<SelectListItem>
             {
@@ -289,6 +289,7 @@ namespace CheckDrive.Web.Controllers
                         FuelTankCapacity = car.FuelTankCapacity,
                         ManufacturedYear = car.ManufacturedYear,
                         MeduimFuelConsumption = car.MeduimFuelConsumption,
+                        Mileage = car.Mileage,
                         Model = car.Model,
                         Number = car.Number,
                         RemainingFuel = car.RemainingFuel - (double)existingReview.OilAmount + operatorReview.OilAmount,
@@ -331,6 +332,7 @@ namespace CheckDrive.Web.Controllers
                 FuelTankCapacity = car.FuelTankCapacity,
                 ManufacturedYear = car.ManufacturedYear,
                 MeduimFuelConsumption = car.MeduimFuelConsumption,
+                Mileage = car.Mileage,
                 Model = car.Model,
                 Number = car.Number,
                 RemainingFuel = car.RemainingFuel - (double)operatorReview.OilAmount,
