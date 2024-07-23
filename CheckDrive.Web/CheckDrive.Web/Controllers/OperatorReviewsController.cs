@@ -95,7 +95,7 @@ namespace CheckDrive.Web.Controllers
             if (int.TryParse(accountIdStr, out int accountId))
             {
                 var operatorResponse = await _operatorDataStore.GetOperators(accountId);
-                operatorr = operatorResponse.Data.FirstOrDefault();
+                operatorr = operatorResponse.Data.First();
             }
             var operators = new List<SelectListItem>
             {
