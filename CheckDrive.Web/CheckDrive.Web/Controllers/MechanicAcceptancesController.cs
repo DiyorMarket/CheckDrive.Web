@@ -81,7 +81,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> CreateByButton()
         {
             var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1);
-            var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today.ToTashkentTime(), null, null);
+            var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today.ToTashkentTime(), null, 10);
             var carData = await _carDataStore.GetCarsAsync(1);
 
             var carMileageDictionary = carData.Data.ToDictionary(car => car.Id, car => car.Mileage);
@@ -146,7 +146,7 @@ namespace CheckDrive.Web.Controllers
             ViewBag.CarData = carData;
 
             var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1);
-            var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today.ToTashkentTime(), null, null);
+            var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today.ToTashkentTime(), null, 10);
 
             var mechanicDriverIds = mechanicAcceptanceResponse.Data.Select(ma => ma.DriverId).ToHashSet();
             var filteredOperatorResponse = operatorResponse.Data.Where(or => !mechanicDriverIds.Contains(or.DriverId)).ToList();
@@ -224,7 +224,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ApiContracts.MechanicAcceptance.MechanicAcceptanceForUpdateDto mechanicAcceptance)
+        public async Task<IActionResult> Edit(int id, MechanicAcceptanceForUpdateDto mechanicAcceptance)
         {
             if (id != mechanicAcceptance.Id)
             {
@@ -287,7 +287,7 @@ namespace CheckDrive.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCarDetails(int carId)
         {
-            var car = await _carDataStore.GetCarAsync(carId); // Ensure you have a method to fetch car details by ID
+            var car = await _carDataStore.GetCarAsync(carId); 
             if (car != null)
             {
                 var carDetails = new

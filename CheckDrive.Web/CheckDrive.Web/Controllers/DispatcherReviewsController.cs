@@ -12,6 +12,7 @@ using CheckDrive.Web.Stores.MechanicHandovers;
 using CheckDrive.Web.Stores.OperatorReviews;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Syncfusion.EJ2.Grids;
 
 namespace CheckDrive.Web.Controllers
@@ -106,7 +107,7 @@ namespace CheckDrive.Web.Controllers
             var dispatcher = new DispatcherDto();
             if (int.TryParse(accountIdStr, out int accountId))
             {
-                var dispatcherResponse = await _dispatcherDataStore.GetDispatchers(accountId);
+                var dispatcherResponse = await _dispatcherDataStore.GetDispatchers(accountId, null);
                 dispatcher = dispatcherResponse.Data.First();
             }
 
@@ -170,7 +171,7 @@ namespace CheckDrive.Web.Controllers
 
             var drivers = await _driverDataStore.GetDriversAsync(1);
             var cars = await _carDataStore.GetCarsAsync(1);
-            var dispatchers = await _dispatcherDataStore.GetDispatchers();
+            var dispatchers = await _dispatcherDataStore.GetDispatchers(null, 10);
 
             ViewBag.DispatcherSelectList = new SelectList(dispatchers.Data.Select(dispatcher => new
             {

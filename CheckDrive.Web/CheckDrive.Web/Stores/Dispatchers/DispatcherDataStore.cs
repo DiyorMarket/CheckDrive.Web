@@ -15,13 +15,18 @@ namespace CheckDrive.Web.Stores.Dispatchers
             _api = apiClient;
         }
 
-        public async Task<GetDispatcherResponse> GetDispatchers(int accountId)
+        public async Task<GetDispatcherResponse> GetDispatchers(int? accountIdt, int? roleId)
         {
             StringBuilder query = new("");
 
-            if (!accountId.Equals(0))
+            if (accountIdt != null)
             {
-                query.Append($"accountId={accountId}");
+                query.Append($"accountId={accountIdt}");
+            }
+
+            if (roleId != null)
+            {
+                query.Append($"roleId={roleId}");
             }
 
             var response = await _api.GetAsync("dispatchers?" + query.ToString());
