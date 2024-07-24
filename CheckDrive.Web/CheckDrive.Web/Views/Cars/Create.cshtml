@@ -9,7 +9,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" onsubmit="return validateForm()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Model" class="control-label">Model</label>
@@ -28,7 +28,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="FuelTankCapacity" class="control-label">Yoqilg'i baki sig'imi</label>
-                <input asp-for="FuelTankCapacity" class="form-control" />
+                <input asp-for="FuelTankCapacity" class="form-control" id="fuelTankCapacity" />
                 <span asp-validation-for="FuelTankCapacity" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -38,28 +38,43 @@
             </div>
             <div class="form-group">
                 <label asp-for="RemainingFuel" class="control-label">Avtomobildagi yoqilg'i qoldig`i</label>
-                <input asp-for="RemainingFuel" class="form-control" />
+                <input asp-for="RemainingFuel" class="form-control" id="remainingFuel" />
                 <span asp-validation-for="RemainingFuel" class="text-danger"></span>
-                <div class="form-group">
-                    <label asp-for="MeduimFuelConsumption" class="control-label">O'rtacha yoqilg'i sarfi</label>
-                    <input asp-for="MeduimFuelConsumption" class="form-control" />
-                    <span asp-validation-for="MeduimFuelConsumption" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ManufacturedYear" class="control-label">Ishlab chiqarilgan yili</label>
-                    <input asp-for="ManufacturedYear" class="form-control" />
-                    <span asp-validation-for="ManufacturedYear" class="text-danger"></span>
-                </div>
-                <div class="form-group  mt-3">
-                    <a asp-action="Index" class="btn btn-outline-info">
-                        <i class="fa-solid fa-arrow-left-long"></i>
-                        Orqaga
-                    </a>
-                    <button class="btn btn-outline-success mr-auto">
-                        <i class="fa fa-plus"></i> Yaratish
-                    </button>
-                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="MeduimFuelConsumption" class="control-label">O'rtacha yoqilg'i sarfi</label>
+                <input asp-for="MeduimFuelConsumption" class="form-control" />
+                <span asp-validation-for="MeduimFuelConsumption" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ManufacturedYear" class="control-label">Ishlab chiqarilgan yili</label>
+                <input asp-for="ManufacturedYear" class="form-control" />
+                <span asp-validation-for="ManufacturedYear" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <a asp-action="Index" class="btn btn-outline-info">
+                    <i class="fa-solid fa-arrow-left-long"></i>
+                    Orqaga
+                </a>
+                <button class="btn btn-outline-success mr-auto">
+                    <i class="fa fa-plus"></i> Yaratish
+                </button>
+            </div>
         </form>
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        function validateForm() {
+            var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
+            var remainingFuel = document.getElementById("remainingFuel").value;
+
+            if (parseFloat(remainingFuel) > parseFloat(fuelTankCapacity)) {
+                alert("Avtomobil yoqilg'i qoldig'i yoqilg'i baki sig'imidan katta bo'lmaydi.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

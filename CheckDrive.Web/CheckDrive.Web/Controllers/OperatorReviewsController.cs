@@ -2,7 +2,7 @@
 using CheckDrive.ApiContracts.Car;
 using CheckDrive.ApiContracts.Operator;
 using CheckDrive.ApiContracts.OperatorReview;
-using CheckDrive.Web.Models;
+using CheckDrive.Web.Extensions;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicHandovers;
@@ -30,7 +30,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
 
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, date, null, 1);
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, DateTime.Now.ToTashkentTime(), null, 1);
 
             ViewBag.PageSize = operatorReviews.PageSize;
             ViewBag.PageCount = operatorReviews.TotalPages;
@@ -95,16 +95,16 @@ namespace CheckDrive.Web.Controllers
             if (int.TryParse(accountIdStr, out int accountId))
             {
                 var operatorResponse = await _operatorDataStore.GetOperators(accountId);
-                operatorr = operatorResponse.Data.FirstOrDefault();
+                operatorr = operatorResponse.Data.First();
             }
             var operators = new List<SelectListItem>
             {
                 new SelectListItem { Value = operatorr.Id.ToString(), Text = $"{operatorr.FirstName} {operatorr.LastName}" }
             };
 
-            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today, null, 1);
+            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), null, 10);
             var oilMarks = GetOilMarks();
-            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today, "Completed", 1);
+            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), "Completed", 10);
 
             var healthyDrivers = mechanicHandovers.Data
                                   .Select(dr => dr.DriverId)
@@ -125,7 +125,7 @@ namespace CheckDrive.Web.Controllers
             if (!driverId.HasValue && !carId.HasValue && filteredDrivers.Any())
             {
                 var firstDriverId = int.Parse(filteredDrivers.First().Value);
-                var mechanicHandover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == firstDriverId && m.Date.Date == DateTime.Today);
+                var mechanicHandover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == firstDriverId && m.Date.Date == DateTime.Today.ToTashkentTime());
 
                 if (mechanicHandover != null)
                 {
@@ -166,7 +166,7 @@ namespace CheckDrive.Web.Controllers
         }
         public async Task<IActionResult> GetCarByDriverId(int driverId)
         {
-            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today, "Completed", 1);
+            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), "Completed", 10);
             var handover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == driverId);
 
             if (handover != null)
@@ -183,7 +183,7 @@ namespace CheckDrive.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                operatorReview.Date = DateTime.Now;
+                operatorReview.Date = DateTime.Now.ToTashkentTime();
                 var car = await _carDataStore.GetCarAsync(operatorReview.CarId);
                 var carr = new CarForUpdateDto
                 {
@@ -192,6 +192,7 @@ namespace CheckDrive.Web.Controllers
                     FuelTankCapacity = car.FuelTankCapacity,
                     ManufacturedYear = car.ManufacturedYear,
                     MeduimFuelConsumption = car.MeduimFuelConsumption,
+                    Mileage = car.Mileage,
                     Model = car.Model,
                     Number = car.Number,
                     RemainingFuel = car.RemainingFuel + operatorReview.OilAmount,
@@ -288,6 +289,7 @@ namespace CheckDrive.Web.Controllers
                         FuelTankCapacity = car.FuelTankCapacity,
                         ManufacturedYear = car.ManufacturedYear,
                         MeduimFuelConsumption = car.MeduimFuelConsumption,
+                        Mileage = car.Mileage,
                         Model = car.Model,
                         Number = car.Number,
                         RemainingFuel = car.RemainingFuel - (double)existingReview.OilAmount + operatorReview.OilAmount,
@@ -330,6 +332,7 @@ namespace CheckDrive.Web.Controllers
                 FuelTankCapacity = car.FuelTankCapacity,
                 ManufacturedYear = car.ManufacturedYear,
                 MeduimFuelConsumption = car.MeduimFuelConsumption,
+                Mileage = car.Mileage,
                 Model = car.Model,
                 Number = car.Number,
                 RemainingFuel = car.RemainingFuel - (double)operatorReview.OilAmount,

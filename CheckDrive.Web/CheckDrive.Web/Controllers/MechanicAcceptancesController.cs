@@ -1,6 +1,7 @@
 using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.Mechanic;
 using CheckDrive.ApiContracts.MechanicAcceptance;
+using CheckDrive.Web.Extensions;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
@@ -27,7 +28,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
 
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, date, null, 1);
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, DateTime.Now.ToTashkentTime(), null, 1);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -79,8 +80,8 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> CreateByButton()
         {
-            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today, "Completed", 1);
-            var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today, null, null);
+            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1);
+            var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today.ToTashkentTime(), null, 10);
             var carData = await _carDataStore.GetCarsAsync(1);
 
             var carMileageDictionary = carData.Data.ToDictionary(car => car.Id, car => car.Mileage);
@@ -115,7 +116,6 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IsAccepted,Comments,MechanicId,Distance,CarId,DriverId")] MechanicAcceptanceForCreateDto mechanicAcceptanceForCreateDto)
@@ -129,28 +129,24 @@ namespace CheckDrive.Web.Controllers
                 }
                 else
                 {
-
-                    if (ModelState.IsValid)
+                    if (mechanicAcceptanceForCreateDto.IsAccepted == null)
                     {
-                        if (mechanicAcceptanceForCreateDto.IsAccepted == null)
-                        {
-                            mechanicAcceptanceForCreateDto.IsAccepted = false;
-                        }
-
-                        mechanicAcceptanceForCreateDto.Date = DateTime.Now;
-                        mechanicAcceptanceForCreateDto.Status = mechanicAcceptanceForCreateDto.IsAccepted ? StatusForDto.Pending : StatusForDto.Rejected;
-                        await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
-                        return RedirectToAction(nameof(PersonalIndex));
+                        mechanicAcceptanceForCreateDto.IsAccepted = false;
                     }
+
+                    mechanicAcceptanceForCreateDto.Date = DateTime.Now.ToTashkentTime();
+                    mechanicAcceptanceForCreateDto.Status = mechanicAcceptanceForCreateDto.IsAccepted ? StatusForDto.Pending : StatusForDto.Rejected;
+                    await _mechanicAcceptanceDataStore.CreateMechanicAcceptanceAsync(mechanicAcceptanceForCreateDto);
+                    return RedirectToAction(nameof(PersonalIndex));
                 }
             }
 
-            // In case of any validation errors, return the view with the model to display errors
+            // Handle validation errors and re-populate view data
             var carData = await _carDataStore.GetCarsAsync(1);
             ViewBag.CarData = carData;
 
-            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today, "Completed", 1);
-            var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today, null, null);
+            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1);
+            var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today.ToTashkentTime(), null, 10);
 
             var mechanicDriverIds = mechanicAcceptanceResponse.Data.Select(ma => ma.DriverId).ToHashSet();
             var filteredOperatorResponse = operatorResponse.Data.Where(or => !mechanicDriverIds.Contains(or.DriverId)).ToList();
@@ -159,7 +155,6 @@ namespace CheckDrive.Web.Controllers
 
             return View("CreateByButton", mechanicAcceptanceForCreateDto);
         }
-
 
 
 
@@ -229,7 +224,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ApiContracts.MechanicAcceptance.MechanicAcceptanceForUpdateDto mechanicAcceptance)
+        public async Task<IActionResult> Edit(int id, MechanicAcceptanceForUpdateDto mechanicAcceptance)
         {
             if (id != mechanicAcceptance.Id)
             {
@@ -289,15 +284,19 @@ namespace CheckDrive.Web.Controllers
             return View(mechanicAcceptence);
         }
 
-        [HttpGet("api/cars/{id}")]
-        public async Task<IActionResult> GetCar(int id)
+        [HttpGet]
+        public async Task<IActionResult> GetCarDetails(int carId)
         {
-            var car = await _carDataStore.GetCarAsync(id);
-            if (car == null)
+            var car = await _carDataStore.GetCarAsync(carId); 
+            if (car != null)
             {
-                return NotFound();
+                var carDetails = new
+                {
+                    mileage = car.Mileage
+                };  
+                return Json(carDetails);
             }
-            return Ok(new { mileage = car.Mileage });
+            return NotFound();
         }
     }
 }

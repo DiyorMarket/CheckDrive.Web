@@ -1,6 +1,7 @@
 ﻿using CheckDrive.ApiContracts.Car;
 using CheckDrive.ApiContracts.Dispatcher;
 using CheckDrive.ApiContracts.DispatcherReview;
+using CheckDrive.Web.Extensions;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DispatcherReviews;
@@ -11,6 +12,7 @@ using CheckDrive.Web.Stores.MechanicHandovers;
 using CheckDrive.Web.Stores.OperatorReviews;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Syncfusion.EJ2.Grids;
 
 namespace CheckDrive.Web.Controllers
@@ -45,7 +47,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pagenumber, string? searchString, DateTime? date)
         {
-            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, date, 1);
+            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, DateTime.Now.ToTashkentTime(), 1);
 
 
             if (response is null)
@@ -105,7 +107,7 @@ namespace CheckDrive.Web.Controllers
             var dispatcher = new DispatcherDto();
             if (int.TryParse(accountIdStr, out int accountId))
             {
-                var dispatcherResponse = await _dispatcherDataStore.GetDispatchers(accountId);
+                var dispatcherResponse = await _dispatcherDataStore.GetDispatchers(accountId, null);
                 dispatcher = dispatcherResponse.Data.First();
             }
 
@@ -113,7 +115,7 @@ namespace CheckDrive.Web.Controllers
             {
                 DistanceCovered = distanceCovered ?? 0,
                 FuelSpended = fuelSpended ?? 0,
-                Date = DateTime.Now,
+                Date = DateTime.Now.ToTashkentTime(),
                 DispatcherId = dispatcher.Id,
                 OperatorId = operatorId,
                 MechanicId = mechanicId,
@@ -133,7 +135,7 @@ namespace CheckDrive.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FuelSpended,DistanceCovered,Date,DispatcherId,OperatorId,MechanicId,DriverId,MechanicHandoverId,MechanicAcceptanceId,CarId, OperatorReviewId")] DispatcherReviewForCreateDto dispatcherReview)
         {
-            dispatcherReview.Date = DateTime.Now;
+            dispatcherReview.Date = DateTime.Now.ToTashkentTime();
             var car = _carDataStore.GetCarAsync(dispatcherReview.CarId);
             var carr = new CarForUpdateDto
             {
@@ -142,6 +144,7 @@ namespace CheckDrive.Web.Controllers
                 FuelTankCapacity = car.Result.FuelTankCapacity,
                 ManufacturedYear = car.Result.ManufacturedYear,
                 MeduimFuelConsumption = car.Result.MeduimFuelConsumption,
+                Mileage = car.Result.Mileage,
                 Model = car.Result.Model,
                 Number = car.Result.Number,
                 RemainingFuel = car.Result.RemainingFuel - dispatcherReview.FuelSpended,
@@ -169,7 +172,7 @@ namespace CheckDrive.Web.Controllers
 
             var drivers = await _driverDataStore.GetDriversAsync(1);
             var cars = await _carDataStore.GetCarsAsync(1);
-            var dispatchers = await _dispatcherDataStore.GetDispatchers();
+            var dispatchers = await _dispatcherDataStore.GetDispatchers(null, 10);
 
             ViewBag.DispatcherSelectList = new SelectList(dispatchers.Data.Select(dispatcher => new
             {
@@ -215,6 +218,7 @@ namespace CheckDrive.Web.Controllers
                         FuelTankCapacity = car.FuelTankCapacity,
                         ManufacturedYear = car.ManufacturedYear,
                         MeduimFuelConsumption = car.MeduimFuelConsumption,
+                        Mileage = car.Mileage,
                         Model = car.Model,
                         Number = car.Number,
                         RemainingFuel = car.RemainingFuel + (double)existingReview.FuelSpended - dispatcherReview.FuelSpended,

@@ -1,5 +1,6 @@
 ﻿using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.MechanicHandover;
+using CheckDrive.Web.Extensions;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Drivers;
@@ -29,7 +30,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, date, null, 1);
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, DateTime.Now.ToTashkentTime(), null, 1);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -84,8 +85,8 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today, true, 1);
-            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, DateTime.Today, null, 1);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today.ToTashkentTime(), true, 10);
+            var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), null, 10);
 
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
@@ -109,6 +110,7 @@ namespace CheckDrive.Web.Controllers
                         .ToList();
 
                     var usedCarIds = mechanicHandovers.Data
+                        .Where(mh => mh.Status != StatusForDto.RejectedByDriver)
                         .Select(mh => mh.CarId)
                         .ToList();
 
@@ -149,7 +151,7 @@ namespace CheckDrive.Web.Controllers
                         mechanicHandoverForCreateDto.Status = StatusForDto.Rejected;
                     }
 
-                    mechanicHandoverForCreateDto.Date = DateTime.Now;
+                    mechanicHandoverForCreateDto.Date = DateTime.Now.ToTashkentTime();
                     mechanicHandoverForCreateDto.Status = mechanicHandoverForCreateDto.IsHanded ? StatusForDto.Pending : StatusForDto.Rejected;
                     await _mechanicHandoverDataStore.CreateMechanicHandoverAsync(mechanicHandoverForCreateDto);
                     return RedirectToAction(nameof(PersonalIndex));

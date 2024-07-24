@@ -34,7 +34,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if(Model != null && Model.Any())
+                @if (Model != null && Model.Any())
                 {
                     @foreach (var review in Model)
                     {
@@ -45,7 +45,7 @@
                             <td class="text-center vertical-align-middle">
                                 @if (review.DispatcherId != 0)
                                 {
-                                    @review.DistanceCovered;
+                                    @review.DistanceCovered
                                 }
                                 else
                                 {
@@ -59,12 +59,12 @@
                             <td class="text-center vertical-align-middle">
                                 @if (review.DispatcherId != 0)
                                 {
-                                    @review.FuelSpended;
+                                    @String.Format("{0:F4}", review.FuelSpended)
                                 }
                                 else
                                 {
                                     <a href="@Url.Action("Create", new {distanceCovered = review.DistanceCovered, fuelSpended = review.FuelSpended, operatorId = review.OperatorId, mechanicId = review.MechanicId, driverId = review.DriverId, mechanicHandoverId = review.MechanicHandoverId, mechanicAcceptanceId = review.MechanicAcceptanceId, carId = review.CarId, operatorReviewId = review.OperatorReviewId })">
-                                        @review.FuelSpended
+                                        @String.Format("{0:F3}", review.FuelSpended)
                                     </a>
                                 }
                             </td>
