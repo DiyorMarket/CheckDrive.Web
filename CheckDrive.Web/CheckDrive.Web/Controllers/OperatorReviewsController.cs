@@ -6,6 +6,7 @@ using CheckDrive.Web.Extensions;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicHandovers;
+using CheckDrive.Web.Stores.OilMarks;
 using CheckDrive.Web.Stores.OperatorReviews;
 using CheckDrive.Web.Stores.Operators;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +20,15 @@ namespace CheckDrive.Web.Controllers
         IMechanicHandoverDataStore mechanicHandover,
         ICarDataStore carDataStore,
         IDriverDataStore driverDataStore,
-        IOperatorDataStore operatorDataStore) : Controller
+        IOperatorDataStore operatorDataStore,
+        IOilMarkDataStore oilMarkDataStore) : Controller
     {
         private readonly IOperatorReviewDataStore _operatorReviewDataStore = operatorReviewDataStore;
         private readonly IMechanicHandoverDataStore _mechanicHandover = mechanicHandover;
         private readonly ICarDataStore _carDataStore = carDataStore;
         private readonly IDriverDataStore _driverDataStore = driverDataStore;
         private readonly IOperatorDataStore _operatorDataStore = operatorDataStore;
+        private readonly IOilMarkDataStore _oilMarkDataStore = oilMarkDataStore;
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
@@ -230,6 +233,7 @@ namespace CheckDrive.Web.Controllers
 
             var drivers = await _driverDataStore.GetDriversAsync(1);
             var cars = await _carDataStore.GetCarsAsync(1);
+            var oilMarks = await _oilMarkDataStore.GetOilMarksAsync();
 
             ViewBag.DriverSelectList = new SelectList(drivers.Data.Select(driver => new
             {
@@ -243,11 +247,11 @@ namespace CheckDrive.Web.Controllers
                 DisplayText = $"{car.Model} ({car.Number})"
             }), "Id", "DisplayText");
 
-            ViewBag.OilMarks = Enum.GetValues(typeof(OilMarksForDto)).Cast<OilMarksForDto>().Select(e => new SelectListItem
+            ViewBag.OilMarks = new SelectList(oilMarks.Data.Select(oilMark => new
             {
-                Value = e.ToString(),
-                Text = e.ToString()
-            });
+                id = oilMark.Id,
+                DisplayText = $"{oilMark.OilMark}"
+            }), "Id", "DisplayText");
 
             ViewBag.Status = Enum.GetValues(typeof(StatusForDto)).Cast<StatusForDto>().Select(e => new SelectListItem
             {
@@ -384,10 +388,9 @@ namespace CheckDrive.Web.Controllers
         }
         private List<string> GetOilMarks()
         {
-            return Enum.GetValues(typeof(OilMarksForDto))
-                       .Cast<OilMarksForDto>()
-                       .Select(o => o.ToString())
-                       .ToList();
+            var oilmarks = _oilMarkDataStore.GetOilMarksAsync();
+            var oilmarkNames = oilmarks.Result.Data.Select(oil => oil.OilMark).ToList();
+            return oilmarkNames;
         }
     }
 }
