@@ -11,22 +11,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CheckDrive.Web.Controllers
 {
-    public class MechanicHandoversController : Controller
+    public class MechanicHandoversController(IMechanicHandoverDataStore mechanicHandoverDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore, IMechanicDataStore mechanicDataStore, IDoctorReviewDataStore doctorReviewDataStore) : Controller
     {
-        private readonly IMechanicHandoverDataStore _mechanicHandoverDataStore;
-        private readonly IDriverDataStore _driverDataStore;
-        private readonly ICarDataStore _carDataStore;
-        private readonly IMechanicDataStore _mechanicDataStore;
-        private readonly IDoctorReviewDataStore _doctorReviewDataStore;
-
-        public MechanicHandoversController(IMechanicHandoverDataStore mechanicHandoverDataStore, IDriverDataStore driverDataStore, ICarDataStore carDataStore, IMechanicDataStore mechanicDataStore, IDoctorReviewDataStore doctorReviewDataStore)
-        {
-            _mechanicHandoverDataStore = mechanicHandoverDataStore;
-            _driverDataStore = driverDataStore;
-            _carDataStore = carDataStore;
-            _mechanicDataStore = mechanicDataStore;
-            _doctorReviewDataStore = doctorReviewDataStore;
-        }
+        private readonly IMechanicHandoverDataStore _mechanicHandoverDataStore = mechanicHandoverDataStore;
+        private readonly IDriverDataStore _driverDataStore = driverDataStore;
+        private readonly ICarDataStore _carDataStore = carDataStore;
+        private readonly IMechanicDataStore _mechanicDataStore = mechanicDataStore;
+        private readonly IDoctorReviewDataStore _doctorReviewDataStore = doctorReviewDataStore;
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {

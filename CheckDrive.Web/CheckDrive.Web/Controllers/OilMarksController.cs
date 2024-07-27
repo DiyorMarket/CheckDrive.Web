@@ -4,18 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
 {
-    public class OilMarksController : Controller
+    public class OilMarksController(IOilMarkDataStore oilMarkDataStore) : Controller
     {
-        private readonly IOilMarkDataStore _oilMarkDataStore;
+        private readonly IOilMarkDataStore _oilMarkDataStore = oilMarkDataStore;
 
-        public OilMarksController(IOilMarkDataStore oilMarkDataStore)
-        {
-            _oilMarkDataStore = oilMarkDataStore;
-        }
         public async Task<IActionResult> Index()
         {
             var oilMarks = await _oilMarkDataStore.GetOilMarksAsync();
-            return View(oilMarks);
+            var oilMarkss = oilMarks.Data.ToList();
+            return View(oilMarkss);
         }
 
         public async Task<IActionResult> Details(int id)
