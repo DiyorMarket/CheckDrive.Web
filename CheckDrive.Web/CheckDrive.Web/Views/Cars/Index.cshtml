@@ -7,55 +7,57 @@
 <h1>Avtomobillar</h1>
 
 <form asp-controller="Cars" asp-action="Index">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 d-flex justify-content-between align-items-center mb-4">
-                <!-- Search -->
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <input type="text" class="form-control rounded-left" placeholder="Avtomobilni izlash..." name="searchString" value="@ViewBag.SearchString">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-search"></i> Qidirish
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Create -->
-                <div class="d-flex" style="gap: 15px;">
-                    <div class="mr-2">
-                        <a class="btn btn-danger" href="@Url.Action("Index", "oilMarks")">OilMarks</a>
-                    </div>
-                    <div>
-                        <a class="btn btn-success" asp-action="Create">
-                            <i class="fa fa-plus"></i> Yaratish
-                        </a>
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <!-- Search -->
+            <div class="col-md-4 mb-4">
+                <div class="input-group">
+                    <input type="text" class="form-control rounded-left" placeholder="Avtomobilni izlash..." name="searchString" value="@ViewBag.SearchString">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i> Qidirish
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <ejs-grid id="cars-list"
-                          dataSource="@ViewBag.Cars"
-                          gridLines="Vertical"
-                          allowSorting="true">
-                    <e-grid-columns>
-                        <e-grid-column headerText="Id" field="Id" template="#template" typeof="Text"></e-grid-column>
-                        <e-grid-column headerText="Model" field="Model" typeof="Text"></e-grid-column>
-                        <e-grid-column headerText="Davlat raqami" field="Number" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="Bosib o'tgan masofasi'" field="Mileage" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="Rangi" field="Color" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="Avtomobildagi yoqilg'i hajmi" field="RemainingFuel" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="O'rtacha yoqilg'i sarfi" field="MeduimFuelConsumption" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="Yoqilg'i baki sig'imi" field="FuelTankCapacity" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="Ishlab chiqarilgan yili" field="ManufacturedYear" typeof="text"></e-grid-column>
-                    </e-grid-columns>
-                </ejs-grid>
+            <!-- Create -->
+            <div class="row">
+                <div class="col-12 text-end mb-2">
+                    <a class="btn btn-success" asp-action="create">
+                        <i class="fa fa-plus"></i> Yaratish
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </form>
+
+
+<div class="row">
+    <div class="col-12">
+        <ejs-grid id="cars-list"
+                  dataSource="@ViewBag.Cars"
+                  gridLines="Vertical"
+                  allowSorting="true"
+                  allowResizing="true">
+            <e-grid-columns>
+                <e-grid-column headerText="Id" field="Id" template="#template" type="Text"></e-grid-column>
+                <e-grid-column headerText="Model" field="Model" type="Text"></e-grid-column>
+                <e-grid-column headerText="Davlat raqami" field="Number" type="Text"></e-grid-column>
+                <e-grid-column headerText="Rangi" field="Color" type="Text"></e-grid-column>
+                <e-grid-column headerText="Ishlab chiqarilgan yili" field="ManufacturedYear" type="Text"></e-grid-column>
+                <e-grid-column headerText="Bosib o'tgan masofasi" field="Mileage" type="Text"></e-grid-column>
+                <e-grid-column headerText="100 km uchun me'yor" field="MeduimFuelConsumption" type="Text"></e-grid-column>
+                <e-grid-column headerText="Yoqilg'i baki sig'imi" field="FuelTankCapacity" type="Text"></e-grid-column>
+                <e-grid-column headerText="Avtomobildagi yoqilg'i hajmi" field="RemainingFuel" type="Text"></e-grid-column>
+                <e-grid-column headerText="1 yillik bosib o'tish me'yori" field="OneYearMediumDistance" type="Text"></e-grid-column>
+                <e-grid-column headerText="1 oylik bosib o'tish me'yori" field="OneMonthMediumDistance" type="Text"></e-grid-column>
+                <e-grid-column headerText="1 yillik yoqilg'i me'yori" field="OneYearMeduimFuelConsumption" type="Text"></e-grid-column>
+                <e-grid-column headerText="1 oylik yoqilg'i me'yori" field="OneMonthMeduimFuelConsumption" type="Text"></e-grid-column>
+            </e-grid-columns>
+        </ejs-grid>
+    </div>
+</div>
 
 <div class="d-flex justify-content-between align-items-center my-3">
     <nav aria-label="Page navigation">
