@@ -65,6 +65,9 @@ namespace CheckDrive.Web.Controllers
             {
                 r.Id,
                 FuelSpended = r.FuelSpended.ToString("0.00").PadLeft(4, '0'),
+                RemainigFuelBefore = r.RemainigFuelBefore.ToString("0.00").PadLeft(4, '0'),
+                RemainigFuelAfter = r.RemainigFuelAfter.ToString("0.00").PadLeft(4, '0'),
+                r.PouredFuel,
                 r.DistanceCovered,
                 r.Date,
                 r.CarMeduimFuelConsumption,

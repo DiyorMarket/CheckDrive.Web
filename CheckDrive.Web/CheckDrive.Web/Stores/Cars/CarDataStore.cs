@@ -16,7 +16,6 @@ namespace CheckDrive.Web.Stores.Cars
         }
 
         public async Task<GetCarResponse> GetCarsAsync(string? searchString,int? pageNumber)
-
         {
             StringBuilder query = new("");
 
