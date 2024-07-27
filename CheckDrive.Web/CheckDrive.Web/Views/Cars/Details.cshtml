@@ -34,6 +34,12 @@
             @Html.DisplayFor(model => model.Number)
         </dd>
         <dt class="col-sm-2">
+            Ishlab chiqarilgan yili:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ManufacturedYear)
+        </dd>
+        <dt class="col-sm-2">
             Bosib o'tgan masofasi:
         </dt>
         <dd class="col-sm-10">
@@ -58,10 +64,28 @@
             @Html.DisplayFor(model => model.FuelTankCapacity)
         </dd>
         <dt class="col-sm-2">
-            Ishlab chiqarilgan yili:
+            1 yillik bosib o'tish me'yori:
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ManufacturedYear)
+            @Html.DisplayFor(model => model.OneYearMediumDistance)
+        </dd>
+        <dt class="col-sm-2">
+            1 oylik bosib o'tish me'yori:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OneMonthMediumDistance)
+        </dd>
+        <dt class="col-sm-2">
+            1 yillik yoqilg'i me'yori:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OneYearMeduimFuelConsumption)
+        </dd>
+        <dt class="col-sm-2">
+            1 oylik yoqilg'i me'yori:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OneMonthMeduimFuelConsumption)
         </dd>
     </dl>
 </div>
