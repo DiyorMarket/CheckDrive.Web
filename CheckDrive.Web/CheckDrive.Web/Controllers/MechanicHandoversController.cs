@@ -57,6 +57,24 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
+        public async Task<IActionResult> HistoryIndexForPersonalPage(int? pageNumber, string? searchString, DateTime? date)
+        {
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId");
+            int accountId = int.Parse(accountIdStr);
+
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, DateTime.Now.ToTashkentTime(), accountId);
+
+            ViewBag.PageSize = response.PageSize;
+            ViewBag.PageCount = response.TotalPages;
+            ViewBag.TotalCount = response.TotalCount;
+            ViewBag.CurrentPage = response.PageNumber;
+            ViewBag.HasPreviousPage = response.HasPreviousPage;
+            ViewBag.HasNextPage = response.HasNextPage;
+
+            return View(response.Data);
+        }
+
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
         {
             var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, null, null, 6);

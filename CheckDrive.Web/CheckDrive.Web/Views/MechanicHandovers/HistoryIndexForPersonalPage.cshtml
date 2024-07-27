@@ -1,33 +1,11 @@
 ﻿@model IEnumerable<CheckDrive.ApiContracts.MechanicHandover.MechanicHandoverDto>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
 
 @{
-    ViewData["Title"] = "Mechanic Handovers (Personal)";
+    ViewData["Title"] = "HistoryIndexForPersonalPage";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
 }
 
-<div class="container-fluid py-2 px-4 d-flex justify-content-end">
-    <div class="d-flex align-items-center gap-2">
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:white; border-color:black; width:55px">
-                <i class="fa-solid fa-user" style="background-color: white; color: black;"></i>
-                <i class="bi bi-caret-down-fill" style="background-color:white; color:black"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-sm" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" style="color: green" href="@Url.Action("PersonalIndex", "MechanicAcceptances")">Mexanik(Qabul qiluvchi)</a></li>
-            </ul>
-        </div>
-        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
-            <span class="logout-icon">
-                <i class="fas fa-sign-out-alt"></i>
-            </span>
-            Chiqish
-        </button>
-        
-    </div>
-</div>
-
-<form method="get" action="@Url.Action("PersonalIndex")">
+<form method="get" action="@Url.Action("HistoryIndexForPersonalPage")">
     <div class="container mt-5">
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
@@ -41,11 +19,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 text-end">
-                <a class="btn btn-info" onclick="window.location.href='@Url.Action("HistoryIndexForPersonalPage", "MechanicHandovers")'">Tarixni ko`rish</a>
-                <a class="btn btn-success shadow" href="@Url.Action("Create", "MechanicHandovers")">
-                    <i class="fa fa-plus"></i> Yaratish
-                </a>
+            <!-- Date -->
+            <div class="col-md-2">
+                <input type="date" name="date" class="form-control">
             </div>
         </div>
 
@@ -55,7 +31,6 @@
                     <tr>
                         <th scope="col" style="width: 13%">Haydovchi F.I</th>
                         <th scope="col" style="width: 13%">Moshina</th>
-                        <th scope="col" style="width: 13%">Mexanik F.I</th>
                         <th scope="col" style="width: 10%">Topshirish</th>
                         <th scope="col" style="width: 20%">Boshlang'ich masofa</th>
                         <th scope="col" style="width: 38%">Izoh</th>
@@ -80,7 +55,6 @@
                                     }
                                 </td>
                                 <td>@item.CarName</td>
-                                <td>@item.MechanicName</td>
                                 <td>
                                     @if (!string.IsNullOrEmpty(item.MechanicName))
                                     {
