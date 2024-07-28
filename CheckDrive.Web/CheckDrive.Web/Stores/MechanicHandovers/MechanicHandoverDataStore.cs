@@ -51,6 +51,39 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
 
             return result;
         }
+        public async Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync(
+            int? pageNumber,
+            string? searchString,
+            DateTime? date,
+            int? accountId)
+        {
+            StringBuilder query = new("");
+
+            if (accountId != 0)
+                query.Append($"accountId={accountId}&");
+
+            if (date is not null)
+                query.Append($"date={date.Value.ToString("MM/dd/yyyy")}&");
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+                query.Append($"searchString={searchString}&");
+
+            if (pageNumber != null)
+                query.Append($"pageNumber={pageNumber}");
+
+            var response = await _api.GetAsync("mechanics/handovers?OrderBy=datedesc&" + query.ToString());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch handovers.");
+            }
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<GetMechanicHandoverResponse>(json);
+
+            return result;
+        }
+
         public async Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync()
         {
             var response = await _api.GetAsync("mechanics/handovers?OrderBy=datedesc");
