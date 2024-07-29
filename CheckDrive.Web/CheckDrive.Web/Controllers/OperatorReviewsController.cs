@@ -1,5 +1,6 @@
 ﻿using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.Car;
+using CheckDrive.ApiContracts.OilMark;
 using CheckDrive.ApiContracts.Operator;
 using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Extensions;
@@ -29,6 +30,31 @@ namespace CheckDrive.Web.Controllers
         private readonly IDriverDataStore _driverDataStore = driverDataStore;
         private readonly IOperatorDataStore _operatorDataStore = operatorDataStore;
         private readonly IOilMarkDataStore _oilMarkDataStore = oilMarkDataStore;
+
+
+        private readonly List<OilMarkDto> oils = new List<OilMarkDto>()
+            {
+                new OilMarkDto()
+                {
+                    Id = 1,
+                    OilMark = "A80"
+                },
+                new OilMarkDto()
+                {
+                    Id = 2,
+                    OilMark = "A91"
+                },
+                new OilMarkDto()
+                {
+                    Id = 3,
+                    OilMark = "95"
+                },
+                new OilMarkDto()
+                {
+                    Id = 4,
+                    OilMark = "Diesel-Fuel"
+                }
+            };
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
