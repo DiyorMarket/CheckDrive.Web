@@ -80,7 +80,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> CreateByButton()
         {
-            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1);
+            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1, null);
             var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today.ToTashkentTime(), null, 10);
             var carData = await _carDataStore.GetCarsAsync(1);
 
@@ -145,7 +145,7 @@ namespace CheckDrive.Web.Controllers
             var carData = await _carDataStore.GetCarsAsync(1);
             ViewBag.CarData = carData;
 
-            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1);
+            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1, null);
             var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today.ToTashkentTime(), null, 10);
 
             var mechanicDriverIds = mechanicAcceptanceResponse.Data.Select(ma => ma.DriverId).ToHashSet();

@@ -1,5 +1,4 @@
 ﻿using CheckDrive.ApiContracts.OperatorReview;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -16,7 +15,8 @@ namespace CheckDrive.Web.Stores.OperatorReviews
             string? searchString,
             DateTime? date,
             string? status,
-            int? roleId)
+            int? roleId,
+            int? accountId)
         {
             StringBuilder query = new("");
 
@@ -25,6 +25,9 @@ namespace CheckDrive.Web.Stores.OperatorReviews
 
             if (roleId != 0)
                 query.Append($"roleId={roleId}&");
+
+            if (accountId != 0)
+                query.Append($"accountId={accountId}&");
 
             if (date is not null)
                 query.Append($"date={date.Value.ToString("MM/dd/yyyy")}&");
