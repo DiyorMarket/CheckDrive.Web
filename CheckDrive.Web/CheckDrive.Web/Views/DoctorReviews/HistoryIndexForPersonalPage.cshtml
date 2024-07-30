@@ -2,21 +2,21 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="~/css/LogOutButtun.css" asp-append-version="true" />
 @{
-    ViewData["Title"] = "PersonalIndex";
+    ViewData["Title"] = "HistoryIndexForPersonalPage";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
 }
 <div class="container-fluid py-2 px-4 d-flex justify-content-end">
     <div class="d-flex align-items-center">
-        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
+        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("PersonalIndex", "DoctorReviews")'">
             <span class="logout-icon">
                 <i class="fas fa-sign-out-alt"></i>
             </span>
-            Chiqish
+            Orqaga
         </button>
     </div>
 </div>
 
-<form asp-controller="DoctorReviews" asp-action="PersonalIndex">
+<form asp-controller="DoctorReviews" asp-action="HistoryIndexForPersonalPage">
     <div class="container mt-5">
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
@@ -30,12 +30,8 @@
                     </div>
                 </div>
             </div>
-            <!-- History and  Create buttoms -->
-            <div class="col-md-4 text-right">
-                <a class="btn btn-info" href="@Url.Action("HistoryIndexForPersonalPage", "DoctorReviews")">Tarixni ko'rish</a>
-                <a class="btn btn-success shadow" href="@Url.Action("Create", "DoctorReviews")">
-                    <i class="fa fa-plus"></i> Yaratish
-                </a>
+            <div class="col-md-2">
+                <input type="date" name="date" class="form-control">
             </div>
         </div>
 
@@ -46,29 +42,18 @@
                         <thead>
                             <tr>
                                 <th class="text-center vertical-align-middle">Haydovchi F.I.</th>
-                                <th class="text-center vertical-align-middle">Shifokor F.I.</th>
                                 <th class="text-center vertical-align-middle">Sog`lig`i</th>
                                 <th class="text-center vertical-align-middle">Izoh</th>
                                 <th class="text-center vertical-align-middle">Sana</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if(Model != null && Model.Any())
+                            @if (Model != null && Model.Any())
                             {
                                 @foreach (var review in Model)
                                 {
                                     <tr>
-                                        <td class="text-center vertical-align-middle">
-                                            @if (!string.IsNullOrEmpty(review.DoctorName))
-                                            {
-                                                @review.DriverName
-                                            }
-                                            else
-                                            {
-                                                <a href="/DoctorReviews/Create?driverId=@review.DriverId&driverName=@review.DriverName">@review.DriverName</a>
-                                            }
-                                        </td>
-                                        <td class="text-center vertical-align-middle">@review.DoctorName</td>
+                                        <td class="text-center vertical-align-middle">@review.DriverName</td>
                                         <td class="text-center vertical-align-middle">
                                             @if (!string.IsNullOrEmpty(review.DoctorName))
                                             {
@@ -104,12 +89,12 @@
                                 @if (ViewBag.HasPreviousPage)
                                 {
                                     <li class="page-item">
-                                        <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = 1 })" aria-label="First">
+                                        <a class="page-link" href="@Url.Action("HistoryIndexForPersonalPage", new { pageNumber = 1 })" aria-label="First">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
                                     </li>
                                     <li class="page-item">
-                                        <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
+                                        <a class="page-link" href="@Url.Action("HistoryIndexForPersonalPage", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
                                     </li>
                                 }
                                 @if (ViewBag.HasNextPage)
@@ -118,10 +103,10 @@
                                         <span class="page-link">@ViewBag.CurrentPage</span>
                                     </li>
                                     <li class="page-item">
-                                        <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
+                                        <a class="page-link" href="@Url.Action("HistoryIndexForPersonalPage", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
                                     </li>
                                     <li class="page-item">
-                                        <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
+                                        <a class="page-link" href="@Url.Action("HistoryIndexForPersonalPage", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
                                     </li>
@@ -129,7 +114,7 @@
                             </ul>
                         </nav>
                         <div class="p-2">
-                            <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy haydovchilar soni: @ViewBag.TotalCount)</p>
+                            <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy tarixlar soni: @ViewBag.TotalCount)</p>
                         </div>
                     </div>
                 </div>
@@ -137,85 +122,3 @@
         </div>
     </div>
 </form>
-
-<style>
-    .badge {
-        font-size: 0.8rem;
-        padding: 5px 10px;
-        border-radius: 5px;
-    }
-
-    .bg-success {
-        background-color: #28a745;
-    }
-
-    .bg-danger {
-        background-color: #dc3545;
-    }
-
-    .bg-empty {
-        background-color: gray;
-    }
-
-    .container {
-        margin-top: 30px;
-    }
-
-    .table-bordered {
-        border: 1px solid #dee2e6;
-    }
-
-        .table-bordered th,
-        .table-bordered td {
-            border: 1px solid #dee2e6;
-        }
-
-    .paper-shadow {
-        background: white;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-    }
-
-    .pagination {
-        justify-content: flex-end;
-    }
-
-    .shadow {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .pagination .page-link {
-        margin-left: 5px;
-    }
-
-    .pagination .page-item.shadow {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .vertical-align-middle {
-        vertical-align: middle !important;
-    }
-
-    .row {
-        margin-right: 0;
-        margin-left: 0;
-    }
-
-    .col-md-4, .col-md-12 {
-        padding-right: 0;
-        padding-left: 0;
-    }
-
-    .text-right {
-        text-align: right;
-    }
-
-    .btn-secondary {
-        background-color: #6c757d;
-        color: white;
-    }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-</style>

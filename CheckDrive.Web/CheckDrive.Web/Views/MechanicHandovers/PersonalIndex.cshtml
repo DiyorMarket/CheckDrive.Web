@@ -42,6 +42,7 @@
                 </div>
             </div>
             <div class="col-md-4 text-end">
+                <a class="btn btn-info" onclick="window.location.href='@Url.Action("HistoryIndexForPersonalPage", "MechanicHandovers")'">Tarixni ko`rish</a>
                 <a class="btn btn-success shadow" href="@Url.Action("Create", "MechanicHandovers")">
                     <i class="fa fa-plus"></i> Yaratish
                 </a>
@@ -57,6 +58,7 @@
                         <th scope="col" style="width: 13%">Mexanik F.I</th>
                         <th scope="col" style="width: 10%">Topshirish</th>
                         <th scope="col" style="width: 20%">Boshlang'ich masofa</th>
+                        <th scope="col" style="width: 20%">Yoqilg`i qoldig`i</th>
                         <th scope="col" style="width: 38%">Izoh</th>
                         <th scope="col" style="width: 15%">Sana</th>
                         <th scope="col" style="width: 15%">Holati</th>
@@ -94,6 +96,7 @@
                                     }
                                 </td>
                                 <td>@item.Distance</td>
+                                <td>@item.RemainingFuel</td>
                                 <td>@item.Comments</td>
                                 <td>@item.Date</td>
                                 <td class="text-center">

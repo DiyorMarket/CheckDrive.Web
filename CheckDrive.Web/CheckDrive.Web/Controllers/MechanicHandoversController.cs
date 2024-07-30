@@ -21,7 +21,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, DateTime.Now.ToTashkentTime(), null, 1);
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, date, null, 1);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -48,6 +48,7 @@ namespace CheckDrive.Web.Controllers
                 r.Distance,
                 r.DriverName,
                 r.MechanicName,
+                r.RemainingFuel,
                 r.CarName,
                 r.CarId
             }).ToList();
@@ -55,6 +56,24 @@ namespace CheckDrive.Web.Controllers
             ViewBag.MechanicHandovers = mechanicHandovers;
 
             return View();
+        }
+
+        public async Task<IActionResult> HistoryIndexForPersonalPage(int? pageNumber, string? searchString, DateTime? date)
+        {
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId");
+            int accountId = int.Parse(accountIdStr);
+
+            var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(pageNumber, searchString, date, accountId);
+
+            ViewBag.PageSize = response.PageSize;
+            ViewBag.PageCount = response.TotalPages;
+            ViewBag.TotalCount = response.TotalCount;
+            ViewBag.CurrentPage = response.PageNumber;
+            ViewBag.HasPreviousPage = response.HasPreviousPage;
+            ViewBag.HasNextPage = response.HasNextPage;
+
+            return View(response.Data);
         }
 
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
@@ -76,7 +95,7 @@ namespace CheckDrive.Web.Controllers
             var drivers = await GETDrivers();
             var cars = await GETCars();
 
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today.ToTashkentTime(), true, 10);
+            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.Today.ToTashkentTime(), true, 10, null);
             var mechanicHandovers = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), null, 10);
 
             var accountIdStr = TempData["AccountId"] as string;
@@ -124,7 +143,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IsHanded,Comments,MechanicId,Distance,CarId,DriverId")] MechanicHandoverForCreateDto mechanicHandoverForCreateDto)
+        public async Task<IActionResult> Create([Bind("IsHanded,Comments,MechanicId,Distance,RemainingFuel,CarId,DriverId")] MechanicHandoverForCreateDto mechanicHandoverForCreateDto)
         {
             if (ModelState.IsValid)
             {
@@ -295,17 +314,17 @@ namespace CheckDrive.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCarDetails(int carId)
         {
-            var car = await _carDataStore.GetCarAsync(carId); 
+            var car = await _carDataStore.GetCarAsync(carId);
             if (car != null)
             {
                 var carDetails = new
                 {
-                    mileage = car.Mileage
+                    mileage = car.Mileage,
+                    remainingFuel = car.RemainingFuel
                 };
                 return Json(carDetails);
             }
             return NotFound();
         }
-
     }
 }
