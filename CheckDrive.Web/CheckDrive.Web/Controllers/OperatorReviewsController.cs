@@ -1,6 +1,5 @@
 ﻿using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.Car;
-using CheckDrive.ApiContracts.OilMark;
 using CheckDrive.ApiContracts.Operator;
 using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Extensions;
@@ -31,35 +30,9 @@ namespace CheckDrive.Web.Controllers
         private readonly IOperatorDataStore _operatorDataStore = operatorDataStore;
         private readonly IOilMarkDataStore _oilMarkDataStore = oilMarkDataStore;
 
-
-        private readonly List<OilMarkDto> oils = new List<OilMarkDto>()
-            {
-                new OilMarkDto()
-                {
-                    Id = 1,
-                    OilMark = "A80"
-                },
-                new OilMarkDto()
-                {
-                    Id = 2,
-                    OilMark = "A91"
-                },
-                new OilMarkDto()
-                {
-                    Id = 3,
-                    OilMark = "95"
-                },
-                new OilMarkDto()
-                {
-                    Id = 4,
-                    OilMark = "Diesel-Fuel"
-                }
-            };
-
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, DateTime.Now.ToTashkentTime(), null, 1);
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, DateTime.Now.ToTashkentTime(), null, 1, null);
 
             ViewBag.PageSize = operatorReviews.PageSize;
             ViewBag.PageCount = operatorReviews.TotalPages;
@@ -94,9 +67,27 @@ namespace CheckDrive.Web.Controllers
             return View();
 
         }
+
+        public async Task<IActionResult> HistoryIndexForPersonalPage(int? pageNumber, string? searchString, DateTime? date)
+        {
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId");
+            int accountId = int.Parse(accountIdStr);
+
+            var response = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, date, null, null, accountId);
+
+            ViewBag.PageSize = response.PageSize;
+            ViewBag.PageCount = response.TotalPages;
+            ViewBag.TotalCount = response.TotalCount;
+            ViewBag.CurrentPage = response.PageNumber;
+            ViewBag.HasPreviousPage = response.HasPreviousPage;
+            ViewBag.HasNextPage = response.HasNextPage;
+
+            return View(response.Data);
+        }
         public async Task<IActionResult> PersonalIndex(int? pageNumber, string? searchString)
         {
-            var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, null, null, 4);
+            var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, null, null, 4, null);
 
             ViewBag.PageSize = reviewsResponse.PageSize;
             ViewBag.PageCount = reviewsResponse.TotalPages;
@@ -113,7 +104,7 @@ namespace CheckDrive.Web.Controllers
 
             return View(operatorReview);
         }
-        public async Task<IActionResult> Create(int? driverId, string? driverName, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel)
+        public async Task<IActionResult> Create(int? driverId, string? driverName, int? oilmarksId, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel)
         {
             var drivers = await GETDrivers();
             var cars = await GETCars();
@@ -123,6 +114,7 @@ namespace CheckDrive.Web.Controllers
 
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
+
             if (int.TryParse(accountIdStr, out int accountId))
             {
                 var operatorResponse = await _operatorDataStore.GetOperators(accountId);
@@ -133,7 +125,8 @@ namespace CheckDrive.Web.Controllers
                 new SelectListItem { Value = operatorr.Id.ToString(), Text = $"{operatorr.FirstName} {operatorr.LastName}" }
             };
 
-            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), null, 10);
+            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), null, 10, null);
+
             var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), "Completed", 10);
 
             var healthyDrivers = mechanicHandovers.Data
@@ -147,15 +140,17 @@ namespace CheckDrive.Web.Controllers
             var filteredDrivers = drivers
                 .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !givedDrivers.Contains(int.Parse(d.Value)))
                 .ToList();
+
             ViewBag.OilMarks = oilMarks.Data.Select(o => new SelectListItem
             {
                 Value = o.Id.ToString(),
                 Text = o.OilMark
             }).ToList();
+
             ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text");
             ViewBag.Operators = operators;
 
-            if (!driverId.HasValue && !carId.HasValue && filteredDrivers.Any())
+            if (!driverId.HasValue && !carId.HasValue && filteredDrivers.Any() && oilmarksId.HasValue)
             {
                 var firstDriverId = int.Parse(filteredDrivers.First().Value);
                 var mechanicHandover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == firstDriverId && m.Date.Date == DateTime.Today.ToTashkentTime());
@@ -167,12 +162,14 @@ namespace CheckDrive.Web.Controllers
                     carModel = car?.Model;
                     fuelTankCapacity = car?.FuelTankCapacity;
                     remainingFuel = car?.RemainingFuel;
+
                 }
 
                 driverId = firstDriverId;
             }
 
             ViewBag.Cars = new SelectList(cars, "Value", "Text", carId);
+
 
             var model = new OperatorReviewForCreateDto();
 
