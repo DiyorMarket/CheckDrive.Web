@@ -1,11 +1,11 @@
-﻿@model IEnumerable<CheckDrive.ApiContracts.MechanicHandover.MechanicHandoverDto>
+﻿@model IEnumerable<CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto>
 
 @{
     ViewData["Title"] = "HistoryIndexForPersonalPage";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
 }
 
-<form method="get" action="@Url.Action("HistoryIndexForPersonalPage")">
+<form method="get" action="@Url.Action("PersonalIndex")">
     <div class="container mt-5">
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
@@ -29,14 +29,14 @@
             <table class="table table-bordered table-striped table-hover paper-shadow">
                 <thead>
                     <tr>
-                        <th scope="col" style="width: 13%">Haydovchi F.I</th>
-                        <th scope="col" style="width: 13%">Moshina</th>
-                        <th scope="col" style="width: 10%">Topshirish</th>
-                        <th scope="col" style="width: 20%">Boshlang'ich masofa</th>
-                        <th scope="col" style="width: 20%">Yoqilg`i qoldig`i</th>
-                        <th scope="col" style="width: 38%">Izoh</th>
-                        <th scope="col" style="width: 15%">Sana</th>
-                        <th scope="col" style="width: 15%">Holati</th>
+                        <th scope="col" style="width: 10%">Haydovchi F.I</th>
+                        <th scope="col" style="width: 15%">Mashina</th>
+                        <th scope="col" style="width: 10%">Qabul qilish</th>
+                        <th scope="col" style="width: 10%">Qabul qilish masofasi</th>
+                        <th scope="col" style="width: 15%">Izoh</th>
+                        <th scope="col" style="width: 10%">Sana</th>
+                        <th scope="col" style="width: 10%">Holati</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -45,34 +45,21 @@
                         foreach (var item in Model)
                         {
                             <tr>
-                                <td class="text-center vertical-align-middle">
-                                    @if (!string.IsNullOrEmpty(item.MechanicName))
+                                <td class="text-center vertical-align-middle">@item.DriverName</td>
+                                <td>@item.CarName</td>
+                                <td>
+                                    @if ((bool)item.IsAccepted)
                                     {
-                                        @item.DriverName
+                                        <span class="badge bg-success ">Qabul qilindi</span>
                                     }
                                     else
                                     {
-                                        <a href="/MechanicHandovers/Create?driverId=@item.DriverId">@item.DriverName</a>
-                                    }
-                                </td>
-                                <td>@item.CarName</td>
-                                <td>
-                                    @if (!string.IsNullOrEmpty(item.MechanicName))
-                                    {
-                                        @if ((bool)item.IsHanded)
-                                        {
-                                            <span class="badge bg-success ">Topshirildi</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-danger ">Topshirilmadi</span>
-                                        }
+                                        <span class="badge bg-danger ">Rad etildi</span>
                                     }
                                 </td>
                                 <td>@item.Distance</td>
-                                <td>@item.RemainingFuel</td>
                                 <td>@item.Comments</td>
-                                <td>@item.Date</td>
+                                <td>@item.Date?.ToString("dd/MM/yyyy")</td>
                                 <td class="text-center">
                                     @if (item.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
                                     {
@@ -105,7 +92,7 @@
                     else
                     {
                         <tr>
-                            <td colspan="6" class="text-center">
+                            <td colspan="8" class="text-center">
                                 Maʼlumotlar mavjud emas
                             </td>
                         </tr>
@@ -211,5 +198,4 @@
     .pagination .page-item.shadow {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-
 </style>

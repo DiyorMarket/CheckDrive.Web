@@ -51,6 +51,39 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
             return result;
         }
 
+        public async Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync(
+            int? pageNumber,
+            string? searchString,
+            DateTime? date,
+            int? accountId)
+        {
+            StringBuilder query = new StringBuilder();
+
+            if (accountId != 0)
+                query.Append($"accountId={accountId}&");
+
+            if (date is not null)
+                query.Append($"date={date.Value.ToString("MM/dd/yyyy")}&");
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+                query.Append($"searchString={searchString}&");
+
+            if (pageNumber != null)
+                query.Append($"pageNumber={pageNumber}");
+
+            var response = await _api.GetAsync("mechanics/acceptances?OrderBy=datedesc&" + query.ToString());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch mechanic acceptances.");
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<GetMechanicAcceptanceResponse>(json);
+
+            return result;
+        }
+
         public async Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync()
         {
             var response = await _api.GetAsync("mechanics/acceptances?OrderBy=datedesc");

@@ -47,6 +47,7 @@ namespace CheckDrive.Web.Controllers
                 r.OperatorName,
                 r.DriverName,
                 r.OilAmount,
+                r.OilMarks,
                 CarModel = $"{r.CarModel} ({r.CarNumber})",
                 r.Date,
                 IsGiven = (bool)r.IsGiven ? "Quyildi" : "Quyilmadi",
@@ -144,8 +145,8 @@ namespace CheckDrive.Web.Controllers
             {
                 Value = o.Id.ToString(),
                 Text = o.OilMark
-            })
-            .ToList();
+            }).ToList();
+
             ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text");
             ViewBag.Operators = operators;
 
