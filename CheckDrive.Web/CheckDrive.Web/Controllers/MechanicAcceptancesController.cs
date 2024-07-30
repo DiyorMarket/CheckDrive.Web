@@ -27,8 +27,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, DateTime.Now.ToTashkentTime(), null, 1);
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, date, null, 1);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -85,6 +84,7 @@ namespace CheckDrive.Web.Controllers
             var carData = await _carDataStore.GetCarsAsync(1);
 
             var carMileageDictionary = carData.Data.ToDictionary(car => car.Id, car => car.Mileage);
+            var carRemainingFuelDictionary = carData.Data.ToDictionary(car => car.Id, car => car.RemainingFuel);
 
             var mechanicDriverIds = mechanicAcceptanceResponse.Data.Select(ma => ma.DriverId).ToHashSet();
             var filteredOperatorResponse = operatorResponse.Data
@@ -96,7 +96,8 @@ namespace CheckDrive.Web.Controllers
                     or.CarModel,
                     or.CarNumber,
                     or.DriverName,
-                    CarMileage = carMileageDictionary.ContainsKey(or.CarId) ? carMileageDictionary[or.CarId] : 0
+                    CarMileage = carMileageDictionary.ContainsKey(or.CarId) ? carMileageDictionary[or.CarId] : 0,
+                    RemainingFuel = carRemainingFuelDictionary.ContainsKey(or.CarId) ? carMileageDictionary[or.CarId] : 0
                 })
                 .ToList();
 
@@ -141,7 +142,6 @@ namespace CheckDrive.Web.Controllers
                 }
             }
 
-            // Handle validation errors and re-populate view data
             var carData = await _carDataStore.GetCarsAsync(1);
             ViewBag.CarData = carData;
 
@@ -158,7 +158,7 @@ namespace CheckDrive.Web.Controllers
 
 
 
-        public async Task<IActionResult> CreateByLink(int driverId, int carId, string carName, string driverName)
+        public async Task<IActionResult> CreateByLink(int driverId, int carId, string carName, string driverName, double remainingFuel)
         {
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
@@ -178,6 +178,7 @@ namespace CheckDrive.Web.Controllers
             ViewBag.DriverId = driverId;
             ViewBag.CarName = carName;
             ViewBag.DriverName = driverName;
+            ViewBag.RemainingFuel = remainingFuel;
 
             return View();
         }
@@ -292,7 +293,8 @@ namespace CheckDrive.Web.Controllers
             {
                 var carDetails = new
                 {
-                    mileage = car.Mileage
+                    mileage = car.Mileage,
+                    remainingFuel = car.RemainingFuel,
                 };  
                 return Json(carDetails);
             }
