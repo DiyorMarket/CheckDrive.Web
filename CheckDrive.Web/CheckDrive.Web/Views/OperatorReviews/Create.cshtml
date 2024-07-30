@@ -55,10 +55,10 @@
                 <input asp-for="OilAmount" class="form-control" id="OilAmount" type="number" step="0.01" min="0" />
                 <span asp-validation-for="OilAmount" class="text-danger"></span>
             </div>
-                <div class="form-group w-75">
-                    <label asp-for="OilMarkId" class="control-label mt-2">Yoqilgi Markasi</label>
-                    <select asp-for="OilMarkId" class="form-control border border-dark" asp-items="ViewBag.OilMarks"></select>
-                </div>
+            <div class="form-group w-75">
+                <label asp-for="OilMarkId" class="control-label mt-2">Yoqilgi Markasi</label>
+                <select asp-for="OilMarkId" class="form-control border border-dark" asp-items="ViewBag.OilMarks"></select>
+            </div>
             <div class="form-group w-75 mt-3">
                 <label asp-for="Comments" for="exampleFormControlTextarea1">Izoh</label>
                 <textarea asp-for="Comments" class="form-control" rows="4"></textarea>

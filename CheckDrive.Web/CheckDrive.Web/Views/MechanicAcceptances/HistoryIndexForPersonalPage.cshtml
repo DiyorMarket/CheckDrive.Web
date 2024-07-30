@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto>
+@model IEnumerable<CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto>
 
 @{
     ViewData["Title"] = "HistoryIndexForPersonalPage";
@@ -33,6 +33,7 @@
                         <th scope="col" style="width: 15%">Mashina</th>
                         <th scope="col" style="width: 10%">Qabul qilish</th>
                         <th scope="col" style="width: 10%">Qabul qilish masofasi</th>
+                        <th scope="col" style="width: 10%">Yoqilg`i qoldig`i</th>
                         <th scope="col" style="width: 15%">Izoh</th>
                         <th scope="col" style="width: 10%">Sana</th>
                         <th scope="col" style="width: 10%">Holati</th>
@@ -58,6 +59,7 @@
                                     }
                                 </td>
                                 <td>@item.Distance</td>
+                                <td>@item.RemainingFuel</td>
                                 <td>@item.Comments</td>
                                 <td>@item.Date?.ToString("dd/MM/yyyy")</td>
                                 <td class="text-center">

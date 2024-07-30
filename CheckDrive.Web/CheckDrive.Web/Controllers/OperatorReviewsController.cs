@@ -32,7 +32,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, DateTime.Now.ToTashkentTime(), null, 1, null);
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, date, null, 1, null);
 
             ViewBag.PageSize = operatorReviews.PageSize;
             ViewBag.PageCount = operatorReviews.TotalPages;
@@ -274,11 +274,11 @@ namespace CheckDrive.Web.Controllers
                 DisplayText = $"{car.Model} ({car.Number})"
             }), "Id", "DisplayText");
 
-            ViewBag.OilMarks = new SelectList(oilMarks.Data.Select(oilMark => new
+            ViewBag.OilMarks = oilMarks.Data.Select(o => new SelectListItem
             {
-                id = oilMark.Id,
-                DisplayText = $"{oilMark.OilMark}"
-            }), "Id", "DisplayText");
+                Value = o.Id.ToString(),
+                Text = o.OilMark
+            }).ToList();
 
             ViewBag.Status = Enum.GetValues(typeof(StatusForDto)).Cast<StatusForDto>().Select(e => new SelectListItem
             {
@@ -299,7 +299,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OilAmount,Comments,Status,Date,OperatorId,DriverId,IsGiven,CarId")] OperatorReviewForUpdateDto operatorReview)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,OilAmount,Comments,Status,Date,OilMarkId,OperatorId,DriverId,IsGiven,CarId")] OperatorReviewForUpdateDto operatorReview)
         {
             if (id != operatorReview.Id)
             {

@@ -22,12 +22,15 @@
                 <tr>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Haydovchi F.I.</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Moshina</th>
-                    <th class="text-center vertical-align-middle" style="min-width: 200px;">O`rtacha Yoqilg`i</th>
+                    <th class="text-center vertical-align-middle" style="min-width: 200px;">Yoqilg`i meyori</th>
+                    <th class="text-center vertical-align-middle" style="min-width: 150px;">Boshlang`ich yoqilg`i qoldig`i</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Masofa</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Boshlang`ich</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Yakuniy</th>
+                    <th class="text-center vertical-align-middle" style="min-width: 150px;">Boshlang`ich</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Sarf</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Quyilgan yoqilg`i</th>
+                    <th class="text-center vertical-align-middle" style="min-width: 150px;">Qolgan yoqilg`i qoldig`i</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Operator F.I.</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Mexanik F.I.</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Sana</th>
@@ -42,6 +45,7 @@
                             <td class="text-center vertical-align-middle">@review.DriverName</td>
                             <td class="text-center vertical-align-middle">@review.CarName</td>
                             <td class="text-center vertical-align-middle">@review.CarMeduimFuelConsumption</td>
+                            <td class="text-center vertical-align-middle">@review.RemainigFuelBefore</td>
                             <td class="text-center vertical-align-middle">
                                 @if (review.DispatcherId != 0)
                                 {
@@ -56,6 +60,7 @@
                             </td>
                             <td class="text-center vertical-align-middle">@review.InitialDistance</td>
                             <td class="text-center vertical-align-middle">@review.FinalDistance</td>
+                            <td class="text-center vertical-align-middle">@review.RemainigFuelBefore</td>
                             <td class="text-center vertical-align-middle">
                                 @if (review.DispatcherId != 0)
                                 {
@@ -69,6 +74,7 @@
                                 }
                             </td>
                             <td class="text-center vertical-align-middle">@review.PouredFuel</td>
+                            <td class="text-center vertical-align-middle">@review.RemainigFuelAfter</td>
                             <td class="text-center vertical-align-middle">@review.OperatorName</td>
                             <td class="text-center vertical-align-middle">@review.MechanicName</td>
                             <td class="text-center vertical-align-middle">@review.Date</td>
@@ -78,7 +84,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="11" class="text-center">
+                        <td colspan="13" class="text-center">
                             Maʼlumotlar mavjud emas
                         </td>
                     </tr>
