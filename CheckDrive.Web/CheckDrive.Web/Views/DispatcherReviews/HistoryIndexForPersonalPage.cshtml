@@ -1,26 +1,11 @@
 ﻿@model IEnumerable<CheckDrive.ApiContracts.DispatcherReview.DispatcherReviewDto>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="~/css/LogOutButtun.css" asp-append-version="true" />
 @{
     ViewData["Title"] = "PersonalIndex";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
 }
-<div class="container-fluid py-2 px-4 d-flex justify-content-end">
-    <div class="d-flex align-items-center">
-        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
-            <span class="logout-icon">
-                <i class="fas fa-sign-out-alt"></i>
-            </span>
-            Chiqish
-        </button>
-    </div>
-</div>
 
 <div class="container mt-5" style="max-width: 100%;">
     <div class="table-responsive">
-        <div class="col-md-12 d-flex flex-row-reverse bd-highlight mb-3">
-            <a class="btn btn-info" onclick="window.location.href='@Url.Action("HistoryIndexForPersonalPage", "DispatcherReviews")'">Tarixni ko`rish</a>
-        </div>
         <table class="table table-bordered table-striped table-hover paper-shadow" style="width: 100%;">
             <thead>
                 <tr>
@@ -50,33 +35,11 @@
                             <td class="text-center vertical-align-middle">@review.CarName</td>
                             <td class="text-center vertical-align-middle">@review.CarMeduimFuelConsumption</td>
                             <td class="text-center vertical-align-middle">@review.RemainigFuelBefore</td>
-                            <td class="text-center vertical-align-middle">
-                                @if (review.DispatcherId != 0)
-                                {
-                                    @review.DistanceCovered
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("Create", new {distanceCovered = review.DistanceCovered, fuelSpended = review.FuelSpended, operatorId = review.OperatorId, mechanicId = review.MechanicId, driverId = review.DriverId, mechanicHandoverId = review.MechanicHandoverId, mechanicAcceptanceId = review.MechanicAcceptanceId, carId = review.CarId, operatorReviewId = review.OperatorReviewId })">
-                                        @review.DistanceCovered
-                                    </a>
-                                }
-                            </td>
+                            <td class="text-center vertical-align-middle">@review.DistanceCovered</td>
                             <td class="text-center vertical-align-middle">@review.InitialDistance</td>
                             <td class="text-center vertical-align-middle">@review.FinalDistance</td>
                             <td class="text-center vertical-align-middle">@review.RemainigFuelBefore</td>
-                            <td class="text-center vertical-align-middle">
-                                @if (review.DispatcherId != 0)
-                                {
-                                    @String.Format("{0:F4}", review.FuelSpended)
-                                }
-                                else
-                                {
-                                    <a href="@Url.Action("Create", new {distanceCovered = review.DistanceCovered, fuelSpended = review.FuelSpended, operatorId = review.OperatorId, mechanicId = review.MechanicId, driverId = review.DriverId, mechanicHandoverId = review.MechanicHandoverId, mechanicAcceptanceId = review.MechanicAcceptanceId, carId = review.CarId, operatorReviewId = review.OperatorReviewId })">
-                                        @String.Format("{0:F3}", review.FuelSpended)
-                                    </a>
-                                }
-                            </td>
+                            <td class="text-center vertical-align-middle">@String.Format("{0:F4}", review.FuelSpended)</td>
                             <td class="text-center vertical-align-middle">@review.PouredFuel</td>
                             <td class="text-center vertical-align-middle">@String.Format("{0:F3}", review.RemainigFuelAfter)</td>
                             <td class="text-center vertical-align-middle">@review.OperatorName</td>

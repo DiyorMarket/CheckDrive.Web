@@ -14,9 +14,13 @@ namespace CheckDrive.Web.Stores.DispatcherReviews
             int? pageNumber, 
             string? searchString, 
             DateTime? date,
-            int? roleId)
+            int? roleId,
+            int? accountId)
         {
             StringBuilder query = new("");
+
+            if (accountId != 0)
+                query.Append($"accountId={accountId}&");
 
             if (roleId != 0)
                 query.Append($"roleId={roleId}&");
@@ -42,6 +46,7 @@ namespace CheckDrive.Web.Stores.DispatcherReviews
 
             return result;
         }
+
         public async Task<DispatcherReviewDto> GetDispatcherReview(int id)
         {
             var response = await _api.GetAsync($"dispatchers/review/{id}");

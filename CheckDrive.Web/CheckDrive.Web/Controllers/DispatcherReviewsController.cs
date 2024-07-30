@@ -47,7 +47,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pagenumber, string? searchString, DateTime? date)
         {
-            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, DateTime.Now.ToTashkentTime(), 1);
+            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, date, 1, null);
 
 
             if (response is null)
@@ -84,7 +84,25 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(int? pagenumber, string? searchString)
         {
-            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, null, 5);
+            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, null, 5, null);
+
+            ViewBag.PageSize = reviewsResponse.PageSize;
+            ViewBag.PageCount = reviewsResponse.TotalPages;
+            ViewBag.TotalCount = reviewsResponse.TotalCount;
+            ViewBag.CurrentPage = reviewsResponse.PageNumber;
+            ViewBag.HasPreviousPage = reviewsResponse.HasPreviousPage;
+            ViewBag.HasNextPage = reviewsResponse.HasNextPage;
+
+            return View(reviewsResponse.Data);
+        }
+
+        public async Task<IActionResult> HistoryIndexForPersonalPage(int? pagenumber, string? searchString, DateTime? date)
+        {
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId");
+            int accountID = int.Parse(accountIdStr);
+
+            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, null, 5, accountID);
 
             ViewBag.PageSize = reviewsResponse.PageSize;
             ViewBag.PageCount = reviewsResponse.TotalPages;
