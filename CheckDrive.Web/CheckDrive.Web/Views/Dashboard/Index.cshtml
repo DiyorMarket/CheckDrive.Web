@@ -70,7 +70,7 @@
                 <h5 class="fw-bold">Yoqilg'i sarfi</h5>
             </div>
             <ejs-chart id="spline-chart" background="whitesmoke"
-                       palettes=@(new string[]{"#54ffa9","#ffe91a","#4287f5","#8a442c"})>
+                       palettes=@(new string[]{"#54ffa9","#ffe91a","#4287f5","#8a442c","#b603fc"})>
                 <e-chart-primaryxaxis valueType="Category">
                     <e-majorgridlines width="0"></e-majorgridlines>
                     <e-majorticklines width="0"></e-majorticklines>
@@ -92,6 +92,8 @@
                               yName="Ai92" name="Ai92" type="Spline"></e-series>
                     <e-series dataSource="@ViewBag.SplineChartData" xName="Month" width="3"
                               yName="Ai95" name="Ai95" type="Spline"></e-series>
+                    <e-series dataSource="@ViewBag.SplineChartData" xName="Month" width="3"
+                              yName="Diesel" name="Diesel" type="Spline"></e-series>
                 </e-series-collection>
                 <e-chart-legendsettings position="Top" alignment="Far" toggleVisibility="false">
                     <e-legendsettings-textstyle color="#0f0f0f" size="1rem"></e-legendsettings-textstyle>

@@ -23,5 +23,6 @@ public class SpliteChartData
     public decimal Ai91 { get; set; }
     public decimal Ai92 { get; set; }
     public decimal Ai95 { get; set; }
+    public decimal Diesel { get; set; }
 }
 

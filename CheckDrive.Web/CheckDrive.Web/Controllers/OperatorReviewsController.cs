@@ -4,6 +4,7 @@ using CheckDrive.ApiContracts.Operator;
 using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Extensions;
 using CheckDrive.Web.Stores.Cars;
+using CheckDrive.Web.Stores.Dashbord;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicHandovers;
 using CheckDrive.Web.Stores.OilMarks;
@@ -21,7 +22,8 @@ namespace CheckDrive.Web.Controllers
         ICarDataStore carDataStore,
         IDriverDataStore driverDataStore,
         IOperatorDataStore operatorDataStore,
-        IOilMarkDataStore oilMarkDataStore) : Controller
+        IOilMarkDataStore oilMarkDataStore,
+        IDashboardStore store) : Controller
     {
         private readonly IOperatorReviewDataStore _operatorReviewDataStore = operatorReviewDataStore;
         private readonly IMechanicHandoverDataStore _mechanicHandover = mechanicHandover;
@@ -29,6 +31,7 @@ namespace CheckDrive.Web.Controllers
         private readonly IDriverDataStore _driverDataStore = driverDataStore;
         private readonly IOperatorDataStore _operatorDataStore = operatorDataStore;
         private readonly IOilMarkDataStore _oilMarkDataStore = oilMarkDataStore;
+        private readonly IDashboardStore _store = store;
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
@@ -97,6 +100,18 @@ namespace CheckDrive.Web.Controllers
             ViewBag.HasNextPage = reviewsResponse.HasNextPage;
 
             return View(reviewsResponse.Data);
+        }
+
+        public async Task<IActionResult> ReportIndexForPersonalPage()
+        {
+            var dashboard = await _store.GetDashboard();
+
+            if (dashboard is null)
+            {
+                return BadRequest();
+            }
+            ViewBag.SplineChartData = dashboard.SplineCharts;
+            return View();
         }
         public async Task<IActionResult> Details(int id)
         {
