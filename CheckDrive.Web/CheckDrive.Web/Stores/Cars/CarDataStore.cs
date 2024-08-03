@@ -41,13 +41,16 @@ namespace CheckDrive.Web.Stores.Cars
             return result;
         }
 
-        public async Task<GetCarResponse> GetCarsAsync(int? roleId)
+        public async Task<GetCarResponse> GetCarsAsync(int? roleId, bool? isBusy)
 
         {
             StringBuilder query = new("");
 
             if (roleId != 0)
                 query.Append($"roleId={roleId}&");
+
+            if (isBusy is not null)
+                query.Append($"isBusy={isBusy}&");
 
             var response = await _api.GetAsync("cars?" + query.ToString());
 

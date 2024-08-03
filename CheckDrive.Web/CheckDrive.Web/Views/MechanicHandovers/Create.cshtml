@@ -3,10 +3,9 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
-    bool noDriversAvailable = ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers.Items).Any();
-    bool noCarsAvailable = ViewBag.Cars == null || !((IEnumerable<SelectListItem>)ViewBag.Cars.Items).Any();
+    bool noDriversAvailable = ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers).Any();
+    bool noCarsAvailable = ViewBag.Cars == null || !((IEnumerable<SelectListItem>)ViewBag.Cars).Any();
 }
-
 <div class="row mt-custom">
     <div class="col-md-4 offset-md-1 mt-5">
         <h4>Ro'yxatga olish</h4>
