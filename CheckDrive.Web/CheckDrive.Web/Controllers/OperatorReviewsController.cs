@@ -119,100 +119,58 @@ namespace CheckDrive.Web.Controllers
 
             return View(operatorReview);
         }
-        public async Task<IActionResult> Create(int? driverId, string? driverName, int? oilmarksId, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel)
+        public async Task<IActionResult> Create(int? driverId, string? driverName, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel)
         {
-            var drivers = await GETDrivers();
-            var cars = await GETCars();
             var oilMarks = await _oilMarkDataStore.GetOilMarksAsync();
-
-            var operatorr = new OperatorDto();
-
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
 
+            var operatorr = new OperatorDto();
             if (int.TryParse(accountIdStr, out int accountId))
             {
                 var operatorResponse = await _operatorDataStore.GetOperators(accountId);
                 operatorr = operatorResponse.Data.First();
             }
-            var operators = new List<SelectListItem>
-            {
-                new SelectListItem { Value = operatorr.Id.ToString(), Text = $"{operatorr.FirstName} {operatorr.LastName}" }
-            };
+            ViewBag.OperatorId = operatorr.Id; // Pass the operator ID directly
 
-            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), null, 10, null);
-
-            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), "Completed", 10);
-
-            var healthyDrivers = mechanicHandovers.Data
-                                  .Select(dr => dr.DriverId)
-                                  .ToList();
-
-            var givedDrivers = response.Data
-                .Select(ma => ma.DriverId)
-                .ToList();
-
-            var filteredDrivers = drivers
-                .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !givedDrivers.Contains(int.Parse(d.Value)))
-                .ToList();
-
+            ViewBag.SelectedCar = $"{carModel} Sig`imi: {fuelTankCapacity?.ToString() ?? "N/A"} litr, Qoldig`i: {remainingFuel?.ToString() ?? "N/A"} litr";
+            ViewBag.SelectedDriverName = driverName;
+            ViewBag.SelectedDriverId = driverId;
+            ViewBag.SelectedCarId = carId;
             ViewBag.OilMarks = oilMarks.Data.Select(o => new SelectListItem
             {
                 Value = o.Id.ToString(),
                 Text = o.OilMark
             }).ToList();
 
-            ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text");
-            ViewBag.Operators = operators;
+            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, null, null, 4, null);
 
-            if (!driverId.HasValue && !carId.HasValue && filteredDrivers.Any() && oilmarksId.HasValue)
+            ViewBag.Drivers = response.Data
+                        .Select(d => new SelectListItem
+                        {
+                            Value = d.DriverId.ToString(),
+                            Text = d.DriverName,
+                        })
+                        .ToList();
+
+            // Check if there are any drivers available
+            if (ViewBag.Drivers == null || !((List<SelectListItem>)ViewBag.Drivers).Any())
             {
-                var firstDriverId = int.Parse(filteredDrivers.First().Value);
-                var mechanicHandover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == firstDriverId && m.Date.Date == DateTime.Today.ToTashkentTime());
-
-                if (mechanicHandover != null)
-                {
-                    carId = mechanicHandover.CarId;
-                    var car = await _carDataStore.GetCarAsync(mechanicHandover.CarId);
-                    carModel = car?.Model;
-                    fuelTankCapacity = car?.FuelTankCapacity;
-                    remainingFuel = car?.RemainingFuel;
-
-                }
-
-                driverId = firstDriverId;
+                ViewBag.NoDriversAvailable = true;
+            }
+            else
+            {
+                ViewBag.NoDriversAvailable = false;
             }
 
-            ViewBag.Cars = new SelectList(cars, "Value", "Text", carId);
-
-
-            var model = new OperatorReviewForCreateDto();
-
-            if (driverId.HasValue)
-            {
-                model.DriverId = driverId.Value;
-                ViewBag.SelectedDriverName = driverName;
-                ViewBag.DriverId = driverId.Value;
-
-                if (carId.HasValue)
-                {
-                    model.CarId = carId.Value;
-                    ViewBag.SelectedCar = $"{carModel} Sig`imi: {fuelTankCapacity?.ToString() ?? "N/A"} litr, Qoldig`i: {remainingFuel?.ToString() ?? "N/A"} litr";
-                }
-            }
-
-            if (fuelTankCapacity.HasValue && remainingFuel.HasValue)
-            {
-                ViewBag.FuelTankCapacity = fuelTankCapacity.Value;
-                ViewBag.RemainingFuel = remainingFuel.Value;
-            }
-
-            return View(model);
+            return View();
         }
+
+
         public async Task<IActionResult> GetCarByDriverId(int driverId)
         {
-            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), "Completed", 10);
-            var handover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == driverId);
+            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, null, null, 4, null);
+            var handover = response.Data.FirstOrDefault(m => m.DriverId == driverId);
 
             if (handover != null)
             {
@@ -265,6 +223,7 @@ namespace CheckDrive.Web.Controllers
 
             return View(operatorReview);
         }
+
         public async Task<IActionResult> Edit(int id)
         {
             var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);
