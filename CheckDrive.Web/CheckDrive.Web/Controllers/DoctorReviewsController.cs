@@ -57,7 +57,7 @@ namespace CheckDrive.Web.Controllers
             TempData.Keep("AccountId");
             int accountID = int.Parse(accountIdStr);
 
-            var response = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, searchString, date, null, null, accountID);
+            var response = await _doctorReviewDataStore.GetDoctorReviewsAsync(pageNumber, searchString, date, null, 1, accountID);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -104,18 +104,19 @@ namespace CheckDrive.Web.Controllers
                 var doctor = doctorResponse.Data.FirstOrDefault();
                 if (doctor != null)
                 {
-                    var doctors = new List<SelectListItem>
-                    {
-                        new SelectListItem { Value = doctor.Id.ToString(), Text = $"{doctor.FirstName} {doctor.LastName}" }
-                    };
+                    var driverResponse = await _driverDataStore.GetDriversAsync(1, false);
+                    var drivers = driverResponse.Data
+                        .Select(d => new SelectListItem
+                        {   
+                            Value = d.Id.ToString(),
+                            Text = $"{d.FirstName} {d.LastName}"
+                        })
+                        .ToList();
 
-                    var driversNotUsedToday = await GetDriversNotUsedToday();
-
-                    ViewBag.Doctors = new SelectList(doctors, "Value", "Text");
                     ViewBag.SelectedDriverName = driverName;
                     ViewBag.SelectedDriverId = driverId;
                     ViewBag.DoctorId = doctor.Id;
-                    ViewBag.Drivers = new SelectList(driversNotUsedToday, "Value", "Text");
+                    ViewBag.Drivers = new SelectList(drivers, "Value", "Text");
 
                     return View(new DoctorReviewForCreateDto { DriverId = driverId, Date = DateTime.Now.ToTashkentTime(), DoctorId = doctor.Id });
                 }
@@ -164,7 +165,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var review = await _doctorReviewDataStore.GetDoctorReviewAsync(id);
-            var drivers = await _driverDataStore.GetDriversAsync(1);
+            var drivers = await _driverDataStore.GetDriversAsync(1, null);
             var driverss = drivers.Data.ToList();
             if (review == null)
             {
@@ -233,26 +234,9 @@ namespace CheckDrive.Web.Controllers
             var review = await _doctorReviewDataStore.GetDoctorReviewAsync(id);
             return review != null;
         }
-
-        private async Task<List<SelectListItem>> GetDriversNotUsedToday()
-        {
-            var doctorReviews = await _doctorReviewDataStore.GetDoctorReviewsAsync(null, null, DateTime.UtcNow.Date, null, 10,null);
-            var today = DateTime.Today.ToTashkentTime();
-            var usedDriverIds = doctorReviews.Data
-                .Where(dr => dr.Date.Date == today)
-                .Select(dr => dr.DriverId)
-                .ToList();
-
-            var drivers = await GETDrivers();
-            var driversNotUsedToday = drivers
-                .Where(d => !usedDriverIds.Contains(int.Parse(d.Value)))
-                .ToList();
-
-            return driversNotUsedToday;
-        }
         private async Task<List<SelectListItem>> GETDrivers()
         {
-            var driverResponse = await _driverDataStore.GetDriversAsync(1);
+            var driverResponse = await _driverDataStore.GetDriversAsync(1, null);
             var drivers = driverResponse.Data
                 .Select(d => new SelectListItem
                 {
