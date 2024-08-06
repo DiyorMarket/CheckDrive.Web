@@ -23,14 +23,12 @@
             </span>
             Chiqish
         </button>
-        
     </div>
 </div>
 
 <form method="get" action="@Url.Action("PersonalIndex")">
     <div class="container mt-5">
         <div class="row justify-content-between align-items-center mb-4">
-            <!-- Search -->
             <div class="col-md-4">
                 <div class="input-group">
                     <input type="text" class="form-control rounded-left" placeholder="Haydovchini kiriting ..." name="searchString" value="@ViewBag.SearchString">
@@ -42,7 +40,18 @@
                 </div>
             </div>
             <div class="col-md-4 text-end">
-                <a class="btn btn-info" onclick="window.location.href='@Url.Action("HistoryIndexForPersonalPage", "MechanicHandovers")'">Tarixni ko`rish</a>
+                <a class="btn btn-primary" onclick="window.location.href='@Url.Action("HistoryIndexForPersonalPage", "MechanicHandovers")'">Tarixni ko`rish</a>
+                <div class="dropdown btn btn">
+                    <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-download"></i> Yuklab olish
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div class="p-2">
+                            <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
+                        </div>
+                        <a class="dropdown-item" href="#" id="downloadButton">Yuklash</a>
+                    </div>
+                </div>
                 <a class="btn btn-success shadow" href="@Url.Action("Create", "MechanicHandovers")">
                     <i class="fa fa-plus"></i> Yaratish
                 </a>
@@ -239,3 +248,35 @@
     }
 
 </style>
+
+<script>
+    let selectedYear = new Date().getFullYear(); // Устанавливаем текущий год по умолчанию
+    let selectedMonth = new Date().getMonth() + 1; // Устанавливаем текущий месяц по умолчанию
+
+    function valueChange(args) {
+        var selectedDate = args.value;
+        selectedYear = selectedDate.getFullYear();
+        selectedMonth = selectedDate.getMonth() + 1; // Месяцы начинаются с нуля
+
+        // Обновляем метку с выбранной датой
+        document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
+    }
+
+    document.getElementById('downloadButton').addEventListener('click', function (e) {
+        e.preventDefault(); // Предотвращаем стандартное действие ссылки
+
+        fetch(`/MechanicHandovers/Download?year=${selectedYear}&month=${selectedMonth}`, {
+            method: 'GET'
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Обработка успешного ответа
+                    console.log('Скачивание инициировано для года ' + data.year + ' и месяца ' + data.month);
+                } else {
+                    // Обработка ошибки
+                    console.error('Ошибка при скачивании');
+                }
+            });
+    });
+</script>
