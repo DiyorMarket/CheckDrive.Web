@@ -3,8 +3,9 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
-    bool noDriversAvailable = ViewBag.NoDriversAvailable;
+    bool noDriversAvailable = ViewBag.NoDriversAvailable ?? false;
     int? selectedDriverId = Model?.DriverId;
+    int? selectedCarId = Model?.CarId;
 }
 
 <div class="row mt-custom">
@@ -24,6 +25,8 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" name="fuelTankCapacity" value="@ViewBag.FuelTankCapacity" />
                 <input type="hidden" name="remainingFuel" value="@ViewBag.RemainingFuel" />
+                <input type="hidden" asp-for="DriverId" value="@ViewBag.SelectedDriverId" />
+                <input type="hidden" asp-for="CarId" value="@ViewBag.SelectedCarId" />
                 <div class="form-group w-75">
                     <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
                     <select asp-for="DriverId" class="form-control border border-dark" asp-items="@ViewBag.Drivers" id="driverDropdown">
@@ -78,6 +81,7 @@
             var driverDropdown = document.getElementById('driverDropdown');
             var carDropdown = document.getElementById('carDropdown');
             var selectedDriverId = @Html.Raw(Json.Serialize(selectedDriverId));
+            var selectedCarId = @Html.Raw(Json.Serialize(selectedCarId));
             var urlParams = new URLSearchParams(window.location.search);
             var driverIdParam = urlParams.has('driverId');
 
@@ -86,7 +90,7 @@
                 carDropdown.disabled = true;
             } else if (selectedDriverId !== null) {
                 driverDropdown.value = selectedDriverId;
-                carDropdown.disabled = true;
+                carDropdown.value = selectedCarId;
             }
 
             driverDropdown.addEventListener('change', function () {
