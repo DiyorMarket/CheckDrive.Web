@@ -98,22 +98,18 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> CreateByButton()
         {
-            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1, null);
-            var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today.ToTashkentTime(), null, 10);
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, null, null, 6);
             var carData = await _carDataStore.GetCarsAsync(1, null);
 
             var carMileageDictionary = carData.Data.ToDictionary(car => car.Id, car => car.Mileage);
             var carRemainingFuelDictionary = carData.Data.ToDictionary(car => car.Id, car => car.RemainingFuel);
 
-            var mechanicDriverIds = mechanicAcceptanceResponse.Data.Select(ma => ma.DriverId).ToHashSet();
-            var filteredOperatorResponse = operatorResponse.Data
-                .Where(or => !mechanicDriverIds.Contains(or.DriverId))
+            var filteredOperatorResponse = response.Data
                 .Select(or => new
                 {
                     or.DriverId,
                     or.CarId,
-                    or.CarModel,
-                    or.CarNumber,
+                    or.CarName,
                     or.DriverName,
                     CarMileage = carMileageDictionary.ContainsKey(or.CarId) ? carMileageDictionary[or.CarId] : 0,
                     RemainingFuel = carRemainingFuelDictionary.ContainsKey(or.CarId) ? carMileageDictionary[or.CarId] : 0

@@ -33,7 +33,7 @@
                             <option value="">Haydovchini tanlang</option>
                             @foreach (var driver in ViewBag.FilteredOperatorResponse)
                             {
-                                <option value="@driver.DriverId" data-carid="@driver.CarId" data-carname="@driver.CarModel (@driver.CarNumber)" data-mileage="@driver.CarMileage">@driver.DriverName</option>
+                                <option value="@driver.DriverId" data-carid="@driver.CarId" data-carname="@driver.CarName" data-mileage="@driver.CarMileage">@driver.DriverName</option>
                             }
                         }
                     </select>

@@ -153,7 +153,6 @@ namespace CheckDrive.Web.Controllers
                         })
                         .ToList();
 
-            // Check if there are any drivers available
             if (ViewBag.Drivers == null || !((List<SelectListItem>)ViewBag.Drivers).Any())
             {
                 ViewBag.NoDriversAvailable = true;
@@ -165,7 +164,6 @@ namespace CheckDrive.Web.Controllers
 
             return View();
         }
-
 
         public async Task<IActionResult> GetCarByDriverId(int driverId)
         {
