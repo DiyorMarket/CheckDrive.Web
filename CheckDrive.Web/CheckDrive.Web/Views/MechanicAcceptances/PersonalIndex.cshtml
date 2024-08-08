@@ -57,12 +57,7 @@
                 <thead>
                     <tr>
                         <th scope="col" style="width: 10%">Haydovchi F.I</th>
-                        <th scope="col" style="width: 10%">Mexanik F.I</th>
                         <th scope="col" style="width: 15%">Mashina</th>
-                        <th scope="col" style="width: 15%">Soz/Nosoz</th>
-                        <th scope="col" style="width: 10%">Qabul qilish masofasi</th>
-                        <th scope="col" style="width: 10%">Yoqilg`i qoldig`i</th>
-                        <th scope="col" style="width: 15%">Izoh</th>
                         <th scope="col" style="width: 10%">Sana</th>
                         <th scope="col" style="width: 10%">Holati</th>
 
@@ -84,24 +79,7 @@
                                         <a href="/MechanicAcceptances/CreateByLink?driverId=@item.DriverId&carId=@item.CarId&carName=@item.CarName&driverName=@item.DriverName&remainingFuel=@item.RemainingFuel">@item.DriverName</a>
                                     }
                                 </td>
-                                <td>@item.MechanicName</td>
                                 <td>@item.CarName</td>
-                                <td>
-                                    @if (item.Date != null && item.Date.Value.Date == DateTime.Today)
-                                    {
-                                        @if ((bool)item.IsAccepted)
-                                        {
-                                            <span class="badge bg-success ">Qabul qilindi</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-danger ">Rad etildi</span>
-                                        }
-                                    }
-                                </td>
-                                <td>@item.Distance</td>
-                                <td>@item.RemainingFuel</td>
-                                <td>@item.Comments</td>
                                 <td>@item.Date?.ToString("dd/MM/yyyy")</td>
                                 <td class="text-center">
                                     @if (item.Status == CheckDrive.ApiContracts.StatusForDto.Pending)

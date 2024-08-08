@@ -56,9 +56,6 @@
                         <thead>
                             <tr>
                                 <th class="text-center vertical-align-middle">Haydovchi F.I.</th>
-                                <th class="text-center vertical-align-middle">Shifokor F.I.</th>
-                                <th class="text-center vertical-align-middle">Sog`lig`i</th>
-                                <th class="text-center vertical-align-middle">Izoh</th>
                                 <th class="text-center vertical-align-middle">Sana</th>
                             </tr>
                         </thead>
@@ -78,22 +75,7 @@
                                                 <a href="/DoctorReviews/Create?driverId=@review.DriverId&driverName=@review.DriverName">@review.DriverName</a>
                                             }
                                         </td>
-                                        <td class="text-center vertical-align-middle">@review.DoctorName</td>
-                                        <td class="text-center vertical-align-middle">
-                                            @if (!string.IsNullOrEmpty(review.DoctorName))
-                                            {
-                                                @if (review.IsHealthy == true)
-                                                {
-                                                    <span class="badge bg-success shadow">Sog`lom</span>
-                                                }
-                                                else if (review.IsHealthy == false)
-                                                {
-                                                    <span class="badge bg-danger shadow">Kasal</span>
-                                                }
-                                            }
-                                        </td>
-                                        <td class="text-center vertical-align-middle">@review.Comments</td>
-                                        <td class="text-center vertical-align-middle">@review.Date</td>
+                                        <td class="text-center vertical-align-middle">@review.Date.ToString("dd.MM.yyyy")</td>
                                     </tr>
                                 }
                             }
@@ -164,18 +146,6 @@
         border-radius: 5px;
     }
 
-    .bg-success {
-        background-color: #28a745;
-    }
-
-    .bg-danger {
-        background-color: #dc3545;
-    }
-
-    .bg-empty {
-        background-color: gray;
-    }
-
     .container {
         margin-top: 30px;
     }
@@ -234,7 +204,7 @@
         color: white;
     }
 
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
 </style>

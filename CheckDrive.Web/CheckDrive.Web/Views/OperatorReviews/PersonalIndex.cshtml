@@ -59,14 +59,10 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Haydovchi F.I.SH</th>
-                                <th class="text-center">Operator F.I.SH</th>
                                 <th class="text-center">Moshina markasi</th>
                                 <th class="text-center">Moshina raqami</th>
                                 <th class="text-center">Yoqilg`i sig`imi</th>
                                 <th class="text-center">Yoqilg`i qoldig`i</th>
-                                <th class="text-center">Quyilgan yoqilg`i miqdori</th>
-                                <th class="text-center">Yoqilg`i Markasi</th>
-                                <th class="text-center">Yoqilg`i berildimi?</th>
                                 <th class="text-center comments-column">Izoh</th>
                                 <th class="text-center">Holati</th>
                             </tr>
@@ -98,23 +94,6 @@
                                         <td class="text-center">@review.CarNumber</td>
                                         <td class="text-center">@review.CarOilCapacity</td>
                                         <td class="text-center">@review.CarOilRemainig</td>
-                                        <td class="text-center">@review.OilAmount</td>
-                                        <td class="text-center">@review.OilMarks</td>
-                                        <td class="text-center">
-                                            @if (review.IsGiven == true)
-                                            {
-                                                <span class="badge bg-success shadow">Berildi</span>
-                                            }
-                                            else if (review.IsGiven == false)
-                                            {
-                                                <span class="badge bg-danger shadow">Berilmadi</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge bg-empty shadow"></span>
-                                            }
-                                        </td>
-                                        <td class="text-center comments-column">@review.Comments</td>
                                         <td class="text-center">
                                             @if (review.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
                                             {
