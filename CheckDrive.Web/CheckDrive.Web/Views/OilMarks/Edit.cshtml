@@ -1,0 +1,30 @@
+﻿@model CheckDrive.ApiContracts.OilMark.OilMarkDto
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h4>Yoqilg'i ma`lumotini o`zgartirish</h4>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="OilMark" class="control-label"></label>
+                <input asp-for="OilMark" class="form-control" />
+                <span asp-validation-for="OilMark" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <a asp-action="Details" asp-route-id="@Model?.Id" class="btn btn-outline-info">
+                    <i class="fa-solid fa-arrow-left-long"></i>
+                    Orqaga
+                </a>
+                <button class="btn btn-outline-success">
+                    <i class="fa fa-pencil"></i> Saqlash
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

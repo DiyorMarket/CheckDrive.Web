@@ -5,22 +5,24 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Yoqilg'i turlari</h1>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Create New</a>
-</p>
+<div class="d-flex flex-row-reverse">
+    <a class="btn btn-success" asp-action="Create">
+        <i class="fa fa-plus"></i> Yaratish
+    </a>
+</div>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.First().Id) <!-- Ensure to access the model item for DisplayNameFor -->
+                @Html.DisplayNameFor(model => model.First().Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().OilMark) <!-- Ensure to access the model item for DisplayNameFor -->
+                Yoqilg'i nomi
             </th>
-            <th>Actions</th>
+            <th>Amallar</th>
         </tr>
     </thead>
     <tbody>
@@ -35,14 +37,11 @@
                 </td>
                 <td>
                     <div class="btn-group" role="group">
-                        <a class="btn btn-outline-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id">
-                            Edit
-                        </a>
-                        <a class="btn btn-outline-info btn-sm" asp-action="Details" asp-route-id="@item.Id">
-                            Details
+                        <a class="btn btn-outline-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id" style="margin-right: 5px;">
+                            Tahrirlash
                         </a>
                         <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id">
-                            Delete
+                            O'chirish
                         </a>
                     </div>
                 </td>

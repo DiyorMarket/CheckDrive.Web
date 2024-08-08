@@ -12,5 +12,6 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
         Task<MechanicHandoverDto> CreateMechanicHandoverAsync(MechanicHandoverForCreateDto mechanicHandoverForCreateDto);
         Task<MechanicHandoverDto> UpdateMechanicHandoverAsync(int id, MechanicHandoverForUpdateDto mechanicHandoverForUpdateDto);
         Task DeleteMechanicHandoverAsync(int id);
+        Task<Stream> GetExportFile(int year, int month);
     }
 }

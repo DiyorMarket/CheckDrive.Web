@@ -18,10 +18,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var oilMark = await _oilMarkDataStore.GetOilMarkByIdAsync(id);
-            if (oilMark == null)
-            {
-                return NotFound();
-            }
+
             return View(oilMark);
         }
 
@@ -32,45 +29,39 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OilMark")] OilMarkForCreateDto oilMark)
+        public async Task<IActionResult> Create([Bind("OilMark")] OilMarkForCreateDto _oilmark)
         {
             if (ModelState.IsValid)
             {
-                await _oilMarkDataStore.CreateOilMarkAsync(oilMark);
+                await _oilMarkDataStore.CreateOilMarkAsync(_oilmark);
                 return RedirectToAction(nameof(Index));
             }
-            return View(oilMark);
+            return View(_oilmark);
         }
 
         public async Task<IActionResult> Edit(int id)
         {
             var oilMark = await _oilMarkDataStore.GetOilMarkByIdAsync(id);
-            if (oilMark == null)
-            {
-                return NotFound();
-            }
+
             return View(oilMark);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OilMark")] OilMarkForUpdateDto oilMark)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,OilMark")] OilMarkForUpdateDto _oilMark)
         {
             if (ModelState.IsValid)
             {
-                await _oilMarkDataStore.UpdateOilMarkAsync(id, oilMark);
+                await _oilMarkDataStore.UpdateOilMarkAsync(id, _oilMark);
                 return RedirectToAction(nameof(Index));
             }
-            return View(oilMark);
+            return View(_oilMark);
         }
 
         public async Task<IActionResult> Delete(int id)
         {
             var oilMark = await _oilMarkDataStore.GetOilMarkByIdAsync(id);
-            if (oilMark == null)
-            {
-                return NotFound();
-            }
+  
             return View(oilMark);
         }
 
