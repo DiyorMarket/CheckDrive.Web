@@ -4,20 +4,24 @@
 @{
     ViewData["Title"] = "HistoryIndexForPersonalPage";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    string activeTab = "HistoryIndexForPersonalPage";
 }
-<div class="container-fluid py-2 px-4 d-flex justify-content-end">
-    <div class="d-flex align-items-center">
-        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("PersonalIndex", "OperatorReviews")'">
-            <span class="logout-icon">
-                <i class="fas fa-sign-out-alt"></i>
-            </span>
-            Chiqish
-        </button>
-    </div>
-</div>
 
 <form asp-controller="OperatorReviews" asp-action="HistoryIndexForPersonalPage">
     <div class="container mt-5">
+        <div class="mb-4">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "PersonalIndex" ? "active" : "")" href="@Url.Action("PersonalIndex", "OperatorReviews")">Asosiy sahifa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "ReportIndexForPersonalPage" ? "active" : "")" href="@Url.Action("ReportIndexForPersonalPage", "OperatorReviews")">Hisobot</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "OperatorReviews")">Tarixni ko'rish</a>
+                </li>
+            </ul>
+        </div>
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
             <div class="col-md-4">
@@ -177,6 +181,15 @@
 </form>
 
 <style>
+    .nav-tabs .nav-link.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid #dee2e6;
+    }
+
     .badge {
         font-size: 0.8rem;
         padding: 5px 10px;
