@@ -66,15 +66,9 @@
             <table class="table table-bordered table-striped table-hover paper-shadow">
                 <thead>
                     <tr>
-                        <th scope="col" style="width: 13%">Haydovchi F.I</th>
-                        <th scope="col" style="width: 13%">Moshina</th>
-                        <th scope="col" style="width: 13%">Mexanik F.I</th>
-                        <th scope="col" style="width: 10%">Topshirish</th>
-                        <th scope="col" style="width: 20%">Boshlang'ich masofa</th>
-                        <th scope="col" style="width: 20%">Yoqilg`i qoldig`i</th>
-                        <th scope="col" style="width: 38%">Izoh</th>
-                        <th scope="col" style="width: 15%">Sana</th>
-                        <th scope="col" style="width: 15%">Holati</th>
+                        <th scope="col">Haydovchi F.I</th>
+                        <th scope="col">Sana</th>
+                        <th scope="col">Holati</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,25 +87,7 @@
                                         <a href="/MechanicHandovers/Create?driverId=@item.DriverId&driverName=@item.DriverName">@item.DriverName</a>
                                     }
                                 </td>
-                                <td>@item.CarName</td>
-                                <td>@item.MechanicName</td>
-                                <td>
-                                    @if (!string.IsNullOrEmpty(item.MechanicName))
-                                    {
-                                        @if ((bool)item.IsHanded)
-                                        {
-                                            <span class="badge bg-success ">Topshirildi</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-danger ">Topshirilmadi</span>
-                                        }
-                                    }
-                                </td>
-                                <td>@item.Distance</td>
-                                <td>@item.RemainingFuel</td>
-                                <td>@item.Comments</td>
-                                <td>@item.Date</td>
+                                <td>@item.Date.ToString("dd.MM.yyyy")</td>
                                 <td class="text-center">
                                     @if (item.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
                                     {
