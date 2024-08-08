@@ -4,20 +4,21 @@
 @{
     ViewData["Title"] = "HistoryIndexForPersonalPage";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    string activeTab = "HistoryIndexForPersonalPage";
 }
-<div class="container-fluid py-2 px-4 d-flex justify-content-end">
-    <div class="d-flex align-items-center">
-        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("PersonalIndex", "DoctorReviews")'">
-            <span class="logout-icon">
-                <i class="fas fa-sign-out-alt"></i>
-            </span>
-            Orqaga
-        </button>
-    </div>
-</div>
 
 <form asp-controller="DoctorReviews" asp-action="HistoryIndexForPersonalPage">
-    <div class="container mt-5">
+    <div class="container mt-5 ">
+        <div class="mb-4">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "PersonalIndex" ? "active" : "")" href="@Url.Action("PersonalIndex", "DoctorReviews")">Asosiy sahifa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "DoctorReviews")">Tarixni ko'rish</a>
+                </li>
+            </ul>
+        </div>
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
             <div class="col-md-4">
@@ -122,3 +123,13 @@
         </div>
     </div>
 </form>
+<style>
+    .nav-tabs .nav-link.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid #dee2e6;
+    }
+</style>

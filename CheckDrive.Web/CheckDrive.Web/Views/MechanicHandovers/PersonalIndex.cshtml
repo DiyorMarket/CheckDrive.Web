@@ -4,31 +4,35 @@
 @{
     ViewData["Title"] = "Mechanic Handovers (Personal)";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    string activeTab = "MechanicHandovers";
 }
 
 <div class="container-fluid py-2 px-4 d-flex justify-content-end">
     <div class="d-flex align-items-center gap-2">
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:white; border-color:black; width:55px">
-                <i class="fa-solid fa-user" style="background-color: white; color: black;"></i>
-                <i class="bi bi-caret-down-fill" style="background-color:white; color:black"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-sm" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" style="color: green" href="@Url.Action("PersonalIndex", "MechanicAcceptances")">Mexanik(Qabul qiluvchi)</a></li>
-            </ul>
-        </div>
         <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
             <span class="logout-icon">
                 <i class="fas fa-sign-out-alt"></i>
             </span>
             Chiqish
         </button>
-        
     </div>
 </div>
 
 <form method="get" action="@Url.Action("PersonalIndex")">
     <div class="container mt-5">
+        <div class="mb-4">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "MechanicHandovers" ? "active" : "")" href="@Url.Action("PersonalIndex", "MechanicHandovers")">Mexanik(Topshirish)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "MechanicAcceptances" ? "active" : "")" href="@Url.Action("PersonalIndex", "MechanicAcceptances")">Mexanik(Qabul qilish)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "MechanicHandovers")">Tarixni ko'rish</a>
+                </li>
+            </ul>
+        </div>
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
             <div class="col-md-4">
@@ -42,7 +46,6 @@
                 </div>
             </div>
             <div class="col-md-4 text-end">
-                <a class="btn btn-info" onclick="window.location.href='@Url.Action("HistoryIndexForPersonalPage", "MechanicHandovers")'">Tarixni ko`rish</a>
                 <a class="btn btn-success shadow" href="@Url.Action("Create", "MechanicHandovers")">
                     <i class="fa fa-plus"></i> Yaratish
                 </a>
@@ -177,6 +180,15 @@
 </form>
 
 <style>
+    .nav-tabs .nav-link.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid #dee2e6;
+    }
+
     .badge {
         font-size: 0.8rem;
         padding: 5px 10px;

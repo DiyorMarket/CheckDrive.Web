@@ -1,10 +1,21 @@
 ﻿@model IEnumerable<CheckDrive.ApiContracts.DispatcherReview.DispatcherReviewDto>
 @{
-    ViewData["Title"] = "PersonalIndex";
+    ViewData["Title"] = "HistoryIndexForPersonalPage";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    string activeTab = "HistoryIndexForPersonalPage";
 }
 
 <div class="container mt-5" style="max-width: 100%;">
+    <div class="mb-4">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link @(activeTab == "PersonalIndex" ? "active" : "")" href="@Url.Action("PersonalIndex", "DispatcherReviews")">Asosiy sahifa</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "DispatcherReviews")">Tarixni ko'rish</a>
+            </li>
+        </ul>
+    </div>
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover paper-shadow" style="width: 100%;">
             <thead>
@@ -51,7 +62,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="13" class="text-center">
+                        <td colspan="14" class="text-center">
                             Maʼlumotlar mavjud emas
                         </td>
                     </tr>
@@ -64,12 +75,12 @@
                     @if (ViewBag.HasPreviousPage)
                     {
                         <li class="page-item">
-                            <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = 1 })" aria-label="First">
+                            <a class="page-link" href="@Url.Action("HistoryIndexForPersonalPage", new { pageNumber = 1 })" aria-label="First">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
+                            <a class="page-link" href="@Url.Action("HistoryIndexForPersonalPage", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
                         </li>
                     }
                     @if (ViewBag.HasNextPage)
@@ -78,10 +89,10 @@
                             <span class="page-link">@ViewBag.CurrentPage</span>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
+                            <a class="page-link" href="@Url.Action("HistoryIndexForPersonalPage", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" href="@Url.Action("PersonalIndex", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
+                            <a class="page-link" href="@Url.Action("HistoryIndexForPersonalPage", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
@@ -96,6 +107,15 @@
 </div>
 
 <style>
+    .nav-tabs .nav-link.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid #dee2e6;
+    }
+
     .badge {
         font-size: 0.8rem;
         padding: 5px 10px;
