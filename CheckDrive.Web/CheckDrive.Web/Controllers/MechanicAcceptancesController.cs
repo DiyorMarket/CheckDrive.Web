@@ -315,5 +315,17 @@ namespace CheckDrive.Web.Controllers
             }
             return NotFound();
         }
+        [HttpGet]
+        public async Task<IActionResult> Download(int year, int month)
+        {
+            var result = await _mechanicAcceptanceDataStore.GetExportFile(year, month);
+
+            if (result == null || result.Length == 0)
+            {
+                return NotFound();
+            }
+
+            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Mexanik(Topshiruvchih).xlsx");
+        }
     }
 }

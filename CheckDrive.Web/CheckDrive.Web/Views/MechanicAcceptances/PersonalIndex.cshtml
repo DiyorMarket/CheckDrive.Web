@@ -45,7 +45,16 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 text-end">
+            <div class="col-md-8 d-flex justify-content-end align-items-center">
+                <div class="dropdown d-inline-block me-2">
+                    <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-download"></i> Yuklab olish
+                    </button>
+                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton" data-bs-auto-close="false">
+                        <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
+                        <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
+                    </div>
+                </div>
                 <a class="btn btn-success shadow" href="@Url.Action("CreateByButton", "MechanicAcceptances")">
                     <i class="fa fa-plus"></i> Yaratish
                 </a>
@@ -229,3 +238,31 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 </style>
+<script>
+    let selectedYear = new Date().getFullYear(); // Set the current year by default
+    let selectedMonth = new Date().getMonth() + 1; // Set the current month by default
+
+    function valueChange(args) {
+        var selectedDate = args.value;
+        selectedYear = selectedDate.getFullYear();
+        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
+
+        // Update the label with the selected date
+        document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
+    }
+
+    document.getElementById('downloadButton').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent the default action of the link
+
+        const url = `/MechanicAcceptences/Download?year=${selectedYear}&month=${selectedMonth}`;
+
+        // Trigger file download by setting the href and using the link's click event
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', ''); // Add download attribute to force download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up
+    });
+
+</script>

@@ -18,7 +18,7 @@
 </div>
 
 <div class="container mt-5" style="max-width: 100%;">
-    <div class="mb-4">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
                 <a class="nav-link @(activeTab == "PersonalIndex" ? "active" : "")" href="@Url.Action("PersonalIndex", "DispatcherReviews")">Asosiy sahifa</a>
@@ -27,6 +27,17 @@
                 <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "DispatcherReviews")">Tarixni ko'rish</a>
             </li>
         </ul>
+
+        <!-- Dropdown Menu for File Download -->
+        <div class="dropdown d-inline-block me-2">
+            <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-download"></i> Yuklab olish
+            </button>
+            <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton" data-bs-auto-close="false">
+                <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
+                <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
+            </div>
+        </div>
     </div>
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover paper-shadow" style="width: 100%;">
@@ -207,3 +218,32 @@
         vertical-align: middle !important;
     }
 </style>
+
+<script>
+    let selectedYear = new Date().getFullYear(); // Set the current year by default
+    let selectedMonth = new Date().getMonth() + 1; // Set the current month by default
+
+    function valueChange(args) {
+        var selectedDate = args.value;
+        selectedYear = selectedDate.getFullYear();
+        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
+
+        // Update the label with the selected date
+        document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
+    }
+
+    document.getElementById('downloadButton').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent the default action of the link
+
+        const url = `/DoctorReviews/Download?year=${selectedYear}&month=${selectedMonth}`;
+
+        // Trigger file download by setting the href and using the link's click event
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', ''); // Add download attribute to force download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up
+    });
+
+</script>

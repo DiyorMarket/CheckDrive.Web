@@ -44,16 +44,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 text-end">
-                <div class="dropdown btn btn">
+            <div class="col-md-8 d-flex justify-content-end align-items-center">
+                <div class="dropdown d-inline-block me-2">
                     <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-download"></i> Yuklab olish
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <div class="p-2">
-                            <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
-                        </div>
-                        <a class="dropdown-item" href="#" id="downloadButton">Yuklash</a>
+                    <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton" data-bs-auto-close="false">
+                        <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
+                        <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
                     </div>
                 </div>
                 <a class="btn btn-success shadow" href="@Url.Action("Create", "MechanicHandovers")">
@@ -61,7 +59,6 @@
                 </a>
             </div>
         </div>
-
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover paper-shadow">
                 <thead>
@@ -239,33 +236,30 @@
 </style>
 
 <script>
-    let selectedYear = new Date().getFullYear(); // Устанавливаем текущий год по умолчанию
-    let selectedMonth = new Date().getMonth() + 1; // Устанавливаем текущий месяц по умолчанию
+    let selectedYear = new Date().getFullYear(); // Set the current year by default
+    let selectedMonth = new Date().getMonth() + 1; // Set the current month by default
 
     function valueChange(args) {
         var selectedDate = args.value;
         selectedYear = selectedDate.getFullYear();
-        selectedMonth = selectedDate.getMonth() + 1; // Месяцы начинаются с нуля
+        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
 
-        // Обновляем метку с выбранной датой
+        // Update the label with the selected date
         document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
     }
 
     document.getElementById('downloadButton').addEventListener('click', function (e) {
-        e.preventDefault(); // Предотвращаем стандартное действие ссылки
+        e.preventDefault(); // Prevent the default action of the link
 
-        fetch(`/MechanicHandovers/Download?year=${selectedYear}&month=${selectedMonth}`, {
-            method: 'GET'
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Обработка успешного ответа
-                    console.log('Скачивание инициировано для года ' + data.year + ' и месяца ' + data.month);
-                } else {
-                    // Обработка ошибки
-                    console.error('Ошибка при скачивании');
-                }
-            });
+        const url = `/MechanicHandovers/Download?year=${selectedYear}&month=${selectedMonth}`;
+
+        // Trigger file download by setting the href and using the link's click event
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', ''); // Add download attribute to force download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up
     });
+
 </script>
