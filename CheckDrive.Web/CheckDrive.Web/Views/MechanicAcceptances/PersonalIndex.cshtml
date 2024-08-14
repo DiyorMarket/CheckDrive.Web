@@ -45,7 +45,16 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 text-end">
+            <div class="col-md-8 d-flex justify-content-end align-items-center">
+                <div class="dropdown d-inline-block me-2">
+                    <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-download"></i> Yuklab olish
+                    </button>
+                    <div class="dropdown-menu p-3" id="dropdownMenu" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">
+                        <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
+                        <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
+                    </div>
+                </div>
                 <a class="btn btn-success shadow" href="@Url.Action("CreateByButton", "MechanicAcceptances")">
                     <i class="fa fa-plus"></i> Yaratish
                 </a>
@@ -229,3 +238,44 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 </style>
+
+<script>
+    // Default selected year and month
+    let selectedYear = new Date().getFullYear(); // Current year
+    let selectedMonth = new Date().getMonth() + 1; // Current month (months are zero-based)
+
+    // Function to handle the change event in the calendar
+    function valueChange(args) {
+        var selectedDate = args.value;
+        selectedYear = selectedDate.getFullYear();
+        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
+
+        // Optionally, update a label to display the selected date (if you have one)
+        document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
+    }
+
+    // Prevent the dropdown from closing when clicking inside
+    document.getElementById('dropdownMenu').addEventListener('click', function (event) {
+        event.stopPropagation(); // Stops the dropdown from closing when interacting with its contents
+    });
+
+    // Handle the download button click
+    document.getElementById('downloadButton').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent the default action of the link
+
+        // Construct the download URL using the selected year and month
+        const url = `/MechanicAcceptances/Download?year=${selectedYear}&month=${selectedMonth}`;
+
+        // Create a temporary link to trigger the download
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', ''); // Add download attribute to force download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up
+
+        // Manually close the dropdown after downloading
+        const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
+        dropdown.hide();
+    });
+</script>

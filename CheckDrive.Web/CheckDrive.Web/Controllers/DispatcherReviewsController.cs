@@ -293,6 +293,18 @@ namespace CheckDrive.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Download(int year, int month)
+        {
+            var result = await _dispatcherReviewDataStore.GetExportFile(year, month);
+
+            if (result == null || result.Length == 0)
+            {
+                return NotFound();
+            }
+
+            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Dispatcher(Xizmatlari) {month}.{year}.xlsx");
+        }
         private async Task<bool> DispatcherReviewExists(int id)
         {
             var review = await _dispatcherReviewDataStore.GetDispatcherReview(id);

@@ -10,5 +10,6 @@ namespace CheckDrive.Web.Stores.DispatcherReviews
         Task<DispatcherReviewDto> CreateDispatcherReview(DispatcherReviewForCreateDto review);
         Task<DispatcherReviewDto> UpdateDispatcherReview(int id, DispatcherReviewForUpdateDto review);
         Task DeleteDispatcherReview(int id);
+        Task<Stream> GetExportFile(int year, int month);
     }
 }

@@ -356,6 +356,19 @@ namespace CheckDrive.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Download(int year, int month)
+        {
+            var result = await _operatorReviewDataStore.GetExportFile(year, month);
+
+            if (result == null || result.Length == 0)
+            {
+                return NotFound();
+            }
+
+            return File(result, $"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Operator(Xizmatlari) {month}.{year}.xlsx");
+        }
+
         private async Task<List<SelectListItem>> GETDrivers()
         {
             var driverResponse = await _driverDataStore.GetDriversAsync(1, null);

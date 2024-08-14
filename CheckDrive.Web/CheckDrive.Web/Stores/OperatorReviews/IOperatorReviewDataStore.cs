@@ -10,5 +10,6 @@ namespace CheckDrive.Web.Stores.OperatorReviews
         Task<OperatorReviewDto> CreateOperatorReview(OperatorReviewForCreateDto review);
         Task<OperatorReviewDto> UpdateOperatorReview(int id, OperatorReviewForUpdateDto operatorReview);
         Task DeleteOperatorReview(int id);
+        Task<Stream> GetExportFile(int year, int month);
     }
 }

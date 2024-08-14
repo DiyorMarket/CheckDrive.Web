@@ -13,5 +13,6 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
         Task<MechanicAcceptanceDto> CreateMechanicAcceptanceAsync(MechanicAcceptanceForCreateDto acceptanceForCreateDto);
         Task<MechanicAcceptanceDto> UpdateMechanicAcceptanceAsync(int id, MechanicAcceptanceForUpdateDto mechanicAcceptanceForUpdateDto);
         Task DeleteMechanicAcceptanceAsync(int id);
+        Task<Stream> GetExportFile(int year, int month);
     }
 }
