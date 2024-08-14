@@ -122,38 +122,5 @@ namespace CheckDrive.Web.Stores.DoctorReviews
                 throw new Exception($"Could not delete Doctor reviews with id: {id}.");
             }
         }
-        public async Task<Stream> GetExportFile(int year, int month)
-        {
-            try
-            {
-                string url = $"mechanics/acceptence/export?year={year}&month={month}";
-                var response = await _api.GetAsync(url);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception("Failed to retrieve the file.");
-                }
-
-                var stream = await response.Content.ReadAsStreamAsync();
-                if (stream == null || stream.Length == 0)
-                {
-                    Console.WriteLine("The file is empty or could not be retrieved.");
-                    return null; // or throw an exception based on your needs
-                }
-
-                return stream;
-            }
-            catch (InvalidOperationException ex)
-            {
-                // Log or handle the exception
-                Console.WriteLine($"An error occurred: {ex.Message}");
-                return null;
-            }
-            catch (Exception ex)
-            {
-
-                throw new Exception("", ex);
-            }
-        }
     }
 }

@@ -325,7 +325,7 @@ namespace CheckDrive.Web.Controllers
                 return NotFound();
             }
 
-            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Mexanik(Topshiruvchih).xlsx");
+            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Mexanik(Qabul Qilish).xlsx {month}.{year}");
         }
     }
 }

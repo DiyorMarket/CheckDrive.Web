@@ -366,7 +366,7 @@ namespace CheckDrive.Web.Controllers
                 return NotFound();
             }
 
-            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Operator(Xizmatlari).xlsx");
+            return File(result, $"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Operator(Xizmatlari) {month}.{year}.xlsx");
         }
 
         private async Task<List<SelectListItem>> GETDrivers()

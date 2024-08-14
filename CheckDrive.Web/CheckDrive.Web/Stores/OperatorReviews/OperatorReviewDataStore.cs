@@ -108,7 +108,7 @@ namespace CheckDrive.Web.Stores.OperatorReviews
         {
             try
             {
-                string url = $"operator/review/export?year={year}&month={month}";
+                string url = $"operators/review/export?year={year}&month={month}";
                 var response = await _api.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)

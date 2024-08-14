@@ -161,7 +161,7 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
         {
             try
             {
-                string url = $"mechanics/acceptence/export?year={year}&month={month}";
+                string url = $"mechanics/acceptance/export?year={year}&month={month}";
                 var response = await _api.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)

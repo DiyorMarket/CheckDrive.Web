@@ -102,7 +102,7 @@ namespace CheckDrive.Web.Stores.DispatcherReviews
         {
             try
             {
-                string url = $"dispatcher/review/export?year={year}&month={month}";
+                string url = $"dispatchers/review/export?year={year}&month={month}";
                 var response = await _api.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)

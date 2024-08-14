@@ -11,6 +11,5 @@ namespace CheckDrive.Web.Stores.DoctorReviews
         Task<DoctorReviewDto> CreateDoctorReviewAsync(DoctorReviewForCreateDto review);
         Task<DoctorReviewDto> UpdateDoctorReviewAsync(int id, DoctorReviewForUpdateDto review);
         Task DeleteDoctorReviewAsync(int id);
-        Task<Stream> GetExportFile(int year, int month);
     }
 }

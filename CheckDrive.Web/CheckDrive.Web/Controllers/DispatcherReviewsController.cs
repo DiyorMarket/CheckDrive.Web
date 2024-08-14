@@ -303,7 +303,7 @@ namespace CheckDrive.Web.Controllers
                 return NotFound();
             }
 
-            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Dispatcher(Xizmatlari).xlsx");
+            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Dispatcher(Xizmatlari) {month}.{year}.xlsx");
         }
         private async Task<bool> DispatcherReviewExists(int id)
         {
