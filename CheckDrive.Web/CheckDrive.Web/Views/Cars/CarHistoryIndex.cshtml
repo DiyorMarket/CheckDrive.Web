@@ -1,0 +1,131 @@
+﻿@model CheckDrive.ApiContracts.Car.CarHistoryDto
+
+@{
+    ViewData["Title"] = "CarHistoryIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-controller="Cars" asp-action="CarHistoryIndex">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-between align-items-center mb-4">
+                <!-- Search -->
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control rounded-left" placeholder="Avtomobilni izlash..." name="searchString" value="@ViewBag.SearchString">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i> Qidirish
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dropdown btn btn">
+                <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    Sanani Tanlash
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <div class="p-2">
+                        <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
+                        <input type="hidden" name="year" id="selectedYearInput" />
+                        <input type="hidden" name="month" id="selectedMonthInput" />
+                    </div>
+                    <button type="submit" class="dropdown-item">Yuborish</button>
+                </div>
+            </div>
+            <div class="col-12">
+                <ejs-grid id="cars-list"
+                          dataSource="@ViewBag.Cars"
+                          gridLines="Vertical"
+                          allowSorting="true">
+                    <e-grid-columns>
+                        <e-grid-column headerText="Model" field="Model" typeof="Text"></e-grid-column>
+                        <e-grid-column headerText="Davlat raqami" field="Number" typeof="text"></e-grid-column>
+                        <e-grid-column headerText="Meyori'" field="MonthlyMediumDistance" typeof="text"></e-grid-column>
+                        <e-grid-column headerText="Bosib o`tgan masofasi" field="MonthlyMileage" typeof="text"></e-grid-column>
+                        <e-grid-column headerText="Yoqilg`i meyori" field="MonthlyNormalOilSpend" typeof="text"></e-grid-column>
+                        <e-grid-column headerText="Bir oyda qancha yoqilg`i ishlatgan" field="MonthlySpentOil" typeof="text"></e-grid-column>
+                        <e-grid-column headerText="Qancha yoqilg`i qolib ketgan" field="MonthlyRefueledOil" typeof="text"></e-grid-column>
+                        <e-grid-column headerText="Keyingi oyga o`tadigan yoqilg`i qoldig`i" field="RemainingFuel" typeof="text"></e-grid-column>
+                    </e-grid-columns>
+                </ejs-grid>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="d-flex justify-content-between align-items-center my-3">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            @if (ViewBag.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("CarHistoryIndex", new { pageNumber = 1 })" aria-label="First">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("CarHistoryIndex", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
+                </li>
+            }
+            @if (ViewBag.HasNextPage)
+            {
+                <li class="page-item active">
+                    <span class="page-link">@ViewBag.CurrentPage</span>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("CarHistoryIndex", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("CarHistoryIndex", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+    <div class="p-2">
+        <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy mashinalar soni: @ViewBag.TotalCount)</p>
+    </div>
+</div>
+
+<script>
+    let selectedYear, selectedMonth;
+
+    function valueChange(args) {
+        var selectedDate = args.value;
+        selectedYear = selectedDate.getFullYear();
+        selectedMonth = selectedDate.getMonth() + 1;
+
+        // Обновляем скрытые поля формы для отправки данных на сервер
+        document.getElementById('selectedYearInput').value = selectedYear;
+        document.getElementById('selectedMonthInput').value = selectedMonth;
+    }
+
+    document.getElementById('downloadButton').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        if (selectedYear && selectedMonth) {
+            fetch(`/Cars/CarHistoryIndex?year=${selectedYear}&month=${selectedMonth}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'text/html'
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text(); // Ожидаем HTML-контент
+                    } else {
+                        throw new Error('Ошибка запроса');
+                    }
+                })
+                .then(data => {
+                    document.body.innerHTML = data; // Обновляем содержимое страницы
+                })
+                .catch(error => console.error('Ошибка:', error));
+        } else {
+            console.error('Год и месяц не выбраны');
+        }
+    });
+</script>

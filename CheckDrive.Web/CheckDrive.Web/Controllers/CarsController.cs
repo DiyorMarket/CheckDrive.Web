@@ -30,6 +30,22 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
+        public async Task<IActionResult> CarHistoryIndex(string? searchString, int? pageNumber, int? year, int? month)
+        {
+            var cars = await _carDataStore.GetCarsHistoryAsync(searchString, pageNumber, year, month);
+
+            ViewBag.SearchString = searchString;
+            ViewBag.Cars = cars.Data;
+
+            ViewBag.PageSize = cars.PageSize;
+            ViewBag.PageCount = cars.TotalPages;
+            ViewBag.TotalCount = cars.TotalCount;
+            ViewBag.CurrentPage = cars.PageNumber;
+            ViewBag.HasPreviousPage = cars.HasPreviousPage;
+            ViewBag.HasNextPage = cars.HasNextPage;
+            return View();
+        }
+
         public async Task<IActionResult> Details(int id)
         {
             var car = await _carDataStore.GetCarAsync(id);
