@@ -102,7 +102,7 @@ namespace CheckDrive.Web.Controllers
             TempData.Keep("AccountId");
             int accountID = int.Parse(accountIdStr);
 
-            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, null, 5, accountID);
+            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, null, 7, accountID);
 
             ViewBag.PageSize = reviewsResponse.PageSize;
             ViewBag.PageCount = reviewsResponse.TotalPages;

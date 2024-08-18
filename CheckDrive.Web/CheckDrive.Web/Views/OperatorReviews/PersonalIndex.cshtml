@@ -46,6 +46,7 @@
             </div>
 
             <div class="col-md-8 d-flex justify-content-end align-items-center gap-2">
+                <a class="btn btn-primary" href="@Url.Action("CarHistoryIndex", "Cars")">Moshina tarixi</a>
                 <div class="dropdown d-inline-block">
                     <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-download"></i> Yuklab olish
@@ -72,7 +73,6 @@
                                 <th class="text-center">Moshina raqami</th>
                                 <th class="text-center">Yoqilg`i sig`imi</th>
                                 <th class="text-center">Yoqilg`i qoldig`i</th>
-                                <th class="text-center comments-column">Izoh</th>
                                 <th class="text-center">Holati</th>
                             </tr>
                         </thead>
@@ -98,7 +98,6 @@
                                                    asp-route-remainingFuel="@review.CarOilRemainig">@review.DriverName</a>
                                             }
                                         </td>
-                                        <td class="text-center">@review.OperatorName</td>
                                         <td class="text-center">@review.CarModel</td>
                                         <td class="text-center">@review.CarNumber</td>
                                         <td class="text-center">@review.CarOilCapacity</td>

@@ -36,7 +36,7 @@
                 <label asp-for="IsAccepted" class="form-check-label" for="flexSwitchCheckDefault">Soz?</label>
             </div>
 
-            <div class="form-group w-50 mt-2">
+            <div class="form-group w-50 mt-2" id="distanceFieldGroup">
                 <label asp-for="Distance" class="control-label mt-2">Qabul qilish masofasi</label>
                 <input asp-for="Distance" class="form-control" type="number" min="0" step="1" />
                 <span asp-validation-for="Distance" class="text-danger"></span>
@@ -74,9 +74,23 @@
             var distanceErrorMessage = document.getElementById('distanceErrorMessage');
             var checkbox = document.getElementById('flexSwitchCheckDefault');
             var checkboxLabel = document.querySelector('label[for="flexSwitchCheckDefault"]');
+            var distanceFieldGroup = document.getElementById('distanceFieldGroup');
 
-            // Set the distance input to the car's mileage when the page loads
-            distanceInput.value = mileage;
+            // Initially hide the Distance field if the checkbox is unchecked
+            if (!checkbox.checked) {
+                distanceFieldGroup.style.display = 'none';
+            }
+
+            function toggleDistanceField() {
+                if (checkbox.checked) {
+                    distanceFieldGroup.style.display = 'block';
+                    distanceInput.value = mileage; // Set the distance input to the car's mileage when shown
+                } else {
+                    distanceFieldGroup.style.display = 'none';
+                    distanceErrorMessage.style.display = 'none';
+                    distanceInput.value = ''; // Clear the distance input when hidden
+                }
+            }
 
             function toggleCheckboxHighlight() {
                 if (!checkbox.checked) {
@@ -89,8 +103,12 @@
             }
 
             toggleCheckboxHighlight();
+            toggleDistanceField();
 
-            checkbox.addEventListener('change', toggleCheckboxHighlight);
+            checkbox.addEventListener('change', function () {
+                toggleCheckboxHighlight();
+                toggleDistanceField();
+            });
 
             distanceInput.addEventListener('input', function () {
                 var distanceValue = parseInt(distanceInput.value);
@@ -106,7 +124,7 @@
                 var distanceValue = parseInt(distanceInput.value);
                 var isGiven = checkbox.checked;
 
-                if (distanceValue < mileage) {
+                if (isGiven && (distanceValue < mileage)) {
                     event.preventDefault();
                     distanceErrorMessage.style.display = 'block';
                 }
