@@ -110,7 +110,7 @@ namespace CheckDrive.Web.Controllers
                             Text = d.DriverName,
                         })
                         .ToList();
-                    var carResponse = await _carDataStore.GetCarsAsync(1, false);
+                    var carResponse = await _carDataStore.GetCarsAsync(2, false);
                     ViewBag.Cars = carResponse.Data
                             .Where(c => c.Status == CarStatusDto.Free)
                             .Select(c => new SelectListItem

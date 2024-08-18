@@ -193,19 +193,6 @@ namespace CheckDrive.Web.Controllers
             if (ModelState.IsValid)
             {
                 operatorReview.Date = DateTime.Now.ToTashkentTime();
-                var car = await _carDataStore.GetCarAsync(operatorReview.CarId);
-                var carr = new CarForUpdateDto
-                {
-                    Id = operatorReview.CarId,
-                    Color = car.Color,
-                    FuelTankCapacity = car.FuelTankCapacity,
-                    ManufacturedYear = car.ManufacturedYear,
-                    MeduimFuelConsumption = car.MeduimFuelConsumption,
-                    Mileage = car.Mileage,
-                    Model = car.Model,
-                    Number = car.Number,
-                    RemainingFuel = car.RemainingFuel + operatorReview.OilAmount,
-                };
 
                 double maxOilAmount = await GetMaxOilAmount(operatorReview.CarId);
 
@@ -222,7 +209,6 @@ namespace CheckDrive.Web.Controllers
                 {
                     operatorReview.Status = operatorReview.IsGiven ? StatusForDto.Pending : StatusForDto.Rejected;
                     await _operatorReviewDataStore.CreateOperatorReview(operatorReview);
-                    await _carDataStore.UpdateCarAsync(operatorReview.CarId, carr);
                     return RedirectToAction(nameof(PersonalIndex));
                 }
             }
@@ -290,23 +276,6 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    var existingReview = await _operatorReviewDataStore.GetOperatorReview(operatorReview.Id);
-                    var car = await _carDataStore.GetCarAsync(operatorReview.CarId);
-
-                    var updatedCar = new CarForUpdateDto
-                    {
-                        Id = operatorReview.CarId,
-                        Color = car.Color,
-                        FuelTankCapacity = car.FuelTankCapacity,
-                        ManufacturedYear = car.ManufacturedYear,
-                        MeduimFuelConsumption = car.MeduimFuelConsumption,
-                        Mileage = car.Mileage,
-                        Model = car.Model,
-                        Number = car.Number,
-                        RemainingFuel = car.RemainingFuel - (double)existingReview.OilAmount + operatorReview.OilAmount,
-                    };
-
-                    await _carDataStore.UpdateCarAsync(updatedCar.Id, updatedCar);
                     await _operatorReviewDataStore.UpdateOperatorReview(id, operatorReview);
                 }
                 catch (Exception)
@@ -343,6 +312,7 @@ namespace CheckDrive.Web.Controllers
                 FuelTankCapacity = car.FuelTankCapacity,
                 ManufacturedYear = car.ManufacturedYear,
                 MeduimFuelConsumption = car.MeduimFuelConsumption,
+                OneYearMediumDistance= car.OneYearMediumDistance,
                 Mileage = car.Mileage,
                 Model = car.Model,
                 Number = car.Number,

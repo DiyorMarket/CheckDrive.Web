@@ -172,12 +172,11 @@ namespace CheckDrive.Web.Controllers
             };
             if (ModelState.IsValid)
             {
-                await _carDataStore.UpdateCarAsync(dispatcherReview.CarId, carr);
                 await _dispatcherReviewDataStore.CreateDispatcherReview(dispatcherReview);
                 return RedirectToAction(nameof(PersonalIndex));
             }
             var care = _carDataStore.GetCarAsync(dispatcherReview.CarId);
-            var fuelRemaining = care.Result.RemainingFuel;
+            var fuelRemaining = care.Result.RemainingFuel;  
             ViewBag.FuelRemaining = fuelRemaining;
             return View(dispatcherReview);
         }
@@ -230,20 +229,6 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    var existingReview = await _dispatcherReviewDataStore.GetDispatcherReview(dispatcherReview.Id);
-                    var car = await _carDataStore.GetCarAsync(dispatcherReview.CarId);
-                    var carr = new CarForUpdateDto
-                    {
-                        Id = dispatcherReview.CarId,
-                        Color = car.Color,
-                        FuelTankCapacity = car.FuelTankCapacity,
-                        ManufacturedYear = car.ManufacturedYear,
-                        MeduimFuelConsumption = car.MeduimFuelConsumption,
-                        Mileage = car.Mileage,
-                        Model = car.Model,
-                        Number = car.Number,
-                        RemainingFuel = car.RemainingFuel + (double)existingReview.FuelSpended - dispatcherReview.FuelSpended,
-                    };
                     var oldDispatcherReview = await _dispatcherReviewDataStore.GetDispatcherReview(id);
                     dispatcherReview.MechanicId = oldDispatcherReview.MechanicId;
                     dispatcherReview.MechanicAcceptanceId = oldDispatcherReview.MechanicAcceptanceId;
@@ -253,7 +238,6 @@ namespace CheckDrive.Web.Controllers
                     dispatcherReview.MechanicHandoverId = oldDispatcherReview.MechanicHandoverId;
                     
                     var dr = await _dispatcherReviewDataStore.UpdateDispatcherReview(id, dispatcherReview);
-                    await _carDataStore.UpdateCarAsync(carr.Id, carr);
                 }
                 catch (Exception ex)
                 {
