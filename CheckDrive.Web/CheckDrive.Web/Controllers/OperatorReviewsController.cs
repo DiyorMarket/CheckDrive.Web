@@ -131,12 +131,14 @@ namespace CheckDrive.Web.Controllers
                 var operatorResponse = await _operatorDataStore.GetOperators(accountId);
                 operatorr = operatorResponse.Data.First();
             }
-            ViewBag.OperatorId = operatorr.Id; // Pass the operator ID directly
+            ViewBag.OperatorId = operatorr.Id;
 
             ViewBag.SelectedCar = $"{carModel} Sig`imi: {fuelTankCapacity?.ToString() ?? "N/A"} litr, Qoldig`i: {remainingFuel?.ToString() ?? "N/A"} litr";
             ViewBag.SelectedDriverName = driverName;
             ViewBag.SelectedDriverId = driverId;
             ViewBag.SelectedCarId = carId;
+            ViewBag.FuelTankCapacity = fuelTankCapacity ?? null;
+            ViewBag.RemainingFuel = remainingFuel ?? null;
             ViewBag.OilMarks = oilMarks.Data.Select(o => new SelectListItem
             {
                 Value = o.Id.ToString(),
@@ -152,6 +154,11 @@ namespace CheckDrive.Web.Controllers
                             Text = d.DriverName,
                         })
                         .ToList();
+            var operatorReview = new OperatorReviewForCreateDto
+            {
+                DriverId = driverId ?? 0,
+                CarId = carId ?? 0,
+            };
 
             if (ViewBag.Drivers == null || !((List<SelectListItem>)ViewBag.Drivers).Any())
             {
@@ -162,7 +169,7 @@ namespace CheckDrive.Web.Controllers
                 ViewBag.NoDriversAvailable = false;
             }
 
-            return View();
+            return View(operatorReview);
         }
 
         public async Task<IActionResult> GetCarByDriverId(int driverId)
@@ -175,6 +182,7 @@ namespace CheckDrive.Web.Controllers
                 var car = await _carDataStore.GetCarAsync(handover.CarId);
                 return Json(new { success = true, car });
             }
+
             return Json(new { success = false });
         }
 

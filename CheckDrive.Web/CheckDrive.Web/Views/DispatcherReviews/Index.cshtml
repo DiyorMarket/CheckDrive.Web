@@ -42,18 +42,15 @@
         <ejs-grid id="dispatcherReview-list" dataSource="@ViewBag.DispatcherReviews" gridLines="Vertical" allowSorting="true">
             <e-grid-columns>
                 <e-grid-column headerText="Id" field="Id" typeof="text" template="#templat" width="50"></e-grid-column>
-                <e-grid-column headerText="Dispetcher F.I.SH" field="DispatcherName" typeof="text" width="150"></e-grid-column>
                 <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" typeof="text" width="150"></e-grid-column>
-                <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" typeof="text" width="150"></e-grid-column>
-                <e-grid-column headerText="Operator F.I.SH" field="OperatorName" typeof="text" width="150"></e-grid-column>
-                <e-grid-column headerText="Boshlang`ich yoqilg`i" field="RemainigFuelBefore" typeof="text" width="150"></e-grid-column>
-                <e-grid-column headerText="Operator quygan yoqilg`i" field="PouredFuel" typeof="text" width="150"></e-grid-column>
-                <e-grid-column headerText="Yakuniy yoqilg`i" field="RemainigFuelAfter" typeof="text" width="150"></e-grid-column>
-                <e-grid-column headerText="Ro'yxatga olingan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" width="150"></e-grid-column>
                 <e-grid-column headerText="Marka" field="CarName" typeof="text" width="100"></e-grid-column>
-                <e-grid-column headerText="O'rtacha yoqilg'i sarfi" field="CarMeduimFuelConsumption" typeof="number" width="150"></e-grid-column>
+                <e-grid-column headerText="Meyori" field="CarMeduimFuelConsumption" typeof="number" width="150"></e-grid-column>
                 <e-grid-column headerText="Bosib o'tilgan masofa" field="DistanceCovered" typeof="number" width="150"></e-grid-column>
                 <e-grid-column headerText="Sarflangan Yoqilg'i" field="FuelSpended" typeof="number" width="150"></e-grid-column>
+                <e-grid-column headerText="Dispetcher F.I.SH" field="DispatcherName" typeof="text" width="150"></e-grid-column>
+                <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" typeof="text" width="150"></e-grid-column>
+                <e-grid-column headerText="Operator F.I.SH" field="OperatorName" typeof="text" width="150"></e-grid-column>
+                <e-grid-column headerText="Ro'yxatga olingan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" width="150"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
