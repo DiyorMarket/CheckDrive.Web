@@ -104,7 +104,16 @@ namespace CheckDrive.Web.Controllers
             var carMileageDictionary = carData.Data.ToDictionary(car => car.Id, car => car.Mileage);
             var carRemainingFuelDictionary = carData.Data.ToDictionary(car => car.Id, car => car.RemainingFuel);
 
-            var filteredOperatorResponse = response.Data
+            var drivers = new List<MechanicAcceptanceDto>();
+            foreach (var mechanicAcceptance in response.Data)
+            {
+                if (mechanicAcceptance.Status == StatusForDto.Unassigned)
+                {
+                    drivers.Add(mechanicAcceptance);
+                }
+            }
+
+            var filteredOperatorResponse = drivers
                 .Select(or => new
                 {
                     or.DriverId,

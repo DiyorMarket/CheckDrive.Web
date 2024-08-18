@@ -103,7 +103,15 @@ namespace CheckDrive.Web.Controllers
                 if (mechanic != null)
                 {
                     var response = await _mechanicHandoverDataStore.GetMechanicHandoversAsync(null, null, null, null, 6);
-                    ViewBag.Drivers = response.Data
+                    var drivers = new List<MechanicHandoverDto>();
+                    foreach( var mechanicHandover in response.Data)
+                    {
+                        if(mechanicHandover.Status == StatusForDto.Unassigned)
+                        {
+                            drivers.Add(mechanicHandover);
+                        }
+                    }
+                    ViewBag.Drivers = drivers
                         .Select(d => new SelectListItem
                         {
                             Value = d.DriverId.ToString(),

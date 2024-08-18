@@ -76,13 +76,13 @@
                         {
                             <tr>
                                 <td class="text-center vertical-align-middle">
-                                    @if (!string.IsNullOrEmpty(item.MechanicName))
+                                    @if (item.Status  == CheckDrive.ApiContracts.StatusForDto.Unassigned)
                                     {
-                                        @item.DriverName
+                                        <a href="/MechanicHandovers/Create?driverId=@item.DriverId&driverName=@item.DriverName">@item.DriverName</a>
                                     }
                                     else
                                     {
-                                        <a href="/MechanicHandovers/Create?driverId=@item.DriverId&driverName=@item.DriverName">@item.DriverName</a>
+                                        @item.DriverName
                                     }
                                 </td>
                                 <td>@item.Date.ToString("dd.MM.yyyy")</td>
