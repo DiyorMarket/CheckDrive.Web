@@ -83,7 +83,7 @@
                                 {
                                     <tr>
                                         <td class="text-center">
-                                            @if (!string.IsNullOrEmpty(review.OperatorName))
+                                            @if (review.Status != CheckDrive.ApiContracts.StatusForDto.Unassigned)
                                             {
                                                 @review.DriverName
                                             }

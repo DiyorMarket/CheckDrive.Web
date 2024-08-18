@@ -79,13 +79,14 @@
                         {
                             <tr>
                                 <td class="text-center vertical-align-middle">
-                                    @if (!string.IsNullOrEmpty(item.MechanicName))
+                                    @if (item.Status == CheckDrive.ApiContracts.StatusForDto.Unassigned)
                                     {
-                                        @item.DriverName
+                                        <a href="/MechanicAcceptances/CreateByLink?driverId=@item.DriverId&carId=@item.CarId&carName=@item.CarName&driverName=@item.DriverName&remainingFuel=@item.RemainingFuel">@item.DriverName</a>
+                                    
                                     }
                                     else
                                     {
-                                        <a href="/MechanicAcceptances/CreateByLink?driverId=@item.DriverId&carId=@item.CarId&carName=@item.CarName&driverName=@item.DriverName&remainingFuel=@item.RemainingFuel">@item.DriverName</a>
+                                            @item.DriverName
                                     }
                                 </td>
                                 <td>@item.CarName</td>

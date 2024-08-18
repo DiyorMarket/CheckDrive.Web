@@ -88,7 +88,7 @@
             var driverSelect = document.getElementById('driverSelect');
             var carSelect = document.getElementById('carSelect');
             var distanceInput = document.getElementById('distanceInput');
-            var createButton = document.getElementById('createButton');
+            var submitButton = document.getElementById('submitButton');  // Correct button ID
             var carIdInput = document.getElementById('carIdInput');
             var remainingFuelInput = document.getElementById('remainingFuelInput');
             var mileage = 0;
@@ -137,11 +137,11 @@
                 if (distance < mileage) {
                     distanceInput.classList.add('is-invalid');
                     showValidationMessage(`Qabul qilish masofasi avtomobilning oxirgi kiritilgan masofasidan ${mileage} km kam bo'lishi mumkin emas!`);
-                    createButton.disabled = true;
+                    submitButton.disabled = true;  // Disable the correct button
                 } else {
                     distanceInput.classList.remove('is-invalid');
                     clearValidationMessage();
-                    createButton.disabled = false;
+                    submitButton.disabled = false;  // Enable the correct button
                 }
             }
 
@@ -162,6 +162,7 @@
                 }
             }
         });
+
     </script>
 }
 
