@@ -1,6 +1,7 @@
 ﻿using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.MechanicHandover;
 using CheckDrive.Web.Extensions;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Drivers;
@@ -111,12 +112,13 @@ namespace CheckDrive.Web.Controllers
                         .ToList();
                     var carResponse = await _carDataStore.GetCarsAsync(1, false);
                     ViewBag.Cars = carResponse.Data
-                        .Select(c => new SelectListItem
-                        {
-                            Value = c.Id.ToString(),
-                            Text = $"{c.Model} ({c.Number})"
-                        })
-                        .ToList();
+                            .Where(c => c.Status == CarStatusDto.Free)
+                            .Select(c => new SelectListItem
+                            {
+                                Value = c.Id.ToString(),
+                                Text = $"{c.Model} ({c.Number})"
+                            })
+                            .ToList();
 
                     ViewBag.SelectedDriverName = driverName;
                     ViewBag.SelectedDriverId = driverId;

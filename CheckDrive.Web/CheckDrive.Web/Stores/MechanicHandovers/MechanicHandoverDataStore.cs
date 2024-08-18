@@ -1,5 +1,4 @@
 ﻿using CheckDrive.ApiContracts.MechanicHandover;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -15,6 +14,7 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
         {
             _api = apiClient;
         }
+
         public async Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync(
             int? pageNumber,
             string? searchString,
@@ -51,6 +51,7 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
 
             return result;
         }
+
         public async Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync(
             int? pageNumber,
             string? searchString,
@@ -127,6 +128,7 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
 
             return result;
         }
+
         public async Task<MechanicHandoverDto> UpdateMechanicHandoverAsync(int id, MechanicHandoverForUpdateDto mechanicHandover)
         {
             var json = JsonConvert.SerializeObject(mechanicHandover);
@@ -141,6 +143,7 @@ namespace CheckDrive.Web.Stores.MechanicHandovers
 
             return JsonConvert.DeserializeObject<MechanicHandoverDto>(jsonResponse);
         }
+
         public async Task DeleteMechanicHandoverAsync(int id)
         {
             var response = await _api.DeleteAsync($"mechanics/handover/{id}");
