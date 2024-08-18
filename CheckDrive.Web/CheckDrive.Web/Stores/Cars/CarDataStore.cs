@@ -43,7 +43,6 @@ namespace CheckDrive.Web.Stores.Cars
         }
 
         public async Task<GetCarResponse> GetCarsAsync(int? roleId, bool? isBusy)
-
         {
             StringBuilder query = new("");
 
