@@ -1,7 +1,7 @@
-﻿using CheckDrive.ApiContracts.Car;
+﻿using CheckDrive.ApiContracts;
+using CheckDrive.ApiContracts.Car;
 using CheckDrive.Web.Stores.Cars;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Principal;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -19,7 +19,6 @@ namespace CheckDrive.Web.Controllers
             var cars = await _carDataStore.GetCarsAsync(searchString, pageNumber);
 
             ViewBag.SearchString = searchString;
-            ViewBag.Cars = cars.Data;
 
             ViewBag.PageSize = cars.PageSize;
             ViewBag.PageCount = cars.TotalPages;
@@ -27,6 +26,28 @@ namespace CheckDrive.Web.Controllers
             ViewBag.CurrentPage = cars.PageNumber;
             ViewBag.HasPreviousPage = cars.HasPreviousPage;
             ViewBag.HasNextPage = cars.HasNextPage;
+
+            var _cars = cars.Data.Select(c => new
+            {
+                c.Id,
+                c.Model,
+                c.Number,
+                c.Mileage,
+                c.Color,
+                c.RemainingFuel,
+                c.MeduimFuelConsumption,
+                c.FuelTankCapacity,
+                c.ManufacturedYear,
+                Status = ((CarStatusDto)c.Status) switch
+                {
+                    CarStatusDto.Free => "Bo'sh",
+                    CarStatusDto.Busy => "Band",
+                    CarStatusDto.Limited => "Limit tugagan",
+                    _ => "No`malum holat"
+                }
+            }).ToList();
+
+            ViewBag.Cars = _cars;
             return View();
         }
 
