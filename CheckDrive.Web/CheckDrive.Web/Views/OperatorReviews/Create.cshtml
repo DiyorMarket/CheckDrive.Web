@@ -40,7 +40,7 @@
                     <select asp-for="CarId" class="form-control border border-dark" id="carDropdown">
                         @if (ViewBag.SelectedCar != null)
                         {
-                            <option value="@ViewBag.SelectedCarId" selected disabled>@ViewBag.SelectedCar</option>
+                            <option value="@ViewBag.SelectedCarId" selected>@ViewBag.SelectedCar</option>
                         }
                     </select>
                 </div>
@@ -73,7 +73,7 @@
                 <a asp-action="PersonalIndex" class="btn btn-outline-info">
                     <i class="fa-solid fa-arrow-left-long"></i> Orqaga
                 </a>
-                <button class="btn btn-success" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
+                <button class="btn btn-success" type="submit">
                     <i class="fa fa-plus"></i> Yaratish
                 </button>
             </div>
