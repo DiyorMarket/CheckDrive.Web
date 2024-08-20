@@ -39,7 +39,7 @@
 
 <div class="row">
     <div class="col-12">
-        <ejs-grid id="dispatcherReview-list" dataSource="@ViewBag.DispatcherReviews" gridLines="Vertical" allowSorting="true">
+        <ejs-grid id="dispatcherReview-list" dataSource="@ViewBag.DispatcherReviews" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
             <e-grid-columns>
                 <e-grid-column headerText="Id" field="Id" typeof="text" template="#templat" width="50"></e-grid-column>
                 <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" typeof="text" width="150"></e-grid-column>
@@ -134,4 +134,14 @@
         const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
         dropdown.hide();
     });
+
+    function onDataBound() {
+        // Получаем все элементы заголовков колонок
+        const headers = document.querySelectorAll('#dispatcherReview-list .e-headercell');
+
+        // Добавляем title атрибут к каждому элементу заголовка
+        headers.forEach(header => {
+            header.setAttribute('title', header.innerText.trim());
+        });
+    }
 </script>

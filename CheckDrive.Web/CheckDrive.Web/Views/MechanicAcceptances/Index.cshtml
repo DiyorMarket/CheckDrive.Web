@@ -42,7 +42,7 @@
     <div class="tab-pane fade show active" id="nav-mechanicAcceptances" role="tabpanel" aria-labelledby="nav-mechanicAcceptances-tab">
         <div class="row">
             <div class="col-12">
-                <ejs-grid id="mechanicAcceptances-list" dataSource="@ViewBag.MechanicAcceptances" gridLines="Vertical" allowSorting="true">
+                <ejs-grid id="mechanicAcceptances-list" dataSource="@ViewBag.MechanicAcceptances" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
                     <e-grid-columns>
                         <e-grid-column headerText="Id" field="Id" template="#templat" type="number" width="60"></e-grid-column>
                         <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" type="string"></e-grid-column>
@@ -146,4 +146,14 @@
         const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
         dropdown.hide();
     });
+
+    function onDataBound() {
+        // Получаем все элементы заголовков колонок
+        const headers = document.querySelectorAll('#mechanicAcceptances-list .e-headercell');
+
+        // Добавляем title атрибут к каждому элементу заголовка
+        headers.forEach(header => {
+            header.setAttribute('title', header.innerText.trim());
+        });
+    }
 </script>
