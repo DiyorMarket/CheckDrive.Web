@@ -127,6 +127,20 @@
             });
         });
 
+        // Слушатель событий для предотвращения изменения значения выбранного водителя
+        driverDropdown.addEventListener('mousedown', function (event) {
+            if (this.value === "@ViewBag.SelectedDriverId") {
+                event.preventDefault();
+            }
+        });
+
+        // Слушатель событий для предотвращения изменения значения выбранного автомобиля
+        carDropdown.addEventListener('mousedown', function (event) {
+            if (this.value === "@ViewBag.SelectedCarId") {
+                event.preventDefault();
+            }
+        });
+
         var form = document.getElementById('operatorReviewForm');
         form.addEventListener('submit', function (event) {
             var oilAmountInput = document.getElementById('OilAmount');

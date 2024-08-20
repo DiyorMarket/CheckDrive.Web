@@ -94,8 +94,10 @@
                                                    asp-route-driverName="@review.DriverName"
                                                    asp-route-carId="@review.CarId"
                                                    asp-route-carModel="@review.CarModel"
-                                                   asp-route-fuelTankCapacity="@review.CarOilCapacity"
-                                                   asp-route-remainingFuel="@review.CarOilRemainig">@review.DriverName</a>
+                                                   asp-route-fuelTankCapacity="@(Convert.ToDouble(review.CarOilCapacity).ToString("F2", System.Globalization.CultureInfo.InvariantCulture).Replace(",", "."))"
+                                                   asp-route-remainingFuel="@(Convert.ToDouble(review.CarOilRemainig).ToString("F2", System.Globalization.CultureInfo.InvariantCulture).Replace(",", "."))">
+                                                    @review.DriverName
+                                                </a>
                                             }
                                         </td>
                                         <td class="text-center">@review.CarModel</td>
