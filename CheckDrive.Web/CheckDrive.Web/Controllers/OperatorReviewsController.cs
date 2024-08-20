@@ -119,7 +119,7 @@ namespace CheckDrive.Web.Controllers
 
             return View(operatorReview);
         }
-        public async Task<IActionResult> Create(int? driverId, string? driverName, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel)
+        public async Task<IActionResult> Create(int? driverId, string? driverName, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel, string? isNull)
         {
             var oilMarks = await _oilMarkDataStore.GetOilMarksAsync();
             var accountIdStr = TempData["AccountId"] as string;
@@ -133,6 +133,7 @@ namespace CheckDrive.Web.Controllers
             }
             ViewBag.OperatorId = operatorr.Id;
 
+            ViewBag.IsNull = isNull;
             ViewBag.SelectedCar = $"{carModel} Sig`imi: {fuelTankCapacity?.ToString() ?? "N/A"} litr, Qoldig`i: {remainingFuel?.ToString() ?? "N/A"} litr";
             ViewBag.SelectedDriverName = driverName;
             ViewBag.SelectedDriverId = driverId;
