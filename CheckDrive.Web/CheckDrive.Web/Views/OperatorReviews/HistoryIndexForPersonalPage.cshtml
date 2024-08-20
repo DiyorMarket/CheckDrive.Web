@@ -7,6 +7,16 @@
     string activeTab = "HistoryIndexForPersonalPage";
 }
 
+<div class="container-fluid py-2 px-4 d-flex justify-content-end">
+    <div class="d-flex align-items-center">
+        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
+            <span class="logout-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </span>
+            Chiqish
+        </button>
+    </div>
+</div>
 <form asp-controller="OperatorReviews" asp-action="HistoryIndexForPersonalPage">
     <div class="container mt-5">
         <div class="mb-4">
