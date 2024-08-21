@@ -33,7 +33,7 @@
                             <option value="">Haydovchini tanlang</option>
                             @foreach (var driver in ViewBag.FilteredOperatorResponse)
                             {
-                                <option value="@driver.DriverId" data-carid="@driver.CarId" data-carname="@driver.CarModel (@driver.CarNumber)" data-mileage="@driver.CarMileage">@driver.DriverName</option>
+                                <option value="@driver.DriverId" data-carid="@driver.CarId" data-carname="@driver.CarName" data-mileage="@driver.CarMileage">@driver.DriverName</option>
                             }
                         }
                     </select>
@@ -53,25 +53,29 @@
                     <input asp-for="IsAccepted" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                     <label asp-for="IsAccepted" class="form-check-label" for="flexSwitchCheckDefault">Soz?</label>
                 </div>
-                <div class="form-group w-50 mt-2">
+                <div id="distanceGroup" class="form-group w-50 mt-2" style="display: none;">
                     <label asp-for="Distance" class="control-label mt-2">Qabul qilish masofasi</label>
                     <input asp-for="Distance" class="form-control" type="number" min="0" step="1" id="distanceInput" />
                     <span asp-validation-for="Distance" class="text-danger"></span>
                     <span class="distance-validation-message text-danger"></span>
                 </div>
                 <div class="form-group w-50 mt-2">
+                    <label for="remainingFuelInput" class="control-label mt-2">Qolgan yoqilg'i (L)</label>
+                    <input type="number" class="form-control" id="remainingFuelInput" disabled />
+                </div>
+                <div class="form-group w-50 mt-2">
                     <label asp-for="Comments" class="control-label mt-2">Izoh</label>
                     <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
                 </div>
             </fieldset>
-                <div class="form-group mt-3 w-50 mt-3">
-                    <a asp-action="PersonalIndex" class="btn btn-outline-info">
-                        <i class="fa-solid fa-arrow-left-long"></i> Orqaga
-                    </a>
-                    <button class="btn btn-success" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
-                        <i class="fa fa-plus"></i> Yaratish
-                    </button>
-                </div>  
+            <div class="form-group mt-3 w-50 mt-3">
+                <a asp-action="PersonalIndex" class="btn btn-outline-info">
+                    <i class="fa-solid fa-arrow-left-long"></i> Orqaga
+                </a>
+                <button class="btn btn-success" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
+                    <i class="fa fa-plus"></i> Yaratish
+                </button>
+            </div>
         </form>
     </div>
 </div>
@@ -79,12 +83,26 @@
 @section Scripts {
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function () {
+            var checkbox = document.getElementById('flexSwitchCheckDefault');
+            var distanceGroup = document.getElementById('distanceGroup');
             var driverSelect = document.getElementById('driverSelect');
             var carSelect = document.getElementById('carSelect');
             var distanceInput = document.getElementById('distanceInput');
-            var createButton = document.getElementById('createButton');
+            var submitButton = document.getElementById('submitButton');  // Correct button ID
             var carIdInput = document.getElementById('carIdInput');
+            var remainingFuelInput = document.getElementById('remainingFuelInput');
             var mileage = 0;
+
+            function toggleDistanceInput() {
+                if (checkbox.checked) {
+                    distanceGroup.style.display = "block";
+                } else {
+                    distanceGroup.style.display = "none";
+                }
+            }
+
+            checkbox.addEventListener('change', toggleDistanceInput);
+            toggleDistanceInput();  // Initial check
 
             driverSelect.addEventListener('change', function () {
                 var selectedOption = driverSelect.options[driverSelect.selectedIndex];
@@ -96,17 +114,17 @@
                     fetch(`/MechanicAcceptances/GetCarDetails?carId=${carId}`)
                         .then(response => response.json())
                         .then(data => {
-                            // Update CarId hidden input field
                             carIdInput.value = carId;
-                            // Update carSelect text content
                             carSelect.innerHTML = `<option value="${carId}">${carName}</option>`;
-                            distanceInput.value = mileage; // Set distance to car's mileage
+                            distanceInput.value = mileage;
+                            remainingFuelInput.value = data.remainingFuel;
                             validateDistance();
                         })
                         .catch(error => console.error('Error fetching car details:', error));
                 } else {
-                    carSelect.innerHTML = '<option value="">Avtomobil tanlang</option>'; // Default option
+                    carSelect.innerHTML = '<option value="">Avtomobil tanlang</option>';
                     distanceInput.value = '';
+                    remainingFuelInput.value = '';
                 }
             });
 
@@ -119,11 +137,11 @@
                 if (distance < mileage) {
                     distanceInput.classList.add('is-invalid');
                     showValidationMessage(`Qabul qilish masofasi avtomobilning oxirgi kiritilgan masofasidan ${mileage} km kam bo'lishi mumkin emas!`);
-                    createButton.disabled = true;
+                    submitButton.disabled = true;  // Disable the correct button
                 } else {
                     distanceInput.classList.remove('is-invalid');
                     clearValidationMessage();
-                    createButton.disabled = false;
+                    submitButton.disabled = false;  // Enable the correct button
                 }
             }
 
@@ -144,6 +162,7 @@
                 }
             }
         });
+
     </script>
 }
 

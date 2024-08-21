@@ -1,0 +1,283 @@
+﻿@model IEnumerable<CheckDrive.ApiContracts.OperatorReview.OperatorReviewDto>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="~/css/LogOutButtun.css" asp-append-version="true" />
+@{
+    ViewData["Title"] = "HistoryIndexForPersonalPage";
+    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    string activeTab = "HistoryIndexForPersonalPage";
+}
+
+<div class="container-fluid py-2 px-4 d-flex justify-content-end">
+    <div class="d-flex align-items-center">
+        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
+            <span class="logout-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </span>
+            Chiqish
+        </button>
+    </div>
+</div>
+<form asp-controller="OperatorReviews" asp-action="HistoryIndexForPersonalPage">
+    <div class="container mt-5">
+        <div class="mb-4">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "PersonalIndex" ? "active" : "")" href="@Url.Action("PersonalIndex", "OperatorReviews")">Asosiy sahifa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "ReportIndexForPersonalPage" ? "active" : "")" href="@Url.Action("ReportIndexForPersonalPage", "OperatorReviews")">Hisobot</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "OperatorReviews")">Tarixni ko'rish</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row justify-content-between align-items-center mb-4">
+            <!-- Search -->
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input type="text" class="form-control rounded-left" placeholder="Haydovchini kiriting ..." name="searchString" value="@ViewBag.SearchString">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i> Qidirish
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="date" class="form-control">
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover shadow">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Haydovchi F.I.Sh</th>
+                                <th class="text-center">Moshina markasi</th>
+                                <th class="text-center">Moshina raqami</th>
+                                <th class="text-center">Yoqilg`i sig`imi</th>
+                                <th class="text-center">Yoqilg`i qoldig`i</th>
+                                <th class="text-center">Quyilgan yoqilg`i miqdori</th>
+                                <th class="text-center">Yoqilg`i Markasi</th>
+                                <th class="text-center">Yoqilg`i berildimi?</th>
+                                <th class="text-center comments-column">Izoh</th>
+                                <th class="text-center">Holati</th>
+                                <th class="text-center vertical-align-middle">Sana</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var review in Model)
+                                {
+                                    <tr>
+                                        <td class="text-center">
+                                            @if (!string.IsNullOrEmpty(review.OperatorName))
+                                            {
+                                                @review.DriverName
+                                            }
+                                            else
+                                            {
+                                                <a asp-action="Create"
+                                                   asp-route-driverId="@review.DriverId"
+                                                   asp-route-driverName="@review.DriverName"
+                                                   asp-route-carId="@review.CarId"
+                                                   asp-route-carModel="@review.CarModel"
+                                                   asp-route-fuelTankCapacity="@review.CarOilCapacity"
+                                                   asp-route-remainingFuel="@review.CarOilRemainig">@review.DriverName</a>
+                                            }
+                                        </td>
+                                        <td class="text-center">@review.CarModel</td>
+                                        <td class="text-center">@review.CarNumber</td>
+                                        <td class="text-center">@review.CarOilCapacity</td>
+                                        <td class="text-center">@review.CarOilRemainig</td>
+                                        <td class="text-center">@review.OilAmount</td>
+                                        <td class="text-center">@review.OilMarks</td>
+                                        <td class="text-center">
+                                            @if (review.IsGiven == true)
+                                            {
+                                                <span class="badge bg-success shadow">Berildi</span>
+                                            }
+                                            else if (review.IsGiven == false)
+                                            {
+                                                <span class="badge bg-danger shadow">Berilmadi</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-empty shadow"></span>
+                                            }
+                                        </td>
+                                        <td class="text-center comments-column">@review.Comments</td>
+                                        <td class="text-center">
+                                            @if (review.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
+                                            {
+                                                <span class="badge bg-pending shadow">Kutilmoqda</span>
+                                            }
+                                            else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Unassigned)
+                                            {
+                                                <span class="badge bg-unassigned shadow">Tayinlanmagan</span>
+                                            }
+                                            else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Completed)
+                                            {
+                                                <span class="badge bg-success shadow">Yakunlangan</span>
+                                            }
+                                            else if (review.Status == CheckDrive.ApiContracts.StatusForDto.RejectedByDriver)
+                                            {
+                                                <span class="badge bg-danger shadow">Haydovchi tomonidan rad etilgan</span>
+                                            }
+                                            else if (review.Status == CheckDrive.ApiContracts.StatusForDto.Rejected)
+                                            {
+                                                <span class="badge bg-danger shadow">Rad etilgan</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-empty shadow">No`malum holat</span>
+                                            }
+                                        </td>
+                                        <td class="text-center vertical-align-middle">@review.Date</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="11" class="text-center">
+                                        Maʼlumotlar mavjud emas
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                @if (ViewBag.HasPreviousPage)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("HistoryIndexForPersonalPage", new { pageNumber = 1 })" aria-label="First">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("HistoryIndexForPersonalPage", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
+                                    </li>
+                                }
+                                @if (ViewBag.HasNextPage)
+                                {
+                                    <li class="page-item active">
+                                        <span class="page-link">@ViewBag.CurrentPage</span>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("HistoryIndexForPersonalPage", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("HistoryIndexForPersonalPage", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                        <div class="p-2">
+                            <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy tarix soni: @ViewBag.TotalCount)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style>
+    .nav-tabs .nav-link.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid #dee2e6;
+    }
+
+    .badge {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .bg-pending {
+        background-color: orange;
+    }
+
+    .bg-unassigned {
+        background-color: slategray;
+    }
+
+    .bg-success {
+        background-color: #28a745;
+    }
+
+    .bg-danger {
+        background-color: #dc3545;
+    }
+
+    .bg-empty {
+        background-color: gray;
+    }
+
+    .shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .table {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+        .table th, .table td {
+            vertical-align: middle !important;
+        }
+
+    .container {
+        margin-top: 30px;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+    .pagination {
+        justify-content: flex-end;
+    }
+
+    .shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    .text-end {
+        text-align: end !important;
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important;
+    }
+
+    .mt-5 {
+        margin-top: 3rem !important;
+    }
+
+    .comments-column {
+        max-width: 250px;
+        word-wrap: break-word;
+        white-space: normal;
+    }
+</style>

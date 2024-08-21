@@ -47,7 +47,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pagenumber, string? searchString, DateTime? date)
         {
-            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, DateTime.Now.ToTashkentTime(), 1);
+            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, date, 1, null);
 
 
             if (response is null)
@@ -65,6 +65,9 @@ namespace CheckDrive.Web.Controllers
             {
                 r.Id,
                 FuelSpended = r.FuelSpended.ToString("0.00").PadLeft(4, '0'),
+                RemainigFuelBefore = r.RemainigFuelBefore.ToString("0.00").PadLeft(4, '0'),
+                RemainigFuelAfter = r.RemainigFuelAfter.ToString("0.00").PadLeft(4, '0'),
+                r.PouredFuel,
                 r.DistanceCovered,
                 r.Date,
                 r.CarMeduimFuelConsumption,
@@ -81,7 +84,25 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> PersonalIndex(int? pagenumber, string? searchString)
         {
-            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, null, 5);
+            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, null, 5, null);
+
+            ViewBag.PageSize = reviewsResponse.PageSize;
+            ViewBag.PageCount = reviewsResponse.TotalPages;
+            ViewBag.TotalCount = reviewsResponse.TotalCount;
+            ViewBag.CurrentPage = reviewsResponse.PageNumber;
+            ViewBag.HasPreviousPage = reviewsResponse.HasPreviousPage;
+            ViewBag.HasNextPage = reviewsResponse.HasNextPage;
+
+            return View(reviewsResponse.Data);
+        }
+
+        public async Task<IActionResult> HistoryIndexForPersonalPage(int? pagenumber, string? searchString, DateTime? date)
+        {
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId");
+            int accountID = int.Parse(accountIdStr);
+
+            var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, null, 7, accountID);
 
             ViewBag.PageSize = reviewsResponse.PageSize;
             ViewBag.PageCount = reviewsResponse.TotalPages;
@@ -136,27 +157,13 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Create([Bind("FuelSpended,DistanceCovered,Date,DispatcherId,OperatorId,MechanicId,DriverId,MechanicHandoverId,MechanicAcceptanceId,CarId, OperatorReviewId")] DispatcherReviewForCreateDto dispatcherReview)
         {
             dispatcherReview.Date = DateTime.Now.ToTashkentTime();
-            var car = _carDataStore.GetCarAsync(dispatcherReview.CarId);
-            var carr = new CarForUpdateDto
-            {
-                Id = dispatcherReview.CarId,
-                Color = car.Result.Color,
-                FuelTankCapacity = car.Result.FuelTankCapacity,
-                ManufacturedYear = car.Result.ManufacturedYear,
-                MeduimFuelConsumption = car.Result.MeduimFuelConsumption,
-                Mileage = car.Result.Mileage,
-                Model = car.Result.Model,
-                Number = car.Result.Number,
-                RemainingFuel = car.Result.RemainingFuel - dispatcherReview.FuelSpended,
-            };
             if (ModelState.IsValid)
             {
-                await _carDataStore.UpdateCarAsync(dispatcherReview.CarId, carr);
                 await _dispatcherReviewDataStore.CreateDispatcherReview(dispatcherReview);
                 return RedirectToAction(nameof(PersonalIndex));
             }
             var care = _carDataStore.GetCarAsync(dispatcherReview.CarId);
-            var fuelRemaining = care.Result.RemainingFuel;
+            var fuelRemaining = care.Result.RemainingFuel;  
             ViewBag.FuelRemaining = fuelRemaining;
             return View(dispatcherReview);
         }
@@ -170,8 +177,8 @@ namespace CheckDrive.Web.Controllers
                 return NotFound();
             }
 
-            var drivers = await _driverDataStore.GetDriversAsync(1);
-            var cars = await _carDataStore.GetCarsAsync(1);
+            var drivers = await _driverDataStore.GetDriversAsync(1, null);
+            var cars = await _carDataStore.GetCarsAsync(1, null);
             var dispatchers = await _dispatcherDataStore.GetDispatchers(null, 10);
 
             ViewBag.DispatcherSelectList = new SelectList(dispatchers.Data.Select(dispatcher => new
@@ -209,20 +216,6 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    var existingReview = await _dispatcherReviewDataStore.GetDispatcherReview(dispatcherReview.Id);
-                    var car = await _carDataStore.GetCarAsync(dispatcherReview.CarId);
-                    var carr = new CarForUpdateDto
-                    {
-                        Id = dispatcherReview.CarId,
-                        Color = car.Color,
-                        FuelTankCapacity = car.FuelTankCapacity,
-                        ManufacturedYear = car.ManufacturedYear,
-                        MeduimFuelConsumption = car.MeduimFuelConsumption,
-                        Mileage = car.Mileage,
-                        Model = car.Model,
-                        Number = car.Number,
-                        RemainingFuel = car.RemainingFuel + (double)existingReview.FuelSpended - dispatcherReview.FuelSpended,
-                    };
                     var oldDispatcherReview = await _dispatcherReviewDataStore.GetDispatcherReview(id);
                     dispatcherReview.MechanicId = oldDispatcherReview.MechanicId;
                     dispatcherReview.MechanicAcceptanceId = oldDispatcherReview.MechanicAcceptanceId;
@@ -232,7 +225,6 @@ namespace CheckDrive.Web.Controllers
                     dispatcherReview.MechanicHandoverId = oldDispatcherReview.MechanicHandoverId;
                     
                     var dr = await _dispatcherReviewDataStore.UpdateDispatcherReview(id, dispatcherReview);
-                    await _carDataStore.UpdateCarAsync(carr.Id, carr);
                 }
                 catch (Exception ex)
                 {
@@ -272,6 +264,18 @@ namespace CheckDrive.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Download(int year, int month)
+        {
+            var result = await _dispatcherReviewDataStore.GetExportFile(year, month);
+
+            if (result == null || result.Length == 0)
+            {
+                return NotFound();
+            }
+
+            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Dispatcher(Xizmatlari) {month}.{year}.xlsx");
+        }
         private async Task<bool> DispatcherReviewExists(int id)
         {
             var review = await _dispatcherReviewDataStore.GetDispatcherReview(id);
@@ -280,7 +284,7 @@ namespace CheckDrive.Web.Controllers
 
         private async Task<List<SelectListItem>> GETCars()
         {
-            var carResponse = await _carDataStore.GetCarsAsync(null, null);
+            var carResponse = await _carDataStore.GetCarsAsync(1, null);
             var cars = carResponse.Data
                 .Select(c => new SelectListItem
                 {
@@ -292,7 +296,7 @@ namespace CheckDrive.Web.Controllers
         }
         private async Task<List<SelectListItem>> GETDrivers()
         {
-            var driverResponse = await _driverDataStore.GetDriversAsync(null, null);
+            var driverResponse = await _driverDataStore.GetDriversAsync(1, null);
             var drivers = driverResponse.Data
                 .Select(d => new SelectListItem
                 {

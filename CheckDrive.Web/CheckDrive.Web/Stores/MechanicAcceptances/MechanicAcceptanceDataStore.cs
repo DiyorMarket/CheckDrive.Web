@@ -51,6 +51,39 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
             return result;
         }
 
+        public async Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync(
+            int? pageNumber,
+            string? searchString,
+            DateTime? date,
+            int? accountId)
+        {
+            StringBuilder query = new StringBuilder();
+
+            if (accountId != 0)
+                query.Append($"accountId={accountId}&");
+
+            if (date is not null)
+                query.Append($"date={date.Value.ToString("MM/dd/yyyy")}&");
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+                query.Append($"searchString={searchString}&");
+
+            if (pageNumber != null)
+                query.Append($"pageNumber={pageNumber}");
+
+            var response = await _api.GetAsync("mechanics/acceptances?OrderBy=datedesc&" + query.ToString());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch mechanic acceptances.");
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<GetMechanicAcceptanceResponse>(json);
+
+            return result;
+        }
+
         public async Task<GetMechanicAcceptanceResponse> GetMechanicAcceptancesAsync()
         {
             var response = await _api.GetAsync("mechanics/acceptances?OrderBy=datedesc");
@@ -122,6 +155,39 @@ namespace CheckDrive.Web.Stores.MechanicAcceptances
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Could not delete Mechanic acceptance with id: {id}.");
+            }
+        }
+        public async Task<Stream> GetExportFile(int year, int month)
+        {
+            try
+            {
+                string url = $"mechanics/acceptance/export?year={year}&month={month}";
+                var response = await _api.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception("Failed to retrieve the file.");
+                }
+
+                var stream = await response.Content.ReadAsStreamAsync();
+                if (stream == null || stream.Length == 0)
+                {
+                    Console.WriteLine("The file is empty or could not be retrieved.");
+                    return null; // or throw an exception based on your needs
+                }
+
+                return stream;
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Log or handle the exception
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("", ex);
             }
         }
     }

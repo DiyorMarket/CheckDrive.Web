@@ -7,7 +7,7 @@ namespace CheckDrive.Web.Stores.Drivers
     public interface IDriverDataStore
     {
         Task<GetDriverResponse> GetDriversAsync(string? searchString,int? pageNumber);
-        Task<GetDriverResponse> GetDriversAsync(int? roleId);
+        Task<GetDriverResponse> GetDriversAsync(int? roleId, bool? isBusy);
         Task<DriverDto> GetDriverAsync(int id);
         Task<IEnumerable<DriverHistoryDto>> GetDriverHistories(int Id);
         Task<DriverDto> CreateDriverAsync(DriverForCreateDto driverForCreate);

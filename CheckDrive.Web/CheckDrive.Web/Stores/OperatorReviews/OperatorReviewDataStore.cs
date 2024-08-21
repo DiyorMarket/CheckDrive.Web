@@ -1,5 +1,4 @@
 ﻿using CheckDrive.ApiContracts.OperatorReview;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -16,7 +15,8 @@ namespace CheckDrive.Web.Stores.OperatorReviews
             string? searchString,
             DateTime? date,
             string? status,
-            int? roleId)
+            int? roleId,
+            int? accountId)
         {
             StringBuilder query = new("");
 
@@ -25,6 +25,9 @@ namespace CheckDrive.Web.Stores.OperatorReviews
 
             if (roleId != 0)
                 query.Append($"roleId={roleId}&");
+
+            if (accountId != 0)
+                query.Append($"accountId={accountId}&");
 
             if (date is not null)
                 query.Append($"date={date.Value.ToString("MM/dd/yyyy")}&");
@@ -99,6 +102,39 @@ namespace CheckDrive.Web.Stores.OperatorReviews
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Could not delete Operator reviews with id: {id}.");
+            }
+        }
+        public async Task<Stream> GetExportFile(int year, int month)
+        {
+            try
+            {
+                string url = $"operators/review/export?year={year}&month={month}";
+                var response = await _api.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception("Failed to retrieve the file.");
+                }
+
+                var stream = await response.Content.ReadAsStreamAsync();
+                if (stream == null || stream.Length == 0)
+                {
+                    Console.WriteLine("The file is empty or could not be retrieved.");
+                    return null; // or throw an exception based on your needs
+                }
+
+                return stream;
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Log or handle the exception
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("", ex);
             }
         }
     }

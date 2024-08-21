@@ -1,0 +1,51 @@
+﻿@model IEnumerable<CheckDrive.ApiContracts.OilMark.OilMarkDto>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Yoqilg'i turlari</h1>
+
+<div class="d-flex flex-row-reverse">
+    <a class="btn btn-success" asp-action="Create">
+        <i class="fa fa-plus"></i> Yaratish
+    </a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Id)
+            </th>
+            <th>
+                Yoqilg'i nomi
+            </th>
+            <th>Amallar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OilMark)
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-outline-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id" style="margin-right: 5px;">
+                            Tahrirlash
+                        </a>
+                        <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id">
+                            O'chirish
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

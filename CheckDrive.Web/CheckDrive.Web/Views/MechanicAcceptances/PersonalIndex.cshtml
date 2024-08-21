@@ -4,18 +4,10 @@
 @{
     ViewData["Title"] = "Mechanic Acceptances (Personal)";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    string activeTab = "MechanicAcceptances";
 }
 <div class="container-fluid py-2 px-4 d-flex justify-content-end">
     <div class="d-flex align-items-center gap-2">
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color:white; border-color:black; width:55px">
-                <i class="fa-solid fa-user" style="background-color: white; color: black;"></i>
-                <i class="bi bi-caret-down-fill" style="background-color:white; color:black"></i>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" style="color: darkblue" href="@Url.Action("PersonalIndex", "MechanicHandovers")">Mexanik(Topshiruvchi)</a></li>
-            </ul>
-        </div>
         <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
             <span class="logout-icon">
                 <i class="fas fa-sign-out-alt"></i>
@@ -28,6 +20,19 @@
 
 <form method="get" action="@Url.Action("PersonalIndex")">
     <div class="container mt-5">
+        <div class="mb-4">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "MechanicHandovers" ? "active" : "")" href="@Url.Action("PersonalIndex", "MechanicHandovers")">Mexanik(Topshirish)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "MechanicAcceptances" ? "active" : "")" href="@Url.Action("PersonalIndex", "MechanicAcceptances")">Mexanik(Qabul qilish)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "MechanicAcceptances")">Tarixni ko'rish</a>
+                </li>
+            </ul>
+        </div>
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
             <div class="col-md-4">
@@ -40,8 +45,17 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 text-end">
-                <a class="btn btn-success shadow" href="@Url.Action("CreateByButton", "MechanicAcceptances")">
+            <div class="col-md-8 d-flex justify-content-end align-items-center">
+                <div class="dropdown d-inline-block me-2">
+                    <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-download"></i> Yuklab olish
+                    </button>
+                    <div class="dropdown-menu p-3" id="dropdownMenu" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">
+                        <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
+                        <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
+                    </div>
+                </div>
+                <a class="btn btn-success" href="@Url.Action("CreateByButton", "MechanicAcceptances")">
                     <i class="fa fa-plus"></i> Yaratish
                 </a>
             </div>
@@ -52,11 +66,7 @@
                 <thead>
                     <tr>
                         <th scope="col" style="width: 10%">Haydovchi F.I</th>
-                        <th scope="col" style="width: 10%">Mexanik F.I</th>
                         <th scope="col" style="width: 15%">Mashina</th>
-                        <th scope="col" style="width: 10%">Qabul qilish</th>
-                        <th scope="col" style="width: 10%">Qabul qilish masofasi</th>
-                        <th scope="col" style="width: 15%">Izoh</th>
                         <th scope="col" style="width: 10%">Sana</th>
                         <th scope="col" style="width: 10%">Holati</th>
 
@@ -69,32 +79,17 @@
                         {
                             <tr>
                                 <td class="text-center vertical-align-middle">
-                                    @if (!string.IsNullOrEmpty(item.MechanicName))
+                                    @if (item.Status == CheckDrive.ApiContracts.StatusForDto.Unassigned)
                                     {
-                                        @item.DriverName
+                                        <a href="/MechanicAcceptances/CreateByLink?driverId=@item.DriverId&carId=@item.CarId&carName=@item.CarName&driverName=@item.DriverName&remainingFuel=@item.RemainingFuel">@item.DriverName</a>
+                                    
                                     }
                                     else
                                     {
-                                        <a href="/MechanicAcceptances/CreateByLink?driverId=@item.DriverId&carId=@item.CarId&carName=@item.CarName&driverName=@item.DriverName">@item.DriverName</a>
+                                            @item.DriverName
                                     }
                                 </td>
-                                <td>@item.MechanicName</td>
                                 <td>@item.CarName</td>
-                                <td>
-                                    @if (item.Date != null && item.Date.Value.Date == DateTime.Today)
-                                    {
-                                        @if ((bool)item.IsAccepted)
-                                        {
-                                            <span class="badge bg-success ">Qabul qilindi</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-danger ">Rad etildi</span>
-                                        }
-                                    }
-                                </td>
-                                <td>@item.Distance</td>
-                                <td>@item.Comments</td>
                                 <td>@item.Date?.ToString("dd/MM/yyyy")</td>
                                 <td class="text-center">
                                     @if (item.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
@@ -128,7 +123,7 @@
                     else
                     {
                         <tr>
-                            <td colspan="8" class="text-center">
+                            <td colspan="9" class="text-center">
                                 Maʼlumotlar mavjud emas
                             </td>
                         </tr>
@@ -174,6 +169,15 @@
 </form>
 
 <style>
+    .nav-tabs .nav-link.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid #dee2e6;
+    }
+
     .badge {
         font-size: 0.8rem;
         padding: 5px 10px;
@@ -235,3 +239,44 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 </style>
+
+<script>
+    // Default selected year and month
+    let selectedYear = new Date().getFullYear(); // Current year
+    let selectedMonth = new Date().getMonth() + 1; // Current month (months are zero-based)
+
+    // Function to handle the change event in the calendar
+    function valueChange(args) {
+        var selectedDate = args.value;
+        selectedYear = selectedDate.getFullYear();
+        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
+
+        // Optionally, update a label to display the selected date (if you have one)
+        document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
+    }
+
+    // Prevent the dropdown from closing when clicking inside
+    document.getElementById('dropdownMenu').addEventListener('click', function (event) {
+        event.stopPropagation(); // Stops the dropdown from closing when interacting with its contents
+    });
+
+    // Handle the download button click
+    document.getElementById('downloadButton').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent the default action of the link
+
+        // Construct the download URL using the selected year and month
+        const url = `/MechanicAcceptances/Download?year=${selectedYear}&month=${selectedMonth}`;
+
+        // Create a temporary link to trigger the download
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', ''); // Add download attribute to force download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up
+
+        // Manually close the dropdown after downloading
+        const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
+        dropdown.hide();
+    });
+</script>

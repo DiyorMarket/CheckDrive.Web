@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "PersonalIndex";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    string activeTab = "PersonalIndex";
 }
 <div class="container-fluid py-2 px-4 d-flex justify-content-end">
     <div class="d-flex align-items-center">
@@ -18,6 +19,19 @@
 
 <form asp-controller="OperatorReviews" asp-action="PersonalIndex">
     <div class="container mt-5">
+        <div class="mb-4">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "PersonalIndex" ? "active" : "")" href="@Url.Action("PersonalIndex", "OperatorReviews")">Asosiy sahifa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "ReportIndexForPersonalPage" ? "active" : "")" href="@Url.Action("ReportIndexForPersonalPage", "OperatorReviews")">Hisobot</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "OperatorReviews")">Tarixni ko'rish</a>
+                </li>
+            </ul>
+        </div>
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
             <div class="col-md-4">
@@ -30,9 +44,19 @@
                     </div>
                 </div>
             </div>
-            <!-- LogOut Link -->
-            <div class="col-md-4 d-flex justify-content-end">
-                <a class="btn btn-success shadow" href="@Url.Action("Create", "OperatorReviews")">
+
+            <div class="col-md-8 d-flex justify-content-end align-items-center gap-2">
+                <a class="btn btn-primary" href="@Url.Action("CarHistoryIndex", "Cars")">Moshina tarixi</a>
+                <div class="dropdown d-inline-block">
+                    <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-download"></i> Yuklab olish
+                    </button>
+                    <div class="dropdown-menu p-3" id="dropdownMenu" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">
+                        <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
+                        <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
+                    </div>
+                </div>
+                <a class="btn btn-success" href="@Url.Action("Create", "OperatorReviews")">
                     <i class="fa fa-plus"></i> Yaratish
                 </a>
             </div>
@@ -44,16 +68,11 @@
                     <table class="table table-bordered table-striped table-hover shadow">
                         <thead>
                             <tr>
-                                <th class="text-center">Haydovchi F.I.</th>
-                                <th class="text-center">Operator F.I.</th>
+                                <th class="text-center">Haydovchi F.I.SH</th>
                                 <th class="text-center">Moshina markasi</th>
                                 <th class="text-center">Moshina raqami</th>
                                 <th class="text-center">Yoqilg`i sig`imi</th>
                                 <th class="text-center">Yoqilg`i qoldig`i</th>
-                                <th class="text-center">Quyilgan yoqilg`i miqdori</th>
-                                <th class="text-center">Yoqilg`i Markasi</th>
-                                <th class="text-center">Yoqilg`i berildimi?</th>
-                                <th class="text-center comments-column">Izoh</th>
                                 <th class="text-center">Holati</th>
                             </tr>
                         </thead>
@@ -64,43 +83,28 @@
                                 {
                                     <tr>
                                         <td class="text-center">
-                                            @if (!string.IsNullOrEmpty(review.OperatorName))
+                                            @if (review.Status != CheckDrive.ApiContracts.StatusForDto.Unassigned)
                                             {
                                                 @review.DriverName
                                             }
                                             else
                                             {
                                                 <a asp-action="Create"
+                                                   asp-route-isNull="NotNull"
                                                    asp-route-driverId="@review.DriverId"
                                                    asp-route-driverName="@review.DriverName"
                                                    asp-route-carId="@review.CarId"
                                                    asp-route-carModel="@review.CarModel"
-                                                   asp-route-fuelTankCapacity="@review.CarOilCapacity"
-                                                   asp-route-remainingFuel="@review.CarOilRemainig">@review.DriverName</a>
+                                                   asp-route-fuelTankCapacity="@(Convert.ToDouble(review.CarOilCapacity).ToString("F2", System.Globalization.CultureInfo.InvariantCulture).Replace(",", "."))"
+                                                   asp-route-remainingFuel="@(Convert.ToDouble(review.CarOilRemainig).ToString("F2", System.Globalization.CultureInfo.InvariantCulture).Replace(",", "."))">
+                                                    @review.DriverName
+                                                </a>
                                             }
                                         </td>
-                                        <td class="text-center">@review.OperatorName</td>
                                         <td class="text-center">@review.CarModel</td>
                                         <td class="text-center">@review.CarNumber</td>
                                         <td class="text-center">@review.CarOilCapacity</td>
                                         <td class="text-center">@review.CarOilRemainig</td>
-                                        <td class="text-center">@review.OilAmount</td>
-                                        <td class="text-center">@review.OilMarks</td>
-                                        <td class="text-center">
-                                            @if (review.IsGiven == true)
-                                            {
-                                                <span class="badge bg-success shadow">Berildi</span>
-                                            }
-                                            else if (review.IsGiven == false)
-                                            {
-                                                <span class="badge bg-danger shadow">Berilmadi</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge bg-empty shadow"></span>
-                                            }
-                                        </td>
-                                        <td class="text-center comments-column">@review.Comments</td>
                                         <td class="text-center">
                                             @if (review.Status == CheckDrive.ApiContracts.StatusForDto.Pending)
                                             {
@@ -181,6 +185,15 @@
 </form>
 
 <style>
+    .nav-tabs .nav-link.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid #dee2e6;
+    }
+
     .badge {
         font-size: 0.8rem;
         padding: 5px 10px;
@@ -262,3 +275,45 @@
         white-space: normal;
     }
 </style>
+
+
+<script>
+    // Default selected year and month
+    let selectedYear = new Date().getFullYear(); // Current year
+    let selectedMonth = new Date().getMonth() + 1; // Current month (months are zero-based)
+
+    // Function to handle the change event in the calendar
+    function valueChange(args) {
+        var selectedDate = args.value;
+        selectedYear = selectedDate.getFullYear();
+        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
+
+        // Optionally, update a label to display the selected date (if you have one)
+        document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
+    }
+
+    // Prevent the dropdown from closing when clicking inside
+    document.getElementById('dropdownMenu').addEventListener('click', function (event) {
+        event.stopPropagation(); // Stops the dropdown from closing when interacting with its contents
+    });
+
+    // Handle the download button click
+    document.getElementById('downloadButton').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent the default action of the link
+
+        // Construct the download URL using the selected year and month
+        const url = `/OperatorReviews/Download?year=${selectedYear}&month=${selectedMonth}`;
+
+        // Create a temporary link to trigger the download
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', ''); // Add download attribute to force download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up
+
+        // Manually close the dropdown after downloading
+        const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
+        dropdown.hide();
+    });
+</script>

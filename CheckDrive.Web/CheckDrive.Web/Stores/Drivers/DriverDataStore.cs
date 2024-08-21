@@ -42,12 +42,16 @@ namespace CheckDrive.Web.Stores.Drivers
             return result;
         }
 
-        public async Task<GetDriverResponse> GetDriversAsync(int? roleId)
+        public async Task<GetDriverResponse> GetDriversAsync(int? roleId, bool? isBusy)
         {
             StringBuilder query = new("");
 
             if (roleId != 0)
                 query.Append($"roleId={roleId}&");
+
+            if (isBusy is not null)
+                query.Append($"isBusy={isBusy}&");
+
             var response = await _api.GetAsync("drivers?" + query.ToString());
 
             if (!response.IsSuccessStatusCode)
@@ -60,6 +64,7 @@ namespace CheckDrive.Web.Stores.Drivers
 
             return result;
         }
+
         public async Task<IEnumerable<DriverHistoryDto>> GetDriverHistories(int Id)
         {
             var response = await _api.GetAsync($"drivers/driverHistories?driverId={Id}");

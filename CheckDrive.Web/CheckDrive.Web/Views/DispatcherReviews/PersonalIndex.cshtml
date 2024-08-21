@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "PersonalIndex";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    string activeTab = "PersonalIndex";
 }
 <div class="container-fluid py-2 px-4 d-flex justify-content-end">
     <div class="d-flex align-items-center">
@@ -15,19 +16,45 @@
         </button>
     </div>
 </div>
+
 <div class="container mt-5" style="max-width: 100%;">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link @(activeTab == "PersonalIndex" ? "active" : "")" href="@Url.Action("PersonalIndex", "DispatcherReviews")">Asosiy sahifa</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "DispatcherReviews")">Tarixni ko'rish</a>
+            </li>
+        </ul>
+        <div class="gap-2">
+            <a class="btn btn-primary" href="@Url.Action("CarHistoryIndex", "Cars")">Moshina tarixi</a>
+            <!-- Dropdown Menu for File Download -->
+            <div class="dropdown d-inline-block">
+                <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-download"></i> Yuklab olish
+                </button>
+                <div class="dropdown-menu p-3" id="dropdownMenu" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">
+                    <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
+                    <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover paper-shadow" style="width: 100%;">
             <thead>
                 <tr>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Haydovchi F.I.</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Moshina</th>
-                    <th class="text-center vertical-align-middle" style="min-width: 200px;">O`rtacha Yoqilg`i</th>
+                    <th class="text-center vertical-align-middle" style="min-width: 200px;">Yoqilg`i meyori</th>
+                    <th class="text-center vertical-align-middle" style="min-width: 150px;">Boshlang`ich yoqilg`i qoldig`i</th>
+                    <th class="text-center vertical-align-middle" style="min-width: 150px;">Boshlang`ich masofa</th>
+                    <th class="text-center vertical-align-middle" style="min-width: 150px;">Yakuniy masofa</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Masofa</th>
-                    <th class="text-center vertical-align-middle" style="min-width: 150px;">Boshlang`ich</th>
-                    <th class="text-center vertical-align-middle" style="min-width: 150px;">Yakuniy</th>
-                    <th class="text-center vertical-align-middle" style="min-width: 150px;">Sarf</th>
+                    <th class="text-center vertical-align-middle" style="min-width: 150px;">Sarflagan yoqilg`i</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Quyilgan yoqilg`i</th>
+                    <th class="text-center vertical-align-middle" style="min-width: 150px;">Qolgan yoqilg`i qoldig`i</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Operator F.I.</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Mexanik F.I.</th>
                     <th class="text-center vertical-align-middle" style="min-width: 150px;">Sana</th>
@@ -42,6 +69,9 @@
                             <td class="text-center vertical-align-middle">@review.DriverName</td>
                             <td class="text-center vertical-align-middle">@review.CarName</td>
                             <td class="text-center vertical-align-middle">@review.CarMeduimFuelConsumption</td>
+                            <td class="text-center vertical-align-middle">@review.RemainigFuelBefore</td>
+                            <td class="text-center vertical-align-middle">@review.InitialDistance</td>
+                            <td class="text-center vertical-align-middle">@review.FinalDistance</td>
                             <td class="text-center vertical-align-middle">
                                 @if (review.DispatcherId != 0)
                                 {
@@ -54,8 +84,6 @@
                                     </a>
                                 }
                             </td>
-                            <td class="text-center vertical-align-middle">@review.InitialDistance</td>
-                            <td class="text-center vertical-align-middle">@review.FinalDistance</td>
                             <td class="text-center vertical-align-middle">
                                 @if (review.DispatcherId != 0)
                                 {
@@ -69,6 +97,7 @@
                                 }
                             </td>
                             <td class="text-center vertical-align-middle">@review.PouredFuel</td>
+                            <td class="text-center vertical-align-middle">@String.Format("{0:F3}", review.RemainigFuelAfter)</td>
                             <td class="text-center vertical-align-middle">@review.OperatorName</td>
                             <td class="text-center vertical-align-middle">@review.MechanicName</td>
                             <td class="text-center vertical-align-middle">@review.Date</td>
@@ -78,7 +107,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="11" class="text-center">
+                        <td colspan="14" class="text-center">
                             Maʼlumotlar mavjud emas
                         </td>
                     </tr>
@@ -123,6 +152,14 @@
 </div>
 
 <style>
+    .nav-tabs .nav-link.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid #dee2e6;
+    }
     .badge {
         font-size: 0.8rem;
         padding: 5px 10px;
@@ -181,3 +218,44 @@
         vertical-align: middle !important;
     }
 </style>
+
+<script>
+    // Default selected year and month
+    let selectedYear = new Date().getFullYear(); // Current year
+    let selectedMonth = new Date().getMonth() + 1; // Current month (months are zero-based)
+
+    // Function to handle the change event in the calendar
+    function valueChange(args) {
+        var selectedDate = args.value;
+        selectedYear = selectedDate.getFullYear();
+        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
+
+        // Optionally, update a label to display the selected date (if you have one)
+        document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
+    }
+
+    // Prevent the dropdown from closing when clicking inside
+    document.getElementById('dropdownMenu').addEventListener('click', function (event) {
+        event.stopPropagation(); // Stops the dropdown from closing when interacting with its contents
+    });
+
+    // Handle the download button click
+    document.getElementById('downloadButton').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent the default action of the link
+
+        // Construct the download URL using the selected year and month
+        const url = `/DispatcherReviews/Download?year=${selectedYear}&month=${selectedMonth}`;
+
+        // Create a temporary link to trigger the download
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', ''); // Add download attribute to force download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up
+
+        // Manually close the dropdown after downloading
+        const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
+        dropdown.hide();
+    });
+</script>

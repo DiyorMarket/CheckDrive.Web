@@ -4,8 +4,10 @@ using CheckDrive.ApiContracts.Operator;
 using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Extensions;
 using CheckDrive.Web.Stores.Cars;
+using CheckDrive.Web.Stores.Dashbord;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicHandovers;
+using CheckDrive.Web.Stores.OilMarks;
 using CheckDrive.Web.Stores.OperatorReviews;
 using CheckDrive.Web.Stores.Operators;
 using Microsoft.AspNetCore.Mvc;
@@ -19,18 +21,21 @@ namespace CheckDrive.Web.Controllers
         IMechanicHandoverDataStore mechanicHandover,
         ICarDataStore carDataStore,
         IDriverDataStore driverDataStore,
-        IOperatorDataStore operatorDataStore) : Controller
+        IOperatorDataStore operatorDataStore,
+        IOilMarkDataStore oilMarkDataStore,
+        IDashboardStore store) : Controller
     {
         private readonly IOperatorReviewDataStore _operatorReviewDataStore = operatorReviewDataStore;
         private readonly IMechanicHandoverDataStore _mechanicHandover = mechanicHandover;
         private readonly ICarDataStore _carDataStore = carDataStore;
         private readonly IDriverDataStore _driverDataStore = driverDataStore;
         private readonly IOperatorDataStore _operatorDataStore = operatorDataStore;
+        private readonly IOilMarkDataStore _oilMarkDataStore = oilMarkDataStore;
+        private readonly IDashboardStore _store = store;
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-
-            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, DateTime.Now.ToTashkentTime(), null, 1);
+            var operatorReviews = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, date, null, 1, null);
 
             ViewBag.PageSize = operatorReviews.PageSize;
             ViewBag.PageCount = operatorReviews.TotalPages;
@@ -45,6 +50,7 @@ namespace CheckDrive.Web.Controllers
                 r.OperatorName,
                 r.DriverName,
                 r.OilAmount,
+                r.OilMarks,
                 CarModel = $"{r.CarModel} ({r.CarNumber})",
                 r.Date,
                 IsGiven = (bool)r.IsGiven ? "Quyildi" : "Quyilmadi",
@@ -64,9 +70,27 @@ namespace CheckDrive.Web.Controllers
             return View();
 
         }
+
+        public async Task<IActionResult> HistoryIndexForPersonalPage(int? pageNumber, string? searchString, DateTime? date)
+        {
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId");
+            int accountId = int.Parse(accountIdStr);
+
+            var response = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, date, null, null, accountId);
+
+            ViewBag.PageSize = response.PageSize;
+            ViewBag.PageCount = response.TotalPages;
+            ViewBag.TotalCount = response.TotalCount;
+            ViewBag.CurrentPage = response.PageNumber;
+            ViewBag.HasPreviousPage = response.HasPreviousPage;
+            ViewBag.HasNextPage = response.HasNextPage;
+
+            return View(response.Data);
+        }
         public async Task<IActionResult> PersonalIndex(int? pageNumber, string? searchString)
         {
-            var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, null, null, 4);
+            var reviewsResponse = await _operatorReviewDataStore.GetOperatorReviews(pageNumber, searchString, null, null, 4, null);
 
             ViewBag.PageSize = reviewsResponse.PageSize;
             ViewBag.PageCount = reviewsResponse.TotalPages;
@@ -77,126 +101,99 @@ namespace CheckDrive.Web.Controllers
 
             return View(reviewsResponse.Data);
         }
+
+        public async Task<IActionResult> ReportIndexForPersonalPage()
+        {
+            var dashboard = await _store.GetDashboard();
+
+            if (dashboard is null)
+            {
+                return BadRequest();
+            }
+            ViewBag.SplineChartData = dashboard.SplineCharts;
+            return View();
+        }
         public async Task<IActionResult> Details(int id)
         {
             var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);
 
             return View(operatorReview);
         }
-        public async Task<IActionResult> Create(int? driverId, string? driverName, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel)
+        public async Task<IActionResult> Create(int? driverId, string? driverName, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel, string? isNull)
         {
-            var drivers = await GETDrivers();
-            var cars = await GETCars();
-
-            var operatorr = new OperatorDto();
-
+            var oilMarks = await _oilMarkDataStore.GetOilMarksAsync();
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
+
+            var operatorr = new OperatorDto();
             if (int.TryParse(accountIdStr, out int accountId))
             {
                 var operatorResponse = await _operatorDataStore.GetOperators(accountId);
                 operatorr = operatorResponse.Data.First();
             }
-            var operators = new List<SelectListItem>
+            ViewBag.OperatorId = operatorr.Id;
+
+            ViewBag.IsNull = isNull;
+            ViewBag.SelectedCar = $"{carModel} Sig`imi: {fuelTankCapacity?.ToString() ?? "N/A"} litr, Qoldig`i: {remainingFuel?.ToString() ?? "N/A"} litr";
+            ViewBag.SelectedDriverName = driverName;
+            ViewBag.SelectedDriverId = driverId;
+            ViewBag.SelectedCarId = carId;
+            ViewBag.FuelTankCapacity = fuelTankCapacity ?? null;
+            ViewBag.RemainingFuel = remainingFuel ?? null;
+            ViewBag.OilMarks = oilMarks.Data.Select(o => new SelectListItem
             {
-                new SelectListItem { Value = operatorr.Id.ToString(), Text = $"{operatorr.FirstName} {operatorr.LastName}" }
+                Value = o.Id.ToString(),
+                Text = o.OilMark
+            }).ToList();
+
+            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, null, null, 4, null);
+
+            ViewBag.Drivers = response.Data
+                        .Select(d => new SelectListItem
+                        {
+                            Value = d.DriverId.ToString(),
+                            Text = d.DriverName,
+                        })
+                        .ToList();
+            var operatorReview = new OperatorReviewForCreateDto
+            {
+                DriverId = driverId ?? 0,
+                CarId = carId ?? 0,
             };
 
-            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), null, 10);
-            var oilMarks = GetOilMarks();
-            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), "Completed", 10);
-
-            var healthyDrivers = mechanicHandovers.Data
-                                  .Select(dr => dr.DriverId)
-                                  .ToList();
-
-            var givedDrivers = response.Data
-                .Select(ma => ma.DriverId)
-                .ToList();
-
-            var filteredDrivers = drivers
-                .Where(d => healthyDrivers.Contains(int.Parse(d.Value)) && !givedDrivers.Contains(int.Parse(d.Value)))
-                .ToList();
-
-            ViewBag.OilMarks = new SelectList(oilMarks);
-            ViewBag.Drivers = new SelectList(filteredDrivers, "Value", "Text");
-            ViewBag.Operators = operators;
-
-            if (!driverId.HasValue && !carId.HasValue && filteredDrivers.Any())
+            if (ViewBag.Drivers == null || !((List<SelectListItem>)ViewBag.Drivers).Any())
             {
-                var firstDriverId = int.Parse(filteredDrivers.First().Value);
-                var mechanicHandover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == firstDriverId && m.Date.Date == DateTime.Today.ToTashkentTime());
-
-                if (mechanicHandover != null)
-                {
-                    carId = mechanicHandover.CarId;
-                    var car = await _carDataStore.GetCarAsync(mechanicHandover.CarId);
-                    carModel = car?.Model;
-                    fuelTankCapacity = car?.FuelTankCapacity;
-                    remainingFuel = car?.RemainingFuel;
-                }
-
-                driverId = firstDriverId;
+                ViewBag.NoDriversAvailable = true;
+            }
+            else
+            {
+                ViewBag.NoDriversAvailable = false;
             }
 
-            ViewBag.Cars = new SelectList(cars, "Value", "Text", carId);
-
-            var model = new OperatorReviewForCreateDto();
-
-            if (driverId.HasValue)
-            {
-                model.DriverId = driverId.Value;
-                ViewBag.SelectedDriverName = driverName;
-                ViewBag.DriverId = driverId.Value;
-
-                if (carId.HasValue)
-                {
-                    model.CarId = carId.Value;
-                    ViewBag.SelectedCar = $"{carModel} Sig`imi: {fuelTankCapacity?.ToString() ?? "N/A"} litr, Qoldig`i: {remainingFuel?.ToString() ?? "N/A"} litr";
-                }
-            }
-
-            if (fuelTankCapacity.HasValue && remainingFuel.HasValue)
-            {
-                ViewBag.FuelTankCapacity = fuelTankCapacity.Value;
-                ViewBag.RemainingFuel = remainingFuel.Value;
-            }
-
-            return View(model);
+            return View(operatorReview);
         }
+
         public async Task<IActionResult> GetCarByDriverId(int driverId)
         {
-            var mechanicHandovers = await _mechanicHandover.GetMechanicHandoversAsync(null, null, DateTime.Today.ToTashkentTime(), "Completed", 10);
-            var handover = mechanicHandovers.Data.FirstOrDefault(m => m.DriverId == driverId);
+            var response = await _operatorReviewDataStore.GetOperatorReviews(null, null, null, null, 4, null);
+            var handover = response.Data.FirstOrDefault(m => m.DriverId == driverId);
 
             if (handover != null)
             {
                 var car = await _carDataStore.GetCarAsync(handover.CarId);
                 return Json(new { success = true, car });
             }
+
             return Json(new { success = false });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OilAmount,Comments,Status,Date,OperatorId,DriverId,CarId,OilMarks,IsGiven")] OperatorReviewForCreateDto operatorReview)
+        public async Task<IActionResult> Create([Bind("OilAmount,Comments,Status,Date,OperatorId,DriverId,CarId,OilMarkId,IsGiven")] OperatorReviewForCreateDto operatorReview)
         {
             if (ModelState.IsValid)
             {
                 operatorReview.Date = DateTime.Now.ToTashkentTime();
-                var car = await _carDataStore.GetCarAsync(operatorReview.CarId);
-                var carr = new CarForUpdateDto
-                {
-                    Id = operatorReview.CarId,
-                    Color = car.Color,
-                    FuelTankCapacity = car.FuelTankCapacity,
-                    ManufacturedYear = car.ManufacturedYear,
-                    MeduimFuelConsumption = car.MeduimFuelConsumption,
-                    Mileage = car.Mileage,
-                    Model = car.Model,
-                    Number = car.Number,
-                    RemainingFuel = car.RemainingFuel + operatorReview.OilAmount,
-                };
 
                 double maxOilAmount = await GetMaxOilAmount(operatorReview.CarId);
 
@@ -213,13 +210,13 @@ namespace CheckDrive.Web.Controllers
                 {
                     operatorReview.Status = operatorReview.IsGiven ? StatusForDto.Pending : StatusForDto.Rejected;
                     await _operatorReviewDataStore.CreateOperatorReview(operatorReview);
-                    await _carDataStore.UpdateCarAsync(operatorReview.CarId, carr);
                     return RedirectToAction(nameof(PersonalIndex));
                 }
             }
 
             return View(operatorReview);
         }
+
         public async Task<IActionResult> Edit(int id)
         {
             var operatorReview = await _operatorReviewDataStore.GetOperatorReview(id);
@@ -228,8 +225,9 @@ namespace CheckDrive.Web.Controllers
                 return NotFound();
             }
 
-            var drivers = await _driverDataStore.GetDriversAsync(1);
-            var cars = await _carDataStore.GetCarsAsync(1);
+            var drivers = await _driverDataStore.GetDriversAsync(1, null);
+            var cars = await _carDataStore.GetCarsAsync(1, null);
+            var oilMarks = await _oilMarkDataStore.GetOilMarksAsync();
 
             ViewBag.DriverSelectList = new SelectList(drivers.Data.Select(driver => new
             {
@@ -243,11 +241,11 @@ namespace CheckDrive.Web.Controllers
                 DisplayText = $"{car.Model} ({car.Number})"
             }), "Id", "DisplayText");
 
-            ViewBag.OilMarks = Enum.GetValues(typeof(OilMarksForDto)).Cast<OilMarksForDto>().Select(e => new SelectListItem
+            ViewBag.OilMarks = oilMarks.Data.Select(o => new SelectListItem
             {
-                Value = e.ToString(),
-                Text = e.ToString()
-            });
+                Value = o.Id.ToString(),
+                Text = o.OilMark
+            }).ToList();
 
             ViewBag.Status = Enum.GetValues(typeof(StatusForDto)).Cast<StatusForDto>().Select(e => new SelectListItem
             {
@@ -268,7 +266,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OilAmount,Comments,Status,Date,OperatorId,DriverId,IsGiven,CarId")] OperatorReviewForUpdateDto operatorReview)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,OilAmount,Comments,Status,Date,OilMarkId,OperatorId,DriverId,IsGiven,CarId")] OperatorReviewForUpdateDto operatorReview)
         {
             if (id != operatorReview.Id)
             {
@@ -279,23 +277,6 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    var existingReview = await _operatorReviewDataStore.GetOperatorReview(operatorReview.Id);
-                    var car = await _carDataStore.GetCarAsync(operatorReview.CarId);
-
-                    var updatedCar = new CarForUpdateDto
-                    {
-                        Id = operatorReview.CarId,
-                        Color = car.Color,
-                        FuelTankCapacity = car.FuelTankCapacity,
-                        ManufacturedYear = car.ManufacturedYear,
-                        MeduimFuelConsumption = car.MeduimFuelConsumption,
-                        Mileage = car.Mileage,
-                        Model = car.Model,
-                        Number = car.Number,
-                        RemainingFuel = car.RemainingFuel - (double)existingReview.OilAmount + operatorReview.OilAmount,
-                    };
-
-                    await _carDataStore.UpdateCarAsync(updatedCar.Id, updatedCar);
                     await _operatorReviewDataStore.UpdateOperatorReview(id, operatorReview);
                 }
                 catch (Exception)
@@ -332,6 +313,7 @@ namespace CheckDrive.Web.Controllers
                 FuelTankCapacity = car.FuelTankCapacity,
                 ManufacturedYear = car.ManufacturedYear,
                 MeduimFuelConsumption = car.MeduimFuelConsumption,
+                OneYearMediumDistance= car.OneYearMediumDistance,
                 Mileage = car.Mileage,
                 Model = car.Model,
                 Number = car.Number,
@@ -353,9 +335,22 @@ namespace CheckDrive.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Download(int year, int month)
+        {
+            var result = await _operatorReviewDataStore.GetExportFile(year, month);
+
+            if (result == null || result.Length == 0)
+            {
+                return NotFound();
+            }
+
+            return File(result, $"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Operator(Xizmatlari) {month}.{year}.xlsx");
+        }
+
         private async Task<List<SelectListItem>> GETDrivers()
         {
-            var driverResponse = await _driverDataStore.GetDriversAsync(1);
+            var driverResponse = await _driverDataStore.GetDriversAsync(1, null);
             var drivers = driverResponse.Data
                 .Select(d => new SelectListItem
                 {
@@ -367,7 +362,7 @@ namespace CheckDrive.Web.Controllers
         }
         private async Task<List<SelectListItem>> GETCars()
         {
-            var carResponse = await _carDataStore.GetCarsAsync(1);
+            var carResponse = await _carDataStore.GetCarsAsync(1, null);
             var cars = carResponse.Data
                 .Select(d => new SelectListItem
                 {
@@ -381,13 +376,6 @@ namespace CheckDrive.Web.Controllers
         {
             var car = await _carDataStore.GetCarAsync(carId);
             return car.FuelTankCapacity - car.RemainingFuel;
-        }
-        private List<string> GetOilMarks()
-        {
-            return Enum.GetValues(typeof(OilMarksForDto))
-                       .Cast<OilMarksForDto>()
-                       .Select(o => o.ToString())
-                       .ToList();
         }
     }
 }

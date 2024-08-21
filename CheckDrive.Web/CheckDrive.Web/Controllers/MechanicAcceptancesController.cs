@@ -27,8 +27,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pageNumber, string? searchString, DateTime? date)
         {
-
-            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, DateTime.Now.ToTashkentTime(), null, 1);
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, date, null, 1);
 
             ViewBag.PageSize = response.PageSize;
             ViewBag.PageCount = response.TotalPages;
@@ -55,6 +54,7 @@ namespace CheckDrive.Web.Controllers
                 r.Distance,
                 r.DriverName,
                 r.MechanicName,
+                r.RemainingFuel,
                 r.CarName,
                 r.CarId
             }).ToList();
@@ -62,6 +62,24 @@ namespace CheckDrive.Web.Controllers
             ViewBag.MechanicAcceptances = mechanicAcceptances;
 
             return View();
+        }
+
+        public async Task<IActionResult> HistoryIndexForPersonalPage(string? searchString, int? pageNumber, DateTime? date)
+        {
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId");
+            int accountId = int.Parse(accountIdStr);
+
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(pageNumber, searchString, date, accountId);
+
+            ViewBag.PageSize = response.PageSize;
+            ViewBag.PageCount = response.TotalPages;
+            ViewBag.TotalCount = response.TotalCount;
+            ViewBag.CurrentPage = response.PageNumber;
+            ViewBag.HasPreviousPage = response.HasPreviousPage;
+            ViewBag.HasNextPage = response.HasNextPage;
+
+            return View(response.Data);
         }
 
         public async Task<IActionResult> PersonalIndex(string? searchString, int? pageNumber)
@@ -80,23 +98,30 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> CreateByButton()
         {
-            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1);
-            var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today.ToTashkentTime(), null, 10);
-            var carData = await _carDataStore.GetCarsAsync(1);
+            var response = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, null, null, 6);
+            var carData = await _carDataStore.GetCarsAsync(1, null);
 
             var carMileageDictionary = carData.Data.ToDictionary(car => car.Id, car => car.Mileage);
+            var carRemainingFuelDictionary = carData.Data.ToDictionary(car => car.Id, car => car.RemainingFuel);
 
-            var mechanicDriverIds = mechanicAcceptanceResponse.Data.Select(ma => ma.DriverId).ToHashSet();
-            var filteredOperatorResponse = operatorResponse.Data
-                .Where(or => !mechanicDriverIds.Contains(or.DriverId))
+            var drivers = new List<MechanicAcceptanceDto>();
+            foreach (var mechanicAcceptance in response.Data)
+            {
+                if (mechanicAcceptance.Status == StatusForDto.Unassigned)
+                {
+                    drivers.Add(mechanicAcceptance);
+                }
+            }
+
+            var filteredOperatorResponse = drivers
                 .Select(or => new
                 {
                     or.DriverId,
                     or.CarId,
-                    or.CarModel,
-                    or.CarNumber,
+                    or.CarName,
                     or.DriverName,
-                    CarMileage = carMileageDictionary.ContainsKey(or.CarId) ? carMileageDictionary[or.CarId] : 0
+                    CarMileage = carMileageDictionary.ContainsKey(or.CarId) ? carMileageDictionary[or.CarId] : 0,
+                    RemainingFuel = carRemainingFuelDictionary.ContainsKey(or.CarId) ? carMileageDictionary[or.CarId] : 0
                 })
                 .ToList();
 
@@ -141,11 +166,10 @@ namespace CheckDrive.Web.Controllers
                 }
             }
 
-            // Handle validation errors and re-populate view data
-            var carData = await _carDataStore.GetCarsAsync(1);
+            var carData = await _carDataStore.GetCarsAsync(1, null);
             ViewBag.CarData = carData;
 
-            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1);
+            var operatorResponse = await _operatorReviewDataStore.GetOperatorReviews(null, null, DateTime.Today.ToTashkentTime(), "Completed", 1, null);
             var mechanicAcceptanceResponse = await _mechanicAcceptanceDataStore.GetMechanicAcceptancesAsync(null, null, DateTime.Today.ToTashkentTime(), null, 10);
 
             var mechanicDriverIds = mechanicAcceptanceResponse.Data.Select(ma => ma.DriverId).ToHashSet();
@@ -158,7 +182,7 @@ namespace CheckDrive.Web.Controllers
 
 
 
-        public async Task<IActionResult> CreateByLink(int driverId, int carId, string carName, string driverName)
+        public async Task<IActionResult> CreateByLink(int driverId, int carId, string carName, string driverName, double remainingFuel)
         {
             var accountIdStr = TempData["AccountId"] as string;
             TempData.Keep("AccountId");
@@ -178,6 +202,7 @@ namespace CheckDrive.Web.Controllers
             ViewBag.DriverId = driverId;
             ViewBag.CarName = carName;
             ViewBag.DriverName = driverName;
+            ViewBag.RemainingFuel = remainingFuel;
 
             return View();
         }
@@ -187,8 +212,8 @@ namespace CheckDrive.Web.Controllers
         {
             var review = await _mechanicAcceptanceDataStore.GetMechanicAcceptanceAsync(id);
 
-            var drivers = await _driverDataStore.GetDriversAsync(1);
-            var cars = await _carDataStore.GetCarsAsync(1);
+            var drivers = await _driverDataStore.GetDriversAsync(1, null);
+            var cars = await _carDataStore.GetCarsAsync(1, null);
 
             ViewBag.DriverSelectList = new SelectList(drivers.Data.Select(driver => new
             {
@@ -292,11 +317,24 @@ namespace CheckDrive.Web.Controllers
             {
                 var carDetails = new
                 {
-                    mileage = car.Mileage
+                    mileage = car.Mileage,
+                    remainingFuel = car.RemainingFuel,
                 };  
                 return Json(carDetails);
             }
             return NotFound();
+        }
+        [HttpGet]
+        public async Task<IActionResult> Download(int year, int month)
+        {
+            var result = await _mechanicAcceptanceDataStore.GetExportFile(year, month);
+
+            if (result == null || result.Length == 0)
+            {
+                return NotFound();
+            }
+
+            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Mexanik(Qabul Qilish) {month}.{year}.xlsx");
         }
     }
 }

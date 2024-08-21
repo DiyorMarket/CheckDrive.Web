@@ -1,4 +1,5 @@
 ﻿using CheckDrive.ApiContracts.Car;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -16,7 +17,6 @@ namespace CheckDrive.Web.Stores.Cars
         }
 
         public async Task<GetCarResponse> GetCarsAsync(string? searchString,int? pageNumber)
-
         {
             StringBuilder query = new("");
 
@@ -42,13 +42,15 @@ namespace CheckDrive.Web.Stores.Cars
             return result;
         }
 
-        public async Task<GetCarResponse> GetCarsAsync(int? roleId)
-
+        public async Task<GetCarResponse> GetCarsAsync(int? roleId, bool? isBusy)
         {
             StringBuilder query = new("");
 
             if (roleId != 0)
                 query.Append($"roleId={roleId}&");
+
+            if (isBusy is not null)
+                query.Append($"isBusy={isBusy}&");
 
             var response = await _api.GetAsync("cars?" + query.ToString());
 
@@ -74,6 +76,38 @@ namespace CheckDrive.Web.Stores.Cars
 
             var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             var result = JsonConvert.DeserializeObject<CarDto>(json);
+
+            return result;
+        }
+
+        public async Task<GetCarHistoryResponse> GetCarsHistoryAsync(string? searchString, int? pageNumber, int? year, int? month)
+        {
+            StringBuilder query = new("");
+
+            if (year != null)
+                query.Append($"year={year}&");
+
+            if (month != null)
+                query.Append($"month={month}&");
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query.Append($"searchString={searchString}&");
+            }
+            if (pageNumber != null)
+            {
+                query.Append($"pageNumber={pageNumber}");
+            }
+
+            var response = await _api.GetAsync("cars/driverHistories?" + query.ToString());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch carsHistory.");
+            }
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<GetCarHistoryResponse>(json);
 
             return result;
         }

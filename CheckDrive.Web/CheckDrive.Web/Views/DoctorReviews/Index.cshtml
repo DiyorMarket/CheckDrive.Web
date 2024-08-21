@@ -32,7 +32,7 @@
 
 <div class="row">
     <div class="col-12">
-        <ejs-grid id="operatorReview-list" dataSource="@ViewBag.DoctorsReview" gridLines="Vertical" allowSorting="true">
+        <ejs-grid id="operatorReview-list" dataSource="@ViewBag.DoctorsReview" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
             <e-grid-columns>
                 <e-grid-column headerText="Id" field="Id" template="#template" typeof="text"></e-grid-column>
                 <e-grid-column headerText="Shifokor F.I.SH" field="DoctorName" typeof="text"></e-grid-column>
@@ -85,4 +85,16 @@
     <div>
         <a rel='nofollow' href="DoctorReviews/Details/${Id}">${Id}</a>
     </div>
+</script>
+
+<script>
+    function onDataBound() {
+        // Получаем все элементы заголовков колонок
+        const headers = document.querySelectorAll('#operatorReview-list .e-headercell');
+
+        // Добавляем title атрибут к каждому элементу заголовка
+        headers.forEach(header => {
+            header.setAttribute('title', header.innerText.trim());
+        });
+    }
 </script>
