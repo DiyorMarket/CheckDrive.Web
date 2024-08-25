@@ -38,7 +38,7 @@ namespace CheckDrive.Web.Controllers
                 c.MeduimFuelConsumption,
                 c.FuelTankCapacity,
                 c.ManufacturedYear,
-                Status = ((CarStatusDto)c.Status) switch
+                Status = ((CarStatusDto)c.CarStatus) switch
                 {
                     CarStatusDto.Free => "Bo'sh",
                     CarStatusDto.Busy => "Band",
