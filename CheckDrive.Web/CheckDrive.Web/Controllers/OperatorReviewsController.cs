@@ -119,7 +119,7 @@ namespace CheckDrive.Web.Controllers
 
             return View(operatorReview);
         }
-        public async Task<IActionResult> Create(int? driverId, string? driverName, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel, string? isNull)
+        public async Task<IActionResult> CreateByLink(int? driverId, string? driverName, int? carId, string? carModel, double? fuelTankCapacity, double? remainingFuel)
         {
             var oilMarks = await _oilMarkDataStore.GetOilMarksAsync();
             var accountIdStr = TempData["AccountId"] as string;
@@ -133,13 +133,35 @@ namespace CheckDrive.Web.Controllers
             }
             ViewBag.OperatorId = operatorr.Id;
 
-            ViewBag.IsNull = isNull;
-            ViewBag.SelectedCar = $"{carModel} Sig`imi: {fuelTankCapacity?.ToString() ?? "N/A"} litr, Qoldig`i: {remainingFuel?.ToString() ?? "N/A"} litr";
+            ViewBag.SelectedCar = carModel;
             ViewBag.SelectedDriverName = driverName;
             ViewBag.SelectedDriverId = driverId;
             ViewBag.SelectedCarId = carId;
             ViewBag.FuelTankCapacity = fuelTankCapacity ?? null;
             ViewBag.RemainingFuel = remainingFuel ?? null;
+            ViewBag.OilMarks = oilMarks.Data.Select(o => new SelectListItem
+            {
+                Value = o.Id.ToString(),
+                Text = o.OilMark
+            }).ToList();
+
+            return View();
+        }
+
+        public async Task<IActionResult> CreateByButton()
+        {
+            var oilMarks = await _oilMarkDataStore.GetOilMarksAsync();
+            var accountIdStr = TempData["AccountId"] as string;
+            TempData.Keep("AccountId");
+
+            var operatorr = new OperatorDto();
+            if (int.TryParse(accountIdStr, out int accountId))
+            {
+                var operatorResponse = await _operatorDataStore.GetOperators(accountId);
+                operatorr = operatorResponse.Data.First();
+            }
+
+            ViewBag.OperatorId = operatorr.Id;
             ViewBag.OilMarks = oilMarks.Data.Select(o => new SelectListItem
             {
                 Value = o.Id.ToString(),
@@ -155,11 +177,6 @@ namespace CheckDrive.Web.Controllers
                             Text = d.DriverName,
                         })
                         .ToList();
-            var operatorReview = new OperatorReviewForCreateDto
-            {
-                DriverId = driverId ?? 0,
-                CarId = carId ?? 0,
-            };
 
             if (ViewBag.Drivers == null || !((List<SelectListItem>)ViewBag.Drivers).Any())
             {
@@ -170,7 +187,7 @@ namespace CheckDrive.Web.Controllers
                 ViewBag.NoDriversAvailable = false;
             }
 
-            return View(operatorReview);
+            return View();
         }
 
         public async Task<IActionResult> GetCarByDriverId(int driverId)
