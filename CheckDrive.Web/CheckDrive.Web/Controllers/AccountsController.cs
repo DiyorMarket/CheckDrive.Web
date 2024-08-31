@@ -94,7 +94,7 @@ namespace CheckDrive.Web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Login,Password,PhoneNumber,FirstName,LastName,Bithdate,RoleId")]
+        public async Task<IActionResult> Create([Bind("Login,Password,PhoneNumber,FirstName,LastName,Address,Position,Passport,Bithdate,RoleId")]
             AccountForCreateDto account)
         {
             if (ModelState.IsValid)
@@ -116,7 +116,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Bithdate,RoleId")]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Login,Password,PhoneNumber,FirstName,LastName,Bithdate,Address,Position,Passport,RoleId")]
             AccountForUpdateDto account)
         {
             if (ModelState.IsValid)

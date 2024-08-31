@@ -31,7 +31,7 @@
     <Compile Include="Controllers\OperatorsController.cs" />
     <Compile Include="Controllers\TechniciansController.cs" />
     <None Include="wwwroot\css\LogOutButtun.css" />
-    <PackageReference Include="CheckDrive.ApiContracts" Version="1.4.9" />
+    <PackageReference Include="CheckDrive.ApiContracts" Version="1.5.1" />
     <PackageReference Include="CheckDrive.DTOs" Version="1.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.3" />
