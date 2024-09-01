@@ -43,6 +43,11 @@
                 <small class="text-danger" id="distanceErrorMessage" style="display: none;">Qabul qilish masofasi avtomobilning oxirgi kiritilgan masofasidan @ViewBag.Mileage km kam bo'lishi mumkin emas!</small>
             </div>
 
+            <div class="form-group w-50 mt-2" id="fuelConsumedFieldGroup" style="display:none;">
+                <label class="control-label mt-2">Sarflangan yoqilg`i</label>
+                <input type="text" id="fuelConsumedInput" class="form-control" disabled />
+            </div>
+
             <div class="form-group w-50 mt-2">
                 <label class="control-label mt-2">Yoqilg`i qoldig`i</label>
                 <input type="text" class="form-control" value="@ViewBag.RemainingFuel" disabled />
@@ -69,17 +74,14 @@
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function () {
             var form = document.getElementById('createFormByLink');
-            var mileage = parseInt(document.getElementById('Mileage').value);
+            var mileage = parseFloat(@ViewBag.Mileage);
+            var meduimFuelConsumption = parseFloat(@ViewBag.MeduimFuelConsumption);
+            var checkbox = document.getElementById('flexSwitchCheckDefault');
+            var fuelConsumedInput = document.getElementById('fuelConsumedInput');
             var distanceInput = document.querySelector('input[name="Distance"]');
             var distanceErrorMessage = document.getElementById('distanceErrorMessage');
-            var checkbox = document.getElementById('flexSwitchCheckDefault');
-            var checkboxLabel = document.querySelector('label[for="flexSwitchCheckDefault"]');
             var distanceFieldGroup = document.getElementById('distanceFieldGroup');
-
-            // Initially hide the Distance field if the checkbox is unchecked
-            if (!checkbox.checked) {
-                distanceFieldGroup.style.display = 'none';
-            }
+            var fuelConsumedFieldGroup = document.getElementById('fuelConsumedFieldGroup');
 
             function toggleDistanceField() {
                 if (checkbox.checked) {
@@ -88,36 +90,44 @@
                 } else {
                     distanceFieldGroup.style.display = 'none';
                     distanceErrorMessage.style.display = 'none';
-                    distanceInput.value = ''; // Clear the distance input when hidden
+                    distanceInput.value = mileage; // Assign mileage to distance when checkbox is unchecked
                 }
             }
 
-            function toggleCheckboxHighlight() {
-                if (!checkbox.checked) {
-                    checkbox.classList.add('border-danger');
-                    checkboxLabel.classList.add('text-danger');
+            function toggleFuelConsumedField() {
+                if (checkbox.checked) {
+                    fuelConsumedFieldGroup.style.display = 'block';
+                    updateFuelConsumed();
                 } else {
-                    checkbox.classList.remove('border-danger');
-                    checkboxLabel.classList.remove('text-danger');
+                    fuelConsumedFieldGroup.style.display = 'none';
+                    fuelConsumedInput.value = ''; // Очистить поле при скрытии
                 }
             }
 
-            toggleCheckboxHighlight();
-            toggleDistanceField();
+            function updateFuelConsumed() {
+                var distanceValue = parseFloat(distanceInput.value);
+                if (distanceValue > mileage) {
+                    var fuelConsumed = (distanceValue - mileage) * meduimFuelConsumption / 100;
+                    fuelConsumedInput.value = fuelConsumed.toFixed(2); // Обновить значение в поле
+                } else {
+                    fuelConsumedInput.value = ''; // Если значение некорректно, очистить поле
+                }
+            }
+
+            toggleDistanceField(); // Изначальная проверка
+            toggleFuelConsumedField(); // Изначальная проверка
 
             checkbox.addEventListener('change', function () {
-                toggleCheckboxHighlight();
                 toggleDistanceField();
+                toggleFuelConsumedField();
+
+                if (!checkbox.checked) {
+                    distanceInput.value = mileage;
+                }
             });
 
             distanceInput.addEventListener('input', function () {
-                var distanceValue = parseInt(distanceInput.value);
-
-                if (distanceValue < mileage) {
-                    distanceErrorMessage.style.display = 'block';
-                } else {
-                    distanceErrorMessage.style.display = 'none';
-                }
+                updateFuelConsumed();
             });
 
             form.addEventListener('submit', function (event) {
