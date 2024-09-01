@@ -26,6 +26,10 @@
                 <input asp-for="FuelSpended" class="form-control" id="FuelSpended" type="number" step="any" />
                 <span asp-validation-for="FuelSpended" class="text-danger" id="fuelSpendedError"></span>
             </div>
+            <div class="form-group w-75 mt-3">
+                <label asp-for="Comment" for="exampleFormControlTextarea1">Izoh</label>
+                <textarea asp-for="Comment" class="form-control" rows="4"></textarea>
+            </div>
             <div class="form-group w-50">
                 <input asp-for="Date" type="hidden" id="hiddenDate" />
             </div>
