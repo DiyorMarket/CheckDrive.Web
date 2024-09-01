@@ -103,6 +103,7 @@ namespace CheckDrive.Web.Controllers
 
             var carMileageDictionary = carData.Data.ToDictionary(car => car.Id, car => car.Mileage);
             var carRemainingFuelDictionary = carData.Data.ToDictionary(car => car.Id, car => car.RemainingFuel);
+            var carMediumFuelDictionary = carData.Data.ToDictionary(car => car.Id, car => car.MeduimFuelConsumption);
 
             var drivers = new List<MechanicAcceptanceDto>();
             foreach (var mechanicAcceptance in response.Data)
@@ -121,7 +122,8 @@ namespace CheckDrive.Web.Controllers
                     or.CarName,
                     or.DriverName,
                     CarMileage = carMileageDictionary.ContainsKey(or.CarId) ? carMileageDictionary[or.CarId] : 0,
-                    RemainingFuel = carRemainingFuelDictionary.ContainsKey(or.CarId) ? carMileageDictionary[or.CarId] : 0
+                    RemainingFuel = carRemainingFuelDictionary.ContainsKey(or.CarId) ? carMileageDictionary[or.CarId] : 0,
+                    MediumFuel = carMediumFuelDictionary.ContainsKey(or.CarId) ? carMediumFuelDictionary[or.CarId] : 0,
                 })
                 .ToList();
 
@@ -180,8 +182,6 @@ namespace CheckDrive.Web.Controllers
             return View("CreateByButton", mechanicAcceptanceForCreateDto);
         }
 
-
-
         public async Task<IActionResult> CreateByLink(int driverId, int carId, string carName, string driverName, double remainingFuel)
         {
             var accountIdStr = TempData["AccountId"] as string;
@@ -203,10 +203,10 @@ namespace CheckDrive.Web.Controllers
             ViewBag.CarName = carName;
             ViewBag.DriverName = driverName;
             ViewBag.RemainingFuel = remainingFuel;
+            ViewBag.MeduimFuelConsumption = car.MeduimFuelConsumption;
 
             return View();
         }
-
 
         public async Task<IActionResult> Edit(int id)
         {

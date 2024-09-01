@@ -33,7 +33,7 @@
                             <option value="">Haydovchini tanlang</option>
                             @foreach (var driver in ViewBag.FilteredOperatorResponse)
                             {
-                                <option value="@driver.DriverId" data-carid="@driver.CarId" data-carname="@driver.CarName" data-mileage="@driver.CarMileage">@driver.DriverName</option>
+                                <option value="@driver.DriverId" data-carid="@driver.CarId" data-carname="@driver.CarName" data-mileage="@driver.CarMileage" data-mediumfuel="@driver.MediumFuel">@driver.DriverName</option>
                             }
                         }
                     </select>
@@ -42,11 +42,10 @@
                     <input type="hidden" asp-for="MechanicId" class="form-control border border-dark" value="@ViewBag.MechanicId" />
                 </div>
                 <div class="form-group w-50 mt-2">
-                    <label asp-for="CarId" class="control-label mt-2">Mashina</label>
+                    <label asp-for="CarId" class="control-label mt-2">Mashина</label>
                     <select asp-for="CarId" class="form-control border border-dark" id="carSelect" disabled>
                         <option value="">Avtomobil tanlang</option>
                     </select>
-                    <!-- Hidden field to store selected CarId -->
                     <input type="hidden" id="carIdInput" name="CarId" />
                 </div>
                 <div class="form-check form-switch mt-3">
@@ -58,6 +57,10 @@
                     <input asp-for="Distance" class="form-control" type="number" min="0" step="1" id="distanceInput" />
                     <span asp-validation-for="Distance" class="text-danger"></span>
                     <span class="distance-validation-message text-danger"></span>
+                </div>
+                <div class="form-group w-50 mt-2" id="fuelConsumptionGroup" style="display: none;">
+                    <label class="control-label mt-2">Sarflangan yoqilg`i (L)</label>
+                    <input type="text" class="form-control" id="fuelConsumptionInput" disabled />
                 </div>
                 <div class="form-group w-50 mt-2">
                     <label for="remainingFuelInput" class="control-label mt-2">Qolgan yoqilg'i (L)</label>
@@ -88,16 +91,21 @@
             var driverSelect = document.getElementById('driverSelect');
             var carSelect = document.getElementById('carSelect');
             var distanceInput = document.getElementById('distanceInput');
-            var submitButton = document.getElementById('submitButton');  // Correct button ID
+            var submitButton = document.getElementById('submitButton');
             var carIdInput = document.getElementById('carIdInput');
             var remainingFuelInput = document.getElementById('remainingFuelInput');
+            var fuelConsumptionInput = document.getElementById('fuelConsumptionInput');
+            var fuelConsumptionGroup = document.getElementById('fuelConsumptionGroup');
             var mileage = 0;
+            var mediumFuel = 0;
 
             function toggleDistanceInput() {
                 if (checkbox.checked) {
                     distanceGroup.style.display = "block";
+                    fuelConsumptionGroup.style.display = "block"; // Показать input для расхода топлива
                 } else {
                     distanceGroup.style.display = "none";
+                    fuelConsumptionGroup.style.display = "none"; // Скрыть input для расхода топлива
                 }
             }
 
@@ -109,6 +117,7 @@
                 var carId = selectedOption.getAttribute('data-carid');
                 var carName = selectedOption.getAttribute('data-carname');
                 mileage = parseInt(selectedOption.getAttribute('data-mileage')) || 0;
+                mediumFuel = parseFloat(selectedOption.getAttribute('data-mediumfuel')) || 0; // Получение среднего расхода топлива
 
                 if (carId) {
                     fetch(`/MechanicAcceptances/GetCarDetails?carId=${carId}`)
@@ -119,17 +128,20 @@
                             distanceInput.value = mileage;
                             remainingFuelInput.value = data.remainingFuel;
                             validateDistance();
+                            calculateFuelConsumption(); // Обновление расчета топлива
                         })
                         .catch(error => console.error('Error fetching car details:', error));
                 } else {
                     carSelect.innerHTML = '<option value="">Avtomobil tanlang</option>';
                     distanceInput.value = '';
                     remainingFuelInput.value = '';
+                    fuelConsumptionInput.value = ''; // Очистить значение
                 }
             });
 
             distanceInput.addEventListener('input', function () {
                 validateDistance();
+                calculateFuelConsumption(); // Обновление расчета топлива при изменении distance
             });
 
             function validateDistance() {
@@ -137,12 +149,18 @@
                 if (distance < mileage) {
                     distanceInput.classList.add('is-invalid');
                     showValidationMessage(`Qabul qilish masofasi avtomobilning oxirgi kiritilgan masofasidan ${mileage} km kam bo'lishi mumkin emas!`);
-                    submitButton.disabled = true;  // Disable the correct button
+                    submitButton.disabled = true;
                 } else {
                     distanceInput.classList.remove('is-invalid');
                     clearValidationMessage();
-                    submitButton.disabled = false;  // Enable the correct button
+                    submitButton.disabled = false;
                 }
+            }
+
+            function calculateFuelConsumption() {
+                var distance = Number(distanceInput.value);
+                var fuelConsumption = ((distance - mileage) * mediumFuel) / 100;
+                fuelConsumptionInput.value = fuelConsumption.toFixed(2); // Вывод расхода топлива с двумя знаками после запятой
             }
 
             function showValidationMessage(message) {
@@ -162,10 +180,8 @@
                 }
             }
         });
-
     </script>
 }
-
 <style>
     .border-danger {
         border: 2px solid red !important;
