@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    double fuelSpend = Model.FuelSpended;
+    var dis = "sas";
 }
 
 <div class="row mt-custom">
@@ -12,9 +14,9 @@
         <form asp-action="Create" method="post" id="createForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group w-50">
-                <label asp-for="DistanceCovered" class="control-label">Bosib otilgan masofa</label>
-                <input asp-for="DistanceCovered" class="form-control" type="number" />
-                <span asp-validation-for="DistanceCovered" class="text-danger"></span>
+                <label asp-for="ChangedDistanceCovered" class="control-label">Bosib otilgan masofa</label>
+                <input asp-for="ChangedDistanceCovered" id="changedDistanceCovered" class="form-control" type="number" value="@Model.DistanceCovered" />
+                <span asp-validation-for="ChangedDistanceCovered" class="text-danger"></span>
             </div>
             <div class="form-group w-50">
                 <label class="control-label">Avtomobil bakidagi yoqilg`i miqdori</label>
@@ -22,13 +24,24 @@
                 <input type="hidden" id="FuelRemaining" name="FuelRemaining" value="@ViewBag.FuelRemaining" />
             </div>
             <div class="form-group w-50">
-                <label asp-for="FuelSpended" class="control-label">Sariflangan yoqilgi</label>
-                <input asp-for="FuelSpended" class="form-control" id="FuelSpended" type="number" step="any" />
-                <span asp-validation-for="FuelSpended" class="text-danger" id="fuelSpendedError"></span>
+                <label asp-for="ChangedFuelSpendede" class="control-label">Sariflangan yoqilgi</label>
+                <input asp-for="ChangedFuelSpendede"
+                       id="changedFuelSpendede"
+                       class="form-control"
+                       type="number"
+                       step="any"
+                       value="@((Model.DistanceCovered * (ViewBag.MediumFuelConsumption ?? 0) / 100).ToString("F2"))" />
+                <span asp-validation-for="ChangedFuelSpendede" class="text-danger"></span>
             </div>
-            <div class="form-group w-75 mt-3">
+            <div class="form-group w-50 mt-3">
                 <label asp-for="Comment" for="exampleFormControlTextarea1">Izoh</label>
                 <textarea asp-for="Comment" class="form-control" rows="4"></textarea>
+            </div>
+            <div class="form-group w-50">
+                <input asp-for="DistanceCovered" type="hidden" />
+            </div>
+            <div class="form-group w-50">
+                <input type="hidden" name="FuelSpended" value="@((Model.DistanceCovered * (ViewBag.MediumFuelConsumption ?? 0) / 100).ToString("F2"))" />
             </div>
             <div class="form-group w-50">
                 <input asp-for="Date" type="hidden" id="hiddenDate" />
@@ -69,61 +82,53 @@
     </div>
 </div>
 
-<!-- Bootstrap Modal for Error Message -->
-<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="errorModalLabel">Xato</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="errorModalBody">
-                <!-- Error message will be injected here -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Yopish</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 @section Scripts {
     <script>
         document.getElementById('createForm').addEventListener('submit', function (event) {
-            var fuelSpended = parseFloat(document.getElementById('FuelSpended').value);
-            var fuelRemaining = parseFloat(document.getElementById('FuelRemaining').value);
-            var fuelSpendedError = document.getElementById('fuelSpendedError');
-            var errorModalBody = document.getElementById('errorModalBody');
-
-            fuelSpendedError.textContent = '';
-            errorModalBody.textContent = '';
-
-            if (isNaN(fuelSpended) || fuelSpended < 0 || fuelSpended > fuelRemaining) {
-                event.preventDefault();
-                var errorMessage = 'Sariflangan yoqilgi miqdori 0 va ' + fuelRemaining + ' orasida bo\'lishi kerak';
-                fuelSpendedError.textContent = errorMessage;
-
-                // Show the error message in the modal
-                errorModalBody.textContent = errorMessage;
-                var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-                errorModal.show();
-
-                return false;
-            }
-
-            var distanceCovered = document.getElementById('DistanceCovered').value;
             var currentDate = new Date().toISOString();
 
-            if (!distanceCovered) {
-                document.getElementById('DistanceCovered').value = '0';
+            var changedDistanceCovered = parseFloat(document.querySelector('[name="ChangedDistanceCovered"]').value);
+            var distanceCovered = parseFloat(document.querySelector('[name="DistanceCovered"]').value);
+
+            var changedFuelSpendede = parseFloat(document.querySelector('[name="ChangedFuelSpendede"]').value);
+            var fuelSpended = parseFloat(document.querySelector('[name="FuelSpended"]').value);
+
+            if (changedDistanceCovered === distanceCovered) {
+                document.querySelector('[name="ChangedDistanceCovered"]').value = '';
             }
 
-            if (!fuelSpended) {
-                document.getElementById('FuelSpended').value = '0';
+            if (Math.abs(changedFuelSpendede - fuelSpended) < 0.01) {
+                document.querySelector('[name="ChangedFuelSpendede"]').value = '';
             }
 
             document.getElementById('hiddenDate').value = currentDate;
+
+            // Ensure Comment is mandatory when distances don't match
+            if (changedDistanceCovered !== distanceCovered) {
+                var commentField = document.querySelector('[name="Comment"]');
+                if (commentField.value.trim() === '') {
+                    alert("Izoh (Comment) field is required when the distance covered values are different.");
+                    commentField.focus();
+                    event.preventDefault();
+                }
+            }
         });
+
+        document.getElementById('changedDistanceCovered').addEventListener('input', function () {
+            var distanceCovered = parseFloat(this.value) || 0;
+            var mediumFuelConsumption = parseFloat('@ViewBag.MediumFuelConsumption.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)') || 0;
+
+            var fuelSpended = (distanceCovered * mediumFuelConsumption) / 100;
+            document.getElementById('changedFuelSpendede').value = fuelSpended.toFixed(3);
+        });
+
+        // Set initial value on page load
+        window.onload = function () {
+            var distanceCovered = parseFloat(document.getElementById('changedDistanceCovered').value) || 0;
+            var mediumFuelConsumption = parseFloat('@ViewBag.MediumFuelConsumption.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)') || 0;
+
+            var initialFuelSpended = (distanceCovered * mediumFuelConsumption) / 100;
+            document.getElementById('changedFuelSpendede').value = initialFuelSpended.toFixed(3);
+        };
     </script>
 }
-

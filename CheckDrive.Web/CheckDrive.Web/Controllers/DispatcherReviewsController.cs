@@ -148,13 +148,15 @@ namespace CheckDrive.Web.Controllers
             };
             var car = _carDataStore.GetCarAsync(carId);
             var fuelRemaining = car.Result.RemainingFuel;
+            var mediumFuelConsumption = car.Result.MeduimFuelConsumption;
+            ViewBag.MediumFuelConsumption = mediumFuelConsumption;
             ViewBag.FuelRemaining = fuelRemaining;
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FuelSpended,DistanceCovered,Date,DispatcherId,OperatorId,MechanicId,DriverId,MechanicHandoverId,MechanicAcceptanceId,CarId,Comment,Status,OperatorReviewId")] DispatcherReviewForCreateDto dispatcherReview)
+        public async Task<IActionResult> Create([Bind("FuelSpended,DistanceCovered,Date,DispatcherId,OperatorId,MechanicId,DriverId,ChangedFuelSpendede,ChangedDistanceCovered,MechanicHandoverId,MechanicAcceptanceId,CarId,Comment,Status,OperatorReviewId")] DispatcherReviewForCreateDto dispatcherReview)
         {
             dispatcherReview.Date = DateTime.Now.ToTashkentTime();
             if (ModelState.IsValid)
