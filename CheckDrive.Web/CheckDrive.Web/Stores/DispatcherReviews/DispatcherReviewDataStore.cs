@@ -47,6 +47,39 @@ namespace CheckDrive.Web.Stores.DispatcherReviews
             return result;
         }
 
+        public async Task<GetDispatcherReviewResponse> GetDispatcherReviews(
+            int? pageNumber,
+            string? searchString,
+            DateTime? date,
+            string? status)
+        {
+            StringBuilder query = new("");
+
+            if (!string.IsNullOrWhiteSpace(status))
+                query.Append($"status={status}&");
+
+            if (date is not null)
+                query.Append($"date={date.Value.ToString("MM/dd/yyyy")}&");
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+                query.Append($"searchString={searchString}&");
+
+            if (pageNumber != null)
+                query.Append($"pageNumber={pageNumber}");
+
+            var response = await _api.GetAsync("dispatchers/reviews?OrderBy=datedesc&" + query.ToString());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not fetch drivers.");
+            }
+
+            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            var result = JsonConvert.DeserializeObject<GetDispatcherReviewResponse>(json);
+
+            return result;
+        }
+
         public async Task<DispatcherReviewDto> GetDispatcherReview(int id)
         {
             var response = await _api.GetAsync($"dispatchers/review/{id}");

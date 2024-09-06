@@ -2,6 +2,7 @@
 using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Dashbord;
+using CheckDrive.Web.Stores.Debts;
 using CheckDrive.Web.Stores.DispatcherReviews;
 using CheckDrive.Web.Stores.Dispatchers;
 using CheckDrive.Web.Stores.DoctorReviews;
@@ -25,6 +26,7 @@ namespace CheckDrive.Web.Extensions
         {
             services.AddScoped<IAccountDataStore, AccountDataStore>();
             services.AddScoped<ICarDataStore, CarDataStore>();
+            services.AddScoped<IDebtDataStore, DebtDataStore>();
             services.AddScoped<IDispatcherReviewDataStore, DispatcherReviewDataStore>();
             services.AddScoped<IDispatcherDataStore, DispatcherDataStore>();
             services.AddScoped<IDoctorDataStore, DoctorDataStore>();

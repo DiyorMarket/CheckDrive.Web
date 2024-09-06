@@ -1,6 +1,7 @@
 ﻿using CheckDrive.ApiContracts.Account;
 using CheckDrive.ApiContracts.Role;
 using CheckDrive.Web.Stores.Accounts;
+using CheckDrive.Web.Stores.Debts;
 using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.Roles;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +15,16 @@ namespace CheckDrive.Web.Controllers
         private readonly IAccountDataStore _accountDataStore;
         private readonly IRoleDataStore _roleStore;
         private readonly IDriverDataStore _driverDataStore;
+        private readonly IDebtDataStore _debtDataStore;
         public AccountsController(IAccountDataStore accountDataStore,
             IRoleDataStore roleDataStore,
-            IDriverDataStore driverDataStore)
+            IDriverDataStore driverDataStore,
+            IDebtDataStore debtDataStore)
         {
             _roleStore = roleDataStore;
             _accountDataStore = accountDataStore;
             _driverDataStore = driverDataStore;
+            _debtDataStore = debtDataStore;
         }
 
         public async Task<IActionResult> Index(string? searchString, int? roleId, DateTime? birthDate, int? pageNumber)
@@ -60,6 +64,9 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var account = await _accountDataStore.GetAccountAsync(id);
+            var debts = await _debtDataStore.GetDebtsAsync(account.Id);
+
+            ViewBag.Debts = debts;
 
             switch (account.RoleId)
             {

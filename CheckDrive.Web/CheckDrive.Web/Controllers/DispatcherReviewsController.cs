@@ -82,6 +82,43 @@ namespace CheckDrive.Web.Controllers
             return View();
         }
 
+        public async Task<IActionResult> BorrowIndex(int? pagenumber, string? searchString, DateTime? date)
+        {
+            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, date, "Rejected");
+
+
+            if (response is null)
+            {
+                return BadRequest();
+            }
+            ViewBag.PageSize = response.PageSize;
+            ViewBag.PageCount = response.TotalPages;
+            ViewBag.TotalCount = response.TotalCount;
+            ViewBag.CurrentPage = response.PageNumber;
+            ViewBag.HasPreviousPage = response.HasPreviousPage;
+            ViewBag.HasNextPage = response.HasNextPage;
+
+            var dispatcherReviewResponse = response.Data.Select(r => new
+            {
+                r.Id,
+                FuelSpended = r.FuelSpended.ToString("0.00").PadLeft(4, '0'),
+                RemainigFuelBefore = r.RemainigFuelBefore.ToString("0.00").PadLeft(4, '0'),
+                RemainigFuelAfter = r.RemainigFuelAfter.ToString("0.00").PadLeft(4, '0'),
+                r.PouredFuel,
+                r.DistanceCovered,
+                r.Date,
+                r.CarMeduimFuelConsumption,
+                r.CarName,
+                r.DispatcherName,
+                r.MechanicName,
+                r.OperatorName,
+                r.DriverName
+            }).ToList();
+
+            ViewBag.DispatcherReviews = dispatcherReviewResponse;
+            return View();
+        }
+
         public async Task<IActionResult> PersonalIndex(int? pagenumber, string? searchString)
         {
             var reviewsResponse = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, null, 5, null);

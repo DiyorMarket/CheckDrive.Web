@@ -1,0 +1,138 @@
+﻿@model IEnumerable<CheckDrive.ApiContracts.DispatcherReview.DispatcherReviewDto>
+
+@{
+    ViewData["Title"] = "BorrowIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Qarzlar</h1>
+
+<form asp-controller="DispatcherReviews" asp-action="Index">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <!-- Search -->
+            <div class="col-md-4 mb-4">
+                <div class="input-group">
+                    <input type="text" class="form-control rounded-left" placeholder="ishchilarni izlash..." name="searchString" value="@ViewBag.SearchString">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i> Qidirish
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4 d-flex align-items-center">
+                <input type="date" name="date" class="form-control me-2">
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-12">
+        <ejs-grid id="dispatcherReview-list" dataSource="@ViewBag.DispatcherReviews" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
+            <e-grid-columns>
+                <e-grid-column headerText="Id" field="Id" typeof="text" template="#templat" width="50"></e-grid-column>
+                <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" typeof="text" width="150"></e-grid-column>
+                <e-grid-column headerText="Marka" field="CarName" typeof="text" width="100"></e-grid-column>
+                <e-grid-column headerText="Meyori" field="CarMeduimFuelConsumption" typeof="number" width="150"></e-grid-column>
+                <e-grid-column headerText="Bosib o'tilgan masofa" field="DistanceCovered" typeof="number" width="150"></e-grid-column>
+                <e-grid-column headerText="Sarflangan Yoqilg'i" field="FuelSpended" typeof="number" width="150"></e-grid-column>
+                <e-grid-column headerText="Dispetcher F.I.SH" field="DispatcherName" typeof="text" width="150"></e-grid-column>
+                <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" typeof="text" width="150"></e-grid-column>
+                <e-grid-column headerText="Operator F.I.SH" field="OperatorName" typeof="text" width="150"></e-grid-column>
+                <e-grid-column headerText="Ro'yxatga olingan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" width="150"></e-grid-column>
+            </e-grid-columns>
+        </ejs-grid>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center my-3">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            @if (ViewBag.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = 1 })" aria-label="First">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
+                </li>
+            }
+            @if (ViewBag.HasNextPage)
+            {
+                <li class="page-item active">
+                    <span class="page-link">@ViewBag.CurrentPage</span>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+    <div class="p-2">
+        <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy dispetcherlar amallari soni: @ViewBag.TotalCount)</p>
+    </div>
+</div>
+<script id="templat" type="text/x-templat">
+    <div>
+        <a rel='nofollow' href="DispatcherReviews/Details/${Id}">${Id}</a>
+    </div>
+</script>
+<script>
+    // Default selected year and month
+    let selectedYear = new Date().getFullYear(); // Current year
+    let selectedMonth = new Date().getMonth() + 1; // Current month (months are zero-based)
+
+    // Function to handle the change event in the calendar
+    function valueChange(args) {
+        var selectedDate = args.value;
+        selectedYear = selectedDate.getFullYear();
+        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
+
+        // Optionally, update a label to display the selected date (if you have one)
+        document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
+    }
+
+    // Prevent the dropdown from closing when clicking inside
+    document.getElementById('dropdownMenu').addEventListener('click', function (event) {
+        event.stopPropagation(); // Stops the dropdown from closing when interacting with its contents
+    });
+
+    // Handle the download button click
+    document.getElementById('downloadButton').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent the default action of the link
+
+        // Construct the download URL using the selected year and month
+        const url = `/DispatcherReviews/Download?year=${selectedYear}&month=${selectedMonth}`;
+
+        // Create a temporary link to trigger the download
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', ''); // Add download attribute to force download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up
+
+        // Manually close the dropdown after downloading
+        const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
+        dropdown.hide();
+    });
+
+    function onDataBound() {
+        // Получаем все элементы заголовков колонок
+        const headers = document.querySelectorAll('#dispatcherReview-list .e-headercell');
+
+        // Добавляем title атрибут к каждому элементу заголовка
+        headers.forEach(header => {
+            header.setAttribute('title', header.innerText.trim());
+        });
+    }
+</script>
