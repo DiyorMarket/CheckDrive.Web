@@ -255,7 +255,7 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    var oldDispatcherReview = await _dispatcherReviewDataStore.GetDispatcherReview(id);             
+                    var oldDispatcherReview = await _dispatcherReviewDataStore.GetDispatcherReview(id);
                     dispatcherReview.MechanicId = oldDispatcherReview.MechanicId;
                     dispatcherReview.MechanicAcceptanceId = oldDispatcherReview.MechanicAcceptanceId;
                     dispatcherReview.Date = oldDispatcherReview.Date;
@@ -267,9 +267,9 @@ namespace CheckDrive.Web.Controllers
 
                     if (oldDispatcherReview.FuelSpended != dispatcherReview.FuelSpended)
                     {
-                        await UpdateCar(dispatcherReview.Id, oldDispatcherReview.FuelSpended, dispatcherReview.FuelSpended);
+                        await UpdateCar(oldDispatcherReview.CarId, oldDispatcherReview.FuelSpended, dispatcherReview.FuelSpended);
                     }
-                    
+
                 }
                 catch (Exception ex)
                 {
