@@ -2,7 +2,6 @@
 using CheckDrive.ApiContracts.Dispatcher;
 using CheckDrive.ApiContracts.DispatcherReview;
 using CheckDrive.Web.Extensions;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.DispatcherReviews;
 using CheckDrive.Web.Stores.Dispatchers;
@@ -13,7 +12,6 @@ using CheckDrive.Web.Stores.OperatorReviews;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using Syncfusion.EJ2.Grids;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -204,7 +202,7 @@ namespace CheckDrive.Web.Controllers
                 return RedirectToAction(nameof(PersonalIndex));
             }
             var care = _carDataStore.GetCarAsync(dispatcherReview.CarId);
-            var fuelRemaining = care.Result.RemainingFuel;  
+            var fuelRemaining = care.Result.RemainingFuel;
             ViewBag.FuelRemaining = fuelRemaining;
             return View(dispatcherReview);
         }
@@ -257,15 +255,21 @@ namespace CheckDrive.Web.Controllers
             {
                 try
                 {
-                    var oldDispatcherReview = await _dispatcherReviewDataStore.GetDispatcherReview(id);
+                    var oldDispatcherReview = await _dispatcherReviewDataStore.GetDispatcherReview(id);             
                     dispatcherReview.MechanicId = oldDispatcherReview.MechanicId;
                     dispatcherReview.MechanicAcceptanceId = oldDispatcherReview.MechanicAcceptanceId;
                     dispatcherReview.Date = oldDispatcherReview.Date;
                     dispatcherReview.OperatorReviewId = oldDispatcherReview.OperatorReviewId;
                     dispatcherReview.OperatorId = oldDispatcherReview.OperatorId;
                     dispatcherReview.MechanicHandoverId = oldDispatcherReview.MechanicHandoverId;
-                    
+
                     var dr = await _dispatcherReviewDataStore.UpdateDispatcherReview(id, dispatcherReview);
+
+                    if (oldDispatcherReview.FuelSpended != dispatcherReview.FuelSpended)
+                    {
+                        await UpdateCar(oldDispatcherReview.Id, oldDispatcherReview.FuelSpended, dispatcherReview.FuelSpended);
+                    }
+                    
                 }
                 catch (Exception ex)
                 {
@@ -346,6 +350,32 @@ namespace CheckDrive.Web.Controllers
                 })
                 .ToList();
             return drivers;
+        }
+
+        private async Task UpdateCar(int carId, double fuelSpended, double changedFuelSpended)
+        {
+            var car = await _carDataStore.GetCarAsync(carId);
+
+            car.RemainingFuel -= fuelSpended;
+
+            car.RemainingFuel += changedFuelSpended;
+
+            var carUpdateDto = new CarForUpdateDto
+            {
+                Id = car.Id,
+                RemainingFuel = car.RemainingFuel,
+                CarStatus = car.CarStatus,
+                Color = car.Color,
+                FuelTankCapacity = car.FuelTankCapacity,
+                ManufacturedYear = car.ManufacturedYear,
+                MeduimFuelConsumption = car.MeduimFuelConsumption,
+                Mileage = car.Mileage,
+                Model = car.Model,
+                Number = car.Number,
+                OneYearMediumDistance = car.OneYearMediumDistance,
+            };
+
+            await _carDataStore.UpdateCarAsync(car.Id, carUpdateDto);
         }
     }
 }
