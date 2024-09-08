@@ -30,7 +30,7 @@
                        class="form-control"
                        type="number"
                        step="any"
-                       value="@((Model.DistanceCovered * (ViewBag.MediumFuelConsumption ?? 0) / 100).ToString("F2"))" />
+                       value="@((Model.DistanceCovered * (ViewBag.MediumFuelConsumption ?? 0) / 100).ToString("F3"))" />
                 <span asp-validation-for="ChangedFuelSpendede" class="text-danger"></span>
             </div>
             <div class="form-group w-50 mt-3">
@@ -41,7 +41,7 @@
                 <input asp-for="DistanceCovered" type="hidden" />
             </div>
             <div class="form-group w-50">
-                <input type="hidden" name="FuelSpended" value="@((Model.DistanceCovered * (ViewBag.MediumFuelConsumption ?? 0) / 100).ToString("F2"))" />
+                <input type="hidden" name="FuelSpended" value="@((Model.DistanceCovered * (ViewBag.MediumFuelConsumption ?? 0) / 100).ToString("F3"))" />
             </div>
             <div class="form-group w-50">
                 <input asp-for="Date" type="hidden" id="hiddenDate" />

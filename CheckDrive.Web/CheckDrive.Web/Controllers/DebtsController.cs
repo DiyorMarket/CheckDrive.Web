@@ -11,8 +11,8 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var debts = await _debtDataStore.GetDebtsAsync(0);
-            var debtss = debts.Data.ToList();
-            return View(debtss);
+            ViewBag.Debts = debts.Data.ToList();
+            return View();
         }
 
         public async Task<IActionResult> Details(int id)
@@ -41,14 +41,14 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var oilMark = await _debtDataStore.GetDebtByIdAsync(id);
+            var debt = await _debtDataStore.GetDebtByIdAsync(id);
 
-            return View(oilMark);
+            return View(debt);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id, OilAmount, Status, DriverId")] DebtsForUpdateDto debtsForUpdateDto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, OilAmount, Status, DriverId, CarId")] DebtsForUpdateDto debtsForUpdateDto)
         {
             if (ModelState.IsValid)
             {

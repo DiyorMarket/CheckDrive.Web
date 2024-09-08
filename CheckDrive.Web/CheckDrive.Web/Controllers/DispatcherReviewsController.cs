@@ -47,7 +47,7 @@ namespace CheckDrive.Web.Controllers
 
         public async Task<IActionResult> Index(int? pagenumber, string? searchString, DateTime? date)
         {
-            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, date, 1, null);
+            var response = await _dispatcherReviewDataStore.GetDispatcherReviews(pagenumber, searchString, date, "Completed");
 
 
             if (response is null)
@@ -101,11 +101,13 @@ namespace CheckDrive.Web.Controllers
             var dispatcherReviewResponse = response.Data.Select(r => new
             {
                 r.Id,
+                ChangedFuelSpended = (r.ChangedFuelSpendede ?? 0).ToString("0.00").PadLeft(4, '0'),
                 FuelSpended = r.FuelSpended.ToString("0.00").PadLeft(4, '0'),
                 RemainigFuelBefore = r.RemainigFuelBefore.ToString("0.00").PadLeft(4, '0'),
                 RemainigFuelAfter = r.RemainigFuelAfter.ToString("0.00").PadLeft(4, '0'),
                 r.PouredFuel,
                 r.DistanceCovered,
+                r.ChangedDistanceCovered,
                 r.Date,
                 r.CarMeduimFuelConsumption,
                 r.CarName,

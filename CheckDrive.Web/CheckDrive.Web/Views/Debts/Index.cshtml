@@ -1,5 +1,101 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model CheckDrive.ApiContracts.Debts.DebtsDto
+
 @{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<div class="container mt-3">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover paper-shadow">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Haydovchi F.I.</th>
+                    <th>Mashina</th>
+                    <th>Qarz Miqdori</th>
+                    <th>Holati</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var debt in ViewBag.Debts)
+                {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("Details", "Debts", new { id = debt.Id })">
+                                @debt.Id
+                            </a>
+                        </td>
+                        <td>@debt.DriverName</td>
+                        <td>@debt.CarName</td>
+                        <td>@debt.OilAmount</td>
+                        <td>
+                            @if (debt.Status.ToString() == "Completed")
+                            {
+                                <span class="badge bg-success">Yopildi</span>
+                            }
+                            else if (debt.Status.ToString() == "Debts")
+                            {
+                                <span class="badge bg-danger">Yopilmadi</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<style>
+    .badge {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .bg-success {
+        background-color: #28a745;
+    }
+
+    .bg-danger {
+        background-color: #dc3545;
+    }
+
+    .container {
+        margin-top: 30px;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+    .paper-shadow {
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .pagination {
+        justify-content: flex-end;
+    }
+
+    .shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .pagination .page-link {
+        margin-left: 5px;
+    }
+
+    .pagination .page-item.shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .font-weight-normal {
+        font-weight: normal;
+    }
+</style>

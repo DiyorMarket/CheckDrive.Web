@@ -81,8 +81,7 @@
                                 <td class="text-center vertical-align-middle">
                                     @if (item.Status == CheckDrive.ApiContracts.StatusForDto.Unassigned)
                                     {
-                                        <a href="/MechanicAcceptances/CreateByLink?driverId=@item.DriverId&carId=@item.CarId&carName=@item.CarName&driverName=@item.DriverName&remainingFuel=@item.RemainingFuel">@item.DriverName</a>
-                                    
+                                        <a href="/MechanicAcceptances/CreateByLink?driverId=@item.DriverId&carId=@item.CarId&carName=@item.CarName&driverName=@item.DriverName&remainingFuel=@((Convert.ToDouble(item.RemainingFuel).ToString("F3", System.Globalization.CultureInfo.InvariantCulture).Replace(",", ".")))">@item.DriverName</a>
                                     }
                                     else
                                     {

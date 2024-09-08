@@ -8,7 +8,6 @@
 <div class="nav nav-tabs" id="nav-tab" role="tablist">
     <button class="nav-link active" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">Ma'lumot</button>
     <button class="nav-link" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" type="button" role="tab" aria-controls="nav-history" aria-selected="false">Ish tarixi</button>
-    <button class="nav-link" id="nav-debt-tab" data-bs-toggle="tab" data-bs-target="#nav-debt" type="button" role="tab" aria-controls="nav-debt" aria-selected="false">Qarzlar</button>
 </div>
 
 <div id="detailsBlock" class="mt-3">
@@ -45,39 +44,6 @@
             </a>
         </div>
     </dl>
-</div>
-
-<div id="debtBlock" class="container mt-3">
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover paper-shadow">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Qarz Miqdori</th>
-                    <th>Holati</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var debt in ViewBag.Debts)
-                {
-                    <tr>
-                        <td>@debt.Id</td>
-                        <td>@debt.OilAmount</td>
-                        <td>
-                            @if (debt.Status == "Completed")
-                            {
-                                <span class="badge bg-success">Yopildi</span>
-                            }
-                            else if (debt.Status == "Rejected")
-                            {
-                                <span class="badge bg-danger">Yopilmadi</span>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
 </div>
 
 <div id="historyBlock" class="container mt-3">
@@ -373,24 +339,15 @@
     $(document).ready(function () {
         $("#detailsBlock").show();
         $("#historyBlock").hide();
-        $("#debtBlock").hide();
 
         $("#nav-details-tab").click(function () {
             $("#detailsBlock").show();
             $("#historyBlock").hide();
-            $("#debtBlock").hide();
         });
 
         $("#nav-history-tab").click(function () {
             $("#detailsBlock").hide();
             $("#historyBlock").show();
-            $("#debtBlock").hide();
-        });
-
-        $("#nav-debt-tab").click(function () {
-            $("#detailsBlock").hide();
-            $("#historyBlock").hide();
-            $("#debtBlock").show();
         });
     });
 </script>

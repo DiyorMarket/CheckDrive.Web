@@ -64,9 +64,6 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var account = await _accountDataStore.GetAccountAsync(id);
-            var debts = await _debtDataStore.GetDebtsAsync(account.Id);
-
-            ViewBag.Debts = debts;
 
             switch (account.RoleId)
             {
