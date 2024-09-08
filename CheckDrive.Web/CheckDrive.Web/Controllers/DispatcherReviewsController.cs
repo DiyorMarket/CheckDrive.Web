@@ -267,7 +267,7 @@ namespace CheckDrive.Web.Controllers
 
                     if (oldDispatcherReview.FuelSpended != dispatcherReview.FuelSpended)
                     {
-                        await UpdateCar(oldDispatcherReview.Id, oldDispatcherReview.FuelSpended, dispatcherReview.FuelSpended);
+                        await UpdateCar(dispatcherReview.Id, oldDispatcherReview.FuelSpended, dispatcherReview.FuelSpended);
                     }
                     
                 }
