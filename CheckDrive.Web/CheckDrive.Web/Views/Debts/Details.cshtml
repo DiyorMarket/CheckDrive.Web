@@ -1,7 +1,10 @@
 ﻿@model CheckDrive.ApiContracts.Debts.DebtsDto
 @using CheckDrive.ApiContracts
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 @{
     ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div>
@@ -33,6 +36,12 @@
             @Html.DisplayFor(model => model.OilAmount)
         </dd>
         <dt class="col-sm-2">
+            Sana:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt class="col-sm-2">
             Holati:
         </dt>
         <dd class="col-sm-10">
@@ -58,4 +67,35 @@
         <i class="fa-solid fa-pen"></i>
         Tahrirlash
     </a>
+    <a asp-controller="DispatcherReviews" asp-action="Details" asp-route-id="@Model?.DispatcherReviewId" class="btn btn-outline-info">
+        <i class="fa-solid fa-info-circle"></i>
+        Ma'lumot
+    </a>
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#completeModal">
+        <i class="fa fa-check"></i> Yopish
+    </button>
+</div>
+
+<!-- Modal for confirmation -->
+<div class="modal fade" id="completeModal" tabindex="-1" role="dialog" aria-labelledby="completeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="completeModalLabel">Tasdiqlash</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Siz bu qarzni yopmoqchimisiz?
+            </div>
+            <div class="modal-footer">
+                <form id="completeForm" asp-action="Complete" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Yo'q</button>
+                    <button type="submit" class="btn btn-primary">Ha</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

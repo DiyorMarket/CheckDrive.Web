@@ -56,11 +56,23 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.DistanceCovered)
         </dd>
+        <dt class="col-sm-2">
+            Ozgartirilgan masofa:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ChangedDistanceCovered)
+        </dd>
         <dt class = "col-sm-2">
             Sarflangan yoqilg'i:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FuelSpended)
+        </dd>
+        <dt class="col-sm-2">
+            O`zgartirilgan sarflangan yoqilg'i:
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ChangedFuelSpendede)
         </dd>
         <dt class="col-sm-2">
             Operator quygan yoqilg`i:
@@ -69,16 +81,10 @@
             @Html.DisplayFor(model => model.PouredFuel)
         </dd>
         <dt class="col-sm-2">
-            Boshlang`ich yoqilg`i qoldig`i:
+            Izoh:
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RemainigFuelBefore)
-        </dd>
-        <dt class="col-sm-2">
-            Yakuniy yoqilg`i qoldig`i:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RemainigFuelAfter)
+            @Html.DisplayFor(model => model.Comment)
         </dd>
     </dl>
 </div>

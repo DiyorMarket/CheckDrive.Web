@@ -1,4 +1,6 @@
-﻿using CheckDrive.ApiContracts.Debts;
+﻿using CheckDrive.ApiContracts;
+using CheckDrive.ApiContracts.Debts;
+using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Debts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +10,19 @@ namespace CheckDrive.Web.Controllers
     {
         private readonly IDebtDataStore _debtDataStore = debtDataStore;
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchString, int? pageNumber)
         {
-            var debts = await _debtDataStore.GetDebtsAsync(0);
+            var debts = await _debtDataStore.GetDebtsAsync(searchString, pageNumber, null);
             ViewBag.Debts = debts.Data.ToList();
+            ViewBag.SearchString = searchString;
+
+            ViewBag.PageSize = debts.PageSize;
+            ViewBag.PageCount = debts.TotalPages;
+            ViewBag.TotalCount = debts.TotalCount;
+            ViewBag.CurrentPage = debts.PageNumber;
+            ViewBag.HasPreviousPage = debts.HasPreviousPage;
+            ViewBag.HasNextPage = debts.HasNextPage;
+
             return View();
         }
 
@@ -57,6 +68,31 @@ namespace CheckDrive.Web.Controllers
             }
             return View(debtsForUpdateDto);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Complete(int id)
+        {
+            var debt = await _debtDataStore.GetDebtByIdAsync(id);
+
+            if (debt != null)
+            {
+                debt.Status = StatusForDto.Completed;
+                await _debtDataStore.UpdateDebtAsync(id, new DebtsForUpdateDto
+                {
+                    Id = debt.Id,
+                    OilAmount = 0,
+                    Status = StatusForDto.Completed,
+                    DriverId = debt.DriverId,
+                    Date = debt.Date,
+                    DispatcherReviewId = debt.DispatcherReviewId,
+                    CarId = debt.CarId
+                });
+            }
+
+            return RedirectToAction(nameof(Details), new { id = id });
+        }
+
 
         public async Task<IActionResult> Delete(int id)
         {

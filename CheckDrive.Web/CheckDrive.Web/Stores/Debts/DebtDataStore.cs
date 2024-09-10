@@ -12,13 +12,21 @@ namespace CheckDrive.Web.Stores.Debts
     {
         private readonly ApiClient _api = api;
 
-        public async Task<GetDebtResponse> GetDebtsAsync(int? accountId) 
+        public async Task<GetDebtResponse> GetDebtsAsync(string? searchString, int? pageNumber, DateTime? date) 
         {
             StringBuilder query = new("");
 
-            if (!accountId.Equals(0))
+            if (date is not null)
+                query.Append($"date={date.Value.ToString("MM/dd/yyyy")}&");
+
+            if (pageNumber != null)
             {
-                query.Append($"driverId={accountId}");
+                query.Append($"pageNumber={pageNumber}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query.Append($"searchString={searchString}&");
             }
 
             var response = await _api.GetAsync("debts?" + query.ToString());

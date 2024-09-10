@@ -4,7 +4,6 @@
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
     double fuelSpend = Model.FuelSpended;
-    var dis = "sas";
 }
 
 <div class="row mt-custom">
@@ -15,7 +14,11 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group w-50">
                 <label asp-for="ChangedDistanceCovered" class="control-label">Bosib otilgan masofa</label>
-                <input asp-for="ChangedDistanceCovered" id="changedDistanceCovered" class="form-control" type="number" value="@Model.DistanceCovered" />
+                <input asp-for="ChangedDistanceCovered"
+                       id="changedDistanceCovered"
+                       class="form-control"
+                       type="number"
+                       value="@Html.Raw(Model.ChangedDistanceCovered != null ? Model.ChangedDistanceCovered : Model.DistanceCovered)" />
                 <span asp-validation-for="ChangedDistanceCovered" class="text-danger"></span>
             </div>
             <div class="form-group w-50">
@@ -82,38 +85,77 @@
     </div>
 </div>
 
+<div class="modal fade" id="validationErrorModal" tabindex="-1" role="dialog" aria-labelledby="validationErrorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="validationErrorModalLabel">Xatolik</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="validationErrorMessage">
+                <!-- Здесь будет сообщение об ошибке -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Yopish</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script>
         document.getElementById('createForm').addEventListener('submit', function (event) {
             var currentDate = new Date().toISOString();
 
-            var changedDistanceCovered = parseFloat(document.querySelector('[name="ChangedDistanceCovered"]').value);
+            var changedDistanceCoveredInput = document.querySelector('[name="ChangedDistanceCovered"]');
+            var changedDistanceCovered = parseFloat(changedDistanceCoveredInput.value);
             var distanceCovered = parseFloat(document.querySelector('[name="DistanceCovered"]').value);
 
-            var changedFuelSpendede = parseFloat(document.querySelector('[name="ChangedFuelSpendede"]').value);
+            var changedFuelSpendedeInput = document.querySelector('[name="ChangedFuelSpendede"]');
+            var changedFuelSpendede = parseFloat(changedFuelSpendedeInput.value);
             var fuelSpended = parseFloat(document.querySelector('[name="FuelSpended"]').value);
 
+            var fuelRemaining = parseFloat('@ViewBag.FuelRemaining') || 0;
+            var commentField = document.querySelector('[name="Comment"]');
+            var errorMessage = '';
+
+            var originalDistanceCovered = '@Model.DistanceCovered';
+
             if (changedDistanceCovered === distanceCovered) {
-                document.querySelector('[name="ChangedDistanceCovered"]').value = '';
+                changedDistanceCoveredInput.value = '';
             }
 
             if (Math.abs(changedFuelSpendede - fuelSpended) < 0.01) {
-                document.querySelector('[name="ChangedFuelSpendede"]').value = '';
+                changedFuelSpendedeInput.value = '';
             }
 
-            document.getElementById('hiddenDate').value = currentDate;
+            // Валидация
+            if (changedDistanceCovered !== distanceCovered && commentField.value.trim() === '') {
+                errorMessage = "Izoh kiritishingiz shart, chunki siz boshqa qiymat kiritdingiz!";
+            }
 
-            // Ensure Comment is mandatory when distances don't match
-            if (changedDistanceCovered !== distanceCovered) {
-                var commentField = document.querySelector('[name="Comment"]');
+            if (changedFuelSpendede > fuelRemaining) {
                 if (commentField.value.trim() === '') {
-                    alert("Izoh (Comment) field is required when the distance covered values are different.");
-                    commentField.focus();
-                    event.preventDefault();
+                    errorMessage = "Sariflangan yoqilgi qiymati avtomobil bakidagi yoqilg'i miqdoridan katta bo'lishi mumkin emas. Iltimos, izoh kiriting.";
+                    changedDistanceCoveredInput.value = originalDistanceCovered;
                 }
+            }
+
+            if (errorMessage) {
+                // Останавливаем отправку формы
+                event.preventDefault();
+
+                // Сохраняем значения, чтобы не сбрасывались
+                document.getElementById('validationErrorMessage').textContent = errorMessage;
+                var validationErrorModal = new bootstrap.Modal(document.getElementById('validationErrorModal'));
+                validationErrorModal.show();
+            } else {
+                // Устанавливаем дату только если нет ошибок
+                document.getElementById('hiddenDate').value = currentDate;
             }
         });
 
+        // Не сбрасывать значения
         document.getElementById('changedDistanceCovered').addEventListener('input', function () {
             var distanceCovered = parseFloat(this.value) || 0;
             var mediumFuelConsumption = parseFloat('@ViewBag.MediumFuelConsumption.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)') || 0;
@@ -122,7 +164,6 @@
             document.getElementById('changedFuelSpendede').value = fuelSpended.toFixed(3);
         });
 
-        // Set initial value on page load
         window.onload = function () {
             var distanceCovered = parseFloat(document.getElementById('changedDistanceCovered').value) || 0;
             var mediumFuelConsumption = parseFloat('@ViewBag.MediumFuelConsumption.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)') || 0;

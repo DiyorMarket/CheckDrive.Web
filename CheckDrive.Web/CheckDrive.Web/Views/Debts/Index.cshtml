@@ -14,6 +14,7 @@
                     <th>Haydovchi F.I.</th>
                     <th>Mashina</th>
                     <th>Qarz Miqdori</th>
+                    <th>Sana</th>
                     <th>Holati</th>
                 </tr>
             </thead>
@@ -29,6 +30,7 @@
                         <td>@debt.DriverName</td>
                         <td>@debt.CarName</td>
                         <td>@debt.OilAmount</td>
+                        <td>@debt.Date</td>
                         <td>
                             @if (debt.Status.ToString() == "Completed")
                             {
@@ -79,7 +81,7 @@
         border-radius: 10px;
     }
 
-    .pagination {
+    .pagination {   
         justify-content: flex-end;
     }
 

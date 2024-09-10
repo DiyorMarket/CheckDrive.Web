@@ -5,7 +5,7 @@ namespace CheckDrive.Web.Stores.Debts
 {
     public interface IDebtDataStore
     {
-        Task<GetDebtResponse> GetDebtsAsync(int? accountId);
+        Task<GetDebtResponse> GetDebtsAsync(string? searchString, int? pageNumber, DateTime? date);
         Task<DebtsDto> GetDebtByIdAsync(int id);
         Task<DebtsDto> CreateDebtAsync(DebtsForCreateDto review);
         Task<DebtsDto> UpdateDebtAsync(int id, DebtsForUpdateDto review);
