@@ -121,14 +121,6 @@
 
             var originalDistanceCovered = '@Model.DistanceCovered';
 
-            if (changedDistanceCovered === distanceCovered) {
-                changedDistanceCoveredInput.value = '';
-            }
-
-            if (Math.abs(changedFuelSpendede - fuelSpended) < 0.01) {
-                changedFuelSpendedeInput.value = '';
-            }
-
             // Валидация
             if (changedDistanceCovered !== distanceCovered && commentField.value.trim() === '') {
                 errorMessage = "Izoh kiritishingiz shart, chunki siz boshqa qiymat kiritdingiz!";
@@ -137,7 +129,6 @@
             if (changedFuelSpendede > fuelRemaining) {
                 if (commentField.value.trim() === '') {
                     errorMessage = "Sariflangan yoqilgi qiymati avtomobil bakidagi yoqilg'i miqdoridan katta bo'lishi mumkin emas. Iltimos, izoh kiriting.";
-                    changedDistanceCoveredInput.value = originalDistanceCovered;
                 }
             }
 
