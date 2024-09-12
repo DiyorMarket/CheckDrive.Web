@@ -1,59 +1,58 @@
 ﻿@model CheckDrive.ApiContracts.DispatcherReview.DispatcherReviewDto
-
+@using CheckDrive.ApiContracts
 @{
     ViewData["Title"] = "Details";
 }
-
 <div>
     <h4>Dispetcher</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Dispetcher F.I.SH:
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DispatcherName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Haydovchi F.I.SH:
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DriverName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Mexanik F.I.SH:
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MechanicName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Operator F.I.SH:
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.OperatorName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Ro'yxatga olingan vaqt:
         </dt>
         <dd class="col-sm-10">
             @(Model.Date.ToString("yyyy-MM-dd | HH:mm"))
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Avtomobil:
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CarName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             O'rtacha yoqilg'i sarfi:
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CarMeduimFuelConsumption)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Bosib o'tilgan masofa:
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DistanceCovered)
         </dd>
         <dt class="col-sm-2">
@@ -62,20 +61,20 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ChangedDistanceCovered)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             Sarflangan yoqilg'i:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FuelSpended)
         </dd>
         <dt class="col-sm-2">
-            O`zgartirilgan sarflangan yoqilg'i:
+            Ozgartirilgan sarflangan yoqilg'i:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ChangedFuelSpendede)
         </dd>
         <dt class="col-sm-2">
-            Operator quygan yoqilg`i:
+            Operator quygan yoqilgi:
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.PouredFuel)
@@ -97,12 +96,15 @@
         <i class="fa-solid fa-pen"></i>
         Tahrirlash
     </a>
-    <form asp-action="SaveReview" method="post" style="display:inline;">
-        <input type="hidden" name="id" value="@Model.Id" />
-        <button type="submit" class="btn btn-outline-success">
-            <i class="fa-solid fa-save"></i>
-            Save
-        </button>
-    </form>
-</div>
 
+    @if (Model.Status == StatusForDto.Rejected)
+    {
+        <form asp-action="SaveReview" method="post" style="display:inline;">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit" class="btn btn-outline-success">
+                <i class="fa-solid fa-save"></i>
+                Save
+            </button>
+        </form>
+    }
+</div>
