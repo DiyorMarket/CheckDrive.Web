@@ -1,4 +1,5 @@
-﻿using CheckDrive.ApiContracts.Car;
+﻿using CheckDrive.ApiContracts;
+using CheckDrive.ApiContracts.Car;
 using CheckDrive.ApiContracts.Dispatcher;
 using CheckDrive.ApiContracts.DispatcherReview;
 using CheckDrive.Web.Extensions;
@@ -118,6 +119,40 @@ namespace CheckDrive.Web.Controllers
             ViewBag.DispatcherReviews = dispatcherReviewResponse;
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> SaveReview(int id)
+        {
+            var review = await _dispatcherReviewDataStore.GetDispatcherReview(id);
+
+            if (review == null)
+            {
+                return NotFound();
+            }
+
+            var reviewForUpdate = new DispatcherReviewForUpdateDto
+            {
+                Id = review.Id,
+                FuelSpended = review.FuelSpended,
+                DistanceCovered = review.DistanceCovered,
+                Status = StatusForDto.Completed, 
+                Comment = review.Comment,
+                Date = review.Date,
+                DispatcherId = review.DispatcherId,
+                OperatorId = review.OperatorId,
+                MechanicId = review.MechanicId,
+                DriverId = review.DriverId,
+                CarId = review.CarId,
+                MechanicAcceptanceId = review.MechanicAcceptanceId,
+                MechanicHandoverId = review.MechanicHandoverId,
+                OperatorReviewId = review.OperatorReviewId
+            };
+
+            await _dispatcherReviewDataStore.UpdateDispatcherReview(id, reviewForUpdate);
+
+            return RedirectToAction("BorrowIndex");
+        }
+
+
 
         public async Task<IActionResult> PersonalIndex(int? pagenumber, string? searchString)
         {

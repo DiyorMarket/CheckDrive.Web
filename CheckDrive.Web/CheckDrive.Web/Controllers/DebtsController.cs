@@ -1,6 +1,5 @@
 ﻿using CheckDrive.ApiContracts;
 using CheckDrive.ApiContracts.Debts;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Stores.Debts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -59,7 +58,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id, OilAmount, Status, DriverId, CarId")] DebtsForUpdateDto debtsForUpdateDto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Date, OilAmount, DispatcherReviewId, Status, DriverId, CarId")] DebtsForUpdateDto debtsForUpdateDto)
         {
             if (ModelState.IsValid)
             {

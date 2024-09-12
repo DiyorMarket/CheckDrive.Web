@@ -97,4 +97,12 @@
         <i class="fa-solid fa-pen"></i>
         Tahrirlash
     </a>
+    <form asp-action="SaveReview" method="post" style="display:inline;">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <button type="submit" class="btn btn-outline-success">
+            <i class="fa-solid fa-save"></i>
+            Save
+        </button>
+    </form>
 </div>
+

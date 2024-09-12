@@ -12,12 +12,11 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group w-50">
-                <label asp-for="OilAmount" class="control-label">Bosib otilgan masofa</label>
+                <label asp-for="OilAmount" class="control-label">Yoqilg'i miqdori</label>
                 <input asp-for="OilAmount" class="form-control" type="number" />
                 <span asp-validation-for="OilAmount" class="text-danger"></span>
             </div>
 
-            <!-- Hidden fields for other properties -->
             <input asp-for="Id" type="hidden" />
             <input asp-for="DriverId" type="hidden" />
             <input asp-for="CarId" type="hidden" />
