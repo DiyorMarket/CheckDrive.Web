@@ -1,10 +1,8 @@
 ﻿using CheckDrive.ApiContracts.Debts;
-using CheckDrive.ApiContracts.OilMark;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
 using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CheckDrive.Web.Stores.Debts
 {
@@ -12,7 +10,7 @@ namespace CheckDrive.Web.Stores.Debts
     {
         private readonly ApiClient _api = api;
 
-        public async Task<GetDebtResponse> GetDebtsAsync(string? searchString, int? pageNumber, DateTime? date) 
+        public async Task<GetDebtResponse> GetDebtsAsync(string? searchString, int? pageNumber, DateTime? date)
         {
             StringBuilder query = new("");
 
