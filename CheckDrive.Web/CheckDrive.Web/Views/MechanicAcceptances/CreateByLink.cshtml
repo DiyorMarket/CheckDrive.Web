@@ -50,7 +50,19 @@
 
             <div class="form-group w-50 mt-2">
                 <label class="control-label mt-2">Yoqilg`i qoldig`i</label>
-                <input type="text" class="form-control" value="@ViewBag.RemainingFuel" disabled />
+                <input type="text" class="form-control" value="@ViewBag.RemainingFuel"/>
+            </div>
+
+            <div class="form-group w-50 mt-2">
+                <label asp-for="OilAmount" class="control-label mt-2">Haydovchi quygan yoqilg`i miqdori</label>
+                <input asp-for="OilAmount" class="form-control" type="number" min="0" step="1" />
+                <span asp-validation-for="OilAmount" class="text-danger"></span>
+            </div>
+
+            <div class="form-group w-50 mt-2">
+                <label asp-for="RemainingFuelInCar" class="control-label mt-2">Avtomobildagi yoqilg`i miqdori</label>
+                <input asp-for="RemainingFuelInCar" class="form-control" type="number" min="0" step="1" />
+                <span asp-validation-for="RemainingFuelInCar" class="text-danger"></span>
             </div>
 
             <div class="form-group w-50 mt-2">

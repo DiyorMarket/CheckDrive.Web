@@ -54,6 +54,7 @@ namespace CheckDrive.Web.Controllers
                 r.Distance,
                 r.DriverName,
                 r.MechanicName,
+                r.OilAmount,
                 r.RemainingFuel,
                 r.CarName,
                 r.CarId

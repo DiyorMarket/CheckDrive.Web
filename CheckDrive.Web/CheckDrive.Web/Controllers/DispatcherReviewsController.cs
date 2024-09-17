@@ -297,13 +297,9 @@ namespace CheckDrive.Web.Controllers
                     dispatcherReview.OperatorReviewId = oldDispatcherReview.OperatorReviewId;
                     dispatcherReview.OperatorId = oldDispatcherReview.OperatorId;
                     dispatcherReview.MechanicHandoverId = oldDispatcherReview.MechanicHandoverId;
+                    dispatcherReview.Status = StatusForDto.Completed;
 
                     var dr = await _dispatcherReviewDataStore.UpdateDispatcherReview(id, dispatcherReview);
-
-                    if (oldDispatcherReview.FuelSpended != dispatcherReview.FuelSpended)
-                    {
-                        await UpdateCar(oldDispatcherReview.CarId, oldDispatcherReview.FuelSpended, dispatcherReview.FuelSpended);
-                    }
 
                 }
                 catch (Exception ex)
@@ -385,32 +381,6 @@ namespace CheckDrive.Web.Controllers
                 })
                 .ToList();
             return drivers;
-        }
-
-        private async Task UpdateCar(int carId, double fuelSpended, double changedFuelSpended)
-        {
-            var car = await _carDataStore.GetCarAsync(carId);
-
-            car.RemainingFuel -= fuelSpended;
-
-            car.RemainingFuel += changedFuelSpended;
-
-            var carUpdateDto = new CarForUpdateDto
-            {
-                Id = car.Id,
-                RemainingFuel = car.RemainingFuel,
-                CarStatus = car.CarStatus,
-                Color = car.Color,
-                FuelTankCapacity = car.FuelTankCapacity,
-                ManufacturedYear = car.ManufacturedYear,
-                MeduimFuelConsumption = car.MeduimFuelConsumption,
-                Mileage = car.Mileage,
-                Model = car.Model,
-                Number = car.Number,
-                OneYearMediumDistance = car.OneYearMediumDistance,
-            };
-
-            await _carDataStore.UpdateCarAsync(car.Id, carUpdateDto);
         }
     }
 }
