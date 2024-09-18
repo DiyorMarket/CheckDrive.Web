@@ -39,15 +39,12 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <ejs-grid id="cars-list"
-                          dataSource="@ViewBag.Cars"
-                          gridLines="Vertical"
-                          allowSorting="true">
+                <ejs-grid id="cars-list" dataSource="@ViewBag.Cars" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
                     <e-grid-columns>
                         <e-grid-column headerText="Id" field="Id" field="Id" template="#template" typeof="Text"></e-grid-column>
                         <e-grid-column headerText="Model" field="Model" typeof="Text"></e-grid-column>
                         <e-grid-column headerText="Davlat raqami" field="Number" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="Bosib o'tgan masofasi'" field="Mileage" typeof="text"></e-grid-column>
+                        <e-grid-column headerText="Bosib o'tgan masofasi" field="Mileage" typeof="text"></e-grid-column>
                         <e-grid-column headerText="Rangi" field="Color" typeof="text"></e-grid-column>
                         <e-grid-column headerText="Avtomobildagi yoqilg'i hajmi" field="RemainingFuel" typeof="text"></e-grid-column>
                         <e-grid-column headerText="O'rtacha yoqilg'i sarfi" field="MeduimFuelConsumption" typeof="text"></e-grid-column>
@@ -100,4 +97,14 @@
     <div>
         <a rel='nofollow' href="cars/Details/${Id}">${Id}</a>
     </div>
+</script>
+
+<script>
+    function onDataBound() {
+        const headers = document.querySelectorAll('#cars-list .e-headercell');
+
+        headers.forEach(header => {
+            header.setAttribute('title', header.innerText.trim());
+        });
+    }
 </script>
