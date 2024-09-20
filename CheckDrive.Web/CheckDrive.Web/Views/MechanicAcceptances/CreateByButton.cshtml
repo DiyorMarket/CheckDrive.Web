@@ -66,7 +66,7 @@
                     <label for="remainingFuelInput" class="control-label mt-2">Qolgan yoqilg'i (L)</label>
                     <input type="number" class="form-control" id="remainingFuelInput" disabled />
                 </div>
-                <div class="form-group w-50 mt-2">
+                <div class="form-group w-50 mt-2" id="oilAmountGroup" style="display: none;">
                     <label asp-for="OilAmount" class="control-label mt-2">Haydovchi quygan yoqilg`i miqdori</label>
                     <input asp-for="OilAmount" class="form-control" type="number" min="0" step="1" />
                     <span asp-validation-for="OilAmount" class="text-danger"></span>
@@ -106,6 +106,10 @@
             var remainingFuelInput = document.getElementById('remainingFuelInput');
             var fuelConsumptionInput = document.getElementById('fuelConsumptionInput');
             var fuelConsumptionGroup = document.getElementById('fuelConsumptionGroup');
+            var oilAmountGroup = document.getElementById('oilAmountGroup');
+            var oilAmountInput = document.querySelector('input[name="OilAmount"]');
+            var commentsInput = document.querySelector('textarea[name="Comments"]');
+
             var mileage = 0;
             var mediumFuel = 0;
 
@@ -139,6 +143,7 @@
                             remainingFuelInput.value = data.remainingFuel;
                             validateDistance();
                             calculateFuelConsumption(); // Обновление расчета топлива
+                            checkRemainingFuel(); // Проверка оставшегося топлива
                         })
                         .catch(error => console.error('Error fetching car details:', error));
                 } else {
@@ -152,6 +157,7 @@
             distanceInput.addEventListener('input', function () {
                 validateDistance();
                 calculateFuelConsumption(); // Обновление расчета топлива при изменении distance
+                checkRemainingFuel(); // Проверка оставшегося топлива при изменении distance
             });
 
             function validateDistance() {
@@ -173,6 +179,17 @@
                 fuelConsumptionInput.value = fuelConsumption.toFixed(2); // Вывод расхода топлива с двумя знаками после запятой
             }
 
+            function checkRemainingFuel() {
+                var remainingFuel = parseFloat(remainingFuelInput.value) || 0;
+                var fuelConsumption = parseFloat(fuelConsumptionInput.value) || 0;
+
+                if (remainingFuel < fuelConsumption) {
+                    oilAmountGroup.style.display = "block"; // Показать поле OilAmount
+                } else {
+                    oilAmountGroup.style.display = "none"; // Скрыть поле OilAmount
+                }
+            }
+
             function showValidationMessage(message) {
                 var errorSpan = document.querySelector('.distance-validation-message');
                 if (!errorSpan) {
@@ -189,6 +206,14 @@
                     errorSpan.textContent = '';
                 }
             }
+
+            document.getElementById('createFormByButton').addEventListener('submit', function (event) {
+                if (oilAmountInput.value && !commentsInput.value.trim()) {
+                    event.preventDefault(); // Prevent form submission
+                    alert("Izoh yozishingiz shart, chunki siz Haydovchi o`z yonidan yoqilg`i" +
+                        " quydi deb qiymat kiritdingiz. Sizdan shu haqida to`liq ma`lumot berishingizni so`rayman.");
+                }
+            });
         });
     </script>
 }

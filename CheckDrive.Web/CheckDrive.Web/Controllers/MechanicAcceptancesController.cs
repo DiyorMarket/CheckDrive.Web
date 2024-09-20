@@ -146,7 +146,7 @@ namespace CheckDrive.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IsAccepted,Comments,MechanicId,Distance,CarId,DriverId")] MechanicAcceptanceForCreateDto mechanicAcceptanceForCreateDto)
+        public async Task<IActionResult> Create([Bind("IsAccepted,Comments,MechanicId,Distance,CarId,DriverId,OilAmount,RemainingFuel,RemainingFuelInCar")] MechanicAcceptanceForCreateDto mechanicAcceptanceForCreateDto)
         {
             if (ModelState.IsValid)
             {

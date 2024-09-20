@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
-    double fuelSpend = Model.FuelSpended;
 }
 
 <div class="row mt-custom">
@@ -111,25 +110,13 @@
             var changedDistanceCovered = parseFloat(changedDistanceCoveredInput.value);
             var distanceCovered = parseFloat(document.querySelector('[name="DistanceCovered"]').value);
 
-            var changedFuelSpendedeInput = document.querySelector('[name="ChangedFuelSpendede"]');
-            var changedFuelSpendede = parseFloat(changedFuelSpendedeInput.value);
-            var fuelSpended = parseFloat(document.querySelector('[name="FuelSpended"]').value);
-
             var fuelRemaining = parseFloat('@ViewBag.FuelRemaining') || 0;
             var commentField = document.querySelector('[name="Comment"]');
             var errorMessage = '';
 
-            var originalDistanceCovered = '@Model.DistanceCovered';
-
             // Валидация
             if (changedDistanceCovered !== distanceCovered && commentField.value.trim() === '') {
                 errorMessage = "Izoh kiritishingiz shart, chunki siz boshqa qiymat kiritdingiz!";
-            }
-
-            if (changedFuelSpendede > fuelRemaining) {
-                if (commentField.value.trim() === '') {
-                    errorMessage = "Sariflangan yoqilgi qiymati avtomobil bakidagi yoqilg'i miqdoridan katta bo'lishi mumkin emas. Iltimos, izoh kiriting.";
-                }
             }
 
             if (errorMessage) {

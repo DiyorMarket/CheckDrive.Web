@@ -41,6 +41,21 @@
                 <select asp-for="CarId" class="form-control" asp-items="ViewBag.CarSelectList"></select>
                 <span asp-validation-for="CarId" class="text-danger"></span>
             </div>
+            <div class="form-group mt-3">
+                <label asp-for="OilAmount" class="control-label">Haydovchiga o`z yonidan quyilgan yoqilg`i</label>
+                <input asp-for="OilAmount" class="form-control"></input>
+                <span asp-validation-for="OilAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="RemainingFuel" class="control-label">Moshinada qolgan yoqilg`i(sarfdan oldin)</label>
+                <input asp-for="RemainingFuel" class="form-control"></input>
+                <span asp-validation-for="RemainingFuel" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="RemainingFuelInCar" class="control-label">Moshinada qolgan yoqilg`i(sarfdan keyin)</label>
+                <input asp-for="RemainingFuelInCar" class="form-control"></input>
+                <span asp-validation-for="RemainingFuelInCar" class="text-danger"></span>
+            </div>
             <div class="form-group mt-2">
                 <label asp-for="Comments" class="control-label mt-2">Izoh</label>
                 <textarea asp-for="Comments" class="form-control" rows="4"></textarea>

@@ -53,7 +53,7 @@
                 <input type="text" class="form-control" value="@ViewBag.RemainingFuel"/>
             </div>
 
-            <div class="form-group w-50 mt-2">
+            <div class="form-group w-50 mt-2" id="oilAmountFieldGroup" style="display: none;">
                 <label asp-for="OilAmount" class="control-label mt-2">Haydovchi quygan yoqilg`i miqdori</label>
                 <input asp-for="OilAmount" class="form-control" type="number" min="0" step="1" />
                 <span asp-validation-for="OilAmount" class="text-danger"></span>
@@ -88,21 +88,28 @@
             var form = document.getElementById('createFormByLink');
             var mileage = parseFloat(@ViewBag.Mileage);
             var meduimFuelConsumption = parseFloat(@ViewBag.MeduimFuelConsumption);
+            var remainingFuel = parseFloat(@ViewBag.RemainingFuel);
             var checkbox = document.getElementById('flexSwitchCheckDefault');
             var fuelConsumedInput = document.getElementById('fuelConsumedInput');
             var distanceInput = document.querySelector('input[name="Distance"]');
             var distanceErrorMessage = document.getElementById('distanceErrorMessage');
             var distanceFieldGroup = document.getElementById('distanceFieldGroup');
             var fuelConsumedFieldGroup = document.getElementById('fuelConsumedFieldGroup');
+            var oilAmountFieldGroup = document.getElementById('oilAmountFieldGroup');
+            var oilAmountInput = document.querySelector('input[name="OilAmount"]');
+            var commentsField = document.querySelector('textarea[name="Comments"]');
+            var commentsInput = document.querySelector('textarea[name="Comments"]');
+            var commentsLabel = document.querySelector('label[for="Comments"]');
+            var oilAmountError = document.getElementById('oilAmountErrorMessage');
 
             function toggleDistanceField() {
                 if (checkbox.checked) {
                     distanceFieldGroup.style.display = 'block';
-                    distanceInput.value = mileage; // Set the distance input to the car's mileage when shown
+                    distanceInput.value = mileage;
                 } else {
                     distanceFieldGroup.style.display = 'none';
                     distanceErrorMessage.style.display = 'none';
-                    distanceInput.value = mileage; // Assign mileage to distance when checkbox is unchecked
+                    distanceInput.value = mileage;
                 }
             }
 
@@ -112,7 +119,7 @@
                     updateFuelConsumed();
                 } else {
                     fuelConsumedFieldGroup.style.display = 'none';
-                    fuelConsumedInput.value = ''; // Очистить поле при скрытии
+                    fuelConsumedInput.value = '';
                 }
             }
 
@@ -120,14 +127,24 @@
                 var distanceValue = parseFloat(distanceInput.value);
                 if (distanceValue > mileage) {
                     var fuelConsumed = (distanceValue - mileage) * meduimFuelConsumption / 100;
-                    fuelConsumedInput.value = fuelConsumed.toFixed(2); // Обновить значение в поле
+                    fuelConsumedInput.value = fuelConsumed.toFixed(2);
+                    toggleOilAmountField(fuelConsumed);
                 } else {
-                    fuelConsumedInput.value = ''; // Если значение некорректно, очистить поле
+                    fuelConsumedInput.value = '';
+                    toggleOilAmountField(0);
                 }
             }
 
-            toggleDistanceField(); // Изначальная проверка
-            toggleFuelConsumedField(); // Изначальная проверка
+            function toggleOilAmountField(fuelConsumed) {
+                if (fuelConsumed > remainingFuel) {
+                    oilAmountFieldGroup.style.display = 'block';
+                } else {
+                    oilAmountFieldGroup.style.display = 'none';
+                }
+            }
+
+            toggleDistanceField();
+            toggleFuelConsumedField();
 
             checkbox.addEventListener('change', function () {
                 toggleDistanceField();
@@ -154,6 +171,17 @@
                 if (distanceValue === 0 && isGiven) {
                     event.preventDefault();
                     alert("Qabul qilish masofanisini kiritishingiz shart!");
+                }
+            });
+
+            form.addEventListener('submit', function (event) {
+                var oilAmountValue = parseFloat(oilAmountInput.value);
+                var commentsValue = commentsInput.value.trim();
+
+                if (!isNaN(oilAmountValue) && oilAmountValue > 0 && commentsValue === "") {
+                    event.preventDefault();
+                    alert("Izoh yozishingiz shart, chunki siz Haydovchi o`z yonidan yoqilg`i" + 
+                    " quydi deb qiymat kiritdingiz. Sizdan shu haqida to`liq ma`lumot berishingizni so`rayman.");
                 }
             });
         });
