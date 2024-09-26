@@ -10,17 +10,17 @@
     <div class="row">
         <div class="d-flex justify-content-between">
             <!-- Filter -->
-            <div class="col-md-2 mb-4">
-                <div class="input-group">
-                    <select class="form-control" name="roleId">
-                        @foreach (var role in ViewBag.Roles)
-                        {
-                            <option value="@role.Id" selected="@(role.Id == ViewBag.RoleId)">
-                                @role.Name
-                            </option>
-                        }
-                    </select>
-                </div>
+            <div class="col-md-2 mb-4" >
+                <div class="input-group" style="height:38px">                  
+                    <ejs-dropdownlist 
+                                      id="roleDropdown"
+                                      name="roleId" 
+                                      dataSource="@(ViewBag.Roles)" 
+                                      fields="@(new Syncfusion.EJ2.DropDowns.DropDownListFieldSettings { Text = "Name", Value = "Id" })" 
+                                      value="@ViewBag.RoleId" 
+                                      placeholder="Ishchini tanlang" >
+                    </ejs-dropdownlist>
+               </div>
             </div>
             <!-- Search -->
             <div class="col-md-4 ms-lg-3 mb-4">
@@ -35,9 +35,9 @@
             </div>
             <!-- Create -->
             <div class="d-flex col-md mb-4 justify-content-end">
-                  <a class="btn btn-success ml" asp-action="create">
+                <button class="btn btn-success" asp-action="create">
                         <i class="fa fa-plus"></i> Yaratish
-                  </a>
+                 </button>
              </div>
         </div>
     </div>
