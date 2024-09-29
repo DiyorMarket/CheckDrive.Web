@@ -35,50 +35,33 @@
     });
     menuItems.Add(new
     {
-        text = "Shifokor Ko'riklari",
+        text = "Shifokor",
         iconCss = "fa-solid fa-briefcase-medical",
         url = "/doctorreviews"
     });
     menuItems.Add(new
     {
-        text = "Mexanik(Topshirish)",
+        text = "Mexanik (Topshirish)",
         iconCss = "fa-solid fa-tools",
         url = "/mechanichandovers"
     });
     menuItems.Add(new
     {
-        text = "Operator Xizmatlari",
+        text = "Operator",
         iconCss = "fa-solid fa-headset",
         url = "/OperatorReviews"
     });
     menuItems.Add(new
     {
-        text = "Mexanik(Qabul qiluvchi)",
+        text = "Mexanik (Qabul qilish)",
         iconCss = "fa-solid fa-car-on",
         url = "/mechanicacceptances"
     });
     menuItems.Add(new
     {
-        text = "Dispetcher Xizmatlari",
+        text = "Dispetcher",
         iconCss = "fa-solid fa-user-gear",
         url = "/DispatcherReviews"
-    });
-    menuItems.Add(new
-    {
-        text = "Umumiy",
-        separator = true,
-    });
-    menuItems.Add(new
-    {
-        text = "Sozlamalar",
-        iconCss = "fa-solid fa-gear",
-        url = "/#"
-    });
-    menuItems.Add(new
-    {
-        text = "Tizimdan chiqish",
-        iconCss = "fa-solid fa-right-from-bracket",
-        url = "/#"
     });
 
     TempData.Keep("UserName");
@@ -88,8 +71,15 @@
              target=".dock-target" enableGestures="false">
     <e-content-template>
 
-        <div class="app-logo">
-            <img src='~/LogoCheakDrive.png' style="height: 80px; width:80px" />
+        <div class="app-logo logo-wrapper">
+            <img src='~/Images/LogoCheakDrive.png' />
+        </div>    
+        
+        <div class="profile-wrapper">
+            <i class="fa-solid fa-user"></i>
+            <div class="titles d-flex flex-column ps-3">
+                <h6 class="mb-0">@TempData["UserName"]</h6>
+            </div>
         </div>
 
         <ejs-menu id="menu"
