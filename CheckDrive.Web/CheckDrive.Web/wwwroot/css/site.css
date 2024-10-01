@@ -85,9 +85,9 @@ body {
     border-radius: 5px;
 }
 
-    .e-grid .e-gridcontent, .e-grid .e-table {
-        background-color: whitesmoke;
-    }
+.e-grid .e-gridcontent, .e-grid .e-table {
+    background-color: whitesmoke;
+}
 
     .e-grid .e-gridheader {
         border: 5px;
@@ -144,7 +144,6 @@ body {
     cursor: pointer;
     font-weight: bold;
 }
-
 /* Logo */
 .logo-wrapper {
     height: 70px;
@@ -271,72 +270,79 @@ img.profile-pic {
 
 /* SideBar */
 #sidebar {
-    background-color: whitesmoke;
-    border-right: 1px dashed rgba(75,82,85,0.24);
-    padding: 10px 20px;
+    background-color: white;
+    border-right: 1px groove rgba(75, 82, 85, 0.24);
+    padding: 10px 0px;
     overflow: hidden;
 }
 
-    #sidebar .e-menu-wrapper {
-        width: 100%;
-        background-color: inherit;
-    }
-
-#sidebar-toggler {
-    padding: 10px;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    cursor: pointer;
+.app-logo {
+    text-align: center;
+    margin-bottom: 15px;
 }
 
-    #sidebar-toggler:hover {
-        cursor: pointer;
-        background-color: #48545f14;
-        transform: scale(1.05) translateZ(0px);
-    }
-
-#sidebar.e-open .e-menu-item:hover {
-    background-color: #D2D2D2;
+.e-menu-wrapper ul.e-menu .e-menu-item .e-menu-icon {
+    color: #505050;
+    font-size: 20px;
+    margin-right: 20px;
 }
 
-#sidebar.e-close {
-    padding-left: 10px;
+.e-menu-wrapper {
+    background-color: white !important;
+}
+
+.e-anchor-wrap {
+    color: #4B5054;
+    gap: 5px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    margin-top: 4px;
+    font-size: 18px;
+    margin-left: 20px;
+}
+
+.e-separator {
+    font-size: 20px;
+    color: #414549;
+    font-weight: 400;
+    margin-top: 20px;
+    margin-bottom: 15px;
     padding-right: 10px;
 }
 
-    #sidebar.e-close .app-logo {
-        display: none;
-    }
-
-    #sidebar.e-close .e-anchor-wrap, #sidebar.e-close .e-menu-item.e-menu-caret-icon {
-        font-size: 0px;
-    }
-
-    #sidebar.e-close .profile-wrapper .titles {
-        display: none !important;
-    }
-
-    #sidebar.e-open .e-anchor-wrap,
-    #sidebar.e-close .e-menu-icon, #sidebar.e-open .e-menu-icon {
-        visibility: visible;
-    }
-
-#sidebar.e-open .profile-wrapper .titles, #sidebar.e-open .app-logo {
-    display: flex;
+.e-menu .e-selected {
+    background-color: white !important;
 }
 
-#sidebar.e-sidebar.e-right.e-close {
-    visibility: visible;
-    transform: translateX(0%);
+.e-menu .e-list-item {
+    transition: background-color 0.3s, color 0.3s;
 }
 
-#sidebar.e-open #sidebar-toggler:before {
-    content: '\f100'
+.e-menu .e-selected .e-menu-icon {
+    background: linear-gradient(to bottom, gray, #6d28d9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 20px;
 }
 
-#sidebar.e-close #sidebar-toggler:before {
-    content: '\f101'
+.e-menu-wrapper ul.e-menu .e-selected::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 24px;
+    background: linear-gradient(to bottom, #ff7f50, #6d28d9);
+    border-radius: 2px;
+    vertical-align: middle;
+    margin-right: -4px;
 }
+
+.e-menu .e-selected .e-anchor-wrap {
+    background: linear-gradient(to bottom, gray, #6d28d9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+}
+
 
 /* Widget */
 .widget {
@@ -372,3 +378,69 @@ img.profile-pic {
     .widget.chart {
         padding: 5px;
     }
+/* Modal default holda ko'rinmaydi */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.modal-backdrop {
+    z-index: 1040;
+}
+
+
+.modal-content {
+    position: page;
+    
+    margin: auto;
+    padding: 20px;
+    width: max-content;
+    border-radius: 10px;
+   
+}
+/*.modal-dialog {
+    position: absolute;
+    left: 0;*/ /* Modal oynani to'liq chap tomonga yopishtirish */
+/*}*/
+/*.modal-dialog {
+    margin-left: 0;*/ /* Modalni chap tomonga yopishtirish uchun */
+/*}*/
+
+.e-input {
+    height: 100px; /* Kerakli balandlikni belgilang */
+    padding: 10px; /* Padding qo'shib, element ichidagi joyni kengaytirish */
+    font-size: 16px; /* Matnning kattaligi bilan balandlikni moslang */
+}
+
+.btn-close {
+    width: 15px; /* Tugmaning o'lchami */
+    height: 15px; /* Tugmaning o'lchami */
+    background-color: transparent; /* Fon shaffof */
+     /* Qora rangli ramka */
+     /* Tugmani aylana shaklga keltirish */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* Tugmani bosganda ko'rsatkich o'zgarishi */
+    position: absolute; /* Pozitsiyani belgilash uchun */
+    top: 13px; /* Yuqoridan joylashuvi */
+    right: 13px; /* O'ngdan joylashuvi */
+}
+    
+    
+#createButton {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    top:50px;
+    right:10px;
+    
+    /* Yuqoridan biroz joy qoldirish uchun */
+}
+
