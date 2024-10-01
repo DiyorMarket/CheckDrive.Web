@@ -1,10 +1,17 @@
-﻿@model CheckDrive.ApiContracts.Car.CarDto
+﻿@using CheckDrive.ApiContracts.Car
+@model CheckDrive.ApiContracts.Car.CarDto
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
 <h1>Avtomobillar</h1>
+
 
 <form asp-controller="Cars" asp-action="Index">
     <div class="container">
@@ -30,9 +37,9 @@
                         <a class="btn btn-info" href="@Url.Action("Index", "oilMarks")">Yoqilg`ilar</a>
                     </div>
                     <div>
-                        <button class="btn btn-success" asp-action="create">
-                            <i class="fa fa-plus"></i> Yaratish
-                        </button>
+                        <button type="button"  data-toggle="modal" class="btn btn-success" data-target="#carModal">
+                            <i  class="fa fa-plus"></i> Yaratish
+                        </button>                                   
                     </div>
                 </div>
             </div>
@@ -61,6 +68,93 @@
     </div>
 </form>
 
+
+<!--  Create Modal Structure -->
+<div class="modal" id="carModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h4>Yangi moshina yaratish</h4>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="carForm" onsubmit="return validateForm()">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class=" col-md-6 mb-3">
+                            <label asp-for="Model" class="control-label">Model</label>
+                            <input asp-for="Model" class="form-control" />
+                            <span asp-validation-for="Model" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Number" class="control-label">Davlat raqami</label>
+                            <input asp-for="Number" class="form-control" />
+                            <span asp-validation-for="Number" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Color" class="control-label">Rangi</label>
+                            <input asp-for="Color" class="form-control" />
+                            <span asp-validation-for="Color" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ManufacturedYear" class="control-label">Ishlab chiqarilgan yili</label>
+                            <input asp-for="ManufacturedYear" class="form-control" />
+                            <span asp-validation-for="ManufacturedYear" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Mileage" class="control-label">Bosib o'tilgan masofasi [km]</label>
+                            <input asp-for="Mileage" class="form-control" />
+                            <span asp-validation-for="Mileage" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="FuelTankCapacity" class="control-label">Yoqilg'i baki sig'imi</label>
+                            <input asp-for="FuelTankCapacity" class="form-control" id="fuelTankCapacity" />
+                            <span asp-validation-for="FuelTankCapacity" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="MeduimFuelConsumption" class="control-label">100 km uchun yoqilg'i me'yori [litr]</label>
+                            <input asp-for="MeduimFuelConsumption" class="form-control" id="meduimFuelConsumption" />
+                            <span asp-validation-for="MeduimFuelConsumption" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="RemainingFuel" class="control-label">Avtomobildagi yoqilg'i qoldig'i [litr]</label>
+                            <input asp-for="RemainingFuel" class="form-control" id="remainingFuel" oninput="validateRemainingFuel()" />
+                            <span asp-validation-for="RemainingFuel" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="OneYearMediumDistance" class="control-label">1 yillik bosib o'tish me'yori [km]</label>
+                            <input asp-for="OneYearMediumDistance" class="form-control" id="oneYearMediumDistance" oninput="calculateMonthlyDistance()" />
+                            <span asp-validation-for="OneYearMediumDistance" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="monthlyDistance" class="control-label">1 oylik bosib o'tish me'yori [km]</label>
+                            <input type="text" id="monthlyDistance" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="yearlyMediumFuel" class="control-label">1 yillik yoqilg'i me'yori [litr]</label>
+                            <input type="text" id="yearlyMediumFuel" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="monthlyMediumFuel" class="control-label">1 oylik yoqilg'i me'yori [litr]</label>
+                            <input type="text" id="monthlyMediumFuel" class="form-control" readonly />
+                        </div>
+                    </div>           
+                    <div class="modal-footer d-flex justify-content-center ">                      
+                        <button type="submit" class="btn btn-success" style="width:200px" id="saveCarBtn">
+                            <i class="fa fa-plus"></i> Yaratish
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* Pagination *@
 <div class="d-flex justify-content-between align-items-center my-3">
     <nav aria-label="Page navigation">
         <ul class="pagination">
@@ -101,3 +195,106 @@
         <a rel='nofollow' href="cars/Details/${Id}">${Id}</a>
     </div>
 </script>
+
+<style>
+    .modal-lg {
+        max-width: 100%;
+        margin: auto;/* Ekranning 90% qismini egallaydi */
+    }
+
+    .modal-content {
+        width: 60%; /* Modal o'lchamini 80% qiling */
+        max-width: 700px; /* Maksimal o'lcham */
+    }
+
+</style>
+
+@section Scripts {
+    <script>
+
+        function validateForm() {
+            var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
+            var remainingFuel = document.getElementById("remainingFuel").value;
+
+            if (parseFloat(remainingFuel) > parseFloat(fuelTankCapacity)) {
+                alert("Avtomobil yoqilg'i qoldig'i yoqilg'i baki sig'imidan katta bo'lmaydi.");
+                return false;
+            }
+            return true;
+        }
+
+        function validateRemainingFuel() {
+            var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
+            var remainingFuel = document.getElementById("remainingFuel").value;
+
+            if (fuelTankCapacity === "") {
+                alert("Siz avval 'Yoqilg'i baki sig'imi' ga qiymat kiritishingiz kerak");
+                document.getElementById("remainingFuel").value = "";
+                return false;
+            }
+
+            if (parseFloat(remainingFuel) > parseFloat(fuelTankCapacity)) {
+                alert("Avtomobil yoqilg'i qoldig'i yoqilg'i baki sig'imidan katta bo'lmaydi.");
+                return false;
+            }
+            return true;
+        }
+
+        function calculateMonthlyDistance() {
+            var oneYearMediumDistance = document.getElementById("oneYearMediumDistance").value;
+            var meduimFuelConsumption = document.getElementById("meduimFuelConsumption").value;
+
+            if (meduimFuelConsumption === "") {
+                alert("Siz avval '100 km uchun yoqilg'i me'yori [litr]' ga qiymat kiritishingiz kerak");
+                document.getElementById("oneYearMediumDistance").value = "";
+                return;
+            }
+
+            var monthlyDistance = oneYearMediumDistance / 12;
+            document.getElementById("monthlyDistance").value = monthlyDistance.toFixed(1);
+
+            var yearlyMediumFuel = oneYearMediumDistance * (meduimFuelConsumption / 100);
+            document.getElementById("yearlyMediumFuel").value = yearlyMediumFuel.toFixed(1);
+
+            var monthlyMediumFuel = yearlyMediumFuel / 12;
+            document.getElementById("monthlyMediumFuel").value = monthlyMediumFuel.toFixed(1);
+        }
+    </script>
+}
+
+@* Ajax *@
+<script>
+    $(document).ready(function () {
+        $('#saveCarBtn').click(function () {
+            var formData = $('#carForm').serialize();
+
+            $.ajax({
+                url: '/cars/create',
+                type: 'POST',
+                data: formData,
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        // Modalni yopish va formni tozalash
+                        $('#carModal').modal('hide');
+                        $('#carForm')[0].reset();
+                        location.reload();
+                    }
+                    else {
+                        alert(response.message);
+                    }
+                },
+                error: function (error) {
+                    alert("Error occurred while saving car.");
+                }
+            });
+        });
+    });       
+    $('body').css('overflow', 'auto'); // modal yopilgandan keyin
+
+</script>
+
