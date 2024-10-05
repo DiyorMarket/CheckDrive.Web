@@ -1,99 +1,64 @@
-﻿using CheckDrive.Web.Exceptions;
+﻿using System.Net.Http.Headers;
 
-namespace CheckDrive.Web.Service
+namespace CheckDrive.Web.Service;
+
+public class ApiClient
 {
-    public class ApiClient
+    private readonly HttpClient _client = new();
+    private readonly IHttpContextAccessor _contextAccessor;
+
+    public ApiClient(IHttpContextAccessor contextAccessor, IConfiguration configuration)
     {
-        private readonly HttpClient _client = new();
-        private readonly IHttpContextAccessor _contextAccessor;
+        var baseUrl = configuration.GetValue<string>("ApiUrl");
 
-        public ApiClient(IHttpContextAccessor contextAccessor, IConfiguration configuration)
+        if (string.IsNullOrEmpty(baseUrl))
         {
-            var baseUrl = configuration.GetValue<string>("API_URL");
-
-            if (string.IsNullOrEmpty(baseUrl))
-            {
-                throw new InvalidOperationException("API url is not supplied.");
-            }
-
-            _client.BaseAddress = new Uri(baseUrl);
-            _client.DefaultRequestHeaders.Add("Accept", "application/json");
-
-            _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
+            throw new InvalidOperationException("API url is not supplied.");
         }
 
-        public async Task<HttpResponseMessage> GetAsync(string url)
+        _client.BaseAddress = new Uri(baseUrl);
+        _client.DefaultRequestHeaders.Add("Accept", "application/json");
+
+        _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
+    }
+
+    public async Task<HttpResponseMessage> GetAsync(string url)
+    {
+        AddToken();
+
+        var request = new HttpRequestMessage(HttpMethod.Get, _client.BaseAddress?.AbsolutePath + url);
+
+        var response = await _client.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+
+        return response;
+    }
+
+    public async Task<HttpResponseMessage> PostAsync(string url, string data)
+    {
+        AddToken();
+
+        var request = new HttpRequestMessage(HttpMethod.Post, _client.BaseAddress?.AbsolutePath + url)
         {
-            string token = string.Empty;
-            var request = new HttpRequestMessage(HttpMethod.Get, _client.BaseAddress?.AbsolutePath + url);
-            _contextAccessor.HttpContext?.Request.Cookies.TryGetValue("tasty-cookies", out token);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
+        };
 
-            var response = await _client.SendAsync(request);
+        var response = await _client.SendAsync(request);
+        response.EnsureSuccessStatusCode();
 
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new ApiException(response.StatusCode, $"Error fetching url: {url}");
-            }
+        return response;
+    }
 
-            return response;
+    private void AddToken()
+    {
+        if (_contextAccessor.HttpContext is null)
+        {
+            return;
         }
 
-        public async Task<HttpResponseMessage> PostAsync(string url, string data)
+        if (_contextAccessor.HttpContext.Request.Cookies.TryGetValue("auth-token", out var token))
         {
-            string token = string.Empty;
-            var request = new HttpRequestMessage(HttpMethod.Post, _client.BaseAddress?.AbsolutePath + url)
-            {
-                Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
-            };
-            _contextAccessor.HttpContext?.Request.Cookies.TryGetValue("tasty-cookies", out token);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-            var response = await _client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new ApiException(response.StatusCode, $"Error fetching url: {url}");
-            }
-
-            return response;
-        }
-
-        public async Task<HttpResponseMessage> PutAsync(string url, string data)
-        {
-            string token = string.Empty;
-            var request = new HttpRequestMessage(HttpMethod.Put, _client.BaseAddress?.AbsolutePath  + url)
-            {
-                Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
-            };
-            _contextAccessor.HttpContext?.Request.Cookies.TryGetValue("tasty-cookies", out token);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-            var response = await _client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new ApiException(response.StatusCode, $"Error fetching url: {url}");
-            }
-
-            return response;
-        }
-
-        public async Task<HttpResponseMessage> DeleteAsync(string url)
-        {
-            string token = string.Empty;
-            var request = new HttpRequestMessage(HttpMethod.Delete, _client.BaseAddress?.AbsolutePath  + url);
-            _contextAccessor.HttpContext?.Request.Cookies.TryGetValue("tasty-cookies", out token);
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-            var response = await _client.SendAsync(request);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new ApiException(response.StatusCode, $"Error fetching url: {url}");
-            }
-
-            return response;
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
     }
 }
