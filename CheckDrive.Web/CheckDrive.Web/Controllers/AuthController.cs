@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
+namespace CheckDrive.Web.Controllers;
+
 public class AuthController : Controller
 {
     private readonly IUserDataStore _userDataStore;
@@ -35,14 +37,14 @@ public class AuthController : Controller
             var roleId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
             var accountId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
             int accountIds = Int32.Parse(accountId);
-          
+
             switch (roleId)
             {
                 case "1":
-                
+
                     TempData["UserName"] = _accountDataStore.GetAccountAsync(accountIds)
                     .Result.FirstName;
-                TempData.Keep("UserName");
+                    TempData.Keep("UserName");
                     return RedirectToAction("Index", "Dashboard");
                 case "3":
                     TempData["AccountId"] = accountId;
