@@ -1,0 +1,10 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace CheckDrive.Web.Controllers.Reviews;
+public class DispatcherReviewsController : Controller
+{
+    public IActionResult Index()
+    {
+        return View();
+    }
+}
