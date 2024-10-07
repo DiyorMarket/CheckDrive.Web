@@ -8,85 +8,86 @@
     bool noDriversAvailable = ViewBag.NoDriversAvailable ?? false;
 }
 
-<div class="row mt-custom">
-    <div class="col-md-4 offset-md-1 mt-5">
-        <h4>Royxatga olish</h4>
-        <hr class="w-75" />
+<form id="operatorReviewForm" asp-action="Create" method="post">
+    <div class="d-flex  justify-content-center" style="width:600px">
+        <div class="col-md-9 mt-1  ">
 
-        @if (noDriversAvailable)
-        {
-            <div class="alert alert-warning">
-                <strong>Diqqat!</strong> Hozirda mavjud haydovchilar yo'q. Iltimos, keyinroq qayta urinib ko'ring.
-            </div>
-        }
+            @* <h4>Royxatga olish</h4>
+            <hr class="w-75" /> *@
 
-        <form id="operatorReviewForm" asp-action="Create" method="post">
-            <fieldset @(noDriversAvailable ? "disabled" : "")>
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                <div class="form-group w-75">
-                    <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
-                    @if (ViewBag.IsNull == "NotNull")
-                    {
-                        <select class="form-control border border-dark" disabled>
-                            <option value="@ViewBag.SelectedDriverId" selected>@ViewBag.SelectedDriverName</option>
-                        </select>
-                        <input type="hidden" name="DriverId" value="@ViewBag.SelectedDriverId" />
-                    }
-                    else
-                    {
-                        <select asp-for="DriverId" class="form-control border border-dark" asp-items="@ViewBag.Drivers" id="driverDropdown">
-                            <option value="">Haydovchini tanlang</option>
-                            @* Other driver options will go here *@
-                        </select>
-                    }
+            @if (noDriversAvailable)
+            {
+                <div class="alert alert-warning">
+                    <strong>Diqqat!</strong> Hozirda mavjud haydovchilar yo'q. Iltimos, keyinroq qayta urinib ko'ring.
                 </div>
+            }
 
-                <div class="form-group w-75">
-                    <label asp-for="CarId" class="control-label mt-2">Moshina</label>
-                    <select asp-for="CarId" class="form-control border border-dark" id="carDropdown">
-                        @if (ViewBag.SelectedCar != null)
+            <fieldset style="width:130%" @(noDriversAvailable ? "disabled" : "")>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group w-75">
+                        <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
+                        @if (ViewBag.IsNull == "NotNull")
                         {
-                            <option value="@ViewBag.SelectedCarId" selected>@ViewBag.SelectedCar</option>
+                            <select class="form-control border border-dark" disabled>
+                                <option value="@ViewBag.SelectedDriverId" selected>@ViewBag.SelectedDriverName</option>
+                            </select>
+                            <input type="hidden" name="DriverId" value="@ViewBag.SelectedDriverId" />
                         }
-                    </select>
-                </div>
+                        else
+                        {
+                            <select asp-for="DriverId" class="form-control border border-dark" asp-items="@ViewBag.Drivers" id="driverDropdown">
+                                <option value="">Haydovchini tanlang</option>
+                                @* Other driver options will go here *@
+                            </select>
+                        }
+                    </div>
 
-                <div class="form-check form-switch mt-3">
-                    <input asp-for="IsGiven" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" value="true">
-                    <label asp-for="IsGiven" class="form-check-label" for="flexSwitchCheckDefault">Yoqilg`i quyildimi?</label>
-                </div>
+                    <div class="form-group w-75">
+                        <label asp-for="CarId" class="control-label mt-2">Moshina</label>
+                        <select asp-for="CarId" class="form-control border border-dark" id="carDropdown">
+                            @if (ViewBag.SelectedCar != null)
+                            {
+                                <option value="@ViewBag.SelectedCarId" selected>@ViewBag.SelectedCar</option>
+                            }
+                        </select>
+                    </div>
 
-                <input type="hidden" asp-for="OperatorId" value="@ViewBag.OperatorId" />
+                    <div class="form-check form-switch mt-3 w-75">
+                        <input asp-for="IsGiven" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" value="true">
+                        <label asp-for="IsGiven" class="form-check-label" for="flexSwitchCheckDefault">Yoqilg`i quyildimi?</label>
+                    </div>
 
-                <div class="form-group w-75">
-                    <label asp-for="OilAmount" class="control-label">Yoqilg`i miqdori</label>
-                    <input asp-for="OilAmount" class="form-control" id="OilAmount" type="number" step="0.01" min="0" />
-                    <span asp-validation-for="OilAmount" class="text-danger"></span>
-                </div>
+                    <input type="hidden" asp-for="OperatorId" value="@ViewBag.OperatorId" />
 
-                <div class="form-group w-75">
-                    <label asp-for="OilMarkId" class="control-label mt-2">Yoqilgi Markasi</label>
-                    <select asp-for="OilMarkId" class="form-control border border-dark" asp-items="ViewBag.OilMarks"></select>
-                </div>
+                    <div class="form-group w-75">
+                        <label asp-for="OilAmount" class="control-label">Yoqilg`i miqdori</label>
+                        <input asp-for="OilAmount" class="form-control" id="OilAmount" type="number" step="0.01" min="0" />
+                        <span asp-validation-for="OilAmount" class="text-danger"></span>
+                    </div>
 
-                <div class="form-group w-75 mt-3">
-                    <label asp-for="Comments" for="exampleFormControlTextarea1">Izoh</label>
-                    <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
-                </div>
-            </fieldset>
+                    <div class="form-group w-75">
+                        <label asp-for="OilMarkId" class="control-label mt-2">Yoqilgi Markasi</label>
+                        <select asp-for="OilMarkId" class="form-control border border-dark" asp-items="ViewBag.OilMarks"></select>
+                    </div>
 
-            <div class="form-group mt-3 w-75">
-                <a asp-action="PersonalIndex" class="btn btn-outline-info">
-                    <i class="fa-solid fa-arrow-left-long"></i> Orqaga
-                </a>
-                <button class="btn btn-success" type="submit">
+                    <div class="form-group w-75 mt-3">
+                        <label asp-for="Comments" for="exampleFormControlTextarea1">Izoh</label>
+                        <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
+                    </div>
+                </fieldset>
+
+            <div class="d-flex justify-content-center mt-4">
+                @* <a asp-action="PersonalIndex" class="btn btn-outline-info">
+                <i class="fa-solid fa-arrow-left-long"></i> Orqaga
+                </a> *@
+                <button type="submit" class="btn btn-success" style="width:50%">
                     <i class="fa fa-plus"></i> Yaratish
                 </button>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
 <div class="modal fade" id="validationErrorModal" tabindex="-1" role="dialog" aria-labelledby="validationErrorModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
