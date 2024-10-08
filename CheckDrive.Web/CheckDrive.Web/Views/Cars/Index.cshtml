@@ -3,13 +3,8 @@
 
 @{
     ViewData["Title"] = "Index";
-    // Layout = "~/Views/Shared/_Layout.cshtml";
-}
-<!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
-<!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
- 
+    Layout = "~/Views/Shared/_Layout.cshtml";
+} 
 <h1>Avtomobillar</h1>
 <form asp-controller="Cars" asp-action="Index">
     <div class="container">
@@ -71,7 +66,7 @@
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-center">
                 <h4>Yangi avtomobil yaratish</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" data-target="#carModal">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">                       
                     </span>
                 </button>
@@ -137,8 +132,8 @@
 </style>
 
 @section Scripts {
-    <script>
-        $(document).ready(function () {
+  <script>
+     $(document).ready(function () {
         $('#openCarCreateModal').on('click',function () {
             $('#carmodalContent').empty();          
             $.ajax({
@@ -155,17 +150,21 @@
                         $.getScript('/lib/jquery-validation/dist/jquery.validate.min.js', function () {
                             $.getScript('/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js');
                         });
-
+                       
                 },
                 error: function (error) {
                     alert("Error occurred while saving car.");
                 }
             });
         });
-    });
-    $('#carModal').on('hidden.bs.modal', function () {
-        $(this).find('#carmodalContent').empty(); // Modal yopilganda ichki kontentni tozalash
-    });
+        $('#carModal').on('hidden.bs.modal', function () {
+            $(this).find('#carmodalContent').empty(); // Modal yopilganda ichki kontentni tozalash
+            $(this).off('click');
+        });
+        $('#carModal').on('click', '.btn-close', function () {
+            $('#carModal').modal('hide');
+        });
+     });
         function validateForm() {
             var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
             var remainingFuel = document.getElementById("remainingFuel").value;
@@ -214,5 +213,5 @@
             document.getElementById("monthlyMediumFuel").value = monthlyMediumFuel.toFixed(1);
         }
 
-    </script>
+  </script>
 } 
