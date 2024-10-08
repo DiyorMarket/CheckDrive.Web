@@ -1,83 +1,83 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
 }
 
-<div class="row mb-4">
+<div class="row mb-3">
     <div class="col-md-4">
-        <div class="d-flex flex-row widget summary car" data-bs-toggle="tooltip" data-bs-placement="top">
-            <div class="icon-container p-5" onmouseover="startBounce(this)" onmouseout="stopBounce(this)">
+        <div class="d-flex flex-row widget summary car " data-bs-toggle="tooltip" data-bs-placement="top">
+            <div class="icon-container p-5 car-widget" onmouseover="startBounce(this)" onmouseout="stopBounce(this)">
                 <i class="fa-solid fa-car fa-2xl"></i>
             </div>
             <div class="d-flex flex-column m-auto py-3" id="revenueContainer" onclick="toggleRevenue()">
-                <span class="lead">Avtomobillar soni:</span>
-                <h1 class="display-6 fw-bold">@ViewBag.CarsCount</h1>
+                <span class="lead fw-bold">Avtomobillar soni</span>
+                <h1 class="display-6 fw-bold" >@ViewBag.CarsCount</h1>
             </div>
         </div>
     </div>
 
     <div class="col-md-4">
         <div class="d-flex flex-row widget summary driver">
-            <div class="icon-container p-5" onmouseover="startBounce(this)" onmouseout="stopBounce(this)">
+            <div class="icon-container p-5 car-widget" onmouseover="startBounce(this)" onmouseout="stopBounce(this)">
                 <i class="fa-solid fa-user fa-2xl"></i>
             </div>
             <div class="d-flex flex-column m-auto py-3">
-                <span class="lead">Haydovchilar soni:</span>
-                <h1 class="display-6 fw-bold">@ViewBag.DriversCount</h1>
+                <span class="lead fw-bold">Haydovchilar soni</span>
+                <h1 class="display-6 fw-bold" >@ViewBag.DriversCount</h1>
             </div>
         </div>
     </div>
 
     <div class="col-md-4">
         <div class="d-flex flex-row widget summary oil">
-            <div class="icon-container p-5" onmouseover="startBounce(this)" onmouseout="stopBounce(this)">
+            <div class="icon-container p-5 car-widget" onmouseover="startBounce(this)" onmouseout="stopBounce(this)">
                 <i class="fa-solid fa-gas-pump fa-2xl"></i>
             </div>
             <div class="d-flex flex-column m-auto py-3">
-                <span class="lead">Umumiy yoqilg'i sarfi (Oylik)</span>
+                <span class="lead fw-bold">Yoqilg'i sarfi</span>
                 <h1 class="display-6 fw-bold">@ViewBag.MonthlyFuelConsumption</h1>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row mb-4">
+<div class="row">
         <div class="col-md-4">
             <div class="widget chart">
                 <div class="p-4">
-                    <h5 class="fw-bold">Kasblar bo'yicha ishchilar soni:</h5>
+                    <h5 class="fw-bold">Kasblar bo'yicha ishchilar soni</h5>
                 </div>
-            <ejs-accumulationchart id="doughnutchart" enableSmartLabels background="whitesmoke">
-                    <e-accumulation-series-collection>
+            <ejs-accumulationchart id="doughnutchart" enableSmartLabels background="white">
+                <e-accumulation-series-collection>
                     <e-accumulation-series dataSource="@ViewBag.EmployeesCountByRole"
                                            xName="RoleName" yName="CountOfEmployees"
-                                               innerRadius="60%" legendShape="Circle"
-                                           palettes=@(new string[]{ "#54ffa9","#ffe91a","#4287f5","#75eb75","#d678d0","#edb7b9" })>
-                            <e-accumulationseries-datalabel name="formattedAmount" visible></e-accumulationseries-datalabel>
-                        </e-accumulation-series>
-                    </e-accumulation-series-collection>
-                    <e-accumulationchart-legendsettings position="Top" toggleVisibility="false">
-                    <e-legendsettings-textstyle color="#0f0f0f" size="1rem"></e-legendsettings-textstyle>
-                    </e-accumulationchart-legendsettings>
-                    <e-accumulationchart-tooltipsettings enable></e-accumulationchart-tooltipsettings>
-                </ejs-accumulationchart>
+                                           innerRadius="60%" legendShape="Circle"
+                                           palettes=@(new string[]{ "#D35400","#3498DB","#27AE60","#1ABC9C","#8E44AD","#F39C12" })>
+                        <e-accumulationseries-datalabel name="formattedAmount" visible>
+                        </e-accumulationseries-datalabel>
+                    </e-accumulation-series>
+                </e-accumulation-series-collection>
+
+                <e-accumulationchart-legendsettings position="Top" toggleVisibility="true">
+                    <e-legendsettings-textstyle color="#0f0f0f" size="1.2rem"></e-legendsettings-textstyle>
+                </e-accumulationchart-legendsettings>
+                <e-accumulationchart-tooltipsettings enable></e-accumulationchart-tooltipsettings>
+            </ejs-accumulationchart>
+
             </div>
         </div>
     <div class="col-md-8">
-        <div class="widget chart"  style="width: 100%; padding: 1; margin: 1;">
+        <div class="widget chart">
             <div class="p-4">
                 <h5 class="fw-bold">Yoqilg'i sarfi</h5>
             </div>
-            <ejs-chart id="spline-chart" background="whitesmoke"
-                       palettes=@(new string[]{"#54ffa9","#ffe91a","#4287f5","#8a442c","#b603fc"})>
+            <ejs-chart id="spline-chart" background="white"
+                       palettes=@(new string[]{"#F24A38","#1374D6","#1DB413","#ffe91a","#9547C7"})>
                 <e-chart-primaryxaxis valueType="Category">
-                    <e-majorgridlines width="0"></e-majorgridlines>
-                    <e-majorticklines width="0"></e-majorticklines>
+                    <e-majorgridlines width="1"></e-majorgridlines>
+                    <e-majorticklines width="1"></e-majorticklines>
                 </e-chart-primaryxaxis>
                 <e-chart-primaryyaxis>
                     <e-majorgridlines width="1" color="#32414d" dashArray="3,5"></e-majorgridlines>
-                    <e-majorticklines width="0"></e-majorticklines>
+                    <e-majorticklines width="1"></e-majorticklines>
                     <e-linestyle width="0"></e-linestyle>
                 </e-chart-primaryyaxis>
                 <e-chart-chartarea>
@@ -103,3 +103,65 @@
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col">
+        <div class="widget">
+            <div class="p-4">
+                <h5 class="fw-bold">Qarzlar</h5>
+            </div>
+            <div class="px-4 pb-4">
+                <ejs-grid id="resent-debts"
+                          dataSource="@ViewBag.Debts"  gridLines="None" rowHeight="38">
+                    <e-grid-columns>
+                        <e-grid-column headerText="Id" field="Id"  template="#navigationColumnTemplate" textAlign=Center headerTextAlign=Center  width="20"></e-grid-column>
+                        <e-grid-column headerText="Haydovchi" field="Driver" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
+                        <e-grid-column headerText="Yoqilg'i turi" field="Petrol" textAlign=Center headerTextAlign=Center width="80"></e-grid-column>
+                        <e-grid-column headerText="Bor edi" field="FuelAmount" textAlign=Center headerTextAlign=Center width="40"></e-grid-column>
+                        <e-grid-column headerText="To'langan" field="PaidAmount" textAlign=Center headerTextAlign=Center width="50"></e-grid-column>
+                        <e-grid-column headerText="Status" template="#statusColumnTemplate" textAlign=Center headerTextAlign=Center width="80"></e-grid-column>
+                    </e-grid-columns>
+                </ejs-grid>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="widget chart">
+            <div class="p-4">
+                <h5 class="fw-bold">Yoqilg'ilar</h5>
+            </div>
+            <ejs-accumulationchart id="fueldoughnutchart" enableSmartLabels background="white">
+                <e-accumulation-series-collection>
+                    <e-accumulation-series dataSource="@ViewBag.PetrolCount"
+                                           xName="Type" yName="Count"
+                                           innerRadius="60%" legendShape="Circle"
+                                           palettes=@(new string[]{ "#D35400","#3498DB","#27AE60","#1ABC9C","#8E44AD","#F39C12" })>
+                        <e-accumulationseries-datalabel name="formattedAmount" visible>
+                        </e-accumulationseries-datalabel>
+                    </e-accumulation-series>
+                </e-accumulation-series-collection>
+
+                <e-accumulationchart-legendsettings position="Top" toggleVisibility="true">
+                    <e-legendsettings-textstyle color="#0f0f0f" size="1.2rem"></e-legendsettings-textstyle>
+                </e-accumulationchart-legendsettings>
+                <e-accumulationchart-tooltipsettings enable></e-accumulationchart-tooltipsettings>
+            </ejs-accumulationchart>
+        </div>
+    </div>
+</div>
+
+<script id="navigationColumnTemplate" type="text/x-template">
+     <div>
+        <a rel="nofollow" href="debts/details/${Id}">${Id}</a>
+    </div>
+</script>
+
+<script id="statusColumnTemplate" type="text/x-template">
+    ${if(Status == 0)}
+        <span class="badge bg-success">To'langan</span>
+    ${else if(Status == 1)}
+        <span class="badge bg-danger">To'lanmagan</span>
+    ${else}
+        <span class="badge bg-warning">Qisman to'langan</span>
+    ${/if}
+</script>
