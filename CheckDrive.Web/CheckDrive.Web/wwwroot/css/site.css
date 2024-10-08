@@ -1,4 +1,4 @@
-/* Îñíîâíûå íàñòðîéêè */
+/* ÃŽÃ±Ã­Ã®Ã¢Ã­Ã»Ã¥ Ã­Ã Ã±Ã²Ã°Ã®Ã©ÃªÃ¨ */
 .logout-btn {
     background-color: #1657d9; /* pink background color */
     border: none; /* no border */
@@ -85,9 +85,9 @@ body {
     border-radius: 5px;
 }
 
-    .e-grid .e-gridcontent, .e-grid .e-table {
-        background-color: whitesmoke;
-    }
+.e-grid .e-gridcontent, .e-grid .e-table {
+    background-color: whitesmoke;
+}
 
     .e-grid .e-gridheader {
         border: 5px;
@@ -227,7 +227,7 @@ img.profile-pic {
     overflow: hidden;
 }
 
-.app-logo img{
+.app-logo {
     text-align: center;
     margin-bottom: 15px;
     height:80px;
@@ -298,6 +298,7 @@ img.profile-pic {
     font-weight: 600;
 }
 
+
 /* Widget */
 .widget {
     border-radius: 1rem;
@@ -332,3 +333,69 @@ img.profile-pic {
     .widget.chart {
         padding: 5px;
     }
+/* Modal default holda ko'rinmaydi */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.modal-backdrop {
+    z-index: 1040;
+}
+
+
+.modal-content {
+    position: page;
+    
+    margin: auto;
+    padding: 20px;
+    width: max-content;
+    border-radius: 10px;
+   
+}
+/*.modal-dialog {
+    position: absolute;
+    left: 0;*/ /* Modal oynani to'liq chap tomonga yopishtirish */
+/*}*/
+/*.modal-dialog {
+    margin-left: 0;*/ /* Modalni chap tomonga yopishtirish uchun */
+/*}*/
+
+.e-input {
+    height: 100px; /* Kerakli balandlikni belgilang */
+    padding: 10px; /* Padding qo'shib, element ichidagi joyni kengaytirish */
+    font-size: 16px; /* Matnning kattaligi bilan balandlikni moslang */
+}
+
+.btn-close {
+    width: 15px; /* Tugmaning o'lchami */
+    height: 15px; /* Tugmaning o'lchami */
+    background-color: transparent; /* Fon shaffof */
+     /* Qora rangli ramka */
+     /* Tugmani aylana shaklga keltirish */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* Tugmani bosganda ko'rsatkich o'zgarishi */
+    position: absolute; /* Pozitsiyani belgilash uchun */
+    top: 13px; /* Yuqoridan joylashuvi */
+    right: 13px; /* O'ngdan joylashuvi */
+}
+    
+    
+#createButton {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    top:50px;
+    right:10px;
+    
+    /* Yuqoridan biroz joy qoldirish uchun */
+}
+
