@@ -1,4 +1,11 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿document.addEventListener("DOMContentLoaded", function () {
+    const currentUrl = window.location.pathname;
+    const menuItems = document.querySelectorAll('.e-menu-item'); 
 
-// Write your JavaScript code.
+    menuItems.forEach(item => {
+        const anchor = item.querySelector('a');
+        if (anchor && anchor.getAttribute('href') === currentUrl) {
+            item.classList.add('e-selected');
+        }
+    });
+});
