@@ -144,7 +144,7 @@ nav.navbar {
 
 .notifications a {
     font-size: 22px;
-    color: #1C375C;
+    color: #1C375C !important;
     margin-right: 20px;
 }
 
