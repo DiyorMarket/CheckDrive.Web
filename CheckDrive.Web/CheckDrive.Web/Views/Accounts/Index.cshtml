@@ -11,15 +11,15 @@
         <div class="d-flex justify-content-between">
             <!-- Filter -->
             <div class="col-md-2 mb-4" >
-                <div class="input-group" style="height:38px">                  
-                    <ejs-dropdownlist 
-                                      id="roleDropdown"
-                                      name="roleId" 
-                                      dataSource="@(ViewBag.Roles)" 
-                                      fields="@(new Syncfusion.EJ2.DropDowns.DropDownListFieldSettings { Text = "Name", Value = "Id" })" 
-                                      value="@ViewBag.RoleId" 
-                                      placeholder="Ishchini tanlang" >
-                    </ejs-dropdownlist>
+                <div class="input-group">                  
+                    <select class="form-control form-select" name="roleId">
+                        @foreach (var role in ViewBag.Roles)
+                        {
+                            <option value="@role.Id" selected="@(role.Id == ViewBag.RoleId)">
+                                @role.Name
+                            </option>
+                        }
+                    </select>
                </div>
             </div>
             <!-- Search -->
@@ -35,7 +35,7 @@
             </div>
             <!-- Create -->
             <div class="d-flex col-md mb-4 justify-content-end">
-                <button class="btn btn-success" asp-action="create">
+                <button id="openModalButton" class="btn btn-success" asp-action="create" type="button">
                         <i class="fa fa-plus"></i> Yaratish
                  </button>
              </div>
@@ -96,8 +96,79 @@
     </div>
 </div>
 
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h4 class="modal-title">Yangi ishchi ma'lumotini yaratish</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" data-target="#createModal">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="accountModalContent">
+            </div>
+        </div>
+    </div>
+</div>
+
 <script id="template" type="text/x-template">
     <div>
         <a rel='nofollow' href="accounts/Details/${Id}">${Id}</a>
     </div>
 </script>
+
+<script>
+    $(document).ready(function () {
+        $('#openModalButton').on('click', function () {
+            $('#accountModalContent').empty();
+            $.ajax({
+                url: '/accounts/create',
+                type: 'GET',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (data) {
+                    $('#accountModalContent').html(data);  
+                    $.getScript('/lib/jquery-validation/dist/jquery.validate.min.js', function () {
+                        $.getScript('/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js');
+                    });
+                    var modal = new bootstrap.Modal(document.getElementById('createModal'), {                        
+                    });
+
+                    modal.show();
+
+                    var datepickerObj = new ej.calendars.DatePicker({
+                        format: "MM/dd/yyyy",
+                        value: new Date(),
+                        showClearButton: false,
+                    });
+                    datepickerObj.appendTo("#birthdateId");
+
+                    var phoneTextbox = new ej.inputs.TextBox({                        
+                        value: "+998",
+                    });
+                    phoneTextbox.appendTo("#phoneNumberId");
+
+                },
+                error: function (error) {
+                    alert("Error occurred while loading the form.");
+                }
+            });
+        });
+    });
+
+    $('#createModal').on('hidden.bs.modal', function () {
+        $(this).find('#accountModalContent').empty(); // Modal kontentini tozalash
+        $(this).off('hidden.bs.modal'); // Hodisani tozalash, har safar qayta yuklamaslik uchun
+    });
+</script>
+<style>
+    .modal-content{
+        width:85%;        
+    }
+    .background{
+        max-height:40px;
+
+    }
+</style>
