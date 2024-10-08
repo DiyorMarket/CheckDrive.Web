@@ -59,7 +59,7 @@ namespace CheckDrive.Web.Controllers
 
             ViewBag.EmployeesCountByRole = dashboard.EmployeesCountByRoles;
             ViewBag.SplineChartData = dashboard.SplineCharts;
-            ViewBag.PetrolCount=dashboard.PetrolCounts;
+            ViewBag.OilCount=dashboard.OilCounts;
             ViewBag.Debts = Debts;
         }
     }

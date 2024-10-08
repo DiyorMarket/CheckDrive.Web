@@ -101,29 +101,29 @@ public class DashboardViewModel
             },
         ];
 
-    public IEnumerable<PetrolCount> PetrolCounts =
+    public IEnumerable<OilCount> OilCounts =
         [
-            new PetrolCount()
+            new OilCount()
             {
                 Type=PetrolType.Ai80,
                 Count=15
             },
-            new PetrolCount()
+            new OilCount()
             {
                 Type=PetrolType.Ai91,
                 Count=10
             },
-            new PetrolCount()
+            new OilCount()
             {
                 Type=PetrolType.Ai95,
                 Count=5
             },
-            new PetrolCount()
+            new OilCount()
             {
                 Type=PetrolType.Ai92,
                 Count=2
             },
-            new PetrolCount()
+            new OilCount()
             {
                 Type=PetrolType.Diesel,
                 Count=9
@@ -164,7 +164,7 @@ public class Debt
 
 }
 
-public class PetrolCount
+public class OilCount
 {
     [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
     public PetrolType Type { get; set; }
