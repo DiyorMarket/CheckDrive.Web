@@ -1,16 +1,23 @@
 ﻿@{
     List<Object> menuItems = new List<Object>();
-
+    
     menuItems.Add(new
     {
         text = "Dashboard",
-        url = "/dashboard",
         iconCss = "fa-solid fa-home",
+        url = "/dashboard",
     });
 
     menuItems.Add(new
     {
-        text = "Ishchilar",
+        text = "Qarzlar",
+        iconCss = "fa-solid fa-file-invoice-dollar",
+        url = "/#",
+    });
+
+    menuItems.Add(new
+    {
+        text = "Umumiy",
         separator = true,
     });
 
@@ -26,6 +33,13 @@
         text = "Avtomobillar",
         iconCss = "fas fa-car",
         url = "/cars"
+    });
+    
+    menuItems.Add(new
+    {
+        text = "Yoqilg'ilar",
+        iconCss = "fa-solid fa-gas-pump",
+        url = "/#"
     });
 
     menuItems.Add(new
@@ -71,17 +85,10 @@
              target=".dock-target" enableGestures="false">
     <e-content-template>
 
-        <div class="app-logo logo-wrapper">
+        <div class="app-logo logo-wrapper mb-5">
             <img src='~/Images/LogoCheakDrive.png' />
         </div>    
         
-        <div class="profile-wrapper">
-            <i class="fa-solid fa-user"></i>
-            <div class="titles d-flex flex-column ps-3">
-                <h6 class="mb-0">@TempData["UserName"]</h6>
-            </div>
-        </div>
-
         <ejs-menu id="menu"
                   items="menuItems"
                   orientation="Vertical"

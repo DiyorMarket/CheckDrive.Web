@@ -39,7 +39,6 @@ public class AuthController : Controller
             switch (roleId)
             {
                 case "1":
-                
                     TempData["UserName"] = _accountDataStore.GetAccountAsync(accountIds)
                     .Result.FirstName;
                 TempData.Keep("UserName");
