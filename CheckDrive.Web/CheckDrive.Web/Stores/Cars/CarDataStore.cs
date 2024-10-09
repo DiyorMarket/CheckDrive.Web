@@ -1,5 +1,4 @@
 ﻿using CheckDrive.ApiContracts.Car;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;
@@ -16,7 +15,7 @@ namespace CheckDrive.Web.Stores.Cars
             _api = apiClient;
         }
 
-        public async Task<GetCarResponse> GetCarsAsync(string? searchString,int? pageNumber)
+        public async Task<GetCarResponse> GetCarsAsync(string? searchString, int? pageNumber)
         {
             StringBuilder query = new("");
 
