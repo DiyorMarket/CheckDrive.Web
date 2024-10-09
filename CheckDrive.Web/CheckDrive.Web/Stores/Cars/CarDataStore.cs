@@ -42,17 +42,10 @@ namespace CheckDrive.Web.Stores.Cars
             return result;
         }
 
-        public async Task<GetCarResponse> GetCarsAsync(int? roleId, bool? isBusy)
+        public async Task<GetCarResponse> GetCarsAsync()
         {
-            StringBuilder query = new("");
 
-            if (roleId != 0)
-                query.Append($"roleId={roleId}&");
-
-            if (isBusy is not null)
-                query.Append($"isBusy={isBusy}&");
-
-            var response = await _api.GetAsync("cars?" + query.ToString());
+            var response = await _api.GetAsync("cars?");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -80,38 +73,6 @@ namespace CheckDrive.Web.Stores.Cars
             return result;
         }
 
-        public async Task<GetCarHistoryResponse> GetCarsHistoryAsync(string? searchString, int? pageNumber, int? year, int? month)
-        {
-            StringBuilder query = new("");
-
-            if (year != null)
-                query.Append($"year={year}&");
-
-            if (month != null)
-                query.Append($"month={month}&");
-
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                query.Append($"searchString={searchString}&");
-            }
-            if (pageNumber != null)
-            {
-                query.Append($"pageNumber={pageNumber}");
-            }
-
-            var response = await _api.GetAsync("cars/driverHistories?" + query.ToString());
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Could not fetch carsHistory.");
-            }
-
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<GetCarHistoryResponse>(json);
-
-            return result;
-        }
-
         public async Task<CarDto> CreateCarAsync(CarForCreateDto carForCreate)
         {
             var json = JsonConvert.SerializeObject(carForCreate);
@@ -125,31 +86,6 @@ namespace CheckDrive.Web.Stores.Cars
             var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
             return JsonConvert.DeserializeObject<CarDto>(jsonResponse);
-        }
-
-        public async Task<CarDto> UpdateCarAsync(int id, CarForUpdateDto car)
-        {
-            var json = JsonConvert.SerializeObject(car);
-            var response = await _api.PutAsync($"cars/{car.Id}", json);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Error updating cars.");
-            }
-
-            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
-            return JsonConvert.DeserializeObject<CarDto>(jsonResponse);
-        }
-
-        public async Task DeleteCarAsync(int id)
-        {
-            var response = await _api.DeleteAsync($"cars/{id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"Could not delete car with id: {id}.");
-            }
         }
     }
 }
