@@ -1,6 +1,8 @@
-﻿namespace CheckDrive.Web.Responses
+﻿using CheckDrive.ApiContracts.Mechanic;
+
+namespace CheckDrive.Web.Responses
 {
-    public class GetMechanicResponse : GetBaseResponse<ApiContracts.Mechanic.MechanicDto>
+    public class GetMechanicResponse : GetBaseResponse<MechanicDto>
     {
     }
 }
