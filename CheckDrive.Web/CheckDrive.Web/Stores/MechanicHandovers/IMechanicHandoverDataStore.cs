@@ -1,12 +1,12 @@
-﻿using CheckDrive.ApiContracts.Mechanic;
+﻿using CheckDrive.ApiContracts.MechanicHandover;
 using CheckDrive.Web.Responses;
 
 namespace CheckDrive.Web.Stores.MechanicHandovers;
 
 public interface IMechanicHandoverDataStore
 {
-    Task<GetMechanicResponse> GetMechanicsAsync(string? searchString, int? pageNumber);
-    Task<GetMechanicResponse> GetMechanicsAsync();
-    Task<MechanicDto> GetMechanicByIdAsync(int id);
-    Task<MechanicDto> CreateMechanicAsync(MechanicForCreateDto mechanicForCreate);
+    Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync(string? searchString, int? pageNumber);
+    Task<GetMechanicHandoverResponse> GetMechanicHandoversAsync();
+    Task<MechanicHandoverDto> GetMechanicHandoverByIdAsync(int id);
+    Task<MechanicHandoverDto> CreateMechanicHandoverAsync(MechanicHandoverForCreateDto handoverForCreate);
 }
