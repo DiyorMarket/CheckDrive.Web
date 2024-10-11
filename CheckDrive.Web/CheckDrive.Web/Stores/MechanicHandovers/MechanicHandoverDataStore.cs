@@ -48,9 +48,9 @@ public class MechanicHandoverDataStore : IMechanicHandoverDataStore
         return await ApiResponseHandler.HandleApiResponse<MechanicHandoverDto>(response, $"Could not fetch mechanic handover with id: {id}.");
     }
 
-    public async Task<MechanicHandoverDto> CreateMechanicHandoverAsync(MechanicHandoverForCreateDto mechanicForCreate)
+    public async Task<MechanicHandoverDto> CreateMechanicHandoverAsync(MechanicHandoverForCreateDto handoverForCreate)
     {
-        var json = JsonConvert.SerializeObject(mechanicForCreate);
+        var json = JsonConvert.SerializeObject(handoverForCreate);
         var response = await _api.PostAsync("mechanics/handover", json);
 
         return await ApiResponseHandler.HandleApiResponse<MechanicHandoverDto>(response, "Error creating mechanic handover.");
