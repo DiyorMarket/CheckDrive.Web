@@ -1,10 +1,9 @@
 ﻿using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Dashbord;
-using CheckDrive.Web.ViewModels;
+using CheckDrive.Web.ViewModels.Dashboard;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CheckDrive.Web.Controllers
 {
@@ -48,11 +47,11 @@ namespace CheckDrive.Web.Controllers
 
             return View();
         }
+
         private void SetViewBagProperties(DashboardViewModel dashboard)
         {
             var summary = dashboard.Summary;
-            var Debts = Newtonsoft.Json.JsonConvert.SerializeObject(dashboard.Debts);
-
+            
             ViewBag.MonthlyFuelConsumption = summary.MonthlyFuelConsumption.ToString("0.00");
             ViewBag.CarsCount = summary.CarsCount;
             ViewBag.DriversCount = summary.DriversCount;
@@ -60,7 +59,7 @@ namespace CheckDrive.Web.Controllers
             ViewBag.EmployeesCountByRole = dashboard.EmployeesCountByRoles;
             ViewBag.SplineChartData = dashboard.SplineCharts;
             ViewBag.OilCount=dashboard.OilCounts;
-            ViewBag.Debts = Debts;
+            ViewBag.Debts = dashboard.Debts;
         }
     }
 }
