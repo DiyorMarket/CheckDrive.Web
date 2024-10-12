@@ -5,8 +5,8 @@ namespace CheckDrive.Web.Stores.DoctorReviews;
 
 public interface IDoctorReviewDataStore
 {
-    Task<GetDoctorResponse> GetDoctorReviewsAsync(string? searchString, int? pageNumber);
-    Task<GetDoctorResponse> GetDoctorReviewsAsync();
+    Task<GetDoctorReviewResponse> GetDoctorReviewsAsync(string? searchString, int? pageNumber);
+    Task<GetDoctorReviewResponse> GetDoctorReviewsAsync();
     Task<DoctorReviewDto> GetDoctorReviewByIdAsync(int id);
     Task<DoctorReviewDto> CreateDoctorReviewAsync(DoctorReviewForCreateDto doctorReviewForCreate);
 }
