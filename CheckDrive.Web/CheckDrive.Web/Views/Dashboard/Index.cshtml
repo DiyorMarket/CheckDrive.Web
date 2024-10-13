@@ -111,8 +111,9 @@
                 <h5 class="fw-bold">Qarzlar</h5>
             </div>
             <div class="px-4 pb-4">
-                <ejs-grid id="resent-debts"
+                <ejs-grid id="resent-debts" allowPaging="true"
                           dataSource="@ViewBag.Debts"  gridLines="None" rowHeight="38">
+                    <e-grid-pagesettings pageSize="8"></e-grid-pagesettings>
                     <e-grid-columns>
                         <e-grid-column headerText="Id" field="Id"  template="#navigationColumnTemplate" textAlign=Center headerTextAlign=Center  width="20"></e-grid-column>
                         <e-grid-column headerText="Haydovchi" field="Driver" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
@@ -132,8 +133,8 @@
             </div>
             <ejs-accumulationchart id="fueldoughnutchart" enableSmartLabels background="white">
                 <e-accumulation-series-collection>
-                    <e-accumulation-series dataSource="@ViewBag.OilCount"
-                                           xName="OilTypeText" yName="Count"
+                    <e-accumulation-series dataSource="@ViewBag.OilAmount"
+                                           xName="Name" yName="Amount"
                                            innerRadius="60%" legendShape="Circle"
                                            palettes=@(new string[]{ "#D35400","#3498DB","#27AE60","#1ABC9C","#8E44AD","#F39C12" })>
                         <e-accumulationseries-datalabel name="formattedAmount" visible>
