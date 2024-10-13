@@ -81,7 +81,7 @@ body {
 
 .e-grid .e-pagercontainer {
     border: medium;
-    background-color: black;
+    background-color: white;
 }
 
 .e-grid .e-content table {
@@ -89,8 +89,9 @@ body {
 }
 
 .e-pagercontainer .e-icons {
-    background-color: black;
+    background-color: white;
     border: none !important;
+    border-radius: 50px;
 }
 
 .e-pager .e-numericitem {
@@ -105,16 +106,19 @@ body {
 
 .e-pager .e-numericitem:hover {
     color: black;
+    border-radius:50px;
 }
 
 .e-pager .e-numericitem.e-currentitem {
     color: black;
-    border: none !important;
-    background-color: whitesmoke;
+    border:  none !important;
+    border-radius:50px;
+    background-color: ghostwhite;
 }
 
 .e-pager div.e-icons:not(.e-disable) {
     color: black;
+    border-radius: 50px;
     cursor: pointer;
     font-weight: bold;
 }
