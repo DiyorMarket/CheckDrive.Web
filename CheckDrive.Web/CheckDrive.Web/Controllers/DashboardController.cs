@@ -1,5 +1,6 @@
 ﻿using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Dashbord;
+using CheckDrive.Web.Stores.MockDashboard;
 using CheckDrive.Web.ViewModels.Dashboard;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,10 +12,12 @@ namespace CheckDrive.Web.Controllers
     {
         private readonly IDashboardStore _store;
         private readonly IAccountDataStore _accountDataStore;
-        public DashboardController(IDashboardStore store, IAccountDataStore accountDataStore)
+        private readonly IMockDashboardStore _mockDashboardStore;
+        public DashboardController(IDashboardStore store, IAccountDataStore accountDataStore,IMockDashboardStore mockDashboardStore)
         {
             _store = store;
             _accountDataStore = accountDataStore;
+            _mockDashboardStore = mockDashboardStore;
         }
 
         public async Task<IActionResult> Index()
@@ -37,6 +40,10 @@ namespace CheckDrive.Web.Controllers
             TempData.Keep("UserName");
             
             var dashboard = await _store.GetDashboard();
+            var mockDashboard = await _mockDashboardStore.GetDashboard();
+
+            dashboard.Debts=mockDashboard.Debts;
+            dashboard.OilAmount=mockDashboard.OilAmount;
 
             if (dashboard is null)
             {
@@ -58,7 +65,7 @@ namespace CheckDrive.Web.Controllers
 
             ViewBag.EmployeesCountByRole = dashboard.EmployeesCountByRoles;
             ViewBag.SplineChartData = dashboard.SplineCharts;
-            ViewBag.OilCount=dashboard.OilCounts;
+            ViewBag.OilAmount=dashboard.OilAmount;
             ViewBag.Debts = dashboard.Debts;
         }
     }
