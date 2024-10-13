@@ -41,15 +41,7 @@ namespace CheckDrive.Web.Controllers
                 r.Id,
                 IsAccepted = (bool)r.IsAccepted ? "Qabul qilindi" : "Rad etildi",
                 r.Comments,
-                Status = ((StatusForDto)r.Status) switch
-                {
-                    StatusForDto.Pending => "Kutilmoqda",
-                    StatusForDto.Completed => "Yakunlangan",
-                    StatusForDto.Rejected => "Rad etilgan",
-                    StatusForDto.Unassigned => "Tayinlanmagan",
-                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
-                    _ => "No`malum holat"
-                },
+                r.Status,
                 r.Date,
                 r.Distance,
                 r.DriverName,
