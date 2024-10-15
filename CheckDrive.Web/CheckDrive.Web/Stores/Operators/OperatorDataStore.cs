@@ -16,24 +16,6 @@ public class OperatorDataStore : IOperatorDataStore
         _api = apiClient;
     }
 
-    public async Task<GetOperatorResponse> GetOperatorsAsync(string? searchString, int? pageNumber)
-    {
-        var query = HttpUtility.ParseQueryString(string.Empty);
-
-        if (!string.IsNullOrWhiteSpace(searchString))
-        {
-            query["searchString"] = searchString;
-        }
-        if (pageNumber != null)
-        {
-            query["pageNumber"] = pageNumber.ToString();
-        }
-
-        var response = await _api.GetAsync($"operators?{query}");
-
-        return await ApiResponseHandler.HandleApiResponse<GetOperatorResponse>(response, "Could not fetch operators.");
-    }
-
     public async Task<GetOperatorResponse> GetOperatorsAsync()
     {
         var response = await _api.GetAsync("operators");

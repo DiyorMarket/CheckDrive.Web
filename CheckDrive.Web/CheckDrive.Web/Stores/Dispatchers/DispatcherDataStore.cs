@@ -16,24 +16,6 @@ public class DispatcherDataStore : IDispatcherDataStore
         _api = apiClient;
     }
 
-    public async Task<GetDispatcherResponse> GetDispatchersAsync(string? searchString, int? pageNumber)
-    {
-        var query = HttpUtility.ParseQueryString(string.Empty);
-
-        if (!string.IsNullOrWhiteSpace(searchString))
-        {
-            query["searchString"] = searchString;
-        }
-        if (pageNumber != null)
-        {
-            query["pageNumber"] = pageNumber.ToString();
-        }
-
-        var response = await _api.GetAsync($"dispatchers?{query}");
-
-        return await ApiResponseHandler.HandleApiResponse<GetDispatcherResponse>(response, "Could not fetch dispatchers.");
-    }
-
     public async Task<GetDispatcherResponse> GetDispatchersAsync()
     {
         var response = await _api.GetAsync("dispatchers");

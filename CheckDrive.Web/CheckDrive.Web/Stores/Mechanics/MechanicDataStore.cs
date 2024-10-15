@@ -16,24 +16,6 @@ public class MechanicDataStore : IMechanicDataStore
         _api = apiClient;
     }
 
-    public async Task<GetMechanicResponse> GetMechanicsAsync(string? searchString, int? pageNumber)
-    {
-        var query = HttpUtility.ParseQueryString(string.Empty);
-
-        if (!string.IsNullOrWhiteSpace(searchString))
-        {
-            query["searchString"] = searchString;
-        }
-        if (pageNumber != null)
-        {
-            query["pageNumber"] = pageNumber.ToString();
-        }
-
-        var response = await _api.GetAsync($"mechanics?{query}");
-
-        return await ApiResponseHandler.HandleApiResponse<GetMechanicResponse>(response, "Could not fetch mechanics.");
-    }
-
     public async Task<GetMechanicResponse> GetMechanicsAsync()
     {
         var response = await _api.GetAsync("mechanics");

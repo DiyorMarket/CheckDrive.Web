@@ -16,24 +16,6 @@ public class DoctorDataStore : IDoctorDateStore
         _api = apiClient;
     }
 
-    public async Task<GetDoctorResponse> GetDoctorsAsync(string? searchString, int? pageNumber)
-    {
-        var query = HttpUtility.ParseQueryString(string.Empty);
-
-        if (!string.IsNullOrWhiteSpace(searchString))
-        {
-            query["searchString"] = searchString;
-        }
-        if (pageNumber != null)
-        {
-            query["pageNumber"] = pageNumber.ToString();
-        }
-
-        var response = await _api.GetAsync($"doctors?{query}");
-
-        return await ApiResponseHandler.HandleApiResponse<GetDoctorResponse>(response, "Could not fetch doctors.");
-    }
-
     public async Task<GetDoctorResponse> GetDoctorsAsync()
     {
         var response = await _api.GetAsync("doctors");

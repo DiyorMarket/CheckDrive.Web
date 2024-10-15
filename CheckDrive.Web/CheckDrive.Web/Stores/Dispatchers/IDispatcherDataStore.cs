@@ -5,7 +5,6 @@ namespace CheckDrive.Web.Stores.Dispatchers;
 
 public interface IDispatcherDataStore
 {
-    Task<GetDispatcherResponse> GetDispatchersAsync(string? searchString, int? pageNumber);
     Task<GetDispatcherResponse> GetDispatchersAsync();
     Task<DispatcherDto> GetDispatcherByIdAsync(int id);
     Task<DispatcherDto> CreateDispatcherAsync(DispatcherForCreateDto dispatcherForCreate);
