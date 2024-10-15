@@ -45,14 +45,10 @@
                 <ejs-grid id="mechanicAcceptances-list" dataSource="@ViewBag.MechanicAcceptances" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
                     <e-grid-columns>
                         <e-grid-column headerText="Id" field="Id" template="#templat" type="number" textAlign=Center headerTextAlign=Center width="50"></e-grid-column>
-                        <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" type="string" textAlign=Center headerTextAlign=Center width="150"></e-grid-column>
-                        <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string" textAlign=Center headerTextAlign=Center width="150"></e-grid-column>
+                        <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
+                        <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
                         <e-grid-column headerText="Mashina" field="CarName" template="#template" type="string" textAlign=Center headerTextAlign=Center></e-grid-column>
-                        <e-grid-column headerText="Qabul qilish masofasi" headertext="" field="Distance" type="number" textAlign=Center headerTextAlign=Center width="90"></e-grid-column>
-                        <e-grid-column headerText="Yoqilg`i qoldig`i" field="RemainingFuel" type="number" textAlign=Center headerTextAlign=Center width="90"></e-grid-column>
                         <e-grid-column headerText="Ro'yxatdan o'tgan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" textAlign=Center headerTextAlign=Center></e-grid-column>
-                        <e-grid-column headerText="Qabul qilish" field="IsAccepted" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
-                        <e-grid-column headerText="Izoh" field="Comments" type="string" headerTextAlign=Center></e-grid-column>
                         <e-grid-column headerText="Status" field="Status" template="#statusColumnTemplate" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
                     </e-grid-columns>
                 </ejs-grid>
