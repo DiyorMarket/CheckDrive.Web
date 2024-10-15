@@ -42,7 +42,7 @@ namespace CheckDrive.Web.Controllers
                 r.DriverName,
                 r.DoctorName,
                 r.Date,
-                IsHealthy = (bool)r.IsHealthy ? "Sog`lom" : "Kasal",
+                IsHealthy = (bool)r.IsHealthy ? 1 : 0,
                 r.Comments
             }).ToList();
 
