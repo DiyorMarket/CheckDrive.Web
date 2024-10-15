@@ -1,16 +1,23 @@
 ﻿@{
     List<Object> menuItems = new List<Object>();
-
+    
     menuItems.Add(new
     {
         text = "Dashboard",
-        url = "/dashboard",
         iconCss = "fa-solid fa-home",
+        url = "/dashboard",
     });
 
     menuItems.Add(new
     {
-        text = "Ishchilar",
+        text = "Qarzlar",
+        iconCss = "fa-solid fa-file-invoice-dollar",
+        url = "/#",
+    });
+
+    menuItems.Add(new
+    {
+        text = "Umumiy",
         separator = true,
     });
 
@@ -27,40 +34,47 @@
         iconCss = "fas fa-car",
         url = "/cars"
     });
+    
+    menuItems.Add(new
+    {
+        text = "Yoqilg'ilar",
+        iconCss = "fa-solid fa-gas-pump",
+        url = "/#"
+    });
 
     menuItems.Add(new
     {
-        text = "Xizmat ko'rsatish",
+        text = "Tekshiruvlar",
         separator = true,
     });
     menuItems.Add(new
     {
-        text = "Shifokor Ko'riklari",
-        iconCss = "fas fa-user-doctor",
+        text = "Shifokor",
+        iconCss = "fa-solid fa-briefcase-medical",
         url = "/doctorreviews"
     });
     menuItems.Add(new
     {
-        text = "Mexanik(Topshirish)",
-        iconCss = "fa-solid fa-user-gear",
+        text = "Mexanik (Topshirish)",
+        iconCss = "fa-solid fa-tools",
         url = "/mechanichandovers"
     });
     menuItems.Add(new
     {
-        text = "Mexanik(Qabul qiluvchi)",
-        iconCss = "fa-solid fa-person-chalkboard",
-        url = "/mechanicacceptances"
-    });
-    menuItems.Add(new
-    {
-        text = "Operator Xizmatlari",
-        iconCss = "fa-solid fa-user-doctor",
+        text = "Operator",
+        iconCss = "fa-solid fa-headset",
         url = "/OperatorReviews"
     });
     menuItems.Add(new
     {
-        text = "Dispetcher Xizmatlari",
-        iconCss = "fa-solid fa-person-chalkboard",
+        text = "Mexanik (Qabul qilish)",
+        iconCss = "fa-solid fa-car-on",
+        url = "/mechanicacceptances"
+    });
+    menuItems.Add(new
+    {
+        text = "Dispetcher",
+        iconCss = "fa-solid fa-user-gear",
         url = "/DispatcherReviews"
     });
 
@@ -71,32 +85,13 @@
              target=".dock-target" enableGestures="false">
     <e-content-template>
 
-        <div class="logo-wrapper">
-            <div class="app-logo">
-                <img src='~/images/LogoCheakDrive.png' style="height: 50px; width:50px" />
-            </div>
-            <div class="w-100"></div>
-            <i id="sidebar-toggler" class="fa-solid"></i>
-        </div>
-
-        <div class="profile-wrapper">
-            <i class="fa-solid fa-user"></i>
-            <div class="titles d-flex flex-column ps-3">
-                <h6 class="mb-0">@TempData["UserName"]</h6>
-            </div>
-        </div>
-
+        <div class="app-logo logo-wrapper mb-5">
+            <img src='~/Images/LogoCheakDrive.png' />
+        </div>    
+        
         <ejs-menu id="menu"
                   items="menuItems"
                   orientation="Vertical"
                   hamburgerMode></ejs-menu>
     </e-content-template>
 </ejs-sidebar>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        dockBar = document.getElementById('sidebar').ej2_instances[0];
-        document.getElementById('sidebar-toggler').onclick = function () {
-            dockBar.toggle();
-        };
-    });
-</script>

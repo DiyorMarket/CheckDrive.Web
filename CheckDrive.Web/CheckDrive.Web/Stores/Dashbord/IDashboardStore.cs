@@ -1,4 +1,4 @@
-﻿using CheckDrive.Web.ViewModels;
+﻿using CheckDrive.Web.ViewModels.Dashboard;
 
 namespace CheckDrive.Web.Stores.Dashbord
 {

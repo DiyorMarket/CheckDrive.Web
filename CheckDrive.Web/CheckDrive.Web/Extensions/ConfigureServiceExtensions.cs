@@ -10,6 +10,7 @@ using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
 using CheckDrive.Web.Stores.MechanicHandovers;
 using CheckDrive.Web.Stores.Mechanics;
+using CheckDrive.Web.Stores.MockDashboard;
 using CheckDrive.Web.Stores.OilMarks;
 using CheckDrive.Web.Stores.OperatorReviews;
 using CheckDrive.Web.Stores.Operators;
@@ -39,6 +40,7 @@ namespace CheckDrive.Web.Extensions
             services.AddScoped<IRoleDataStore, RoleDataStore>();
             services.AddScoped<ITechnicianDataStore, MockTechnicianDataStore>();
             services.AddScoped<IDashboardStore, DashboardStore>();
+            services.AddScoped<IMockDashboardStore, MockDashboardStore>();
             services.AddScoped<IUserDataStore, UserDataStore>();
 
             return services;
