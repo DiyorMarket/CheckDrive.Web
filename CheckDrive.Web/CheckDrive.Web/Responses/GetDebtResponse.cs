@@ -1,6 +1,6 @@
 ﻿namespace CheckDrive.Web.Responses
 {
-    public class GetDebtResponse
+    public class GetDebtResponse : GetBaseResponse<DebtDto>
     {
     }
 }
