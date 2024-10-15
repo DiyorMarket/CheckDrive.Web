@@ -5,8 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }       
 
-<h1>Operator Xizmatlari</h1>
-
 <form asp-controller="OperatorReviews" asp-action="Index">
     <div class="row">
         <div class="d-flex justify-content-between">
@@ -41,16 +39,12 @@
     <div class="col-12">
         <ejs-grid id="operatorReview-list" dataSource="@ViewBag.OperatorsReview" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
             <e-grid-columns>
-                <e-grid-column headerText="Id" field="Id" typeof="text" template="#templat" width="50"></e-grid-column>
-                <e-grid-column headerText="Operator F.I.SH" field="OperatorName" typeof="text" class="customcss"></e-grid-column>
-                <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" typeof="text" class="customcss"></e-grid-column>
-                <e-grid-column headerText="Mashina" field="CarModel" type="string"></e-grid-column>
-                <e-grid-column headerText="Yoqilg'i miqdori" field="OilAmount" typeof="text" class="customcss"></e-grid-column>
-                <e-grid-column headerText="Yoqilg'i markasi" field="OilMarks" typeof="text" class="customcss"></e-grid-column>
-                <e-grid-column headerText="Ro'yxatdan o'tgan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm"></e-grid-column>
-                <e-grid-column headerText="Quyildimi" field="IsGiven" type="string"></e-grid-column>
-                <e-grid-column headerText="Izoh" field="Comments" typeof="text" class="customcss"></e-grid-column>
-                <e-grid-column headerText="Status" field="Status" typeof="text" class="customcss"></e-grid-column>
+                <e-grid-column headerText="Id" field="Id" type="number" template="#templat" textAlign=Center headerTextAlign=Center width="50"></e-grid-column>
+                <e-grid-column headerText="Operator F.I.SH" field="OperatorName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
+                <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
+                <e-grid-column headerText="Mashina" field="CarModel" type="string" textAlign=Center headerTextAlign=Center ></e-grid-column>
+                <e-grid-column headerText="Ro'yxatdan o'tgan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" type="string" textAlign=Center headerTextAlign=Center></e-grid-column>
+                <e-grid-column headerText="Status" field="Status" template="#statusColumnTemplate" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
@@ -146,4 +140,16 @@
             header.setAttribute('title', header.innerText.trim());
         });
     }
+</script>
+
+<script id="statusColumnTemplate" type="text/x-template">
+    ${if(Status == 0)}
+        <span class="badge bg-warning">Kutilmoqda</span>
+    ${else if(Status == 1)}
+        <span class="badge bg-success">Yakunlangan</span>
+    ${else if(Status == 2)}
+        <span class="badge bg-danger">Rad etilgan</span>
+    ${else if(Status == 4)}
+        <span class="badge bg-danger">Haydovchi tomonidan rad etilgan</span>
+    ${/if}
 </script>
