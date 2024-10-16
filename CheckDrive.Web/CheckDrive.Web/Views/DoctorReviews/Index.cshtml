@@ -83,16 +83,49 @@
 
 <script id="template" type="text/x-template">
     <div>
-        <a rel='nofollow' href="DoctorReviews/Details/${Id}">${Id}</a>
+        <a rel='nofollow' href="#" class="detail-link" data-id="${Id}">${Id}</a>
     </div>
+</script>
+
+<div class="modal fade" id="doctorReviewDetailsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body" id="doctorReviewDetailsContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('detail-link')) {
+                e.preventDefault();
+                const id = e.target.getAttribute('data-id');
+
+                $.ajax({
+                    url: `/DoctorReviews/Details/${id}`,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#doctorReviewDetailsContent').html(data);
+                        $('#doctorReviewDetailsModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        }).modal('show');
+                    },
+                    error: function () {
+                        $('#doctorReviewDetailsContent').html('<p>Error loading details</p>');
+                    }
+                });
+            }
+        });
+    });
 </script>
 
 <script>
     function onDataBound() {
-        // Получаем все элементы заголовков колонок
         const headers = document.querySelectorAll('#operatorReview-list .e-headercell');
 
-        // Добавляем title атрибут к каждому элементу заголовка
         headers.forEach(header => {
             header.setAttribute('title', header.innerText.trim());
         });

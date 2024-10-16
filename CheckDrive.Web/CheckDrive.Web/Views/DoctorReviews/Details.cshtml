@@ -2,58 +2,65 @@
 
 @{
     ViewData["Title"] = "Details";
+    Layout = null;
 }
 
 <div>
-    <h4>Shifokor ko`rigi haqida ma'lumot</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            Id:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class="col-sm-2">
-            Haydovchi F.I.SH:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DriverName)
-        </dd>
-        <dt class="col-sm-2">
-            Shifokor F.I.SH:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DoctorName)
-        </dd>
-        <dt class="col-sm-2">
-            Sog`lig`i:
-        </dt>
-        <dd class="col-sm-10">
-            @(Model.IsHealthy.HasValue ? (Model.IsHealthy.Value ? "Sog`lom" : "Kasal") : "N/A")
-        </dd>
-        <dt class="col-sm-2">
-            Izoh:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Comments)
-        </dd>
-        <dt class="col-sm-2">
-            Sana:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-    </dl>
+    <h4 class="text-center">Shifokor ko'rigi haqida ma'lumot</h4>
+    <div class="grid-container mt-3">
+        <div class="row content">
+            <div class="col text-center">
+                Haydovchi F.I.SH
+            </div>
+            <div class="col text-center">
+                Shifokor F.I.SH
+            </div>
+        </div>
+        <div class="row value">
+            <div class="col text-center">
+                @Model.DriverName
+            </div>
+            <div class="col text-center">
+                @Model.DoctorName
+            </div>
+        </div>
+        <div class="row content">
+            <div class="col text-center">
+                Sog'lig'i
+            </div>
+            <div class="col text-center">
+                Sana
+            </div>
+        </div>
+        <div class="row value">
+            <div class="col text-center">
+                @(Model.IsHealthy.HasValue ? (Model.IsHealthy.Value ? "Sog`lom" : "Kasal") : "N/A")
+            </div>
+            <div class="col text-center">
+                @Model.Date
+            </div>  
+        </div>
+        <div class="row content">
+            <div class="col text-center">
+                Izoh
+            </div>
+        </div>
+        <div class="row comments">
+            <div class="col text-center">
+                @if (string.IsNullOrWhiteSpace(Model.Comments))
+                {
+                    Model.Comments = "Izoh mavjud emas";
+                }
+                @Model.Comments
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="mt-4">
-    <a asp-action="Index" class="btn btn-outline-info">
-        <i class="fa-solid fa-arrow-left"></i>
-        Orqaga
-    </a>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">
-        <i class="fa-solid fa-pen"></i>
-        Tahrirlash
-    </a>
+<div class="d-flex justify-content-center mt-5">
+    <div class="d-grid w-50">
+        <a asp-action="Index" class="btn btn-outline-white border border-secondary rounded">
+            Yopish
+        </a>
+    </div>
 </div>
