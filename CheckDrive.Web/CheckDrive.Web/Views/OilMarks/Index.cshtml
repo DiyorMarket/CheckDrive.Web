@@ -13,7 +13,7 @@
             <i class="fa fa-plus"></i> Yaratish
         </button>
         <div id="createoilModal" class="modal" >
-            <div class="modal-content  " style="height: 250px; width: 500px ">
+            <div class="modal-content" style="height: 250px; width: 500px ">
                 <span class="close">
                     <button class="btn btn-close "></button>
                 </span>
@@ -48,11 +48,11 @@
                 </td>
                 <td>
                     <div class="btn-group" role="group">
-                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id" style="margin-right: 5px;">
-                            <i class="fa fa-pencil"></i>
+                        <a class="e-btn e-flat" asp-action="Edit" asp-route-id="@item.Id" style="margin-right: 5px;">
+                            <i class="fa-solid fa-pen fa-lg text-warning"></i>
                         </a>
-                        <a class="btn btn-danger " asp-action="Delete" asp-route-id="@item.Id">
-                            <i class="bi bi-trash"></i>
+                        <a class="e-btn e-flat " asp-action="Delete" asp-route-id="@item.Id">
+                            <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
                         </a>
                     </div>
                 </td>
