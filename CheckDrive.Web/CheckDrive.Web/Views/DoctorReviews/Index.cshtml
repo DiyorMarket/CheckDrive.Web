@@ -5,8 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Shifokor ko'riklari</h1>
-
 <form asp-controller="DoctorReviews" asp-action="Index">
     <div class="row">
         <div class="d-flex justify-content-between">
@@ -34,12 +32,11 @@
     <div class="col-12">
         <ejs-grid id="operatorReview-list" dataSource="@ViewBag.DoctorsReview" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
             <e-grid-columns>
-                <e-grid-column headerText="Id" field="Id" template="#template" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Shifokor F.I.SH" field="DoctorName" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Ro'yxatdan o'tgan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm"></e-grid-column>
-                <e-grid-column headerText="Sog'ligi" field="IsHealthy" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Izoh" field="Comments" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Id" field="Id" template="#template" type="number" textAlign=Center headerTextAlign=Center width="50"></e-grid-column>
+                <e-grid-column headerText="Shifokor F.I.SH" field="DoctorName" type="string" textAlign=Center headerTextAlign=Center width="300"></e-grid-column>
+                <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string" textAlign=Center headerTextAlign=Center width="300"></e-grid-column>
+                <e-grid-column headerText="Ro'yxatdan o'tgan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" textAlign=Center headerTextAlign=Center></e-grid-column>
+                <e-grid-column headerText="Sog'ligi" field="IsHealthy" template="#booleanColumnTemplate" textAlign=Center headerTextAlign=Center></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
@@ -130,4 +127,12 @@
             header.setAttribute('title', header.innerText.trim());
         });
     }
+</script>
+
+<script id="booleanColumnTemplate" type="text/x-template">
+    ${if(IsHealthy == 0)}
+        <span class="badge bg-danger">Kasal</span>
+    ${else if(IsHealthy == 1)}
+        <span class="badge bg-success">Sog'lom</span>
+    ${/if}
 </script>

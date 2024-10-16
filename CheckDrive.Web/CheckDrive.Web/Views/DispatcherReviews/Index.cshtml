@@ -4,9 +4,7 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h1>Dispetcher Xizmatlari</h1>
-
+    
 <form asp-controller="DispatcherReviews" asp-action="Index">
     <div class="row">
         <div class="d-flex justify-content-between">
@@ -42,15 +40,12 @@
         <ejs-grid id="dispatcherReview-list" dataSource="@ViewBag.DispatcherReviews" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
             <e-grid-columns>
                 <e-grid-column headerText="Id" field="Id" typeof="text" template="#dispatcherTemplate" width="50"></e-grid-column>
-                <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" typeof="text" width="150"></e-grid-column>
-                <e-grid-column headerText="Marka" field="CarName" typeof="text" width="100"></e-grid-column>
-                <e-grid-column headerText="Meyori" field="CarMeduimFuelConsumption" typeof="number" width="150"></e-grid-column>
-                <e-grid-column headerText="Bosib o'tilgan masofa" field="DistanceCovered" typeof="number" width="150"></e-grid-column>
-                <e-grid-column headerText="Sarflangan Yoqilg'i" field="FuelSpended" typeof="number" width="150"></e-grid-column>
-                <e-grid-column headerText="Dispetcher F.I.SH" field="DispatcherName" typeof="text" width="150"></e-grid-column>
-                <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" typeof="text" width="150"></e-grid-column>
-                <e-grid-column headerText="Operator F.I.SH" field="OperatorName" typeof="text" width="150"></e-grid-column>
-                <e-grid-column headerText="Ro'yxatga olingan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" width="150"></e-grid-column>
+                <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
+                <e-grid-column headerText="Marka" field="CarName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
+                <e-grid-column headerText="Dispetcher F.I.SH" field="DispatcherName" type="string" textAlign=Center headerTextAlign=Center></e-grid-column>
+                <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
+                <e-grid-column headerText="Operator F.I.SH" field="OperatorName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
+                <e-grid-column headerText="Ro'yxatga olingan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" textAlign=Center headerTextAlign=Center></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
