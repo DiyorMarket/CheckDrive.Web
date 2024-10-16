@@ -20,7 +20,7 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group w-50 mt-2">
                     <label asp-for="DriverId" class="control-label mt-2">Haydovchi</label>
-                    <select asp-for="DriverId" class="form-control border border-dark" id="driverSelect">
+                    <select asp-for="DriverId" class="form-control border border-dark form-select" id="driverSelect">
                         @if (noDriversAvailable)
                         {
                             <option value="">Haydovchilar mavjud emas</option>
@@ -40,7 +40,7 @@
                 </div>
                 <div class="form-group w-50 mt-2">
                     <label asp-for="CarId" class="control-label mt-2">Mashina</label>
-                    <select asp-for="CarId" class="form-control border border-dark" id="carSelect" disabled>
+                    <select asp-for="CarId" class="form-control form-select border border-dark" id="carSelect" disabled>
                         <option value="">Avtomobil tanlang</option>
                     </select>
                     <!-- Hidden field to store selected CarId -->
@@ -65,12 +65,9 @@
                     <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
                 </div>
             </fieldset>
-            <div class="form-group justify-content-center d-flex w-50 mt-3">
-                @* <a asp-action="PersonalIndex" class="btn btn-outline-info">
-                    <i class="fa-solid fa-arrow-left-long"></i> Orqaga
-                </a> *@
+            <div class="form-group justify-content-center d-flex w-50 mt-3">               
                 <button style="width:150px" class="btn btn-success" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
-                    <i class="fa fa-plus"></i> Yaratish
+                    Saqlash
                 </button>
             </div>
         </form>

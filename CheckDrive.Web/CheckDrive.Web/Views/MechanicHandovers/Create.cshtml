@@ -35,7 +35,7 @@
                         }
                         else
                         {
-                            <select asp-for="DriverId" id="driverIdDropdown" class="form-control border border-dark" asp-items="@ViewBag.Drivers">
+                            <select asp-for="DriverId" id="driverIdDropdown" class="form-control form-select border border-dark" asp-items="@ViewBag.Drivers">
                                 <option value="" selected>Haydovchini tanlang</option>
                             </select>
                         }
@@ -54,7 +54,7 @@
                     }
                     else
                     {
-                        <select asp-for="CarId" id="carIdDropdown" class="form-control border border-dark" asp-items="@ViewBag.Cars">
+                        <select asp-for="CarId" id="carIdDropdown" class="form-control border border-dark form-select" asp-items="@ViewBag.Cars">
                             <option value="" selected>Avtomobil tanlang</option>
                         </select>
                     }
@@ -85,7 +85,7 @@
 
             <div class="form-group justify-content-center d-flex w-50 mt-3">
                 <button style="width:150px" class="btn btn-success" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
-                    Yaratish
+                    Saqlash
                 </button>
             </div>
         </div>
