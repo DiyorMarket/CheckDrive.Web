@@ -50,7 +50,7 @@
                   gridLines="Vertical"
                   allowSorting="true">
             <e-grid-columns>
-                <e-grid-column headerText="Id" field="Id" field="Id" template="#template" typeof="Text"></e-grid-column>
+                <e-grid-column headerText="Id" field="Id" template="#template" typeof="Text"></e-grid-column>
                 <e-grid-column headerText="Ism" field="FirstName" typeof="text"></e-grid-column>
                 <e-grid-column headerText="Familiya" field="LastName" typeof="text"></e-grid-column>
                 <e-grid-column headerText="Telefon raqam" field="PhoneNumber" typeof="text"></e-grid-column>
@@ -98,6 +98,42 @@
 
 <script id="template" type="text/x-template">
     <div>
-        <a rel='nofollow' href="accounts/Details/${Id}">${Id}</a>
+        <a rel='nofollow' href="#" class="detail-link" data-id="${Id}">${Id}</a>
     </div>
+</script>
+
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body" id="detailsContent">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('detail-link')) {
+                e.preventDefault();
+                const id = e.target.getAttribute('data-id');
+
+                $.ajax({
+                    url: `/Accounts/Details/${id}`,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#detailsContent').html(data);
+                        $('#detailsModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        }).modal('show');
+                    },
+                    error: function () {
+                        $('#detailsContent').html('<p>Error loading details</p>');
+                    }
+                });
+            }
+        });
+    });
 </script>
