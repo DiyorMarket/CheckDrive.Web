@@ -227,7 +227,7 @@ img.profile-pic {
     overflow: hidden;
 }
 
-.app-logo {
+.app-logo img {
     text-align: center;
     margin-bottom: 15px;
     height:80px;
@@ -298,7 +298,6 @@ img.profile-pic {
     font-weight: 600;
 }
 
-
 /* Widget */
 .widget {
     border-radius: 1rem;
@@ -348,23 +347,14 @@ img.profile-pic {
     z-index: 1040;
 }
 
-
 .modal-content {
     position: page;
-    
+
     margin: auto;
     padding: 20px;
     width: max-content;
     border-radius: 10px;
-   
 }
-/*.modal-dialog {
-    position: absolute;
-    left: 0;*/ /* Modal oynani to'liq chap tomonga yopishtirish */
-/*}*/
-/*.modal-dialog {
-    margin-left: 0;*/ /* Modalni chap tomonga yopishtirish uchun */
-/*}*/
 
 .e-input {
     height: 100px; /* Kerakli balandlikni belgilang */
@@ -376,8 +366,6 @@ img.profile-pic {
     width: 15px; /* Tugmaning o'lchami */
     height: 15px; /* Tugmaning o'lchami */
     background-color: transparent; /* Fon shaffof */
-     /* Qora rangli ramka */
-     /* Tugmani aylana shaklga keltirish */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -386,7 +374,6 @@ img.profile-pic {
     top: 13px; /* Yuqoridan joylashuvi */
     right: 13px; /* O'ngdan joylashuvi */
 }
-    
     
 #createButton {
     display: block;
