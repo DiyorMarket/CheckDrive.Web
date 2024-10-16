@@ -44,10 +44,10 @@
             <div class="col-12">
                 <ejs-grid id="mechanicAcceptances-list" dataSource="@ViewBag.MechanicAcceptances" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
                     <e-grid-columns>
-                        <e-grid-column headerText="Id" field="Id" template="#templat" type="number" width="60"></e-grid-column>
+                        <e-grid-column headerText="Id" field="Id" template="#mechanicAcceptanceTemplate" type="number" width="60"></e-grid-column>
                         <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" type="string"></e-grid-column>
                         <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string"></e-grid-column>
-                        <e-grid-column headerText="Mashina" field="CarName" template="#template" type="string"></e-grid-column>
+                        <e-grid-column headerText="Mashina" field="CarName" template="#carTemplate" type="string"></e-grid-column>
                         <e-grid-column headerText="Qabul qilish masofasi" field="Distance" type="number" width="90"></e-grid-column>
                         <e-grid-column headerText="Yoqilg`i qoldig`i" field="RemainingFuel" type="number" width="90"></e-grid-column>
                         <e-grid-column headerText="Ro'yxatdan o'tgan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm"></e-grid-column>
@@ -96,62 +96,123 @@
     </div>
 </div>
 
-<script id="template" type="text/x-template">
+<script id="carTemplate" type="text/x-template">
     <div>
-        <a href="/Cars/DetailsForMechanicAcceptance/${CarId}">${CarName}</a>
+         <a rel='nofollow' href="#" class="car-detail-link" data-id="${CarId}">${CarName}</a>
     </div>
 </script>
-<script id="templat" type="text/x-templat">
-    <div>
-        <a rel='nofollow' href="MechanicAcceptances/Details/${Id}">${Id}</a>
+
+<div class="modal fade" id="carDetailsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body" id="carDetailsContent">
+            </div>
+        </div>
     </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('car-detail-link')) {
+                e.preventDefault();
+                const id = e.target.getAttribute('data-id');
+
+                $.ajax({
+                    url: `/Cars/DetailsForMechanicAcceptance/${id}`,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#carDetailsContent').html(data);
+                        $('#carDetailsModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        }).modal('show');
+                    },
+                    error: function () {
+                        $('#carDetailsContent').html('<p>Error loading details</p>');
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<script id="mechanicAcceptanceTemplate" type="text/x-template">
+    <div>
+        <a rel='nofollow' href="#" class="mechanic-acceptance-detail-link" data-id="${Id}">${Id}</a>
+    </div>
+</script>
+
+<div class="modal fade" id="mechanicAcceptanceDetailsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body" id="mechanicAcceptanceDetailsContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('mechanic-acceptance-detail-link')) {
+                e.preventDefault();
+                const id = e.target.getAttribute('data-id');
+
+                $.ajax({
+                    url: `/MechanicAcceptances/Details/${id}`,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#mechanicAcceptanceDetailsContent').html(data);
+                        $('#mechanicAcceptanceDetailsModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        }).modal('show');
+                    },
+                    error: function () {
+                        $('#mechanicAcceptanceDetailsModal').html('<p>Error loading details</p>');
+                    }
+                });
+            }
+        });
+    });
 </script>
 
 <script>
-    // Default selected year and month
-    let selectedYear = new Date().getFullYear(); // Current year
-    let selectedMonth = new Date().getMonth() + 1; // Current month (months are zero-based)
+    let selectedYear = new Date().getFullYear();
+    let selectedMonth = new Date().getMonth() + 1;
 
-    // Function to handle the change event in the calendar
     function valueChange(args) {
         var selectedDate = args.value;
         selectedYear = selectedDate.getFullYear();
-        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
+        selectedMonth = selectedDate.getMonth() + 1;
 
-        // Optionally, update a label to display the selected date (if you have one)
         document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
     }
 
-    // Prevent the dropdown from closing when clicking inside
     document.getElementById('dropdownMenu').addEventListener('click', function (event) {
-        event.stopPropagation(); // Stops the dropdown from closing when interacting with its contents
+        event.stopPropagation();
     });
 
-    // Handle the download button click
     document.getElementById('downloadButton').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent the default action of the link
+        e.preventDefault();
 
-        // Construct the download URL using the selected year and month
         const url = `/MechanicAcceptances/Download?year=${selectedYear}&month=${selectedMonth}`;
 
-        // Create a temporary link to trigger the download
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', ''); // Add download attribute to force download
+        link.setAttribute('download', '');
         document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link); // Clean up
+        document.body.removeChild(link);
 
-        // Manually close the dropdown after downloading
         const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
         dropdown.hide();
     });
 
     function onDataBound() {
-        // Получаем все элементы заголовков колонок
         const headers = document.querySelectorAll('#mechanicAcceptances-list .e-headercell');
 
-        // Добавляем title атрибут к каждому элементу заголовка
         headers.forEach(header => {
             header.setAttribute('title', header.innerText.trim());
         });
