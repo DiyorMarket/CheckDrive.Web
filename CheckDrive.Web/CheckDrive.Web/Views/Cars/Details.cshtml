@@ -1,12 +1,11 @@
 ﻿@model CheckDrive.ApiContracts.Car.CarDto
-
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div>
-    <h4>Moshina haqida ma'lumot</h4>
+    <h4>Avtomobil haqida ma'lumot</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -91,17 +90,130 @@
 </div>
 
 <div class="mt-4">
-    <a asp-action="Index" class="btn btn-outline-info">
+    <a asp-action="Index" class="btn btn-info">
         <i class="fa-solid fa-arrow-left"></i>
         Orqaga
     </a>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">
+    <a id="openCarModal" class="btn btn-warning">
         <i class="fa-solid fa-pen"></i>
         Tahrirlash
     </a>
-    <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-outline-danger">
+    <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-danger">
         <i class="fa-solid fa-trash"></i>
         O'chirish
     </a>
 </div>
 
+<div class="modal fade" id="carModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h4>Avtomobil ma'lumotlarini o'zgartirish</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">                       
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body" id="carmodalContent">
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#openCarModal').on('click', function () {
+                $('#carmodalContent').empty();
+                $.ajax({
+                    url: "/cars/edit/"+@Model?.Id,
+                    type: 'GET',
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (data) {
+                        $('#carmodalContent').html(data);
+                        console.log("Ajax muvaffaqqiyatli bajarildi");
+                        $('#carModal').modal('show');
+                        $.getScript('/lib/jquery-validation/dist/jquery.validate.min.js', function () {
+                            $.getScript('/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js');
+                        });
+
+                    },
+                    error: function (error) {
+                        alert("Tahrirlash oynasini ochishda muommo bo'ldi \n" + error );
+                    }
+                });
+            });
+            $('#carModal').on('hidden.bs.modal', function () {
+                $(this).find('#carmodalContent').empty(); // Modal yopilganda ichki kontentni tozalash
+                $(this).off('click');
+            });
+            $('#carModal').on('click', '.btn-close', function () {
+                $('#carModal').modal('hide');
+            });
+        });
+        function validateForm() {
+            var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
+            var remainingFuel = document.getElementById("remainingFuel").value;
+
+            if (parseFloat(remainingFuel) > parseFloat(fuelTankCapacity)) {
+                alert("Avtomobil yoqilg'i qoldig'i yoqilg'i baki sig'imidan katta bo'lmaydi.");
+                return false;
+            }
+            return true;
+        }
+
+        function validateRemainingFuel() {
+            var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
+            var remainingFuel = document.getElementById("remainingFuel").value;
+
+            if (fuelTankCapacity === "") {
+                alert("Siz avval 'Yoqilg'i baki sig'imi' ga qiymat kiritishingiz kerak");
+                document.getElementById("remainingFuel").value = "";
+                return false;
+            }
+
+            if (parseFloat(remainingFuel) > parseFloat(fuelTankCapacity)) {
+                alert("Avtomobil yoqilg'i qoldig'i yoqilg'i baki sig'imidan katta bo'lmaydi.");
+                return false;
+            }
+            return true;
+        }
+
+        function calculateMonthlyDistance() {
+            var oneYearMediumDistance = document.getElementById("oneYearMediumDistance").value;
+            var meduimFuelConsumption = document.getElementById("meduimFuelConsumption").value;
+
+            if (meduimFuelConsumption === "") {
+                alert("Siz avval '100 km uchun yoqilg'i me'yori [litr]' ga qiymat kiritishingiz kerak");
+                document.getElementById("oneYearMediumDistance").value = "";
+                return;
+            }
+
+            var monthlyDistance = oneYearMediumDistance / 12;
+            document.getElementById("monthlyDistance").value = monthlyDistance.toFixed(1);
+
+            var yearlyMediumFuel = oneYearMediumDistance * (meduimFuelConsumption / 100);
+            document.getElementById("yearlyMediumFuel").value = yearlyMediumFuel.toFixed(1);
+
+            var monthlyMediumFuel = yearlyMediumFuel / 12;
+            document.getElementById("monthlyMediumFuel").value = monthlyMediumFuel.toFixed(1);
+        }
+
+    </script>
+}
+<style>
+    .modal-lg {
+        max-width: 100%;
+        margin: auto; /* Ekranning 90% qismini egallaydi */
+    }
+
+    .modal-content {
+        width: 60%; /* Modal o'lchamini 80% qiling */
+        max-width: 700px; /* Maksimal o'lcham */
+    }
+
+</style>
