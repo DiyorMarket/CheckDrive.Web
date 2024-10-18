@@ -144,8 +144,7 @@
                     'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
                 },
                 success: function (data) {
-                    $('#carmodalContent').html(data);
-                    console.log("Ajax muvaffaqqiyatli bajarildi");
+                    $('#carmodalContent').html(data);                  
                     $('#carModal').modal('show');       
                         $.getScript('/lib/jquery-validation/dist/jquery.validate.min.js', function () {
                             $.getScript('/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js');
