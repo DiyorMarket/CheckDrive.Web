@@ -11,6 +11,7 @@ public class CurrentUserService:ICurrentUserService
     {
         _httpContextAccessor = httpContextAccessor;
     }
+    
     public string GetRole()
     {
         var httpContext = _httpContextAccessor.HttpContext;
