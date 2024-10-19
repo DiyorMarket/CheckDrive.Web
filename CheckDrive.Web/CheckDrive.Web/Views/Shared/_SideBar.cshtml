@@ -1,84 +1,11 @@
-﻿@{
-    List<Object> menuItems = new List<Object>();
-    
-    menuItems.Add(new
-    {
-        text = "Dashboard",
-        iconCss = "fa-solid fa-home",
-        url = "/dashboard",
-    });
+﻿@using CheckDrive.Web.Stores.Menu;
+@using CheckDrive.Web.Stores.User
+@inject ICurrentUserService currentUserService;
+@inject IMenuService menuService;
 
-    menuItems.Add(new
-    {
-        text = "Qarzlar",
-        iconCss = "fa-solid fa-file-invoice-dollar",
-        url = "/#",
-    });
-
-    menuItems.Add(new
-    {
-        text = "Umumiy",
-        separator = true,
-    });
-
-    menuItems.Add(new
-    {
-        text = "Ishchilar",
-        iconCss = "fas fa-users",
-        url = "/accounts"
-    });
-
-    menuItems.Add(new
-    {
-        text = "Avtomobillar",
-        iconCss = "fas fa-car",
-        url = "/cars"
-    });
-    
-    menuItems.Add(new
-    {
-        text = "Yoqilg'ilar",
-        iconCss = "fa-solid fa-gas-pump",
-        url = "/#"
-    });
-
-    menuItems.Add(new
-    {
-        text = "Tekshiruvlar",
-        separator = true,
-    });
-    menuItems.Add(new
-    {
-        text = "Shifokor",
-        iconCss = "fa-solid fa-briefcase-medical",
-        url = "/doctorreviews"
-    });
-    menuItems.Add(new
-    {
-        text = "Mexanik (Topshirish)",
-        iconCss = "fa-solid fa-tools",
-        url = "/mechanichandovers"
-    });
-    menuItems.Add(new
-    {
-        text = "Operator",
-        iconCss = "fa-solid fa-headset",
-        url = "/OperatorReviews"
-    });
-    menuItems.Add(new
-    {
-        text = "Mexanik (Qabul qilish)",
-        iconCss = "fa-solid fa-car-on",
-        url = "/mechanicacceptances"
-    });
-    menuItems.Add(new
-    {
-        text = "Dispetcher",
-        iconCss = "fa-solid fa-user-gear",
-        url = "/DispatcherReviews"
-    });
-
-    TempData.Keep("UserName");
+@{
+    var role = currentUserService.GetRole();
+    var menuItems = menuService.GetMenuItems(role);
 }
 
 <ejs-sidebar id="sidebar" width="290px" enableDock dockSize="100px"

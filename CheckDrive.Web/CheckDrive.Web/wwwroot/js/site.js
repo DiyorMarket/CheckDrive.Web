@@ -6,8 +6,18 @@
         const anchor = item.querySelector('a');
         if (anchor && anchor.getAttribute('href') === currentUrl) {
             item.classList.add('e-selected');
+            if (item.id === "handoversItem") {
+                updateTarixUrl("/mechanichandovers/historyindexforpersonalpage");
+            }
         }
     });
+    function updateTarixUrl(newUrl) {
+        var tarixMenuItem = document.getElementById("historyItem");
+        var historyLink = tarixMenuItem.querySelector("a.e-menu-url");
+        if (historyLink) {
+            historyLink.href = newUrl;            
+        }
+    }
 });
 
 function toggleDropdown() {
