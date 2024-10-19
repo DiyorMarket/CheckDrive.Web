@@ -7,33 +7,8 @@
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
     string activeTab = "MechanicAcceptances";
 }
-<div class="container-fluid py-2 px-4 d-flex justify-content-end">
-    <div class="d-flex align-items-center gap-2">
-        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
-            <span class="logout-icon">
-                <i class="fas fa-sign-out-alt"></i>
-            </span>
-            Chiqish
-        </button>
-        
-    </div>
-</div>
-
 <form method="get" action="@Url.Action("PersonalIndex")">
-    <div class="container mt-5">
-        <div class="mb-4">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "MechanicHandovers" ? "active" : "")" href="@Url.Action("PersonalIndex", "MechanicHandovers")">Mexanik(Topshirish)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "MechanicAcceptances" ? "active" : "")" href="@Url.Action("PersonalIndex", "MechanicAcceptances")">Mexanik(Qabul qilish)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "MechanicAcceptances")">Tarixni ko'rish</a>
-                </li>
-            </ul>
-        </div>
+    <div class="container mt-5">    
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
             <div class="col-md-4">
@@ -47,6 +22,11 @@
                 </div>
             </div>
             <div class="col-md-8 d-flex justify-content-end align-items-center">
+                <button id="openCreteMechanicAcceptancesModal" 
+                        class="btn btn-success"
+                        type="button">
+                    <i class="fa fa-plus"></i> Yaratish
+                </button>
                 <div class="dropdown d-inline-block me-2">
                     <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-download"></i> Yuklab olish
@@ -56,14 +36,6 @@
                         <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
                     </div>
                 </div>
-                @* <a class="btn btn-success" href="@Url.Action("CreateByButton", "MechanicAcceptances")">
-                    <i class="fa fa-plus"></i> Yaratish
-                </a> *@
-                <button id="openCreteMechanicAcceptancesModal" 
-                        class="btn btn-success"
-                        type="button">
-                    <i class="fa fa-plus"></i> Yaratish
-                </button>
             </div>
         </div>
 

@@ -14,49 +14,16 @@
     <link rel="stylesheet" href="~/CheckDrive.Web.styles.css" asp-append-version="true" />
     <script src="https://cdn.syncfusion.com/ej2/20.2.43/dist/ej2.min.js"></script>
 </head>
-<body>
+<body class="bg-white">
 
-    <partial name="_SideBar" />
-    <div class="navbar" style="background-color:white;">
-        <div class="profile-container">
-            <div class="notifications">
-                <a href="" class="text-decoration-none"><i class="fa-regular fa-message"></i></a>
-                <a href="" class="text-decoration-none"> <i class="fa-regular fa-bell"></i> </a>
-            </div>
-            <div class="profile-icon">
-                <div class="icon-wrapper" onclick="toggleDropdown()">
-                    <i class="fa-regular fa-user"></i>
-                </div>
-                <div id="dropdown" class="dropdown">
-                    <span>
-                        <a href="/accounts/details" style="color:#1C375C" class=" fs-6 fw-bold"><i class="fa-regular fa-user"></i> Shaxsiy kabinet</a>
-                    </span>
-                    <span>
-                        <a href="/auth/login" class="text-danger fs-6 fw-bold"><i class="fa-solid fa-right-from-bracket"></i> Chiqish</a>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="main-content">
-        <div class="container mt-3">
-            <div class="row justify-content-center">
-                <div class="col-md-12">
-                    <main role="main" class="pb-3">
-                        @RenderBody()
-                    </main>
-                </div>
-            </div>
-        </div>
-    </div>
+    @RenderBody()
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-     @RenderSection("Scripts", required: false)
+    @await RenderSectionAsync("Scripts", required: false)
     <ejs-scripts></ejs-scripts>
 </body>
 </html>

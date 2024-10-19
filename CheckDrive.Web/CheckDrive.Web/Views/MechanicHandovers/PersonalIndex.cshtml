@@ -5,35 +5,10 @@
 @{
     ViewData["Title"] = "Mechanic Handovers (Personal)";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
-    string activeTab = "MechanicHandovers";
 }
-
-<div class="container-fluid py-2 px-4 d-flex justify-content-end">
-    <div class="d-flex align-items-center gap-2">
-        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
-            <span class="logout-icon">
-                <i class="fas fa-sign-out-alt"></i>
-            </span>
-            Chiqish
-        </button>
-    </div>
-</div>
 
 <form method="get" action="@Url.Action("PersonalIndex")">
     <div class="container mt-5">
-        <div class="mb-4">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "MechanicHandovers" ? "active" : "")" href="@Url.Action("PersonalIndex", "MechanicHandovers")">Mexanik(Topshirish)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "MechanicAcceptances" ? "active" : "")" href="@Url.Action("PersonalIndex", "MechanicAcceptances")">Mexanik(Qabul qilish)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "MechanicHandovers")">Tarixni ko'rish</a>
-                </li>
-            </ul>
-        </div>
         <div class="row justify-content-between align-items-center mb-4">
             <div class="col-md-4">
                 <div class="input-group">
@@ -46,7 +21,6 @@
                 </div>
             </div>
             <div class="col-md-8 d-flex justify-content-end align-items-center gap-2">
-                <a class="btn btn-primary" href="@Url.Action("CarHistoryIndex", "Cars")">Moshina tarixi</a>
                 <div class="dropdown d-inline-block">
                     <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-download"></i> Yuklab olish
@@ -55,7 +29,8 @@
                         <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
                         <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
                     </div>
-                </div>
+                </div>            
+                <a class="btn btn-primary" href="@Url.Action("CarHistoryIndex", "Cars")">Moshina tarixi</a>                
                 <button  type="button" id="openCreteMechanicHandoverModal" class="btn btn-success">
                     <i class="fa fa-plus"></i> Yaratish
                 </button>
@@ -275,14 +250,9 @@
 <script>
     $(document).ready(function () {
         $('.openMechanicHandoverReviewModal').click(function (e) {
-            e.preventDefault();
-            console.log("F.I.O link bosildi");
+            e.preventDefault();       
             var driverId = $(this).data('driver-id');
             var driverName = $(this).data('driver-name');
-
-            console.log("Driver ID: ", driverId);
-            console.log("Driver Name: ", driverName);
-
             $.ajax({
                 url: "/mechanichandovers/create?driverid=" + driverId + "&driverName=" + driverName,
                 type: 'GET',

@@ -44,7 +44,6 @@
             <div class="col-12">
                 <ejs-grid id="mechanicAcceptances-list" dataSource="@ViewBag.MechanicAcceptances" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
                     <e-grid-columns>
-                        <e-grid-column headerText="Id" field="Id" template="#templat" type="number" width="60"></e-grid-column>
                         <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" type="string"></e-grid-column>
                         <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string"></e-grid-column>
                         <e-grid-column headerText="Mashina" field="CarName" template="#template" type="string"></e-grid-column>
@@ -54,6 +53,7 @@
                         <e-grid-column headerText="Qabul qilish" field="IsAccepted" type="string" width="100"></e-grid-column>
                         <e-grid-column headerText="Izoh" field="Comments" type="string"></e-grid-column>
                         <e-grid-column headerText="Status" field="Status" type="string"></e-grid-column>
+                        <e-grid-column width="100" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
                     </e-grid-columns>
                 </ejs-grid>
             </div>
@@ -156,4 +156,10 @@
             header.setAttribute('title', header.innerText.trim());
         });
     }
+</script>
+
+<script type="text/x-template" id="actionTemplate">
+    <button type="button" class="shadow-sm  bg-white rounded e-btn e-flat mx-2" title="Tafsilot" onclick="onDetailsClick(${Id})">
+        <i class="bi bi-card-list text-info" style="font-size: 19px;"></i>
+    </button>    
 </script>
