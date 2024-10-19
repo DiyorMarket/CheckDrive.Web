@@ -44,16 +44,13 @@
                           gridLines="Vertical"
                           allowSorting="true">
                     <e-grid-columns>
-                        <e-grid-column headerText="Id" field="Id" field="Id" template="#template" typeof="Text"></e-grid-column>
                         <e-grid-column headerText="Model" field="Model" typeof="Text"></e-grid-column>
                         <e-grid-column headerText="Davlat raqami" field="Number" typeof="text"></e-grid-column>
                         <e-grid-column headerText="Bosib o'tgan masofasi'" field="Mileage" typeof="text"></e-grid-column>
                         <e-grid-column headerText="Rangi" field="Color" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="Avtomobildagi yoqilg'i hajmi" field="RemainingFuel" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="O'rtacha yoqilg'i sarfi" field="MeduimFuelConsumption" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="Yoqilg'i baki sig'imi" field="FuelTankCapacity" typeof="text"></e-grid-column>
                         <e-grid-column headerText="Ishlab chiqarilgan yili" field="ManufacturedYear" typeof="text"></e-grid-column>
                         <e-grid-column headerText="Status" field="Status" type="string"></e-grid-column>
+                        <e-grid-column width="180" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
                     </e-grid-columns>
                 </ejs-grid>
             </div>
@@ -100,4 +97,16 @@
     <div>
         <a rel='nofollow' href="cars/Details/${Id}">${Id}</a>
     </div>
+</script>
+
+<script type="text/x-template" id="actionTemplate">
+    <button type="button" class="shadow-sm  bg-white rounded e-btn e-flat mx-2" title="Tafsilot" onclick="onDetailsClick(${Id})">
+        <i class="bi bi-card-list text-info" style="font-size: 19px;"></i>
+    </button>
+    <button type="button"  class="shadow-sm  bg-white rounded e-btn e-flat" title="Tahrirlash" onclick="onEditClick(${Id})">
+        <i class="fa-solid fa-pen fa-lg text-warning" ></i>
+    </button>
+    <button type="button" class="shadow-sm   bg-white rounded e-btn e-flat mx-2" title="O&#39;chirish" onclick="onDeleteClick(${Id})">
+        <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
+    </button>
 </script>

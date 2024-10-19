@@ -39,13 +39,13 @@
     <div class="col-12">
         <ejs-grid id="dispatcherReview-list" dataSource="@ViewBag.DispatcherReviews" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
             <e-grid-columns>
-                <e-grid-column headerText="Id" field="Id" type="number" template="#templat" textAlign=Center headerTextAlign=Center width="50"></e-grid-column>
                 <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
                 <e-grid-column headerText="Marka" field="CarName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
                 <e-grid-column headerText="Dispetcher F.I.SH" field="DispatcherName" type="string" textAlign=Center headerTextAlign=Center></e-grid-column>
                 <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
                 <e-grid-column headerText="Operator F.I.SH" field="OperatorName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
                 <e-grid-column headerText="Ro'yxatga olingan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" textAlign=Center headerTextAlign=Center></e-grid-column>
+                <e-grid-column width="100" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
@@ -139,4 +139,10 @@
             header.setAttribute('title', header.innerText.trim());
         });
     }
+</script>
+
+<script type="text/x-template" id="actionTemplate">
+    <button type="button" class="shadow-sm  bg-white rounded e-btn e-flat mx-2" title="Tafsilot" onclick="onDetailsClick(${Id})">
+        <i class="bi bi-card-list text-info" style="font-size: 19px;"></i>
+    </button>
 </script>
