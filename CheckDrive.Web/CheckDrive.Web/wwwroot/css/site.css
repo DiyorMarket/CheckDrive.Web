@@ -206,7 +206,7 @@ nav.navbar {
     overflow: hidden;
 }
 
-.app-logo img{
+.app-logo img {
     text-align: center;
     margin-bottom: 15px;
     height:80px;
@@ -374,4 +374,54 @@ nav.navbar {
 
 .icon-wrapper {
     cursor: pointer;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.modal-backdrop {
+    z-index: 1040;
+}
+
+.modal-content {
+    position: page;
+    margin: auto;
+    padding: 20px;
+    width: max-content;
+    border-radius: 10px;
+}
+
+.e-input {
+    height: 100px; 
+    padding: 10px; 
+    font-size: 16px;
+}
+
+.btn-close {
+    width: 15px; 
+    height: 15px;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; 
+    position: absolute; 
+    top: 13px; 
+    right: 13px;
+}
+    
+#createButton {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    top:50px;
+    right:10px;    
 }
