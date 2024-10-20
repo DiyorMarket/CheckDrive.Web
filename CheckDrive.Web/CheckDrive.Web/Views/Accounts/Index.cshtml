@@ -50,12 +50,12 @@
                   gridLines="Vertical"
                   allowSorting="true">
             <e-grid-columns>
-                <e-grid-column headerText="Id" field="Id" field="Id" template="#template" typeof="Text"></e-grid-column>
                 <e-grid-column headerText="Ism" field="FirstName" typeof="text"></e-grid-column>
                 <e-grid-column headerText="Familiya" field="LastName" typeof="text"></e-grid-column>
                 <e-grid-column headerText="Telefon raqam" field="PhoneNumber" typeof="text"></e-grid-column>
                 <e-grid-column headerText="Tug'ilgan yil" field="Bithdate" type="date" format="dd-MM-yyyy"></e-grid-column>
                 <e-grid-column headerText="Kasb" field="RoleName" typeof="text"></e-grid-column>
+                <e-grid-column width="180" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
@@ -96,8 +96,14 @@
     </div>
 </div>
 
-<script id="template" type="text/x-template">
-    <div>
-        <a rel='nofollow' href="accounts/Details/${Id}">${Id}</a>
-    </div>
+<script type="text/x-template" id="actionTemplate">
+    <button type="button" class="shadow-sm  bg-white rounded e-btn e-flat mx-2" title="Tafsilot" onclick="onDetailsClick(${Id})">
+        <i class="bi bi-card-list text-info" style="font-size: 19px;"></i>
+    </button>
+    <button type="button"  class="shadow-sm  bg-white rounded e-btn e-flat" title="Tahrirlash" onclick="onEditClick(${Id})">
+        <i class="fa-solid fa-pen fa-lg text-warning" ></i>
+    </button>
+    <button type="button" class="shadow-sm   bg-white rounded e-btn e-flat mx-2" title="O&#39;chirish" onclick="onDeleteClick(${Id})">
+        <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
+    </button>
 </script>
