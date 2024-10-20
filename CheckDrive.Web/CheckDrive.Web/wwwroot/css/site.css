@@ -51,19 +51,14 @@ body {
     border-radius: 10px;
 }
 
-.e-grid .e-gridcontent, .e-grid .e-table {
-    background-color: white;
-}
-
 .e-grid .e-gridheader {
     border: 5px;
     border-radius:50px;
     padding: 10px;
     background-color: ghostwhite;
 }
-
-    .e-grid .e-row:hover .e-rowcell {
-        background-color: rgb(204, 229, 255) !important;
+    .e-grid .e-gridcontent, .e-grid .e-table {
+        background-color: #fafafa;
     }
 
     .e-grid .e-rowcell.e-selectionbackground {
