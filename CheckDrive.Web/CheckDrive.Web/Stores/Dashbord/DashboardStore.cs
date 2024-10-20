@@ -1,5 +1,5 @@
 ﻿using CheckDrive.Web.Service;
-using CheckDrive.Web.ViewModels;
+using CheckDrive.Web.ViewModels.Dashboard;
 using Newtonsoft.Json;
 
 namespace CheckDrive.Web.Stores.Dashbord

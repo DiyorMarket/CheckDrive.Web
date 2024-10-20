@@ -1,17 +1,28 @@
-﻿@model IEnumerable<CheckDrive.ApiContracts.OilMark.OilMarkDto>
+﻿@using CheckDrive.ApiContracts.OilMark
+@model IEnumerable<CheckDrive.ApiContracts.OilMark.OilMarkDto>
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    // Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Yoqilg'i turlari</h1>
+<div>
+    <div class="d-flex flex-row-reverse">
+        <button id="createoilBtn" class="btn btn-success">
+            <i class="fa fa-plus"></i> Yaratish
+        </button>
+        <div id="createoilModal" class="modal" >
+            <div class="modal-content" style="height: 250px; width: 500px ">
+                <span class="close">
+                    <button class="btn btn-close "></button>
+                </span>
+                <partial name="Create" model="new OilMarkForCreateDto()" />
+            </div>
+        </div>
+    </div>
+</div>      
 
-<div class="d-flex flex-row-reverse">
-    <a class="btn btn-success" asp-action="Create">
-        <i class="fa fa-plus"></i> Yaratish
-    </a>
-</div>
 
 <table class="table">
     <thead>
@@ -37,11 +48,11 @@
                 </td>
                 <td>
                     <div class="btn-group" role="group">
-                        <a class="btn btn-outline-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id" style="margin-right: 5px;">
-                            Tahrirlash
+                        <a class="e-btn e-flat" asp-action="Edit" asp-route-id="@item.Id" style="margin-right: 5px;">
+                            <i class="fa-solid fa-pen fa-lg text-warning"></i>
                         </a>
-                        <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id">
-                            O'chirish
+                        <a class="e-btn e-flat " asp-action="Delete" asp-route-id="@item.Id">
+                            <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
                         </a>
                     </div>
                 </td>
@@ -49,3 +60,34 @@
         }
     </tbody>
 </table>
+
+<script>
+    var modal = document.getElementById("createoilModal");
+    var btn = document.getElementById("createoilBtn");
+    var span = document.getElementsByClassName("close")[0];
+    var form = document.getElementById("createForm");
+
+    btn.onclick = function (event) {
+        event.preventDefault(); 
+        modal.style.display = "block";
+    }
+
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    form.onsubmit = function (event) {
+        event.preventDefault(); 
+        alert("Form submit qilindi, lekin sahifa yangilanmaydi.");
+    }
+
+    modalContent.onclick = function (event) {
+        event.stopPropagation(); 
+    }
+
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>

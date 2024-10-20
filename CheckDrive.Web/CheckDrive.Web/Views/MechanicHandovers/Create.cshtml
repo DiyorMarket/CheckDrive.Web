@@ -6,11 +6,9 @@
     bool noDriversAvailable = ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers).Any();
     bool noCarsAvailable = ViewBag.Cars == null || !((IEnumerable<SelectListItem>)ViewBag.Cars).Any();
 }
-<div class="row mt-custom">
-    <div class="col-md-4 offset-md-1 mt-5">
-        <h4>Ro'yxatga olish</h4>
-        <hr class="w-50" />
-            
+<form id="mechanicHandoverForm" asp-action="Create" method="post">
+    <div class="row mt-custom" style="width:580px">
+        <div class="col-md-4 offset-md-1 mt-1" style="width:580px">
         @if (noDriversAvailable)
         {
             <div class="alert alert-warning">
@@ -18,7 +16,6 @@
             </div>
         }
 
-        <form id="mechanicHandoverForm" asp-action="Create" method="post">
             <fieldset @(noDriversAvailable ? "disabled" : "")>
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group w-50 mt-3">
@@ -38,7 +35,7 @@
                         }
                         else
                         {
-                            <select asp-for="DriverId" id="driverIdDropdown" class="form-control border border-dark" asp-items="@ViewBag.Drivers">
+                            <select asp-for="DriverId" id="driverIdDropdown" class="form-control form-select border border-dark" asp-items="@ViewBag.Drivers">
                                 <option value="" selected>Haydovchini tanlang</option>
                             </select>
                         }
@@ -57,7 +54,7 @@
                     }
                     else
                     {
-                        <select asp-for="CarId" id="carIdDropdown" class="form-control border border-dark" asp-items="@ViewBag.Cars">
+                        <select asp-for="CarId" id="carIdDropdown" class="form-control border border-dark form-select" asp-items="@ViewBag.Cars">
                             <option value="" selected>Avtomobil tanlang</option>
                         </select>
                     }
@@ -86,19 +83,17 @@
                 </div>
             </fieldset>
 
-            <div class="form-group mt-3 w-50 mt-3">
-                <a asp-action="PersonalIndex" class="btn btn-outline-info">
-                    <i class="fa-solid fa-arrow-left-long"></i> Orqaga
-                </a>
-                <button class="btn btn-success" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
-                    <i class="fa fa-plus"></i> Yaratish
+            <div class="form-group justify-content-center d-flex w-50 mt-3">
+                <button style="width:150px" class="btn btn-success" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
+                    Saqlash
                 </button>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
-@section Scripts {
+
+ @section Scripts {
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function () {
             var form = document.getElementById('mechanicHandoverForm');
@@ -158,7 +153,7 @@
             });
         });
     </script>
-}
+} 
 
 <style>
     .border-danger {

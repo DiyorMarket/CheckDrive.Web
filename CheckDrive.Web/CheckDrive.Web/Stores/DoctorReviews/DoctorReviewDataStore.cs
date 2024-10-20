@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using CheckDrive.ApiContracts.DoctorReview;
-using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
 using CheckDrive.Web.Service;
 using Newtonsoft.Json;

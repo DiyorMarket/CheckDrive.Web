@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CheckDrive.Web.ViewModels
+namespace CheckDrive.Web.ViewModels.Login
 {
     public class LoginViewModel
     {

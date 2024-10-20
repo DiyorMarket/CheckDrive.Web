@@ -25,24 +25,23 @@ public class AuthController : Controller
     {
         if (HttpContext.Request.Cookies.TryGetValue("tasty-cookies", out _))
         {
-            string token = HttpContext.Request.Cookies["tasty-cookies"];
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
-            if (jwtToken == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            var roleId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
-            var accountId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+                string token = HttpContext.Request.Cookies["tasty-cookies"];
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+                if (jwtToken == null)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                var roleId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Role).Value;
+                var accountId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
             int accountIds = Int32.Parse(accountId);
-          
+
             switch (roleId)
             {
                 case "1":
-                
                     TempData["UserName"] = _accountDataStore.GetAccountAsync(accountIds)
                     .Result.FirstName;
-                TempData.Keep("UserName");
+                    TempData.Keep("UserName");
                     return RedirectToAction("Index", "Dashboard");
                 case "3":
                     TempData["AccountId"] = accountId;

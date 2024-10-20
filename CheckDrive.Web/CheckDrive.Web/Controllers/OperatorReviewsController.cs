@@ -44,31 +44,9 @@ namespace CheckDrive.Web.Controllers
             ViewBag.HasPreviousPage = operatorReviews.HasPreviousPage;
             ViewBag.HasNextPage = operatorReviews.HasNextPage;
 
-            var operatorReviewss = operatorReviews.Data.Select(r => new
-            {
-                r.Id,
-                r.OperatorName,
-                r.DriverName,
-                r.OilAmount,
-                r.OilMarks,
-                CarModel = $"{r.CarModel} ({r.CarNumber})",
-                r.Date,
-                IsGiven = (bool)r.IsGiven ? "Quyildi" : "Quyilmadi",
-                r.Comments,
-                Status = ((StatusForDto)r.Status) switch
-                {
-                    StatusForDto.Pending => "Kutilmoqda",
-                    StatusForDto.Completed => "Yakunlangan",
-                    StatusForDto.Rejected => "Rad etilgan",
-                    StatusForDto.Unassigned => "Tayinlanmagan",
-                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
-                    _ => "No`malum holat"
-                }
-            }).ToList();
+            ViewBag.OperatorsReview = operatorReviews.Data;
 
-            ViewBag.OperatorsReview = operatorReviewss;
             return View();
-
         }
 
         public async Task<IActionResult> HistoryIndexForPersonalPage(int? pageNumber, string? searchString, DateTime? date)
