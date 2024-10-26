@@ -5,7 +5,9 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 } 
+
 <h1>Avtomobillar</h1>
+
 <form asp-controller="Cars" asp-action="Index">
     <div class="container">
         <div class="row">
@@ -57,6 +59,7 @@
         </div>
     </div>
 </form>
+
 <!--  Create Modal Structure -->
 <div class="modal fade" id="carModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg ">
@@ -74,6 +77,7 @@
         </div>
     </div>
 </div>
+
 <div class="d-flex justify-content-between align-items-center my-3">
     <nav aria-label="Page navigation">
         <ul class="pagination">
@@ -121,18 +125,45 @@
     </button>
 </script>
 
-<style>
-    .modal-lg {
-        max-width: 100%;
-        margin: auto;/* Ekranning 90% qismini egallaydi */
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h3 class="modal-title" id="detailsModalLabel">Avtomobil ma'lumotlari</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="detailsContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onDetailsClick(id) {
+        $('#detailsContent').empty();
+        $.ajax({
+            url: `/cars/details/${id}`,
+            type: 'GET',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            success: function (data) {
+                $('#detailsContent').html(data);
+                var detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'), {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                detailsModal.show();
+            },
+            error: function (error) {
+                alert("Ma'lumotlarni yuklashda muammo yuz berdi.");
+            }
+        });
     }
 
-    .modal-content {
-        width: 60%; /* Modal o'lchamini 80% qiling */
-        max-width: 700px; /* Maksimal o'lcham */
-    }
+    $('#detailsModal').on('hidden.bs.modal', function () {
+        $(this).find('#detailsContent').empty();
+    });
+</script>
 
-</style>
 
 @section Scripts {
   <script>
@@ -163,7 +194,7 @@
             });
         });
         $('#carModal').on('hidden.bs.modal', function () {
-            $(this).find('#carmodalContent').empty(); // Modal yopilganda ichki kontentni tozalash
+            $(this).find('#carmodalContent').empty();
             $(this).off('click');
         });
         $('#carModal').on('click', '.btn-close', function () {
@@ -217,6 +248,5 @@
             var monthlyMediumFuel = yearlyMediumFuel / 12;
             document.getElementById("monthlyMediumFuel").value = monthlyMediumFuel.toFixed(1);
         }
-
   </script>
 } 
