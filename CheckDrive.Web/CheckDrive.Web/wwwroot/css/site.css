@@ -425,3 +425,56 @@ nav.navbar {
     top:50px;
     right:10px;    
 }
+
+/* Open details pages in a popup modal */
+.grid-container .row {
+    margin-left: 17px;
+    margin-right: 17px;
+    border-left: 0.1px solid #d9d9d9;
+}
+
+.content .col {
+    border-top: 0.1px solid #d9d9d9;
+    border-right: 0.1px solid #d9d9d9;
+    min-height: 45px;
+    max-height: auto;
+    padding: 14px;
+    background-color: #f2f0f1;
+    font-size: 17px !important;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.value .col {
+    border-top: 0.1px solid #d9d9d9;
+    border-right: 0.1px solid #d9d9d9;
+    padding: 14px;
+    min-height: 45px;
+    max-height: auto;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.comments {
+    border-top: 0.1px solid #d9d9d9;
+    border-right: 0.1px solid #d9d9d9;
+    border-bottom: 0.1px solid #d9d9d9;
+    padding: 14px;
+    min-height: 45px;
+    max-height: auto;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 750px;
+    overflow: hidden;
+}
+
+.bottom-style {
+    border-bottom: 0.1px solid #d9d9d9;
+}
+
+.modal-content {
+    width: 85%;
+}
+/* Open details pages in a popup modal */
