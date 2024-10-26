@@ -3,7 +3,9 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}       
+} 
+
+<h2>Operatorlar ko'riklari</h2>
 
 <form asp-controller="OperatorReviews" asp-action="Index">
     <div class="row">
@@ -92,50 +94,40 @@
 </script>
 
 <script>
-    // Default selected year and month
-    let selectedYear = new Date().getFullYear(); // Current year
-    let selectedMonth = new Date().getMonth() + 1; // Current month (months are zero-based)
+    let selectedYear = new Date().getFullYear();
+    let selectedMonth = new Date().getMonth() + 1;
 
-    // Function to handle the change event in the calendar
     function valueChange(args) {
         var selectedDate = args.value;
         selectedYear = selectedDate.getFullYear();
-        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
+        selectedMonth = selectedDate.getMonth() + 1;
 
-        // Optionally, update a label to display the selected date (if you have one)
         document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
     }
 
-    // Prevent the dropdown from closing when clicking inside
     document.getElementById('dropdownMenu').addEventListener('click', function (event) {
-        event.stopPropagation(); // Stops the dropdown from closing when interacting with its contents
+        event.stopPropagation();
     });
 
-    // Handle the download button click
     document.getElementById('downloadButton').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent the default action of the link
+        e.preventDefault();
 
-        // Construct the download URL using the selected year and month
         const url = `/OperatorReviews/Download?year=${selectedYear}&month=${selectedMonth}`;
 
-        // Create a temporary link to trigger the download
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', ''); // Add download attribute to force download
+        link.setAttribute('download', '');
         document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link); // Clean up
+        document.body.removeChild(link);
 
-        // Manually close the dropdown after downloading
         const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
         dropdown.hide();
     });
 
     function onDataBound() {
-        // Получаем все элементы заголовков колонок
         const headers = document.querySelectorAll('#operatorReview-list .e-headercell');
 
-        // Добавляем title атрибут к каждому элементу заголовка
         headers.forEach(header => {
             header.setAttribute('title', header.innerText.trim());
         });
@@ -158,4 +150,43 @@
     <button type="button" class="shadow-sm  bg-white rounded e-btn e-flat mx-2" title="Tafsilot" onclick="onDetailsClick(${Id})">
         <i class="bi bi-card-list text-info" style="font-size: 19px;"></i>
     </button>
+</script>
+
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h3 class="modal-title" id="detailsModalLabel">Operator ko'rigi ma'lumotlari</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="detailsContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onDetailsClick(id) {
+        $('#detailsContent').empty();
+        $.ajax({
+            url: `/operatorReviews/details/${id}`,
+            type: 'GET',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            success: function (data) {
+                $('#detailsContent').html(data);
+                var detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'), {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                detailsModal.show();
+            },
+            error: function (error) {
+                alert("Ma'lumotlarni yuklashda muammo yuz berdi.");
+            }
+        });
+    }
+
+    $('#detailsModal').on('hidden.bs.modal', function () {
+        $(this).find('#detailsContent').empty();
+    });
 </script>
