@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "CreateByButton";
-    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    Layout = null;
     bool noDriversAvailable = ViewBag.FilteredOperatorResponse == null || !((IEnumerable<dynamic>)ViewBag.FilteredOperatorResponse).Any();
 }
 
