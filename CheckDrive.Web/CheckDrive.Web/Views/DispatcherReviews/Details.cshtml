@@ -2,93 +2,100 @@
 
 @{
     ViewData["Title"] = "Details";
+    Layout = null;
 }
 
-<div>
-    <h4>Dispetcher</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            Dispetcher F.I.SH:
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DispatcherName)
-        </dd>
-        <dt class = "col-sm-2">
-            Haydovchi F.I.SH:
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DriverName)
-        </dd>
-        <dt class = "col-sm-2">
-            Mexanik F.I.SH:
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MechanicName)
-        </dd>
-        <dt class = "col-sm-2">
-            Operator F.I.SH:
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OperatorName)
-        </dd>
-        <dt class = "col-sm-2">
-            Ro'yxatga olingan vaqt:
-        </dt>
-        <dd class="col-sm-10">
+<div class="grid-container mt-3">
+    <div class="row content">
+        <div class="col text-center">
+            Dispetcher F.I.SH
+        </div>
+        <div class="col text-center">
+            Haydovchi F.I.SH
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.DispatcherName
+        </div>
+        <div class="col text-center">
+            @Model.DriverName
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            Mexanik F.I.SH
+        </div>
+        <div class="col text-center">
+            Operator F.I.SH
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.MechanicName
+        </div>
+        <div class="col text-center">
+            @Model.OperatorName
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            Avtomobil
+        </div>
+        <div class="col text-center">
+            O'rtacha yoqilg'i sarfi
+        </div>
+        <div class="col text-center">
+            Operator quygan yoqilg'i
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.CarName
+        </div>
+        <div class="col text-center">
+            @Model.CarMeduimFuelConsumption
+        </div>
+        <div class="col text-center">
+            @Model.PouredFuel
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            Ro'yxatga olingan vaqt
+        </div>
+        <div class="col text-center">
+            Bosib o'tilgan masofa
+        </div>
+        <div class="col text-center">
+            Sarflangan yoqilg'i
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
             @(Model.Date.ToString("yyyy-MM-dd | HH:mm"))
-        </dd>
-        <dt class = "col-sm-2">
-            Avtomobil:
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CarName)
-        </dd>
-        <dt class = "col-sm-2">
-            O'rtacha yoqilg'i sarfi:
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CarMeduimFuelConsumption)
-        </dd>
-        <dt class = "col-sm-2">
-            Bosib o'tilgan masofa:
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DistanceCovered)
-        </dd>
-        <dt class = "col-sm-2">
-            Sarflangan yoqilg'i:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FuelSpended)
-        </dd>
-        <dt class="col-sm-2">
-            Operator quygan yoqilg`i:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PouredFuel)
-        </dd>
-        <dt class="col-sm-2">
-            Boshlang`ich yoqilg`i qoldig`i:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RemainigFuelBefore)
-        </dd>
-        <dt class="col-sm-2">
-            Yakuniy yoqilg`i qoldig`i:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RemainigFuelAfter)
-        </dd>
-    </dl>
-</div>
-<div class="mt-4">
-    <a asp-action="Index" class="btn btn-outline-info">
-        <i class="fa-solid fa-arrow-left"></i>
-        Orqaga
-    </a>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">
-        <i class="fa-solid fa-pen"></i>
-        Tahrirlash
-    </a>
+        </div>
+        <div class="col text-center">
+            @Model.DistanceCovered
+        </div>
+        <div class="col text-center">
+            @Model.FuelSpended
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            Boshlang`ich yoqilg`i qoldig`i
+        </div>
+        <div class="col text-center">
+            Yakuniy yoqilg`i qoldig`i
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center bottom-style">
+            @Model.RemainigFuelBefore
+        </div>
+        <div class="col text-center bottom-style">
+            @Model.RemainigFuelAfter
+        </div>
+    </div>
 </div>

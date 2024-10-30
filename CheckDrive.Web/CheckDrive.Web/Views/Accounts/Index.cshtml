@@ -4,7 +4,8 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>Ishchilar</h1>
+
+<h2>Ishchilar</h2>
 
 <form asp-controller="Accounts" asp-action="Index">
     <div class="row">
@@ -165,12 +166,41 @@
     });
 </script>
 
-<style>
-    .modal-content{
-        width:85%;        
-    }
-    .background{
-        max-height:40px;
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h3 class="modal-title" id="detailsModalLabel">Ishchining ma'lumotlari</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="detailsContent">
+            </div>
+        </div>
+    </div>
+</div>
 
+<script>
+    function onDetailsClick(id) {
+        $('#detailsContent').empty();
+        $.ajax({
+            url: `/accounts/details/${id}`,
+            type: 'GET',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            success: function (data) {
+                $('#detailsContent').html(data);
+                var detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'), {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                detailsModal.show();
+            },
+            error: function (error) {
+                alert("Ma'lumotlarni yuklashda muammo yuz berdi.");
+            }
+        });
     }
-</style>
+
+    $('#detailsModal').on('hidden.bs.modal', function () {
+        $(this).find('#detailsContent').empty();
+    });
+</script>
