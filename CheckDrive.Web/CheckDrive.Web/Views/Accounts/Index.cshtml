@@ -161,8 +161,8 @@
     });
 
     $('#createModal').on('hidden.bs.modal', function () {
-        $(this).find('#accountModalContent').empty(); // Modal kontentini tozalash
-        $(this).off('hidden.bs.modal'); // Hodisani tozalash, har safar qayta yuklamaslik uchun
+        $(this).find('#accountModalContent').empty();
+        $(this).off('hidden.bs.modal');
     });
 </script>
 
@@ -203,4 +203,72 @@
     $('#detailsModal').on('hidden.bs.modal', function () {
         $(this).find('#detailsContent').empty();
     });
+</script>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body" id="deleteContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onDeleteClick(id) {
+        $('#deleteContent').empty();
+        $.ajax({
+            url: "/accounts/delete/" + id,
+            type: 'GET',
+            success: function (data) {
+                $('#deleteContent').html(data);
+                $('#deleteModal').modal('show');
+            },
+            error: function () {
+                $('#deleteContent').html('<p>Error loading details</p>');
+            }
+        });
+        $(this).find('#deleteContent').empty();
+        $(this).off('hidden.bs.modal');
+    }
+</script>
+
+<div class="modal fade" id="accountEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h4 class="modal-title">Ishchi ma'lumotini o'zgartirish</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" data-target="#">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="accountEditModalContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function onEditClick(id) {
+        $('#accountEditModalContent').empty();
+        $.ajax({
+            url: "/accounts/edit/" + id,
+            type: 'GET',
+            success: function (data) {
+                $('#accountEditModalContent').html(data);
+                $('#accountEditModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                }).modal('show');
+
+                var birthdateValue = $('#birthdateId').val();
+                console.log(birthdateValue);
+            },
+            error: function (error) {
+                alert("Tahrirlash oynasini ochishda muommo bo'ldi \n" + error);
+            }
+        });
+        $(this).find('#accountEditModalContent').empty();
+        $(this).off('hidden.bs.modal');
+    }
 </script>
