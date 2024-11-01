@@ -110,7 +110,9 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var account = await _accountDataStore.GetAccountAsync(id);
-
+            var roles = await GETRoles();
+            ViewBag.Roles = new SelectList(roles, "Id", "Name");
+            
             return View(account);
         }
 
@@ -122,7 +124,7 @@ namespace CheckDrive.Web.Controllers
             if (ModelState.IsValid)
             {
                 var newAccount = await _accountDataStore.UpdateAccountAsync(id, account);
-                return RedirectToAction("Details", new { id = newAccount.Id });
+                return RedirectToAction(nameof(Index));
             }
             return View(account);
         }
