@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";    
-    Layout = "~/Views/Shared/_ModalForLayout.cshtml";
+    Layout = "~/Views/Shared/_LayoutForModal.cshtml";
 }
 <form id="editAccountForm" asp-action="Edit" method="post" asp-controller="Accounts">
     @Html.AntiForgeryToken()
@@ -56,13 +56,7 @@
                             format="dd/MM/yyyy"
                             ejs-for="Bithdate"
                             style="height:36.6px">
-            </ejs-datepicker>
-            @*  <input  type="date"
-            id="birthdateId"
-            name="birthdate"
-            class="background form-control"
-            asp-for="Bithdate"
-            > *@
+            </ejs-datepicker>           
             <span asp-validation-for="Bithdate" class="text-danger"></span>
         </div>
         <div class="col-md-4">
