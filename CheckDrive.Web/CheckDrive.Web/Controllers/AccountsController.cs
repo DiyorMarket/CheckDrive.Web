@@ -27,7 +27,7 @@ namespace CheckDrive.Web.Controllers
         {
             var accounts = await _accountDataStore.GetAccountsAsync(searchString, roleId, birthDate, pageNumber);
 
-            var roles = await GETRoles();
+            var roles = await GetRolesAsync();
 
             roles.Insert(0, new RoleDto
             {
@@ -88,7 +88,7 @@ namespace CheckDrive.Web.Controllers
         }
         public async Task<IActionResult> Create()
         {
-            var roles = await GETRoles();
+            var roles = await GetRolesAsync();
             ViewBag.Roles = new SelectList(roles, "Id", "Name");
             return View();
         }
@@ -102,7 +102,7 @@ namespace CheckDrive.Web.Controllers
                 var newAccount = await _accountDataStore.CreateAccountAsync(account);
                 return RedirectToAction("Details", new {id = newAccount.Id});
             }
-            var roles = await GETRoles();
+            var roles = await GetRolesAsync();
             ViewBag.Roles = new SelectList(roles, "Id", "Name");
             return View(account);
         }
@@ -110,7 +110,7 @@ namespace CheckDrive.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var account = await _accountDataStore.GetAccountAsync(id);
-            var roles = await GETRoles();
+            var roles = await GetRolesAsync();
             ViewBag.Roles = new SelectList(roles, "Id", "Name");
             
             return View(account);
@@ -147,7 +147,7 @@ namespace CheckDrive.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<List<RoleDto>> GETRoles()
+        private async Task<List<RoleDto>> GetRolesAsync()
         {
             var roleResponse = await _roleStore.GetRoles();
             var roles = roleResponse.Data.ToList();
