@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    Layout = null;
     bool noDriversAvailable = ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers.Items).Any();
 }
 <form asp-action="Create" method="post" id="createDoctorReviewForm">        

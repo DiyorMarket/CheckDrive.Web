@@ -1,107 +1,103 @@
 ﻿@model CheckDrive.ApiContracts.Car.CarDto
+
 @{
     ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = null;
 }
 
-<div>
-    <h4>Avtomobil haqida ma'lumot</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            ID:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class="col-sm-2">
-            Model:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Model)
-        </dd>
-        <dt class="col-sm-2">
-            Rangi:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Color)
-        </dd>
-        <dt class="col-sm-2">
-            Davlat raqami:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Number)
-        </dd>
-        <dt class="col-sm-2">
-            Ishlab chiqarilgan yili:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ManufacturedYear)
-        </dd>
-        <dt class="col-sm-2">
-            Bosib o'tgan masofasi:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Mileage)
-        </dd>
-        <dt class="col-sm-2">
-            Avtomobildagi yoqilg'i qoldig`i:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RemainingFuel)
-        </dd>
-        <dt class="col-sm-2">
-            O'rtacha yoqilg'i sarfi:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MeduimFuelConsumption)
-        </dd>
-        <dt class="col-sm-2">
-            Yoqilg'i baki sig'imi:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FuelTankCapacity)
-        </dd>
-        <dt class="col-sm-2">
-            1 yillik bosib o'tish me'yori:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OneYearMediumDistance)
-        </dd>
-        <dt class="col-sm-2">
-            1 oylik bosib o'tish me'yori:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OneMonthMediumDistance)
-        </dd>
-        <dt class="col-sm-2">
-            1 yillik yoqilg'i me'yori:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OneYearMeduimFuelConsumption)
-        </dd>
-        <dt class="col-sm-2">
-            1 oylik yoqilg'i me'yori:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OneMonthMeduimFuelConsumption)
-        </dd>
-    </dl>
-</div>
-
-<div class="mt-4">
-    <a asp-action="Index" class="btn btn-info">
-        <i class="fa-solid fa-arrow-left"></i>
-        Orqaga
-    </a>
-    <a id="openCarModal" class="btn btn-warning">
-        <i class="fa-solid fa-pen"></i>
-        Tahrirlash
-    </a>
-    <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-danger">
-        <i class="fa-solid fa-trash"></i>
-        O'chirish
-    </a>
+<div class="grid-container mt-3">
+    <div class="row content">
+        <div class="col text-center">
+            Model
+        </div>
+        <div class="col text-center">
+            Rangi
+        </div>
+        <div class="col text-center">
+            Davlat raqami
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.Model
+        </div>
+        <div class="col text-center">
+            @Model.Color
+        </div>
+        <div class="col text-center">
+            @Model.Number
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            Ishlab chiqarilgan yil
+        </div>
+        <div class="col text-center">
+            Bosib o'tgan masofasi
+        </div>
+        <div class="col text-center">
+            Yoqilg'i qoldig'i
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.ManufacturedYear
+        </div>
+        <div class="col text-center">
+            @Model.Mileage
+        </div>
+        <div class="col text-center">
+            @Model.RemainingFuel
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            O'rtacha yoqilg'i sarfi
+        </div>
+        <div class="col text-center">
+            Yoqilg'i baki sig'imi
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.MeduimFuelConsumption
+        </div>
+        <div class="col text-center">
+            @Model.FuelTankCapacity
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            1 yillik bosib o'tishi me'yori
+        </div>
+        <div class="col text-center">
+            1 oylik bosib o'tish me'yori
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.OneYearMediumDistance
+        </div>
+        <div class="col text-center">
+            @Model.OneMonthMediumDistance
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            1 yillik yoqilg'i me'yori
+        </div>
+        <div class="col text-center">
+            1 oylik yoqilg'i me'yori
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center bottom-style">
+            @Model.OneYearMeduimFuelConsumption
+        </div>
+        <div class="col text-center bottom-style">
+            @Model.OneMonthMeduimFuelConsumption
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="carModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
