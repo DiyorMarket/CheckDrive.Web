@@ -244,38 +244,6 @@ nav.navbar {
     padding-right: 10px;
 }
 
-.e-menu .e-selected {
-    background-color: white !important;
-}
-
-.e-menu .e-list-item {
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.e-menu .e-selected .e-menu-icon {
-    background: #1C375C;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: 20px;
-}
-
-.e-menu-wrapper ul.e-menu .e-selected::before {
-    content: '';
-    display: inline-block;
-    width: 4px;
-    height: 24px;
-    background: #1C375C;
-    border-radius: 2px;
-    vertical-align: middle;
-    margin-right: -4px;
-}
-
-.e-menu .e-selected .e-anchor-wrap {
-    background: #1C375C;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 600;
-}
 
 /* Widget */
 .widget {
@@ -425,3 +393,34 @@ nav.navbar {
     top:50px;
     right:10px;    
 }
+
+.active-menu-item {
+    background-color: white; 
+    color: #1C375C !important; 
+    font-weight: 600; 
+}
+
+    .active-menu-item a {
+        background: #1C375C;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
+    }
+
+    .active-menu-item::before {
+        content: '';
+        display: inline-block;
+        width: 4px;
+        height: 24px;
+        background: #1C375C;
+        border-radius: 2px;
+        vertical-align: middle;
+        margin-right: -4px;
+    }
+
+    .active-menu-item .e-menu-icon {
+        background: #1C375C;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 20px;
+    }
