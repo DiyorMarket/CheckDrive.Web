@@ -2,42 +2,23 @@
 
 @{
     ViewData["Title"] = "Delete";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutForModal.cshtml";
 }
-
-<h1 class="align-items-baseline" style="margin-top: 100px">O'chirish</h1>
-
-<h3 style="color:grey;">
-    Haqiqatan ham buni oʻchirib tashlamoqchimisiz?
+<h1 class="text-center mb-5 text-danger"><i class="fa fa-exclamation-circle" style="font-size:100px"></i></h1>
+<h4 style="color:grey;">
+    Haqiqatan ham <b style="color:black;">@Model.OilMark</b> ni  oʻchirib tashlamoqchimisiz?
     O'chirsangiz bu yoqilg'i turidan foydalangan barcha ma'lumotlar ham o'chiriladi!!!
-</h3>
+</h4>
 
 <div>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OilMark)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OilMark)
-        </dd>
-    </dl>
-  
+    <hr /> 
     <form asp-action="Delete">
-        <div class="form-group">
-            <a asp-action="Index" class="btn btn-outline-info">
-                <i class="fa-solid fa-arrow-left-long"></i>
-                Orqaga
-            </a>
-            <button asp-route-itemid="@Model.Id" class="btn btn-outline-danger">
-                <i class="fa-solid fa-trash"></i>
-                O'chirish
+        <div class="d-flex justify-content-center mt-5 m-2" style="gap: 10px;">
+            <button asp-action="Index" class="btn btn-secondary" style="width:120px">
+                Yo'q
+            </button>
+            <button type="submit" asp-route-itemid="@Model.Id" class="btn btn-danger" style="width:120px">
+                Ha
             </button>
         </div>
     </form>

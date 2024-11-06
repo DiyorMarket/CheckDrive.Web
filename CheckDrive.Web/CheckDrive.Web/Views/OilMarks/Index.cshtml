@@ -3,7 +3,6 @@
 
 @{
     ViewData["Title"] = "Index";
-    // Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Yoqilg'i turlari</h1>
@@ -26,40 +25,110 @@
 
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.First().Id)
-            </th>
+        <tr>            
             <th>
                 Yoqilg'i nomi
             </th>
-            <th>Amallar</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
+            <tr>                
                 <td>
                     @Html.DisplayFor(modelItem => item.OilMark)
                 </td>
                 <td>
-                    <div class="btn-group" role="group">
-                        <a class="e-btn e-flat" asp-action="Edit" asp-route-id="@item.Id" style="margin-right: 5px;">
+                    <div class="btn-group" role="group">                        
+                        <button type="button" 
+                                class="shadow-sm  bg-white rounded e-btn e-flat" 
+                                title="Tahrirlash" 
+                                onclick="onEditClick(@item.Id)">
                             <i class="fa-solid fa-pen fa-lg text-warning"></i>
-                        </a>
-                        <a class="e-btn e-flat " asp-action="Delete" asp-route-id="@item.Id">
+                        </button>
+                        <button type="button" 
+                                class="shadow-sm bg-white rounded e-btn e-flat mx-2" 
+                                title="O&#39;chirish" 
+                                onclick="onDeleteClick(@item.Id)">
                             <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
-                        </a>
+                        </button>
                     </div>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div class="modal fade" id="deleteOilModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body" id="deleteOilContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="oilEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content" style="height: 250px; width: 500px ">
+            <div class="modal-header d-flex justify-content-center">
+                <h4>Yoqilg'i ma`lumotini o`zgartirish</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body" id="oilEditModalContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function onEditClick(id) {
+        $('#oilEditModalContent').empty();
+        $.ajax({
+            url: "/oilmarks/edit/" + id,
+            type: 'GET',            
+            success: function (data) {
+                $('#oilEditModalContent').html(data);
+                $('#oilEditModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                }).modal('show');
+
+            },
+            error: function (error) {
+                alert("Tahrirlash oynasini ochishda muommo bo'ldi \n" + error);
+            }
+        });
+        $(this).find('#oilEditModalContent').empty();
+        $(this).off('hidden.bs.modal');
+
+    }
+</script>
+
+
+<script>
+    function onDeleteClick(id) {
+        $('#deleteOilContent').empty();
+        $.ajax({
+            url: "/oilmarks/delete/" + id,
+            type: 'GET',
+            success: function (data) {
+                $('#deleteOilContent').html(data);
+                $('#deleteOilModal').modal('show');
+            },
+            error: function () {
+                $('#deleteOilContent').html('<p>Error loading details</p>');
+            }
+        });
+
+        $(this).find('#deleteOilContent').empty();
+        $(this).off('hidden.bs.modal');
+    }
+</script>
 
 <script>
     var modal = document.getElementById("createoilModal");

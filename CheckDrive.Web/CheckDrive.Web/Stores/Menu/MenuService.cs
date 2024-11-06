@@ -46,7 +46,7 @@ public class MenuService : IMenuService
             {
                 text = "Yoqilg'ilar",
                 iconCss = "fa-solid fa-gas-pump",
-                url = "/#"
+                url = "/oilMarks"
             });
             
             menuItems.Add(new
