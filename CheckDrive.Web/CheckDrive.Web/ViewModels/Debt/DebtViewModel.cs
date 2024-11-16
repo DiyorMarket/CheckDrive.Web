@@ -5,7 +5,7 @@ namespace CheckDrive.Web.ViewModels.Debt;
 public class DebtViewModel
 {
     public int Id { get; set; }
-    public string Driver { get; set; }
+    public string Driver { get; set; } 
     public OilType Oil { get; set; }
     public string OilTypeText
     {
