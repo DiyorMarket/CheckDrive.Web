@@ -4,8 +4,6 @@
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_LayoutForModal.cshtml";
 }
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <form id="createAccountForm" asp-action="Create" method="post" asp-controller="Accounts">
     @Html.AntiForgeryToken()
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -20,6 +18,22 @@
         <div class="col-md-5">
             <div>
                 <label asp-for="LastName" class="control-label">Familiya</label>
+            </div>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row gap-5 ms-4 mb-3">
+        <div class="col-md-5">
+            <div>
+                <label asp-for="FirstName" class="control-label">Pasport</label>
+            </div>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="col-md-5">
+            <div>
+                <label asp-for="LastName" class="control-label">Manzil</label>
             </div>
             <input asp-for="LastName" class="form-control" />
             <span asp-validation-for="LastName" class="text-danger"></span>
@@ -51,7 +65,7 @@
         </div>
         <div class="col-md-3">
             <div>
-                <label asp-for="Bithdate" class="control-label">Tug'ilgan kun</label>
+                <label asp-for="Bithdate" class="control-label">Tug'ilgan sana</label>
             </div>
             <ejs-datepicker id="birthdateId"
                             class="background"
@@ -70,7 +84,7 @@
     <div class="d-flex justify-content-center mb-3 mt-5">
         <div class="d-grid w-50">
             <button type="submit" id="saveButton" class="btn btn-success mr-auto" style="font-size: 14px;">
-                Yaratish
+                Saqlash
             </button>
         </div>
     </div>

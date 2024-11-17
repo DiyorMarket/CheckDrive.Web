@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h4>Yangi yoqilg'i turini yaratish</h4>
+<h4 class="d-flex justify-content-center">Yangi yoqilg'i turini yaratish</h4>
 <hr />
 <div style="width : 1100px">
     <div class="col-md-5 mb-3">
@@ -12,11 +12,10 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="">
                 <label asp-for="OilMark" class="control-label"> Yoqilg'i turini kiriting</label>
-                <input asp-for="OilMark" class="form-control" />
+                <input asp-for="OilMark" class="form-control" required />
                 <span asp-validation-for="OilMark" class="text-danger"></span>
             </div>
-            <div class="form-group mt-3 d-flex justify-content-center ">
-                
+            <div class="form-group mt-3 d-flex justify-content-center ">                
                 <button  type="submit" class="btn btn-success" style="width:200px">
                    Saqlash
                 </button>
