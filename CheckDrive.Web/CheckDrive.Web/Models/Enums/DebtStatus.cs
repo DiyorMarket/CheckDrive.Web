@@ -3,6 +3,5 @@
 public enum DebtStatus
 {
     Paid,
-    Unpaid,
-    PartiallyPaid
+    Unpaid
 }
