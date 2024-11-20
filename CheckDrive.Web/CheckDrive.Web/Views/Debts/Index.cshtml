@@ -5,7 +5,7 @@
 }
 
 <form asp-controller="Debts" asp-action="Index">
-    <div class="row">
+    <div class="row mt-4">
         <div class="d-flex justify-content-center" >
             <!-- Filter -->
             <div class="col-md-2 mb-4 filter-bar">
@@ -53,15 +53,13 @@
             <e-grid-columns>    
                 <e-grid-column headerText="Haydovchi" field="Driver" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
                 <e-grid-column headerText="Yoqilg'i turi" field="OilTypeText" textAlign=Center headerTextAlign=Center width="80"></e-grid-column>
-                <e-grid-column headerText="Bor edi" field="FuelAmount" textAlign=Center headerTextAlign=Center width="40"></e-grid-column>
-                <e-grid-column headerText="To'langan" field="PaidAmount" textAlign=Center headerTextAlign=Center width="50"></e-grid-column>
+                <e-grid-column headerText="Qarz" field="DebtAmount" textAlign=Center headerTextAlign=Center width="40"></e-grid-column>
                 <e-grid-column headerText="Status" template="#statusColumnTemplate" textAlign=Center headerTextAlign=Center width="80"></e-grid-column>
                 <e-grid-column width="180" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
 </div>
-
 
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -84,20 +82,14 @@
         <span class="badge bg-success">To'langan</span>
     ${else if(Status == 1)}
         <span class="badge bg-danger">To'lanmagan</span>
-    ${else}
-        <span class="badge bg-warning">Qisman to'langan</span>
     ${/if} 
 </script>
 
 <script type="text/x-template" id="actionTemplate">
-    <button type="button" class="shadow-sm  bg-white rounded e-btn e-flat mx-2" title="Tafsilot" onclick="onDetailsClick(${Id})">
-        <i class="bi bi-card-list text-info" style="font-size: 19px;"></i>
-    </button>
-    <button type="button"  class="shadow-sm  bg-white rounded e-btn e-flat" title="Tahrirlash" onclick="onEditClick(${Id})">
-        <i class="fa-solid fa-pen fa-lg text-warning" ></i>
-    </button>
-    <button type="button" class="shadow-sm   bg-white rounded e-btn e-flat mx-2" title="O&#39;chirish" onclick="onDeleteClick(${Id})">
-        <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
+    <button type="button" class="shadow-sm text-white  bg-success rounded e-btn e-flat mx-2">
+        <span>
+            Qarzni yopish <i class="fa-regular fa-square-check" style="font-size: 19px; "></i>
+        </span>
     </button>
 </script>
 
@@ -141,111 +133,4 @@
         $(this).find('#debtModalContent').empty();
         $(this).off('hidden.bs.modal');
     });
-</script>
-
-<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header d-flex justify-content-center">
-                <h3 class="modal-title" id="detailsModalLabel">Qarz haqida ma'lumotlar</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="detailsContent">
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    function onDetailsClick(id) {
-        $('#detailsContent').empty();
-        $.ajax({
-            url: `/debts/details/${id}`,
-            type: 'GET',
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            success: function (data) {
-                $('#detailsContent').html(data);
-                var detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'), {
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                detailsModal.show();
-            },
-            error: function (error) {
-                alert("Ma'lumotlarni yuklashda muammo yuz berdi.");
-            }
-        });
-    }
-
-    $('#detailsModal').on('hidden.bs.modal', function () {
-        $(this).find('#detailsContent').empty();
-    });
-</script>
-
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-body" id="deleteContent">
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    function onDeleteClick(id) {
-        $('#deleteContent').empty();
-        $.ajax({
-            url: "/debts/delete/" + id,
-            type: 'GET',
-            success: function (data) {
-                $('#deleteContent').html(data);
-                $('#deleteModal').modal('show');
-            },
-            error: function () {
-                $('#deleteContent').html('<p>Error loading details</p>');
-            }
-        });
-        $(this).find('#deleteContent').empty();
-        $(this).off('hidden.bs.modal');
-    }
-</script>
-
-<div class="modal fade" id="accountEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header d-flex justify-content-center">
-                <h4 class="modal-title">Qarzning o'zgartirish</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" data-target="#">
-                    <span aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="modal-body" id="debtEditModalContent">
-            </div>
-        </div>
-    </div>
-</div>
-
-<script type="text/javascript">
-    function onEditClick(id) {
-        $('#debtEditModalContent').empty();
-        $.ajax({
-            url: "/debts/edit/" + id,
-            type: 'GET',
-            success: function (data) {
-                $('#debtEditModalContent').html(data);
-                $('#accountEditModal').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                }).modal('show');
-
-                var birthdateValue = $('#birthdateId').val();
-                console.log(birthdateValue);
-            },
-            error: function (error) {
-                alert("Tahrirlash oynasini ochishda muommo bo'ldi \n" + error);
-            }
-        });
-        $(this).find('#debtEditModalContent').empty();
-        $(this).off('hidden.bs.modal');
-    }
 </script>
