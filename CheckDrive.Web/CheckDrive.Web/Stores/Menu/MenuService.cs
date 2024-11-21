@@ -19,7 +19,7 @@ public class MenuService : IMenuService
             {
                 text = "Qarzlar",
                 iconCss = "fa-solid fa-file-invoice-dollar",
-                url = "/#",
+                url = "/debts",
             });
             
             menuItems.Add(new

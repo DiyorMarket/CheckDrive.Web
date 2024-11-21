@@ -8,7 +8,7 @@ html {
     }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
@@ -28,7 +28,7 @@ html {
 body {
     overflow-y: auto;
     overflow-x: auto;
-    background-color: #fafafa;
+    background-color: #f6f6f6;
 }
 
 .e-breadcrumb a, .e-breadcrumb a:hover {
@@ -41,57 +41,75 @@ body {
     box-shadow: none;
 }
 
+.filter-bar {
+    display:flex;
+    margin-left:40px;
+}
+
+.create-btn{
+    margin-right:40px;
+}
+
 .no-a-decoration, .no-a-decoration:hover {
     text-decoration: none;
     color: inherit;
 }
 
 .e-grid {
-    border: 0;
+    margin-left:40px;
+    margin-right:40px;
+    margin-top:10px;
+    border: 0.5px solid #DBDFE3;
     border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
+
 }
 
-.e-grid .e-gridheader {
-    border: 5px;
-    border-radius:50px;
-    padding: 10px;
-    background-color: ghostwhite;
-}
+    .e-grid .e-gridheader {
+        border: 5px;
+        border-start-end-radius: 20px;
+        border-start-start-radius: 20px;
+        padding: 10px;
+        background-color: ghostwhite;
+    }
     .e-grid .e-gridcontent, .e-grid .e-table {
-        background-color: #fafafa;
+        background-color: white;
     }
 
     .e-grid .e-rowcell.e-selectionbackground {
         background-color: ghostwhite;
     }
 
-.e-grid .e-gridheader .e-headercell {
-    background-color: ghostwhite;
-    border:5px;
-}
+    .e-grid .e-gridheader .e-headercell {
+        background-color: ghostwhite;
+        border: 5px;
+    }
 
-.e-grid .e-gridpager {
-    background-color: white;
-}
+    .e-grid .e-gridpager {
+        background-color: ghostwhite;
+        border: 5px;
+        border-end-start-radius: 20px;
+        border-end-end-radius: 20px;
+    }
 
-.e-grid .e-pagercontainer {
-    border: medium;
-    background-color: white;
-}
+    .e-grid .e-pagercontainer {
+        border: medium;
+        background-color: ghostwhite;
+    }
 
 .e-grid .e-content table {
     padding: 0px 10px;
 }
 
 .e-pagercontainer .e-icons {
-    background-color: white;
+    background-color: ghostwhite;
     border: none !important;
     border-radius: 50px;
 }
 
 .e-pager .e-numericitem {
     color: black;
-    background-color: white;
+    background-color: ghostwhite;
     padding: 15px !important;
 }
 
@@ -108,7 +126,7 @@ body {
     color: black;
     border:  none !important;
     border-radius:50px;
-    background-color: ghostwhite;
+    background-color: #EDEFF3;
 }
 
 .e-pager div.e-icons:not(.e-disable) {
@@ -192,7 +210,7 @@ nav.navbar {
     color: #fff;
 }
 
-.e-btn-group.custom-rbt-group input:checked + label.e-btn {
+.e-btn-group.custom-rbt-group :checked + label.e-btn {
     background-color: #fff;
     color: #212b36;
     border: 1px solid #fff;
@@ -366,7 +384,7 @@ nav.navbar {
     border-radius: 10px;
 }
 
-.e-input {
+.e- {
     height: 100px; 
     padding: 10px; 
     font-size: 16px;
