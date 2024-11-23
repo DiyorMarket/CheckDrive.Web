@@ -5,13 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Ishchilar</h2>
-
 <form asp-controller="Accounts" asp-action="Index">
-    <div class="row">
+    <div class="row mt-4">
         <div class="d-flex justify-content-between">
             <!-- Filter -->
-            <div class="col-md-2 mb-4" >
+            <div class="col-md-2 mb-4 filter-bar" >
                 <div class="input-group">                  
                     <select class="form-control form-select" name="roleId">
                         @foreach (var role in ViewBag.Roles)
@@ -35,7 +33,7 @@
                 </div>
             </div>
             <!-- Create -->
-            <div class="d-flex col-md mb-4 justify-content-end">
+            <div class="d-flex col-md mb-4 justify-content-end create-btn">
                 <button id="openModalButton" class="btn btn-success" asp-action="create" type="button">
                         <i class="fa fa-plus"></i> Yaratish
                  </button>
@@ -48,54 +46,33 @@
     <div class="col-12">
         <ejs-grid id="accounts-list"
                   dataSource="@ViewBag.Accounts"
-                  gridLines="Vertical"
-                  allowSorting="true">
+                  gridLines="Both"
+                  allowSorting="true"
+                  allowPaging="true">
+                  <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
             <e-grid-columns>
-                <e-grid-column headerText="Ism" field="FirstName" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Familiya" field="LastName" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Telefon raqam" field="PhoneNumber" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Tug'ilgan yil" field="Bithdate" type="date" format="dd-MM-yyyy"></e-grid-column>
-                <e-grid-column headerText="Kasb" field="RoleName" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Ism" field="FirstName" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Familiya" field="LastName" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Telefon raqam" field="PhoneNumber" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
+                <e-grid-column headerText="Tug'ilgan yil" field="Bithdate" textAlign="Center" headerTextAlign="Center" type="date" format="dd-MM-yyyy"></e-grid-column>
+                <e-grid-column headerText="Kasb" field="RoleName" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
                 <e-grid-column width="180" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
 </div>
 
-<div class="d-flex justify-content-between align-items-center my-3">
-    <nav aria-label="Page navigation">
-        <ul class="pagination">
-            @if (ViewBag.HasPreviousPage)
-            {
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = 1 })" aria-label="First">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
-                </li>
-            }
-            @if (ViewBag.HasNextPage)
-            {
-                <li class="page-item active">
-                    <span class="page-link">@ViewBag.CurrentPage</span>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            }
-        </ul>
-    </nav>
-    <div class="p-2">
-        <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy ishchilar soni: @ViewBag.TotalCount)</p>
-    </div>
-</div>
+<script type="text/x-template" id="actionTemplate">
+    <button type="button" class="shadow-sm  bg-white rounded e-btn e-flat mx-2" title="Tafsilot" onclick="onDetailsClick(${Id})">
+        <i class="bi bi-card-list text-info" style="font-size: 19px;"></i>
+    </button>
+    <button type="button"  class="shadow-sm  bg-white rounded e-btn e-flat" title="Tahrirlash" onclick="onEditClick(${Id})">
+        <i class="fa-solid fa-pen fa-lg text-warning" ></i>
+    </button>
+    <button type="button" class="shadow-sm   bg-white rounded e-btn e-flat mx-2"  title="O&#39;chirish" onclick="onDeleteClick(${Id})">
+        <i class="fa-solid fa-trash-can fa-lg" style="color:#696A81;"></i>
+    </button>
+</script>
 
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -111,18 +88,6 @@
         </div>
     </div>
 </div>
-
-<script type="text/x-template" id="actionTemplate">
-    <button type="button" class="shadow-sm  bg-white rounded e-btn e-flat mx-2" title="Tafsilot" onclick="onDetailsClick(${Id})">
-        <i class="bi bi-card-list text-info" style="font-size: 19px;"></i>
-    </button>
-    <button type="button"  class="shadow-sm  bg-white rounded e-btn e-flat" title="Tahrirlash" onclick="onEditClick(${Id})">
-        <i class="fa-solid fa-pen fa-lg text-warning" ></i>
-    </button>
-    <button type="button" class="shadow-sm   bg-white rounded e-btn e-flat mx-2" title="O&#39;chirish" onclick="onDeleteClick(${Id})">
-        <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
-    </button>
-</script>
 
 <script>
     $(document).ready(function () {
