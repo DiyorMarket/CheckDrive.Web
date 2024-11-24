@@ -5,13 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Shifokorlar ko'riklari</h1>
-
 <form asp-controller="DoctorReviews" asp-action="Index">
-    <div class="row">
+    <div class="row mt-4">
         <div class="d-flex justify-content-between">
             <!-- Search -->
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4 filter-bar">
                 <div class="input-group">
                     <input type="text" class="form-control rounded-left" placeholder="shifokor yoki haydovchini izlash..." name="searchString" value="@ViewBag.SearchString">
                     <div class="input-group-append">
@@ -22,7 +20,7 @@
                 </div>
             </div>
             <!-- Date -->
-            <div class="col-md-2 mb-4">
+            <div class="col-md-2 mb-4 create-btn">
                 <input type="date" name="date" class="form-control">
              </div>
         </div>
@@ -31,7 +29,14 @@
 
 <div class="row">
     <div class="col-12">
-        <ejs-grid id="operatorReview-list" dataSource="@ViewBag.DoctorsReview" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
+        <ejs-grid 
+        id="operatorReview-list" 
+        dataSource="@ViewBag.DoctorsReview" 
+        gridLines="Both" 
+        allowSorting="true" 
+        allowPaging="true"
+        dataBound="onDataBound">
+        <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
             <e-grid-columns>                
                 <e-grid-column headerText="Shifokor F.I.SH" field="DoctorName" type="string" textAlign=Center headerTextAlign=Center width="300"></e-grid-column>
                 <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string" textAlign=Center headerTextAlign=Center width="300"></e-grid-column>
@@ -43,40 +48,6 @@
     </div>
 </div>
 
-<div class="d-flex justify-content-between align-items-center my-3">
-    <nav aria-label="Page navigation">
-        <ul class="pagination">
-            @if (ViewBag.HasPreviousPage)
-            {
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = 1 })" aria-label="First">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
-                </li>
-            }
-            @if (ViewBag.HasNextPage)
-            {
-                <li class="page-item active">
-                    <span class="page-link">@ViewBag.CurrentPage</span>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            }
-        </ul>
-    </nav>
-    <div class="p-2">
-        <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy doctorlar ko'riklari soni: @ViewBag.TotalCount)</p>
-    </div>
-</div>
 
 <script>
     function onDataBound() {
