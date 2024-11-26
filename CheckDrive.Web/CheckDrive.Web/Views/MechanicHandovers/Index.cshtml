@@ -22,21 +22,13 @@
             <div class="col-md-4 mb-4 d-flex align-items-center ">
                 <input type="date" name="date" class="form-control me-2">
                 <div class="create-btn">
-                    <button class="btn btn-outline-info dropdown-toggle"
-                            type="button"
-                            id="dropdownMenuButton"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                    <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-download"></i> Yuklab olish
                     </button>
-                    <div class="dropdown-menu p-3"
-                         id="dropdownMenu"
-                         aria-labelledby="dropdownMenuButton"
-                         data-bs-auto-close="outside">
-                        <a class="dropdown-item" href="#">PDF</a>
-                        <a class="dropdown-item" href="#">EXEL</a>
+                    <div class="dropdown-menu p-3" id="dropdownMenu" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">
+                        <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
+                        <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
                     </div>
-
                 </div>
             </div>
         </div>
