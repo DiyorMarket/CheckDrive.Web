@@ -5,10 +5,9 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Yoqilg'i turlari</h1>
 <div>
     <div class="d-flex flex-row-reverse">
-        <button id="createoilBtn" class="btn btn-success">
+        <button id="createoilBtn" class="btn btn-success create-btn mt-4" >
             <i class="fa fa-plus"></i> Yaratish
         </button>
         <div id="createoilModal" class="modal" >
@@ -22,43 +21,21 @@
     </div>
 </div>      
 
-
-<table class="table">
-    <thead>
-        <tr>            
-            <th>
-                Yoqilg'i nomi
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>                
-                <td>
-                    @Html.DisplayFor(modelItem => item.OilMark)
-                </td>
-                <td>
-                    <div class="btn-group" role="group">                        
-                        <button type="button" 
-                                class="shadow-sm  bg-white rounded e-btn e-flat" 
-                                title="Tahrirlash" 
-                                onclick="onEditClick(@item.Id)">
-                            <i class="fa-solid fa-pen fa-lg text-warning"></i>
-                        </button>
-                        <button type="button" 
-                                class="shadow-sm bg-white rounded e-btn e-flat mx-2" 
-                                title="O&#39;chirish" 
-                                onclick="onDeleteClick(@item.Id)">
-                            <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="row mt-4">
+    <div class="col-12">
+        <ejs-grid id="oilMarks-list" 
+                     dataSource="@Model"
+                     gridLines="Both"
+                     allowPaging="true"
+                     allowSorting="true">
+                    <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>             
+        <e-grid-columns>
+            <e-grid-column headerText="Yoqilg'i nomi" field="OilMark" textAlign="Center" width="200" headerTextAlign="Center" ></e-grid-column>
+            <e-grid-column width="180" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
+        </e-grid-columns>
+        </ejs-grid>
+    </div>
+</div>
 
 <div class="modal fade" id="deleteOilModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -84,6 +61,15 @@
         </div>
     </div>
 </div>
+
+<script type="text/x-template" id="actionTemplate">
+    <button type="button"  class="shadow-sm  bg-white rounded e-btn e-flat" title="Tahrirlash" onclick="onEditClick(${Id})">
+        <i class="fa-solid fa-pen fa-lg text-warning" ></i>
+    </button>
+    <button type="button" class="shadow-sm   bg-white rounded e-btn e-flat mx-2" title="O&#39;chirish" onclick="onDeleteClick(${Id})">
+        <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
+    </button>
+</script>
 
 <script type="text/javascript">
     function onEditClick(id) {
