@@ -50,6 +50,10 @@ body {
     margin-right:40px;
 }
 
+.date-filter{
+    margin-right:40px;
+}
+
 .no-a-decoration, .no-a-decoration:hover {
     text-decoration: none;
     color: inherit;
