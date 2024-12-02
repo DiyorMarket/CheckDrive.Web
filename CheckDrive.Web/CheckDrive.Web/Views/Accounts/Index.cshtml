@@ -11,7 +11,7 @@
             <!-- Filter -->
             <div class="col-md-2 mb-4 filter-bar" >
                 <div class="input-group">                  
-                    <select class="form-control form-select" name="roleId">
+                    <select class="form-control form-select" name="roleId" id="roles" onchange="searchAndFilter()">
                         @foreach (var role in ViewBag.Roles)
                         {
                             <option value="@role.Id" selected="@(role.Id == ViewBag.RoleId)">
@@ -23,14 +23,14 @@
             </div>
             <!-- Search -->
             <div class="col-md-4 ms-lg-3 mb-4">
-                <div class="input-group">
-                    <input type="text" class="form-control rounded-left" placeholder="Ishchini izlash..." name="searchString" value="@ViewBag.SearchString">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-search"></i> Qidirish
-                        </button>
-                    </div>
-                </div>
+                <ejs-textbox id="search-box"
+                             name="search"
+                             class="search-box"
+                             placeholder="Ishchini izlash..."
+                             floatLabelType="Never"
+                             value="@ViewBag.SearchString"
+                             input="searchAndFilter">
+                </ejs-textbox>
             </div>
             <!-- Create -->
             <div class="d-flex col-md mb-4 justify-content-end create-btn">
@@ -48,8 +48,9 @@
                   dataSource="@ViewBag.Accounts"
                   gridLines="Both"
                   allowSorting="true"
-                  allowPaging="true">
-                  <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+                  allowPaging="true"
+                  allowFiltering="true">
+            <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
             <e-grid-columns>
                 <e-grid-column headerText="Ism" field="FirstName" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
                 <e-grid-column headerText="Familiya" field="LastName" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
@@ -237,3 +238,56 @@
         $(this).off('hidden.bs.modal');
     }
 </script>
+
+<script>
+    function searchAndFilter() {
+        const searchInput = document.getElementById("search-box").value.trim();
+        const selectedElement = document.getElementById("roles");
+        const filterInput = selectedElement[selectedElement.selectedIndex]?.text || "";
+        const gridElement = document.getElementById("accounts-list");
+        const gridInstance = gridElement?.ej2_instances?.[0];
+
+        if (!gridInstance) {
+            console.error("Grid instance not found.");
+            return;
+        }
+
+        if (filterInput === 'Barcha ishchilar' || filterInput === "") {
+            gridInstance.clearFiltering();
+        } else {
+            gridInstance.filterByColumn("RoleName", "equal", filterInput);
+        }
+
+        if (searchInput) {
+            gridInstance.search(searchInput);
+        } else {
+            gridInstance.searchSettings.key = "";
+        }
+
+        gridInstance.refresh();
+    }
+</script>
+
+<style>
+    .input-group select {
+        height: 37px !important;
+        padding-left: 10px;
+        padding-top: 4px;
+    }
+
+    .e-input-group input {
+        height: 35px !important;
+    }
+
+    button {
+        height: 37px;
+    }
+
+    .e-filterbar {
+        display: none;
+    }
+
+    .e-pager .e-pagerexternalmsg {
+        display: none;
+    }
+</style>
