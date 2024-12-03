@@ -8,10 +8,9 @@
 <form asp-controller="DispatcherReviews" asp-action="Index">
     <div class="row mt-4">
         <div class="d-flex justify-content-between">
-            <!-- Search -->
             <div class="col-md-4 mb-4 filter-bar">
                 <div class="input-group">
-                    <input type="text" class="form-control rounded-left" placeholder="ishchilarni izlash..." name="searchString" value="@ViewBag.SearchString">
+                    <input type="text" class="form-control rounded-left" placeholder="Izlash..." name="searchString" value="@ViewBag.SearchString">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-search"></i> Qidirish
@@ -46,12 +45,12 @@
         dataBound="onDataBound">
         <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
             <e-grid-columns>
-                <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string" textAlign=Center headerTextAlign=Center ></e-grid-column>
-                <e-grid-column headerText="Marka" field="CarName" type="string" textAlign=Center headerTextAlign=Center ></e-grid-column>
-                <e-grid-column headerText="Dispetcher F.I.SH" field="DispatcherName" type="string" textAlign=Center headerTextAlign=Center></e-grid-column>
-                <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" type="string" textAlign=Center headerTextAlign=Center ></e-grid-column>
-                <e-grid-column headerText="Operator F.I.SH" field="OperatorName" type="string" textAlign=Center headerTextAlign=Center></e-grid-column>
-                <e-grid-column headerText="Ro'yxatga olingan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" textAlign=Center headerTextAlign=Center></e-grid-column>
+                <e-grid-column headerText="Haydovchi" field="DriverName" type="string" textAlign=Center headerTextAlign=Center ></e-grid-column>
+                <e-grid-column headerText="Avtomobil" field="CarName" type="string" textAlign=Center headerTextAlign=Center ></e-grid-column>
+                <e-grid-column headerText="Dispetcher" field="DispatcherName" type="string" textAlign=Center headerTextAlign=Center></e-grid-column>
+                <e-grid-column headerText="Mexanik" field="MechanicName" type="string" textAlign=Center headerTextAlign=Center ></e-grid-column>
+                <e-grid-column headerText="Operator" field="OperatorName" type="string" textAlign=Center headerTextAlign=Center></e-grid-column>
+                <e-grid-column headerText="Ko'rik vaqti" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" textAlign=Center headerTextAlign=Center></e-grid-column>
                 <e-grid-column  type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
