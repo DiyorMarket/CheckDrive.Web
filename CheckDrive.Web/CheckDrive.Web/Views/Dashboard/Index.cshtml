@@ -103,49 +103,49 @@
         </div>
     </div>
 </div>
-
-<div class="row">
-    <div class="col">
-        <div class="widget">
-            <div class="p-4">
-                <h5 class="fw-bold">Qarzlar</h5>
-            </div>
-            <div class="px-4 pb-4">
-                <ejs-grid id="resent-debts" allowPaging="true"
-                          dataSource="@ViewBag.Debts"  gridLines="None" rowHeight="38">
-                    <e-grid-pagesettings pageSize="8"></e-grid-pagesettings>
-                    <e-grid-columns>
-                        <e-grid-column headerText="Id" field="Id"  template="#navigationColumnTemplate" textAlign=Center headerTextAlign=Center  width="20"></e-grid-column>
-                        <e-grid-column headerText="Haydovchi" field="Driver" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
-                        <e-grid-column headerText="Yoqilg'i turi" field="OilTypeText" textAlign=Center headerTextAlign=Center width="80"></e-grid-column>
-                        <e-grid-column headerText="Qarz" field="DebtAmount" textAlign=Center headerTextAlign=Center width="40"></e-grid-column>
-                        <e-grid-column headerText="Status" template="#statusColumnTemplate" textAlign=Center headerTextAlign=Center width="80"></e-grid-column>
-                    </e-grid-columns>
-                </ejs-grid>
-            </div>
+<div class="col-md-5">
+    <div class="widget chart">
+        <div class="p-4">
+            <h5 class="fw-bold">Yoqilg'ilar</h5>
         </div>
-    </div>
-    <div class="col-md-5">
-        <div class="widget chart">
-            <div class="p-4">
-                <h5 class="fw-bold">Yoqilg'ilar</h5>
-            </div>
-            <ejs-accumulationchart id="fueldoughnutchart" enableSmartLabels background="white">
-                <e-accumulation-series-collection>
-                    <e-accumulation-series dataSource="@ViewBag.OilAmount"
-                                           xName="Name" yName="Amount"
-                                           innerRadius="60%" legendShape="Circle"
-                                           palettes=@(new string[]{ "#D35400","#3498DB","#27AE60","#1ABC9C","#8E44AD","#F39C12" })>
-                        <e-accumulationseries-datalabel name="formattedAmount" visible>
-                        </e-accumulationseries-datalabel>
-                    </e-accumulation-series>
-                </e-accumulation-series-collection>
+        <ejs-accumulationchart id="fueldoughnutchart" enableSmartLabels background="white">
+            <e-accumulation-series-collection>
+                <e-accumulation-series dataSource="@ViewBag.OilAmount"
+                                       xName="Name" yName="Amount"
+                                       innerRadius="60%" legendShape="Circle"
+                                       palettes=@(new string[]{ "#D35400","#3498DB","#27AE60","#1ABC9C","#8E44AD","#F39C12" })>
+                    <e-accumulationseries-datalabel name="formattedAmount" visible>
+                    </e-accumulationseries-datalabel>
+                </e-accumulation-series>
+            </e-accumulation-series-collection>
 
-                <e-accumulationchart-legendsettings position="Top" toggleVisibility="true">
-                    <e-legendsettings-textstyle color="#0f0f0f" size="1.2rem"></e-legendsettings-textstyle>
-                </e-accumulationchart-legendsettings>
-                <e-accumulationchart-tooltipsettings enable></e-accumulationchart-tooltipsettings>
-            </ejs-accumulationchart>
+            <e-accumulationchart-legendsettings position="Top" toggleVisibility="true">
+                <e-legendsettings-textstyle color="#0f0f0f" size="1.2rem"></e-legendsettings-textstyle>
+            </e-accumulationchart-legendsettings>
+            <e-accumulationchart-tooltipsettings enable></e-accumulationchart-tooltipsettings>
+        </ejs-accumulationchart>
+    </div>
+</div>
+<div class="col">
+    <div class="widget">
+        <div class="p-4">
+            <h5 class="fw-bold">Tekshiruvlar</h5>
+        </div>
+        <div class="px-4 pb-4">
+            <ejs-grid id="resent-debts" allowPaging="true"
+                      dataSource="@ViewBag.CheckPoint" gridLines="None" rowHeight="38">
+                <e-grid-pagesettings pageSize="8"></e-grid-pagesettings>
+                <e-grid-columns>
+                    <e-grid-column headerText="Id" field="Id" template="#navigationColumnTemplate" textAlign=Center headerTextAlign=Center width="20"></e-grid-column>
+                    <e-grid-column headerText="Boshlangan vaqti" field="StartDate" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
+                    <e-grid-column headerText="Haydovchi" field="Driver" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
+                    <e-grid-column headerText="Doctor" field="Doctor" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
+                    <e-grid-column headerText="Mexanik" field="Mechanic" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
+                    <e-grid-column headerText="Operator" field="Operator" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
+                    <e-grid-column headerText="Dispatcher" field="Dispatcher" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
+                    <e-grid-column headerText="Qarz" template="#statusColumnTemplate" textAlign=Center headerTextAlign=Center width="80"></e-grid-column>
+                </e-grid-columns>
+            </ejs-grid>
         </div>
     </div>
 </div>

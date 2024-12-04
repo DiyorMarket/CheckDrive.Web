@@ -1,4 +1,5 @@
 ﻿using CheckDrive.Web.Models.Enums;
+using CheckDrive.Web.ViewModels.CheckPoint;
 using CheckDrive.Web.ViewModels.Debt;
 
 namespace CheckDrive.Web.ViewModels.Dashboard;
@@ -11,7 +12,7 @@ public class DashboardViewModel
     
     public IEnumerable<EmployeesCountByRole> EmployeesCountByRoles { get; set; }
 
-    public IEnumerable<DebtViewModel> Debts {  get; set; }
+    public IEnumerable<CheckPointViewModel> CheckPoints {  get; set; }
 
     public IEnumerable<OilMarkViewModel> OilAmount {  get; set; }
 }
