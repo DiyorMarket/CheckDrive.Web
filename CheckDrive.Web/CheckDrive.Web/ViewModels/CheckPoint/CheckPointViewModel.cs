@@ -20,5 +20,7 @@ namespace CheckDrive.Web.ViewModels.CheckPoint
         public string Dispatcher { get; set; }
         public decimal FuelConsumptionAdjustment { get; set; }
         public decimal DebtAmount { get; set; }
+        public CheckPointStage Stage { get; set; }
+        public CheckPointStatus Status { get; set; }
     }
 }

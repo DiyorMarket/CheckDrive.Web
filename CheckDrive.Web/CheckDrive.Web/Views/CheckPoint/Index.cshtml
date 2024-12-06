@@ -2,7 +2,8 @@
 @model CheckPointViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="grid-container mt-3">
@@ -117,10 +118,10 @@
     </div>
     <div class="row value">
         <div class="col text-center">
-            @Model.FinalMileage
+            <input type="number" class="form-control" style="text-align:center;" name="FinalMileage" value="@Model.FinalMileage" />
         </div>
         <div class="col text-center">
-            @Model.CurrentFuelAmount
+            <input type="number" class="form-control" style="text-align:center;" name="CurrentFuelAmount" value="@Model.CurrentFuelAmount" />
         </div>
     </div>
     <div class="row content">
@@ -130,10 +131,14 @@
     </div>
     <div class="row value">
         <div class="col text-center">
-            @Model.DebtAmount
+            <input type="number" class="form-control" style="text-align:center;" name="DebtAmount" value="@Model.DebtAmount" />
         </div>
     </div>
-    <div>
-        <button class="confirm-btn">Tasdiqlash</button>
+
+    <!-- Button with full width -->
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+            <button class="confirm-btn" style="width:70; background:#68de1f;">Tasdiqlash</button>
+        </div>
     </div>
 </div>
