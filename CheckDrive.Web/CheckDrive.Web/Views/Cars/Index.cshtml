@@ -6,25 +6,27 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 } 
 
-<h1>Avtomobillar</h1>
-
 <form asp-controller="Cars" asp-action="Index">
     <div class="container">
-        <div class="row">
-            <div class="col-12 d-flex justify-content-between align-items-center mb-4">
+        <div class="row mt-4">
+            <div class="d-flex justify-content-between mb-4 ">
                 <!-- Search -->
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <input type="text" class="form-control rounded-left" placeholder="Avtomobilni izlash..." name="searchString" value="@ViewBag.SearchString">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-search"></i> Qidirish
-                            </button>
-                        </div>
+                <div class="col-md-4 filter-bar position-relative">
+                    <div class="position-relative w-100">
+                        <i class="fa-solid fa-magnifying-glass position-absolute top-50 start-0 translate-middle-y ms-3" style="color: dimgray;"></i>
+                        <ejs-textbox id="search-box"
+                                     name="search"
+                                     class="search-box ps-5"
+                                     placeholder="Avtomobilni izlash..."
+                                     floatLabelType="Never"
+                                     value="@ViewBag.SearchString"
+                                     input="onChangeSearch">
+                        </ejs-textbox>
                     </div>
                 </div>
+
                 <!-- Create -->
-                <div class="d-flex" style="gap: 15px;">
+                <div class="d-flex create-btn" style="gap: 15px;">
                     <div class="mr-2">
                         <a class="btn btn-secondary" href="@Url.Action("CarHistoryIndex", "Cars")">Tarixni ko`rish</a>
                     </div>                   
@@ -40,15 +42,17 @@
             <div class="col-12">
                 <ejs-grid id="cars-list"
                           dataSource="@ViewBag.Cars"
-                          gridLines="Vertical"
-                          allowSorting="true">                            
+                          gridLines="Both"
+                          allowSorting="true"
+                          allowPaging="true">                            
+                          <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
                     <e-grid-columns>
-                        <e-grid-column headerText="Model" field="Model" typeof="Text"></e-grid-column>
-                        <e-grid-column headerText="Davlat raqami" field="Number" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="Bosib o'tgan masofasi'" field="Mileage" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="Rangi" field="Color" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="Ishlab chiqarilgan yili" field="ManufacturedYear" typeof="text"></e-grid-column>
-                        <e-grid-column headerText="Status" field="Status" type="string"></e-grid-column>
+                        <e-grid-column headerText="Model" field="Model" textAlign="Center" headerTextAlign="Center" typeof="Text"></e-grid-column>
+                        <e-grid-column headerText="Davlat raqami" field="Number" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
+                        <e-grid-column headerText="Bosib o'tgan masofasi'" field="Mileage" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
+                        <e-grid-column headerText="Rangi" field="Color" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
+                        <e-grid-column headerText="Ishlab chiqarilgan yili" field="ManufacturedYear" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
+                        <e-grid-column headerText="Status" field="Status" textAlign="Center" headerTextAlign="Center" type="string"></e-grid-column>
                         <e-grid-column width="180" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
                     </e-grid-columns>
                 </ejs-grid>
@@ -72,41 +76,6 @@
                 
             </div>
         </div>
-    </div>
-</div>
-
-<div class="d-flex justify-content-between align-items-center my-3">
-    <nav aria-label="Page navigation">
-        <ul class="pagination">
-            @if (ViewBag.HasPreviousPage)
-            {
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = 1 })" aria-label="First">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
-                </li>
-            }
-            @if (ViewBag.HasNextPage)
-            {
-                <li class="page-item active">
-                    <span class="page-link">@ViewBag.CurrentPage</span>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            }
-        </ul>
-    </nav>
-    <div class="p-2">
-        <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy mashinalar soni: @ViewBag.TotalCount)</p>
     </div>
 </div>
 
@@ -233,7 +202,6 @@
     });
 </script>
 
-
 @section Scripts {
   <script>
      $(document).ready(function () {
@@ -319,3 +287,47 @@
         }
   </script>
 } 
+
+<script>
+    function onChangeSearch() {
+        const searchInput = document.getElementById("search-box").value.trim();
+        const gridElement = document.getElementById("cars-list");
+        const gridInstance = gridElement?.ej2_instances?.[0];
+
+        if (!gridInstance) {
+            console.error("Grid instance not found.");
+            return;
+        }
+
+        if (searchInput) {
+            gridInstance.search(searchInput);
+        } else {
+            gridInstance.searchSettings.key = "";
+        }
+
+        gridInstance.refresh();
+    }
+</script>
+
+<style>
+    .e-input-group input {
+        height: 35px !important;
+    }
+
+    .search-box {
+        padding-left: 2rem;
+    }
+
+    .position-relative .fa-magnifying-glass {
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    button {
+        height: 37px;
+    }
+
+    .e-pager .e-pagerexternalmsg {
+        display: none;
+    }
+</style>
