@@ -26,6 +26,22 @@
     <div class="row gap-5 ms-4 mb-3">
         <div class="col-md-5">
             <div>
+                <label asp-for="FirstName" class="control-label">Pasport</label>
+            </div>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="col-md-5">
+            <div>
+                <label asp-for="LastName" class="control-label">Manzil</label>
+            </div>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row gap-5 ms-4 mb-3">
+        <div class="col-md-5">
+            <div>
                 <label asp-for="Login" class="control-label">Login</label>
             </div>
             <input asp-for="Login" class="form-control" />
@@ -51,8 +67,8 @@
             <div>
                 <label asp-for="Bithdate" class="control-label">Tug'ilgan kun</label>
             </div>
-            <ejs-datepicker id="birthdateId"
-                            class="background"
+            <ejs-datepicker value="@Model.Bithdate"
+                            class="form-control"
                             format="dd/MM/yyyy"
                             ejs-for="Bithdate"
                             style="height:36.6px">

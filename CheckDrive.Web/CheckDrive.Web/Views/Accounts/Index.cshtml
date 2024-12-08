@@ -76,7 +76,7 @@
 </script>
 
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-center">
                 <h4 class="modal-title">Yangi ishchi ma'lumotini yaratish</h4>
@@ -133,7 +133,7 @@
 </script>
 
 <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-center">
                 <h3 class="modal-title" id="detailsModalLabel">Ishchining ma'lumotlari</h3>
@@ -172,7 +172,7 @@
 </script>
 
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body" id="deleteContent">
             </div>
@@ -200,7 +200,7 @@
 </script>
 
 <div class="modal fade" id="accountEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-center">
                 <h4 class="modal-title">Ishchi ma'lumotini o'zgartirish</h4>
@@ -225,10 +225,7 @@
                 $('#accountEditModal').modal({
                     backdrop: 'static',
                     keyboard: false
-                }).modal('show');
-
-                var birthdateValue = $('#birthdateId').val();
-                console.log(birthdateValue);
+                }).modal('show');                
             },
             error: function (error) {
                 alert("Tahrirlash oynasini ochishda muommo bo'ldi \n" + error);

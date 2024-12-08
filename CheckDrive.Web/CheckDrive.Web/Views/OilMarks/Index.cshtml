@@ -11,12 +11,14 @@
             <i class="fa fa-plus"></i> Yaratish
         </button>
         <div id="createoilModal" class="modal" >
-            <div class="modal-content" style="height: 250px; width: 500px ">
-                <span class="close">
-                    <button class="btn btn-close "></button>
-                </span>
-                <partial name="Create" model="new OilMarkForCreateDto()" />
-            </div>
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content d-flex justify-content-center" style="height: 250px; width: 500px ">
+                    <span class="close">
+                        <button class="btn btn-close "></button>
+                    </span>
+                    <partial name="Create" model="new OilMarkForCreateDto()" />
+                </div>
+            </div>            
         </div>
     </div>
 </div>      
@@ -38,7 +40,7 @@
 </div>
 
 <div class="modal fade" id="deleteOilModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body" id="deleteOilContent">
             </div>
@@ -47,7 +49,7 @@
 </div>
 
 <div class="modal fade" id="oilEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg ">
+    <div class="modal-dialog modal-lg modal-dialog-centered ">
         <div class="modal-content" style="height: 250px; width: 500px ">
             <div class="modal-header d-flex justify-content-center">
                 <h4>Yoqilg'i ma`lumotini o`zgartirish</h4>
