@@ -6,34 +6,23 @@
 
 <form asp-controller="Debts" asp-action="Index">
     <div class="row mt-4">
-        <div class="d-flex justify-content-center" >
-            <!-- Filter -->
-            <div class="col-md-2 mb-4 filter-bar">
-                <div class="input-group">
-                    <select class="form-control form-select" value="@ViewBag.SelectedStatus" name="status">
-                        <option value="" disabled selected>Status filtri</option>
-                       @foreach(var debtStatus in ViewBag.Status as List<SelectListItem>)
-                       {
-                           <option value="@debtStatus.Value">
-                               @debtStatus.Text
-                           </option>
-                       }
-                    </select>
-                </div>
-            </div>
+        <div class="d-flex justify-content-center mb-4">
             <!-- Search -->
-            <div class="col-md-4 ms-lg-3 mb-4">
-                <div class="input-group">
-                    <input type="text" class="form-control rounded-left" placeholder="Haydovchini izlash..." name="searchText" value="@ViewBag.SearchText">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-search"></i> Qidirish
-                        </button>
-                    </div>
+            <div class="col-md-4 filter-bar position-relative">
+                <div class="position-relative w-100">
+                    <i class="fa-solid fa-magnifying-glass position-absolute top-50 start-0 translate-middle-y ms-3" style="color: dimgray;"></i>
+                    <ejs-textbox id="search-box"
+                                 name="search"
+                                 class="search-box ps-5"
+                                 placeholder="Qarzni izlash..."
+                                 floatLabelType="Never"
+                                 value="@ViewBag.SearchString"
+                                 input="searchAndFilter">
+                    </ejs-textbox>
                 </div>
             </div>
             <!-- Create -->
-            <div class="d-flex col-md mb-4 justify-content-end create-btn">
+            <div class="d-flex col-md justify-content-end create-btn">
                 <button id="openModalButton" class="btn btn-success" asp-action="create" type="button">
                     <i class="fa fa-plus"></i> Yaratish
                 </button>
@@ -88,7 +77,7 @@
 <script type="text/x-template" id="actionTemplate">
     <button type="button" class="shadow-sm text-white  bg-success rounded e-btn e-flat mx-2">
         <span>
-            Qarzni yopish <i class="fa-regular fa-square-check" style="font-size: 19px; "></i>
+            Qarzni yopish
         </span>
     </button>
 </script>
@@ -134,3 +123,53 @@
         $(this).off('hidden.bs.modal');
     });
 </script>
+
+<script>
+    function searchAndFilter() {
+        const searchInput = document.getElementById("search-box").value.trim();
+        const gridElement = document.getElementById("debts-list");
+        const gridInstance = gridElement?.ej2_instances?.[0];
+
+        if (!gridInstance) {
+            console.error("Grid instance not found.");
+            return;
+        }
+
+        if (searchInput) {
+            gridInstance.search(searchInput);
+        } else {
+            gridInstance.searchSettings.key = "";
+        }
+
+        gridInstance.refresh();
+    }
+</script>
+
+<style>
+    .input-group select {
+        height: 37px !important;
+        padding-left: 10px;
+        padding-top: 4px;
+    }
+
+    .e-input-group input {
+        height: 35px !important;
+    }
+
+    .position-relative .fa-magnifying-glass {
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    button {
+        height: 37px;
+    }
+
+    .e-filterbar {
+        display: none;
+    }
+
+    .e-pager .e-pagerexternalmsg {
+        display: none;
+    }
+</style>

@@ -7,19 +7,26 @@
 
 <form asp-controller="DoctorReviews" asp-action="Index">
     <div class="row mt-4">
-        <div class="d-flex justify-content-between">
-            <div class="col-md-4 mb-4 filter-bar">
-                <div class="input-group">
-                    <input type="text" class="form-control rounded-left" placeholder="Izlash..." name="searchString" value="@ViewBag.SearchString">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-search"></i> Qidirish
-                        </button>
-                    </div>
+        <div class="d-flex justify-content-between mb-4">
+            <div class="col-md-4 filter-bar position-relative">
+                <div class="position-relative w-100">
+                    <i class="fa-solid fa-magnifying-glass position-absolute top-50 start-0 translate-middle-y ms-3" style="color: dimgray;"></i>
+                    <ejs-textbox id="search-box"
+                                 name="search"
+                                 class="search-box ps-5"
+                                 placeholder="Izlash..."
+                                 floatLabelType="Never"
+                                 value="@ViewBag.SearchString"
+                                 input="onChangeSearchAndDate">
+                    </ejs-textbox>
                 </div>
             </div>
-            <div class="col-md-2 mb-4 date-filter">
-                <input type="date" name="date" class="form-control">
+            <div class="col-md-2 date-filter">
+                <ejs-datepicker id="date"
+                                format="dd-MM-yyyy"
+                                placeholder="Sanani tanlang"
+                                floatLabelType="Never">
+                </ejs-datepicker>
              </div>
         </div>
     </div>
@@ -28,17 +35,17 @@
 <div class="row">
     <div class="col-12">
         <ejs-grid 
-        id="operatorReview-list" 
-        dataSource="@ViewBag.DoctorsReview" 
-        gridLines="Both" 
-        allowSorting="true" 
-        allowPaging="true"
-        dataBound="onDataBound">
+                id="doctorReview-list" 
+                dataSource="@ViewBag.DoctorsReview" 
+                gridLines="Both" 
+                allowSorting="true" 
+                allowPaging="true"
+                dataBound="onDataBound">
         <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
             <e-grid-columns>                
                 <e-grid-column headerText="Shifokor" field="DoctorName" type="string" textAlign=Center headerTextAlign=Center width="300"></e-grid-column>
                 <e-grid-column headerText="Haydovchi" field="DriverName" type="string" textAlign=Center headerTextAlign=Center width="300"></e-grid-column>
-                <e-grid-column headerText="Ko'rik vaqti" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" textAlign=Center headerTextAlign=Center></e-grid-column>
+                <e-grid-column headerText="Ko'rik vaqti" field="Date" type="date" format="dd-MM-yyyy | HH:mm" textAlign=Center headerTextAlign=Center></e-grid-column>
                 <e-grid-column headerText="Sog'ligi" field="IsHealthy" template="#booleanColumnTemplate" textAlign=Center headerTextAlign=Center></e-grid-column>
                 <e-grid-column width="100" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
             </e-grid-columns>
@@ -49,7 +56,7 @@
 
 <script>
     function onDataBound() {
-        const headers = document.querySelectorAll('#operatorReview-list .e-headercell');
+        const headers = document.querySelectorAll('#doctorReview-list .e-headercell');
 
         headers.forEach(header => {
             header.setAttribute('title', header.innerText.trim());
@@ -109,3 +116,47 @@
         $(this).find('#detailsContent').empty();
     });
 </script>
+
+<script>
+    function onChangeSearchAndDate() {
+        const searchInput = document.getElementById("search-box").value.trim();
+        const gridElement = document.getElementById("doctorReview-list");
+        const gridInstance = gridElement?.ej2_instances?.[0];
+
+        if (!gridInstance) {
+            console.error("Grid instance not found.");
+            return;
+        }
+
+        if (searchInput) {
+            gridInstance.search(searchInput);
+        } else {
+            gridInstance.searchSettings.key = "";
+        }
+
+        gridInstance.refresh();
+    }
+</script>
+
+<style>
+    .e-input-group input {
+        height: 35px !important;
+    }
+
+    .search-box {
+        padding-left: 2rem;
+    }
+
+    .position-relative .fa-magnifying-glass {
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    button {
+        height: 37px;
+    }
+
+    .e-pager .e-pagerexternalmsg {
+        display: none;
+    }
+</style>
