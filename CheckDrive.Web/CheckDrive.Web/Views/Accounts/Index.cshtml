@@ -7,9 +7,23 @@
 
 <form asp-controller="Accounts" asp-action="Index">
     <div class="row mt-4">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between mb-4">
+            <!-- Search -->
+            <div class="col-md-4 filter-bar position-relative">
+                <div class="position-relative w-100">
+                    <i class="fa-solid fa-magnifying-glass position-absolute top-50 start-0 translate-middle-y ms-3" style="color: dimgray;"></i>
+                    <ejs-textbox id="search-box"
+                                 name="search"
+                                 class="search-box ps-5"
+                                 placeholder="Ishchini izlash..."
+                                 floatLabelType="Never"
+                                 value="@ViewBag.SearchString"
+                                 input="searchAndFilter">
+                    </ejs-textbox>
+                </div>
+            </div>
             <!-- Filter -->
-            <div class="col-md-2 mb-4 filter-bar" >
+            <div class="col-md-2 filter-bar">
                 <div class="input-group">                  
                     <select class="form-control form-select" name="roleId" id="roles" onchange="searchAndFilter()">
                         @foreach (var role in ViewBag.Roles)
@@ -21,19 +35,8 @@
                     </select>
                </div>
             </div>
-            <!-- Search -->
-            <div class="col-md-4 ms-lg-3 mb-4">
-                <ejs-textbox id="search-box"
-                             name="search"
-                             class="search-box"
-                             placeholder="Ishchini izlash..."
-                             floatLabelType="Never"
-                             value="@ViewBag.SearchString"
-                             input="searchAndFilter">
-                </ejs-textbox>
-            </div>
             <!-- Create -->
-            <div class="d-flex col-md mb-4 justify-content-end create-btn">
+            <div class="d-flex col-md justify-content-end create-btn">
                 <button id="openModalButton" class="btn btn-success" asp-action="create" type="button">
                         <i class="fa fa-plus"></i> Yaratish
                  </button>
@@ -274,6 +277,11 @@
 
     .e-input-group input {
         height: 35px !important;
+    }
+
+    .position-relative .fa-magnifying-glass {
+        pointer-events: none;
+        z-index: 1;
     }
 
     button {
