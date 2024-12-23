@@ -106,9 +106,13 @@
 <div class="row">
     <div class="col">
             <div style="margin-bottom:10px;">
-                <ejs-grid id="resent-debts" allowPaging="true"
-                          dataSource="@ViewBag.CheckPoint" gridLines="None">
-                    <e-grid-pagesettings pageSize="8"></e-grid-pagesettings>
+                <ejs-grid id="resent-checkpoints" 
+                    style="margin-left:0px; margin-right:0px;"  
+                    allowPaging="true"
+                    allowSorting="true"
+                    dataSource="@ViewBag.CheckPoint" 
+                    gridLines="Both">
+                    <e-grid-pagesettings pageSize="12"></e-grid-pagesettings>
                     <e-grid-columns>
                         <e-grid-column headerText="Id" field="Id" template="#navigationColumnTemplate" textAlign=Center headerTextAlign=Center width="20"></e-grid-column>
                         <e-grid-column headerText="Haydovchi" field="Driver" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
