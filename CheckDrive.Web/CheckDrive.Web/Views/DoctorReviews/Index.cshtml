@@ -5,96 +5,158 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Shifokor ko'riklari</h1>
-
 <form asp-controller="DoctorReviews" asp-action="Index">
-    <div class="row">
-        <div class="d-flex justify-content-between">
-            <!-- Search -->
-            <div class="col-md-4 mb-4">
-                <div class="input-group">
-                    <input type="text" class="form-control rounded-left" placeholder="shifokor yoki haydovchini izlash..." name="searchString" value="@ViewBag.SearchString">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-search"></i> Qidirish
-                        </button>
-                    </div>
+    <div class="row mt-4">
+        <div class="d-flex justify-content-between mb-4">
+            <div class="col-md-4 filter-bar position-relative">
+                <div class="position-relative w-100">
+                    <i class="fa-solid fa-magnifying-glass position-absolute top-50 start-0 translate-middle-y ms-3" style="color: dimgray;"></i>
+                    <ejs-textbox id="search-box"
+                                 name="search"
+                                 class="search-box ps-5"
+                                 placeholder="Izlash..."
+                                 floatLabelType="Never"
+                                 value="@ViewBag.SearchString"
+                                 input="onChangeSearchAndDate">
+                    </ejs-textbox>
                 </div>
             </div>
-            <!-- Date -->
-            <div class="col-md-2 mb-4">
-                <input type="date" name="date" class="form-control">
+            <div class="col-md-2 date-filter">
+                <ejs-datepicker id="date"
+                                format="dd-MM-yyyy"
+                                placeholder="Sanani tanlang"
+                                floatLabelType="Never">
+                </ejs-datepicker>
              </div>
         </div>
     </div>
 </form>
 
-
 <div class="row">
     <div class="col-12">
-        <ejs-grid id="operatorReview-list" dataSource="@ViewBag.DoctorsReview" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
-            <e-grid-columns>
-                <e-grid-column headerText="Id" field="Id" template="#template" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Shifokor F.I.SH" field="DoctorName" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Ro'yxatdan o'tgan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm"></e-grid-column>
-                <e-grid-column headerText="Sog'ligi" field="IsHealthy" typeof="text"></e-grid-column>
-                <e-grid-column headerText="Izoh" field="Comments" typeof="text"></e-grid-column>
+        <ejs-grid 
+                id="doctorReview-list" 
+                dataSource="@ViewBag.DoctorsReview" 
+                gridLines="Both" 
+                allowSorting="true" 
+                allowPaging="true"
+                dataBound="onDataBound">
+        <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+            <e-grid-columns>                
+                <e-grid-column headerText="Shifokor" field="DoctorName" type="string" textAlign=Center headerTextAlign=Center width="300"></e-grid-column>
+                <e-grid-column headerText="Haydovchi" field="DriverName" type="string" textAlign=Center headerTextAlign=Center width="300"></e-grid-column>
+                <e-grid-column headerText="Ko'rik vaqti" field="Date" type="date" format="dd-MM-yyyy | HH:mm" textAlign=Center headerTextAlign=Center></e-grid-column>
+                <e-grid-column headerText="Sog'ligi" field="IsHealthy" template="#booleanColumnTemplate" textAlign=Center headerTextAlign=Center></e-grid-column>
+                <e-grid-column width="100" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
     </div>
 </div>
 
 
-<div class="d-flex justify-content-between align-items-center my-3">
-    <nav aria-label="Page navigation">
-        <ul class="pagination">
-            @if (ViewBag.HasPreviousPage)
-            {
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = 1 })" aria-label="First">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
-                </li>
-            }
-            @if (ViewBag.HasNextPage)
-            {
-                <li class="page-item active">
-                    <span class="page-link">@ViewBag.CurrentPage</span>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            }
-        </ul>
-    </nav>
-    <div class="p-2">
-        <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy doctorlar ko'riklari soni: @ViewBag.TotalCount)</p>
-    </div>
-</div>
-
-<script id="template" type="text/x-template">
-    <div>
-        <a rel='nofollow' href="DoctorReviews/Details/${Id}">${Id}</a>
-    </div>
-</script>
-
 <script>
     function onDataBound() {
-        // Получаем все элементы заголовков колонок
-        const headers = document.querySelectorAll('#operatorReview-list .e-headercell');
+        const headers = document.querySelectorAll('#doctorReview-list .e-headercell');
 
-        // Добавляем title атрибут к каждому элементу заголовка
         headers.forEach(header => {
             header.setAttribute('title', header.innerText.trim());
         });
     }
 </script>
+
+<script id="booleanColumnTemplate" type="text/x-template">
+    ${if(IsHealthy == 0)}
+        <span class="badge bg-danger">Kasal</span>
+    ${else if(IsHealthy == 1)}
+        <span class="badge bg-success">Sog'lom</span>
+    ${/if}
+</script>
+
+<script type="text/x-template" id="actionTemplate">
+    <button type="button" class="shadow-sm  bg-white rounded e-btn e-flat mx-2" title="Tafsilot" onclick="onDetailsClick(${Id})">
+        <i class="bi bi-card-list text-info" style="font-size: 19px;"></i>
+    </button>    
+</script>
+
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h3 class="modal-title" id="detailsModalLabel">Shifokor ko'rigi haqida ma'lumot</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="detailsContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onDetailsClick(id) {
+        $('#detailsContent').empty();
+        $.ajax({
+            url: `/doctorReviews/details/${id}`,
+            type: 'GET',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            success: function (data) {
+                $('#detailsContent').html(data);
+                var detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'), {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                detailsModal.show();
+            },
+            error: function (error) {
+                alert("Ma'lumotlarni yuklashda muammo yuz berdi.");
+            }
+        });
+    }
+
+    $('#detailsModal').on('hidden.bs.modal', function () {
+        $(this).find('#detailsContent').empty();
+    });
+</script>
+
+<script>
+    function onChangeSearchAndDate() {
+        const searchInput = document.getElementById("search-box").value.trim();
+        const gridElement = document.getElementById("doctorReview-list");
+        const gridInstance = gridElement?.ej2_instances?.[0];
+
+        if (!gridInstance) {
+            console.error("Grid instance not found.");
+            return;
+        }
+
+        if (searchInput) {
+            gridInstance.search(searchInput);
+        } else {
+            gridInstance.searchSettings.key = "";
+        }
+
+        gridInstance.refresh();
+    }
+</script>
+
+<style>
+    .e-input-group input {
+        height: 35px !important;
+    }
+
+    .search-box {
+        padding-left: 2rem;
+    }
+
+    .position-relative .fa-magnifying-glass {
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    button {
+        height: 37px;
+    }
+
+    .e-pager .e-pagerexternalmsg {
+        display: none;
+    }
+</style>

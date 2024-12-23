@@ -1,37 +1,14 @@
 ﻿@model IEnumerable<CheckDrive.ApiContracts.OperatorReview.OperatorReviewDto>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="~/css/LogOutButtun.css" asp-append-version="true" />
 @{
     ViewData["Title"] = "PersonalIndex";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
-    string activeTab = "PersonalIndex";
 }
-<div class="container-fluid py-2 px-4 d-flex justify-content-end">
-    <div class="d-flex align-items-center">
-        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
-            <span class="logout-icon">
-                <i class="fas fa-sign-out-alt"></i>
-            </span>
-            Chiqish
-        </button>
-    </div>
-</div>
 
 <form asp-controller="OperatorReviews" asp-action="PersonalIndex">
     <div class="container mt-5">
-        <div class="mb-4">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "PersonalIndex" ? "active" : "")" href="@Url.Action("PersonalIndex", "OperatorReviews")">Asosiy sahifa</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "ReportIndexForPersonalPage" ? "active" : "")" href="@Url.Action("ReportIndexForPersonalPage", "OperatorReviews")">Hisobot</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "OperatorReviews")">Tarixni ko'rish</a>
-                </li>
-            </ul>
-        </div>
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
             <div class="col-md-4">
@@ -45,20 +22,18 @@
                 </div>
             </div>
 
-            <div class="col-md-8 d-flex justify-content-end align-items-center gap-2">
-                <a class="btn btn-primary" href="@Url.Action("CarHistoryIndex", "Cars")">Moshina tarixi</a>
-                <div class="dropdown d-inline-block">
-                    <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-download"></i> Yuklab olish
-                    </button>
-                    <div class="dropdown-menu p-3" id="dropdownMenu" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">
-                        <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
-                        <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
-                    </div>
+            <div class="col-md-8 d-flex justify-content-end align-items-center gap-2">                
+                <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-download"></i> Yuklab olish
+                </button>
+                 <div class="dropdown-menu p-3" id="dropdownMenu" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">
+                    <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
+                    <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
                 </div>
-                <a class="btn btn-success" href="@Url.Action("Create", "OperatorReviews")">
+                <a class="btn btn-primary" href="@Url.Action("CarHistoryIndex", "Cars")">Moshina tarixi</a>   
+                <button id="openCreateOperatorModal" type="button" class="btn btn-success">
                     <i class="fa fa-plus"></i> Yaratish
-                </a>
+                </button>
             </div>
         </div>
 
@@ -184,7 +159,264 @@
     </div>
 </form>
 
+<!-- Modal oyna -->
+<div class="modal fade" id="createOperatorReviewModal" tabindex="-1" aria-labelledby="createOperatorReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h5 id="createOperatorReviewModalLabel">Ro'yxatga olish</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body d-flex justify-content-center" id="modalContent">
+                <!-- Bu yerga forma yuklanadi -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function validateForm() {
+            var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
+            var remainingFuel = document.getElementById("remainingFuel").value;
+
+            if (parseFloat(remainingFuel) > parseFloat(fuelTankCapacity)) {
+                alert("Avtomobil yoqilg'i qoldig'i yoqilg'i baki sig'imidan katta bo'lmaydi.");
+                return false;
+            }
+            return true;
+        }
+
+        function validateRemainingFuel() {
+            var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
+            var remainingFuel = document.getElementById("remainingFuel").value;
+
+            if (fuelTankCapacity === "") {
+                alert("Siz avval 'Yoqilg'i baki sig'imi' ga qiymat kiritishingiz kerak");
+                document.getElementById("remainingFuel").value = "";
+                return false;
+            }
+
+            if (parseFloat(remainingFuel) > parseFloat(fuelTankCapacity)) {
+                alert("Avtomobil yoqilg'i qoldig'i yoqilg'i baki sig'imidan katta bo'lmaydi.");
+                return false;
+            }
+            return true;
+        }
+
+        function calculateMonthlyDistance() {
+            var oneYearMediumDistance = document.getElementById("oneYearMediumDistance").value;
+            var meduimFuelConsumption = document.getElementById("meduimFuelConsumption").value;
+
+            if (meduimFuelConsumption === "") {
+                alert("Siz avval '100 km uchun yoqilg'i me'yori [litr]' ga qiymat kiritishingiz kerak");
+                document.getElementById("oneYearMediumDistance").value = "";
+                return;
+            }
+
+            var monthlyDistance = oneYearMediumDistance / 12;
+            document.getElementById("monthlyDistance").value = monthlyDistance.toFixed(1);
+
+            var yearlyMediumFuel = oneYearMediumDistance * (meduimFuelConsumption / 100);
+            document.getElementById("yearlyMediumFuel").value = yearlyMediumFuel.toFixed(1);
+
+            var monthlyMediumFuel = yearlyMediumFuel / 12;
+            document.getElementById("monthlyMediumFuel").value = monthlyMediumFuel.toFixed(1);
+        }
+       
+            function validateForm() {
+                var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
+                var remainingFuel = document.getElementById("remainingFuel").value;
+
+                if (parseFloat(remainingFuel) > parseFloat(fuelTankCapacity)) {
+                    alert("Avtomobil yoqilg'i qoldig'i yoqilg'i baki sig'imidan katta bo'lmaydi.");
+                    return false;
+                }
+                return true;
+            }
+            
+            function validateRemainingFuel() {
+                var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
+                var remainingFuel = document.getElementById("remainingFuel").value;
+
+                if (fuelTankCapacity === "") {
+                    alert("Siz avval 'Yoqilg'i baki sig'imi' ga qiymat kiritishingiz kerak");
+                    document.getElementById("remainingFuel").value = "";
+                    return false;
+                }
+
+                if (parseFloat(remainingFuel) > parseFloat(fuelTankCapacity)) {
+                    alert("Avtomobil yoqilg'i qoldig'i yoqilg'i baki sig'imidan katta bo'lmaydi.");
+                    return false;
+                }
+                return true;
+            }
+
+            function calculateMonthlyDistance() {
+                var oneYearMediumDistance = document.getElementById("oneYearMediumDistance").value;
+                var meduimFuelConsumption = document.getElementById("meduimFuelConsumption").value;
+
+                if (meduimFuelConsumption === "") {
+                    alert("Siz avval '100 km uchun yoqilg'i me'yori [litr]' ga qiymat kiritishingiz kerak");
+                    document.getElementById("oneYearMediumDistance").value = "";
+                    return;
+                }
+
+                var monthlyDistance = oneYearMediumDistance / 12;
+                document.getElementById("monthlyDistance").value = monthlyDistance.toFixed(1);
+
+                var yearlyMediumFuel = oneYearMediumDistance * (meduimFuelConsumption / 100);
+                document.getElementById("yearlyMediumFuel").value = yearlyMediumFuel.toFixed(1);
+
+                var monthlyMediumFuel = yearlyMediumFuel / 12;
+                document.getElementById("monthlyMediumFuel").value = monthlyMediumFuel.toFixed(1);
+            }
+            
+    </script>
+}
+
+@*Ajax*@
+<script>
+    $(document).ready(function () {
+        $('#openCreateOperatorModal').on('click', function () {
+            $('#modalContent').empty();
+            $.ajax({
+                url: '/operatorreviews/create',
+                type: 'GET',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (data) {
+                    $('#modalContent').html(data);
+                    $('#createOperatorReviewModal').modal('show');
+                    var driverDropdown = document.getElementById('driverDropdown');
+                    var carDropdown = document.getElementById('carDropdown');
+
+                    var fuelTankCapacitys = 0;
+                    var remainingFuels = 0;
+
+                    driverDropdown.addEventListener('change', function () {
+                        var driverId = this.value;
+                        $.ajax({
+                            url: '@Url.Action("GetCarByDriverId")',
+                            type: 'GET',
+                            data: { driverId: driverId },
+                            success: function (response) {
+                                if (response.success) {
+                                    var car = response.car;
+                                    fuelTankCapacitys = parseFloat(car.fuelTankCapacity) || 0;
+                                    remainingFuels = parseFloat(car.remainingFuel) || 0;
+                                    carDropdown.innerHTML = `<option value="${car.id}" selected>${car.model} - Sig'imi: ${car.fuelTankCapacity} litr, Qoldig'i: ${car.remainingFuel} litr</option>`;
+                                    document.getElementById('CarId').value = car.id;
+
+                                } else {
+                                    carDropdown.innerHTML = `<option value="" selected>Moshina mavjud emas</option>`;
+                                    document.getElementById('CarId').value = '';
+                                }
+                            },
+                            error: function () {
+                                carDropdown.innerHTML = `<option value="" selected>Moshina mavjud emas</option>`;
+                                document.getElementById('CarId').value = '';
+                            }
+                        });
+                    });
+
+                    var form = document.getElementById('operatorReviewForm');
+                    form.addEventListener('submit', function (event) {
+                        var oilAmountInput = document.getElementById('OilAmount');
+                        var oilAmount = parseFloat(oilAmountInput.value) || 0;
+                        var fuelTankCapacity = parseFloat('@ViewBag.FuelTankCapacity') || fuelTankCapacitys;
+                        var remainingFuel = parseFloat('@ViewBag.RemainingFuel') || remainingFuels;
+                        var checkbox = document.getElementById('flexSwitchCheckDefault');
+
+                        if (checkbox.checked && (remainingFuel + oilAmount) > fuelTankCapacity) {
+                            var errorMessage = `Diqqat: Umumiy yoqilg'i miqdori bak sig'imidan oshib ketmoqda! Yoqilgi 0 va ${fuelTankCapacity - remainingFuel} bolishi kerak`;
+
+                            oilAmountInput.classList.add('is-invalid');
+                            event.preventDefault();
+
+                            document.getElementById('validationErrorMessage').textContent = errorMessage;
+                            $('#validationErrorModal').modal('show');
+                        } else if (!checkbox.checked && oilAmount > 0) {
+                            var errorMessage = `Diqqat: Yoqilgi berdingiz ammo quydim tugmasini berishni unutdingiz!`;
+
+                            oilAmountInput.classList.add('is-invalid');
+                            event.preventDefault();
+
+                            document.getElementById('validationErrorMessage').textContent = errorMessage;
+                            $('#validationErrorModal').modal('show')
+                        }
+                    });
+
+                },
+                error: function () {
+                    alert("Ro'yhatga olish formani yuklashda xatolik yuz berdi.");
+                }
+            });
+        });
+    });    
+    $('#createOperatorReviewModal').on('hidden.bs.modal', function () {
+        $(this).find('#modalContent').empty(); // Modal yopilganda ichki kontentni tozalash
+    });
+
+
+</script>
+
+<script>
+    // Default selected year and month
+    let selectedYear = new Date().getFullYear(); // Current year
+    let selectedMonth = new Date().getMonth() + 1; // Current month (months are zero-based)
+
+    // Function to handle the change event in the calendar
+    function valueChange(args) {
+        var selectedDate = args.value;
+        selectedYear = selectedDate.getFullYear();
+        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
+
+        // Optionally, update a label to display the selected date (if you have one)
+        document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
+    }
+
+    // Prevent the dropdown from closing when clicking inside
+    document.getElementById('dropdownMenu').addEventListener('click', function (event) {
+        event.stopPropagation(); // Stops the dropdown from closing when interacting with its contents
+    });
+
+    // Handle the download button click
+    document.getElementById('downloadButton').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent the default action of the link
+
+        // Construct the download URL using the selected year and month
+        const url = `/OperatorReviews/Download?year=${selectedYear}&month=${selectedMonth}`;
+
+        // Create a temporary link to trigger the download
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', ''); // Add download attribute to force download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up
+
+        // Manually close the dropdown after downloading
+        const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
+        dropdown.hide();
+    });
+</script>
+
 <style>
+    .modal-lg {
+        max-width: 100%;
+         /* Ekranning 90% qismini egallaydi */
+    }
+
+    .modal-content {
+        width: 40%; /* Modal o'lchamini 80% qiling */
+        max-width: 700px; /* Maksimal o'lcham */
+    }
+
     .nav-tabs .nav-link.active {
         background-color: #007bff;
         color: white;
@@ -275,45 +507,3 @@
         white-space: normal;
     }
 </style>
-
-
-<script>
-    // Default selected year and month
-    let selectedYear = new Date().getFullYear(); // Current year
-    let selectedMonth = new Date().getMonth() + 1; // Current month (months are zero-based)
-
-    // Function to handle the change event in the calendar
-    function valueChange(args) {
-        var selectedDate = args.value;
-        selectedYear = selectedDate.getFullYear();
-        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
-
-        // Optionally, update a label to display the selected date (if you have one)
-        document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
-    }
-
-    // Prevent the dropdown from closing when clicking inside
-    document.getElementById('dropdownMenu').addEventListener('click', function (event) {
-        event.stopPropagation(); // Stops the dropdown from closing when interacting with its contents
-    });
-
-    // Handle the download button click
-    document.getElementById('downloadButton').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent the default action of the link
-
-        // Construct the download URL using the selected year and month
-        const url = `/OperatorReviews/Download?year=${selectedYear}&month=${selectedMonth}`;
-
-        // Create a temporary link to trigger the download
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', ''); // Add download attribute to force download
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link); // Clean up
-
-        // Manually close the dropdown after downloading
-        const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
-        dropdown.hide();
-    });
-</script>

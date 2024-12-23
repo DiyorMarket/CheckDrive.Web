@@ -1,58 +1,92 @@
 ﻿@model CheckDrive.ApiContracts.Account.AccountDto
 
 @{
-    ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Edit";    
+    Layout = "~/Views/Shared/_LayoutForModal.cshtml";
 }
-
-<h4>Ishchi ma`lumoti</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+<form id="editAccountForm" asp-action="Edit" method="post" asp-controller="Accounts">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row gap-5 ms-4 mb-3">
+        <div class="col-md-5">
+            <div>
                 <label asp-for="FirstName" class="control-label">Ism</label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="col-md-5">
+            <div>
                 <label asp-for="LastName" class="control-label">Familiya</label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Bithdate" class="control-label">Tug'ilgan yil</label>
-                <input asp-for="Bithdate" type="date" class="form-control" />
-                <span asp-validation-for="Bithdate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label">Telefon raqam</label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Login" class="control-label">Login</label>
-                <input asp-for="Login" class="form-control" />
-                <span asp-validation-for="Login" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label">Parol</label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <input asp-for="RoleId" type="hidden" />
-            <div class="form-group mt-3">
-                <a asp-action="Details" asp-route-id="@Model?.Id" class="btn btn-outline-info">
-                    <i class="fa-solid fa-arrow-left-long"></i>
-                    Orqaga
-                </a>
-                <button class="btn btn-outline-success">
-                    <i class="fa fa-pencil"></i> Saqlash
-                </button>
-            </div>
-        </form>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
     </div>
-</div>
-
-
+    <div class="row gap-5 ms-4 mb-3">
+        <div class="col-md-5">
+            <div>
+                <label asp-for="FirstName" class="control-label">Pasport</label>
+            </div>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="col-md-5">
+            <div>
+                <label asp-for="LastName" class="control-label">Manzil</label>
+            </div>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row gap-5 ms-4 mb-3">
+        <div class="col-md-5">
+            <div>
+                <label asp-for="Login" class="control-label">Login</label>
+            </div>
+            <input asp-for="Login" class="form-control" />
+            <span asp-validation-for="Login" class="text-danger"></span>
+        </div>
+        <div class="col-md-5">
+            <div>
+                <label asp-for="Password" class="control-label">Parol</label>
+            </div>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row gap-1 ms-4">
+        <div class="col-md-4">
+            <div>
+                <label asp-for="PhoneNumber" class="control-label">Telefon raqam</label>
+            </div>
+            <input id="phoneNumberId" class="form-control" asp-for="PhoneNumber" style="height:37.6px; width:160px" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="col-md-3">
+            <div>
+                <label asp-for="Bithdate" class="control-label">Tug'ilgan kun</label>
+            </div>
+            <ejs-datepicker value="@Model.Bithdate"
+                            class="form-control"
+                            format="dd/MM/yyyy"
+                            ejs-for="Bithdate"
+                            style="height:36.6px">
+            </ejs-datepicker>           
+            <span asp-validation-for="Bithdate" class="text-danger"></span>
+        </div>
+        <div class="col-md-4">
+            <div>
+                <label asp-for="RoleId" class=" control-label">Kasb tanlang</label>
+                <select name="roleId" asp-for="RoleId" class="form-select form-control border" asp-items="@ViewBag.Roles"></select>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center mb-3 mt-5">
+        <div class="d-grid w-50">
+            <button type="submit" id="saveButtonId" class="btn btn-success mr-auto" style="font-size: 14px;">
+                Saqlash
+            </button>
+        </div>
+    </div>
+</form>

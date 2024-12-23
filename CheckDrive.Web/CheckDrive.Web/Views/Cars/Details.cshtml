@@ -2,106 +2,214 @@
 
 @{
     ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutForModal.cshtml";
 }
 
-<div>
-    <h4>Moshina haqida ma'lumot</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            ID:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class="col-sm-2">
-            Model:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Model)
-        </dd>
-        <dt class="col-sm-2">
-            Rangi:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Color)
-        </dd>
-        <dt class="col-sm-2">
-            Davlat raqami:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Number)
-        </dd>
-        <dt class="col-sm-2">
-            Ishlab chiqarilgan yili:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ManufacturedYear)
-        </dd>
-        <dt class="col-sm-2">
-            Bosib o'tgan masofasi:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Mileage)
-        </dd>
-        <dt class="col-sm-2">
-            Avtomobildagi yoqilg'i qoldig`i:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RemainingFuel)
-        </dd>
-        <dt class="col-sm-2">
-            O'rtacha yoqilg'i sarfi:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MeduimFuelConsumption)
-        </dd>
-        <dt class="col-sm-2">
-            Yoqilg'i baki sig'imi:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FuelTankCapacity)
-        </dd>
-        <dt class="col-sm-2">
-            1 yillik bosib o'tish me'yori:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OneYearMediumDistance)
-        </dd>
-        <dt class="col-sm-2">
-            1 oylik bosib o'tish me'yori:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OneMonthMediumDistance)
-        </dd>
-        <dt class="col-sm-2">
-            1 yillik yoqilg'i me'yori:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OneYearMeduimFuelConsumption)
-        </dd>
-        <dt class="col-sm-2">
-            1 oylik yoqilg'i me'yori:
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OneMonthMeduimFuelConsumption)
-        </dd>
-    </dl>
+<div class="grid-container mt-3">
+    <div class="row content">
+        <div class="col text-center">
+            Model
+        </div>
+        <div class="col text-center">
+            Rangi
+        </div>
+        <div class="col text-center">
+            Davlat raqami
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.Model
+        </div>
+        <div class="col text-center">
+            @Model.Color
+        </div>
+        <div class="col text-center">
+            @Model.Number
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            Ishlab chiqarilgan yil
+        </div>
+        <div class="col text-center">
+            Bosib o'tgan masofasi
+        </div>
+        <div class="col text-center">
+            Yoqilg'i qoldig'i
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.ManufacturedYear
+        </div>
+        <div class="col text-center">
+            @Model.Mileage
+        </div>
+        <div class="col text-center">
+            @Model.RemainingFuel
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            O'rtacha yoqilg'i sarfi
+        </div>
+        <div class="col text-center">
+            Yoqilg'i baki sig'imi
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.MeduimFuelConsumption
+        </div>
+        <div class="col text-center">
+            @Model.FuelTankCapacity
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            1 yillik bosib o'tishi me'yori
+        </div>
+        <div class="col text-center">
+            1 oylik bosib o'tish me'yori
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.OneYearMediumDistance
+        </div>
+        <div class="col text-center">
+            @Model.OneMonthMediumDistance
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            1 yillik yoqilg'i me'yori
+        </div>
+        <div class="col text-center">
+            1 oylik yoqilg'i me'yori
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center bottom-style">
+            @Model.OneYearMeduimFuelConsumption
+        </div>
+        <div class="col text-center bottom-style">
+            @Model.OneMonthMeduimFuelConsumption
+        </div>
+    </div>
 </div>
 
-<div class="mt-4">
-    <a asp-action="Index" class="btn btn-outline-info">
-        <i class="fa-solid fa-arrow-left"></i>
-        Orqaga
-    </a>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">
-        <i class="fa-solid fa-pen"></i>
-        Tahrirlash
-    </a>
-    <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-outline-danger">
-        <i class="fa-solid fa-trash"></i>
-        O'chirish
-    </a>
+<div class="modal fade" id="carModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h4>Avtomobil ma'lumotlarini o'zgartirish</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">                       
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body" id="carmodalContent">
+                
+            </div>
+        </div>
+    </div>
 </div>
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#openCarModal').on('click', function () {
+                $('#carmodalContent').empty();
+                $.ajax({
+                    url: "/cars/edit/"+@Model?.Id,
+                    type: 'GET',
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (data) {
+                        $('#carmodalContent').html(data);
+                        console.log("Ajax muvaffaqqiyatli bajarildi");
+                        $('#carModal').modal('show');
+                        $.getScript('/lib/jquery-validation/dist/jquery.validate.min.js', function () {
+                            $.getScript('/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js');
+                        });
+
+                    },
+                    error: function (error) {
+                        alert("Tahrirlash oynasini ochishda muommo bo'ldi \n" + error );
+                    }
+                });
+            });
+            $('#carModal').on('hidden.bs.modal', function () {
+                $(this).find('#carmodalContent').empty(); // Modal yopilganda ichki kontentni tozalash
+                $(this).off('click');
+            });
+            $('#carModal').on('click', '.btn-close', function () {
+                $('#carModal').modal('hide');
+            });
+        });
+        function validateForm() {
+            var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
+            var remainingFuel = document.getElementById("remainingFuel").value;
+
+            if (parseFloat(remainingFuel) > parseFloat(fuelTankCapacity)) {
+                alert("Avtomobil yoqilg'i qoldig'i yoqilg'i baki sig'imidan katta bo'lmaydi.");
+                return false;
+            }
+            return true;
+        }
+
+        function validateRemainingFuel() {
+            var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
+            var remainingFuel = document.getElementById("remainingFuel").value;
+
+            if (fuelTankCapacity === "") {
+                alert("Siz avval 'Yoqilg'i baki sig'imi' ga qiymat kiritishingiz kerak");
+                document.getElementById("remainingFuel").value = "";
+                return false;
+            }
+
+            if (parseFloat(remainingFuel) > parseFloat(fuelTankCapacity)) {
+                alert("Avtomobil yoqilg'i qoldig'i yoqilg'i baki sig'imidan katta bo'lmaydi.");
+                return false;
+            }
+            return true;
+        }
+
+        function calculateMonthlyDistance() {
+            var oneYearMediumDistance = document.getElementById("oneYearMediumDistance").value;
+            var meduimFuelConsumption = document.getElementById("meduimFuelConsumption").value;
+
+            if (meduimFuelConsumption === "") {
+                alert("Siz avval '100 km uchun yoqilg'i me'yori [litr]' ga qiymat kiritishingiz kerak");
+                document.getElementById("oneYearMediumDistance").value = "";
+                return;
+            }
+
+            var monthlyDistance = oneYearMediumDistance / 12;
+            document.getElementById("monthlyDistance").value = monthlyDistance.toFixed(1);
+
+            var yearlyMediumFuel = oneYearMediumDistance * (meduimFuelConsumption / 100);
+            document.getElementById("yearlyMediumFuel").value = yearlyMediumFuel.toFixed(1);
+
+            var monthlyMediumFuel = yearlyMediumFuel / 12;
+            document.getElementById("monthlyMediumFuel").value = monthlyMediumFuel.toFixed(1);
+        }
+
+    </script>
+}
+<style>
+    .modal-lg {
+        max-width: 100%;
+        margin: auto; /* Ekranning 90% qismini egallaydi */
+    }
+
+    .modal-content {
+        width: 60%; /* Modal o'lchamini 80% qiling */
+        max-width: 700px; /* Maksimal o'lcham */
+    }
+
+</style>

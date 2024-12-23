@@ -1,51 +1,150 @@
-﻿@model IEnumerable<CheckDrive.ApiContracts.OilMark.OilMarkDto>
+﻿@using CheckDrive.ApiContracts.OilMark
+@model IEnumerable<CheckDrive.ApiContracts.OilMark.OilMarkDto>
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Yoqilg'i turlari</h1>
+<div>
+    <div class="d-flex flex-row-reverse">
+        <button id="createoilBtn" class="btn btn-success create-btn mt-4" >
+            <i class="fa fa-plus"></i> Yaratish
+        </button>
+        <div id="createoilModal" class="modal" >
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content d-flex justify-content-center" style="height: 250px; width: 500px ">
+                    <span class="close">
+                        <button class="btn btn-close "></button>
+                    </span>
+                    <partial name="Create" model="new OilMarkForCreateDto()" />
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>      
 
-<div class="d-flex flex-row-reverse">
-    <a class="btn btn-success" asp-action="Create">
-        <i class="fa fa-plus"></i> Yaratish
-    </a>
+<div class="row mt-4">
+    <div class="col-12">
+        <ejs-grid id="oilMarks-list" 
+                     dataSource="@Model"
+                     gridLines="Both"
+                     allowPaging="true"
+                     allowSorting="true">
+                    <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>             
+        <e-grid-columns>
+            <e-grid-column headerText="Yoqilg'i nomi" field="OilMark" textAlign="Center" width="200" headerTextAlign="Center" ></e-grid-column>
+            <e-grid-column width="180" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
+        </e-grid-columns>
+        </ejs-grid>
+    </div>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.First().Id)
-            </th>
-            <th>
-                Yoqilg'i nomi
-            </th>
-            <th>Amallar</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OilMark)
-                </td>
-                <td>
-                    <div class="btn-group" role="group">
-                        <a class="btn btn-outline-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id" style="margin-right: 5px;">
-                            Tahrirlash
-                        </a>
-                        <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id">
-                            O'chirish
-                        </a>
-                    </div>
-                </td>
-            </tr>
+<div class="modal fade" id="deleteOilModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body" id="deleteOilContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="oilEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered ">
+        <div class="modal-content" style="height: 250px; width: 500px ">
+            <div class="modal-header d-flex justify-content-center">
+                <h4>Yoqilg'i ma`lumotini o`zgartirish</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body" id="oilEditModalContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-template" id="actionTemplate">
+    <button type="button"  class="shadow-sm  bg-white rounded e-btn e-flat" title="Tahrirlash" onclick="onEditClick(${Id})">
+        <i class="fa-solid fa-pen fa-lg text-warning" ></i>
+    </button>
+    <button type="button" class="shadow-sm   bg-white rounded e-btn e-flat mx-2" title="O&#39;chirish" onclick="onDeleteClick(${Id})">
+        <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
+    </button>
+</script>
+
+<script type="text/javascript">
+    function onEditClick(id) {
+        $('#oilEditModalContent').empty();
+        $.ajax({
+            url: "/oilmarks/edit/" + id,
+            type: 'GET',            
+            success: function (data) {
+                $('#oilEditModalContent').html(data);
+                $('#oilEditModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                }).modal('show');
+
+            },
+            error: function (error) {
+                alert("Tahrirlash oynasini ochishda muommo bo'ldi \n" + error);
+            }
+        });
+        $(this).find('#oilEditModalContent').empty();
+        $(this).off('hidden.bs.modal');
+
+    }
+</script>
+
+
+<script>
+    function onDeleteClick(id) {
+        $('#deleteOilContent').empty();
+        $.ajax({
+            url: "/oilmarks/delete/" + id,
+            type: 'GET',
+            success: function (data) {
+                $('#deleteOilContent').html(data);
+                $('#deleteOilModal').modal('show');
+            },
+            error: function () {
+                $('#deleteOilContent').html('<p>Error loading details</p>');
+            }
+        });
+
+        $(this).find('#deleteOilContent').empty();
+        $(this).off('hidden.bs.modal');
+    }
+</script>
+
+<script>
+    var modal = document.getElementById("createoilModal");
+    var btn = document.getElementById("createoilBtn");
+    var span = document.getElementsByClassName("close")[0];
+    var form = document.getElementById("createForm");
+
+    btn.onclick = function (event) {
+        event.preventDefault(); 
+        modal.style.display = "block";
+    }
+
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    form.onsubmit = function (event) {
+        event.preventDefault(); 
+        alert("Form submit qilindi, lekin sahifa yangilanmaydi.");
+    }
+
+    modalContent.onclick = function (event) {
+        event.stopPropagation(); 
+    }
+
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
         }
-    </tbody>
-</table>
+    }
+</script>

@@ -2,6 +2,7 @@
 using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Dashbord;
+using CheckDrive.Web.Stores.Debts;
 using CheckDrive.Web.Stores.DispatcherReviews;
 using CheckDrive.Web.Stores.Dispatchers;
 using CheckDrive.Web.Stores.DoctorReviews;
@@ -10,10 +11,13 @@ using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.MechanicAcceptances;
 using CheckDrive.Web.Stores.MechanicHandovers;
 using CheckDrive.Web.Stores.Mechanics;
+using CheckDrive.Web.Stores.Menu;
+using CheckDrive.Web.Stores.MockDashboard;
 using CheckDrive.Web.Stores.OilMarks;
 using CheckDrive.Web.Stores.OperatorReviews;
 using CheckDrive.Web.Stores.Operators;
 using CheckDrive.Web.Stores.Roles;
+using CheckDrive.Web.Stores.SplineCharts;
 using CheckDrive.Web.Stores.Technicians;
 using CheckDrive.Web.Stores.User;
 
@@ -39,8 +43,13 @@ namespace CheckDrive.Web.Extensions
             services.AddScoped<IRoleDataStore, RoleDataStore>();
             services.AddScoped<ITechnicianDataStore, MockTechnicianDataStore>();
             services.AddScoped<IDashboardStore, DashboardStore>();
+            services.AddScoped<IMockDashboardStore, MockDashboardStore>();
+            services.AddScoped<IDebtsStore, DebtsStore>();
             services.AddScoped<IUserDataStore, UserDataStore>();
+            services.AddScoped<ICheckPointStore, CheckPointStore>();
 
+            services.AddScoped<IMenuService, MenuService>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
             return services;
         }
 

@@ -1,0 +1,142 @@
+﻿@using CheckDrive.Web.ViewModels.CheckPoint
+@model CheckPointViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="grid-container m-5">
+    <div class="row content">
+        <div class="col text-center">
+            Haydovchi
+        </div>
+        <div class="col text-center">
+            Avtomobil
+        </div>
+        <div class="col text-center">
+            Hozirgi masofa
+        </div>
+        <div class="col text-center">
+            Hozirgi yoqilg'i
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.Driver
+        </div>
+        <div class="col text-center">
+            @Model.CarModel
+        </div>
+        <div class="col text-center">
+            @Model.CurrentMileage
+        </div>
+        <div class="col text-center">
+            @Model.CurrentFuelAmount
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            Mexanik
+        </div>
+        <div class="col text-center">
+            Boshlang'ich masofa
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.Mechanic
+        </div>
+        <div class="col text-center">
+            @Model.InitialMillage
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            Operator
+        </div>
+        <div class="col text-center">
+            Boshlang'ich yoqilg'i'
+        </div>
+        <div class="col text-center">
+            Quyilgan yoqilg'i
+        </div>
+        <div class="col text-center">
+            Yoqilg'i turi
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.Operator
+        </div>
+        <div class="col text-center">
+            @Model.InitialOilAmount
+        </div>
+        <div class="col text-center">
+            @Model.OilRefillAmount
+        </div>
+        <div class="col text-center">
+            @Model.Oil
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            Mexanik
+        </div>
+        <div class="col text-center">
+            Yakuniy masofa
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.Mechanic
+        </div>
+        <div class="col text-center">
+            @Model.FinalMileage
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            Dispetcher
+        </div>
+        <div class="col text-center">
+            Yoqilg'i sarfi
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            @Model.Dispatcher
+        </div>
+        <div class="col text-center">
+            @Model.FuelConsumptionAdjustment
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            Avtomobilning yakuniy qiymatlari
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            <input type="number" class="form-control" style="text-align:center;" name="FinalMileage" value="@Model.FinalMileage" />
+        </div>
+        <div class="col text-center">
+            <input type="number" class="form-control" style="text-align:center;" name="CurrentFuelAmount" value="@Model.CurrentFuelAmount" />
+        </div>
+    </div>
+    <div class="row content">
+        <div class="col text-center">
+            Qarz
+        </div>
+    </div>
+    <div class="row value">
+        <div class="col text-center">
+            <input type="number" class="form-control" style="text-align:center;" name="DebtAmount" value="@Model.DebtAmount" />
+        </div>
+    </div>
+    <div class="d-flex col-md mb-4 justify-content-center">
+        <button id="openModalButton" class="btn btn-success" asp-action="create" type="button">
+            <i class="fa"></i> Saqlash
+        </button>
+    </div>    
+</div>

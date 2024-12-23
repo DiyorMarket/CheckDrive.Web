@@ -2,32 +2,26 @@
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_PersonalLayout.cshtml";
+    Layout = "~/Views/Shared/_LayoutForModal.cshtml";
     bool noDriversAvailable = ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers.Items).Any();
-
-
 }
+<form asp-action="Create" method="post" id="createDoctorReviewForm">        
+    <div class="row mt-custom" >
+        <div class="col-md-4  mt-3" style="width:400px">                      
+            @if (noDriversAvailable)
+            {
+                <div class="alert alert-warning">
+                    <strong>Diqqat!</strong> Hozirda mavjud haydovchilar yo'q. Iltimos, keyinroq qayta urinib ko'ring.
+                </div>
+            }
 
-<div class="row mt-custom">
-    <div class="col-md-4 offset-md-1 mt-5">
-        <h4>Ro`yxatga olish</h4>
-        <hr class="w-50" />
-       
-        @if (noDriversAvailable)
-        {
-            <div class="alert alert-warning">
-                <strong>Diqqat!</strong> Hozirda mavjud haydovchilar yo'q. Iltimos, keyinroq qayta urinib ko'ring.
-            </div>
-        }
-
-        <form id="doctorReviewForm" asp-action="Create" method="post">
             <fieldset @(noDriversAvailable ? "disabled" : "")>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group w-50 mt-3">
+            <div class="form-group w-75 mt-3">
                 <label asp-for="DriverId">Haydovchi F.I.</label>
                 @if (ViewBag.SelectedDriverId != null && ViewBag.SelectedDriverId != 0)
                 {
-                    <select class="form-control border border-dark" disabled>
+                    <select class="form-control  border border-dark" style="width:400px" disabled>
                         <option value="@ViewBag.SelectedDriverId" selected="selected">@ViewBag.SelectedDriverName</option>
                     </select>
                     <input type="hidden" asp-for="DriverId" value="@ViewBag.SelectedDriverId" />
@@ -36,45 +30,42 @@
                 {
                     @if (ViewBag.Drivers == null || !((IEnumerable<SelectListItem>)ViewBag.Drivers).Any())
                     {
-                        <select class="form-control border border-dark" disabled>
+                        <select class="form-control border border-dark" style="width:400px" disabled>
                             <option selected>Haydovchilar mavjud emas</option>
                         </select>
                     }
                     else
                     {
-                        <select asp-for="DriverId" class="form-control border border-dark" asp-items="@ViewBag.Drivers"></select>
+                            <select asp-for="DriverId" class="form-control border border-dark form-select" style="width:400px" asp-items="@ViewBag.Drivers"></select>
                     }
                 }
             </div>
             <div class="form-check form-switch mt-3">
-                <input asp-for="IsHealthy" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" value="true">
+                <input asp-for="IsHealthy" class="form-check-input " type="checkbox" role="switch" id="flexSwitchCheckDefault" value="true">
                 <label asp-for="IsHealthy" class="form-check-label" for="flexSwitchCheckDefault">Sog`ligi</label>
                 <div id="checkboxError" class="text-danger d-none"></div>
             </div>
-            <div class="form-group w-50">
+            <div class="form-group w-75">
                 <select asp-for="DoctorId" class="form-control border border-dark d-none" asp-items="@ViewBag.Doctors"></select>
                 <input type="hidden" asp-for="DoctorId" value="@ViewBag.DoctorId" />
             </div>
-            <div class="form-group w-50 mt-3">
+                <div class="form-group justify-content-center mt-3">
                 <label asp-for="Comments" for="exampleFormControlTextarea1">Izoh</label>
                 <textarea asp-for="Comments" class="form-control" rows="4"></textarea>
             </div>
                 </fieldset>
-            <div class="form-group mt-3 w-50 mt-3">
-                <a asp-action="PersonalIndex" class="btn btn-outline-info">
-                    <i class="fa-solid fa-arrow-left-long"></i> Orqaga
-                </a>
-                <button class="btn btn-success" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
-                    <i class="fa fa-plus"></i> Yaratish
+            <div class="form-group justify-content-center d-flex mt-4">
+                <button class="btn btn-success w-25" type="submit" id="submitButton" @(noDriversAvailable ? "disabled" : "")>
+                     Saqlash
                 </button>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
+    </div> 
+</form>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var form = document.getElementById('doctorReviewForm');
+        var form = document.getElementById('createDoctorReviewForm');
         var checkbox = document.getElementById('flexSwitchCheckDefault');
         var checkboxError = document.getElementById('checkboxError');
 
@@ -103,7 +94,7 @@
             }
         });
     });
-</script>
+</script> 
 
 <style>
     .is-invalid {

@@ -1,34 +1,13 @@
 ﻿@model IEnumerable<CheckDrive.ApiContracts.DoctorReview.DoctorReviewDto>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
-<link rel="stylesheet" href="~/css/LogOutButtun.css" asp-append-version="true" />
 @{
     ViewData["Title"] = "PersonalIndex";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
-    string activeTab = "PersonalIndex";
+    
 }
-<div class="container-fluid py-2 px-4 d-flex justify-content-end">
-    <div class="d-flex align-items-center">
-        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
-            <span class="logout-icon">
-                <i class="fas fa-sign-out-alt"></i>
-            </span>
-            Chiqish
-        </button>
-    </div>
-</div>
-
 <form asp-controller="DoctorReviews" asp-action="PersonalIndex">
     <div class="container mt-5">
-        <div class="mb-4">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "PersonalIndex" ? "active" : "")" href="@Url.Action("PersonalIndex", "DoctorReviews")">Asosiy sahifa</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "DoctorReviews")">Tarixni ko'rish</a>
-                </li>
-            </ul>
-        </div>
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
             <div class="col-md-4">
@@ -41,13 +20,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 text-right">
-                <a class="btn btn-success" href="@Url.Action("Create", "DoctorReviews")">
+            <div class="col-md-4 text-right">                                
+                <button type="button" class="btn btn-success" id="openCreateModal">
                     <i class="fa fa-plus"></i> Yaratish
-                </a>
+                </button>
+
             </div>
         </div>
-
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="table-responsive">
@@ -70,8 +49,13 @@
                                                 @review.DriverName
                                             }
                                             else
-                                            {
-                                                <a href="/DoctorReviews/Create?driverId=@review.DriverId&driverName=@review.DriverName">@review.DriverName</a>
+                                            {                                                
+                                                <a href="javascript:void(0);"
+                                                   class="openDoctorReviewModal"
+                                                   data-driver-id="@review.DriverId"                                                  
+                                                   data-driver-name="@review.DriverName">
+                                                    @review.DriverName
+                                                </a>
                                             }
                                         </td>
                                         <td class="text-center vertical-align-middle">@review.Date.ToString("dd.MM.yyyy")</td>
@@ -126,8 +110,136 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
 </form>
+<!-- Modal oyna -->
+<div class="modal fade" id="createDoctorReviewModal" tabindex="-1" aria-labelledby="createDoctorReviewModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content" style="width:60%">
+            <div class="modal-header d-flex justify-content-center">
+                <h5  id="createDoctorReviewModalLabel">Ro'yxatga olish</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>                
+            </div>
+            <div class="modal-body" id="modalContent">
+                <!-- Bu yerga forma yuklanadi -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#openCreateModal').on('click', function () {
+            $('#modalContent').empty();
+            $.ajax({
+                url: '/doctorreviews/create',
+                type: 'GET',                
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (data) {
+                    $('#modalContent').html(data);
+                    $('#createDoctorReviewModal').modal('show');
+                    var form = document.getElementById('createDoctorReviewForm');
+                    var checkbox = document.getElementById('flexSwitchCheckDefault');
+                    var checkboxError = document.getElementById('checkboxError');
+
+                    if (!checkbox.checked) {
+                        checkbox.classList.add('is-invalid');
+                        checkboxError.classList.remove('d-none');
+                    }
+
+                    form.addEventListener('submit', function () {
+                        if (!checkbox.checked) {
+                            checkbox.classList.add('is-invalid');  // Add invalid class
+                            checkboxError.classList.remove('d-none');  // Show error message
+                        } else {
+                            checkbox.classList.remove('is-invalid');  // Remove invalid class
+                            checkboxError.classList.add('d-none');  // Hide error message
+                        }
+                    });
+
+                    checkbox.addEventListener('change', function () {
+                        if (checkbox.checked) {
+                            checkbox.classList.remove('is-invalid');
+                            checkboxError.classList.add('d-none');
+                        } else {
+                            checkbox.classList.add('is-invalid');
+                            checkboxError.classList.remove('d-none');
+                        }
+                    });
+                },
+                error: function () {
+                    alert('Yaratish formani yuklashda xatolik yuz berdi.');
+                }
+            });
+        });
+    });
+    $('#createDoctorReviewModal').on('hidden.bs.modal', function () {
+        $(this).find('#modalContent').empty(); // Modal yopilganda ichki kontentni tozalash
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.openDoctorReviewModal').click(function (e) {
+            e.preventDefault();
+            console.log("F.I.O link bosildi");
+            var driverId = $(this).data('driver-id');
+            var driverName = $(this).data('driver-name');
+
+            console.log("Driver ID: ", driverId);
+            console.log("Driver Name: ", driverName);
+            
+            $.ajax({
+                url: "/doctorreviews/create?driverid=" + driverId + "&driverName=" + driverName,                
+                type: 'GET',
+                data: { id: driverId },
+                success: function (data) {
+                    // Modal oynaga ma'lumotlarni joylashtirish
+                    $('#modalContent').html(data);
+                    // Modalni ochish
+                    $('#createDoctorReviewModal').modal('show');
+                    var form = document.getElementById('createDoctorReviewForm');
+                    var checkbox = document.getElementById('flexSwitchCheckDefault');
+                    var checkboxError = document.getElementById('checkboxError');
+
+                    if (!checkbox.checked) {
+                        checkbox.classList.add('is-invalid');
+                        checkboxError.classList.remove('d-none');
+                    }
+
+                    form.addEventListener('submit', function () {
+                        if (!checkbox.checked) {
+                            checkbox.classList.add('is-invalid');  // Add invalid class
+                            checkboxError.classList.remove('d-none');  // Show error message
+                        } else {
+                            checkbox.classList.remove('is-invalid');  // Remove invalid class
+                            checkboxError.classList.add('d-none');  // Hide error message
+                        }
+                    });
+
+                    checkbox.addEventListener('change', function () {
+                        if (checkbox.checked) {
+                            checkbox.classList.remove('is-invalid');
+                            checkboxError.classList.add('d-none');
+                        } else {
+                            checkbox.classList.add('is-invalid');
+                            checkboxError.classList.remove('d-none');
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    // Xatolik yuz berganda
+                    alert('Xatolik: ' + error);
+                }
+            });
+        });
+    });
+</script>
 
 <style>
     .nav-tabs .nav-link.active {

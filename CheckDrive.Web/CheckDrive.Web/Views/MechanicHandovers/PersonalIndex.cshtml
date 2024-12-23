@@ -1,38 +1,14 @@
 ﻿@model IEnumerable<CheckDrive.ApiContracts.MechanicHandover.MechanicHandoverDto>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
 
 @{
     ViewData["Title"] = "Mechanic Handovers (Personal)";
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
-    string activeTab = "MechanicHandovers";
 }
-
-<div class="container-fluid py-2 px-4 d-flex justify-content-end">
-    <div class="d-flex align-items-center gap-2">
-        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
-            <span class="logout-icon">
-                <i class="fas fa-sign-out-alt"></i>
-            </span>
-            Chiqish
-        </button>
-    </div>
-</div>
 
 <form method="get" action="@Url.Action("PersonalIndex")">
     <div class="container mt-5">
-        <div class="mb-4">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "MechanicHandovers" ? "active" : "")" href="@Url.Action("PersonalIndex", "MechanicHandovers")">Mexanik(Topshirish)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "MechanicAcceptances" ? "active" : "")" href="@Url.Action("PersonalIndex", "MechanicAcceptances")">Mexanik(Qabul qilish)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "MechanicHandovers")">Tarixni ko'rish</a>
-                </li>
-            </ul>
-        </div>
         <div class="row justify-content-between align-items-center mb-4">
             <div class="col-md-4">
                 <div class="input-group">
@@ -44,20 +20,18 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-8 d-flex justify-content-end align-items-center gap-2">
-                <a class="btn btn-primary" href="@Url.Action("CarHistoryIndex", "Cars")">Moshina tarixi</a>
-                <div class="dropdown d-inline-block">
+            <div class="col-md-8 d-flex justify-content-end align-items-center gap-2">                
                     <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-download"></i> Yuklab olish
                     </button>
                     <div class="dropdown-menu p-3" id="dropdownMenu" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">
                         <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
                         <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
-                    </div>
-                </div>
-                <a class="btn btn-success" href="@Url.Action("Create", "MechanicHandovers")">
+                    </div>                        
+                <a class="btn btn-primary" href="@Url.Action("CarHistoryIndex", "Cars")">Moshina tarixi</a>                
+                <button  type="button" id="openCreteMechanicHandoverModal" class="btn btn-success">
                     <i class="fa fa-plus"></i> Yaratish
-                </a>
+                </button>
             </div>
         </div>
         <div class="table-responsive">
@@ -78,7 +52,12 @@
                                 <td class="text-center vertical-align-middle">
                                     @if (item.Status  == CheckDrive.ApiContracts.StatusForDto.Unassigned)
                                     {
-                                        <a href="/MechanicHandovers/Create?driverId=@item.DriverId&driverName=@item.DriverName">@item.DriverName</a>
+                                        <a href="javascript:void(0);"
+                                            class="openMechanicHandoverReviewModal"
+                                            data-driver-id = "@item.DriverId"
+                                            data-driver-name = "@item.DriverName">
+                                            @item.DriverName
+                                        </a>
                                     }
                                     else
                                     {
@@ -162,8 +141,234 @@
         </div>
     </div>
 </form>
+<!-- Modal oyna -->
+<div class="modal fade" id="createMechanicHandoverReviewModal" tabindex="-1" aria-labelledby="createDoctorReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h5 id="createMechanicHandoverReviewModalLabel">Ro'yxatga olish</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        
+        $(document).ready(function () {
+        
+            $('#openCreteMechanicHandoverModal').on('click', function () {
+                $('#modalContent').empty();
+                $.ajax({
+                    url: '/mechanichandovers/create',
+                    type: 'GET',
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (data) {
+                        $('#modalContent').html(data);
+                        $('#createMechanicHandoverReviewModal').modal('show');
+
+                        // Forma yuklangandan keyin hodisalarni bog'lash
+                        var form = document.getElementById('mechanicHandoverForm');
+                        var checkbox = document.getElementById('flexSwitchCheckDefault');
+                        var checkboxLabel = document.querySelector('label[for="flexSwitchCheckDefault"]');
+                        var carDropdown = document.getElementById('carIdDropdown');
+                        var distanceInputContainer = document.getElementById('distanceInputContainer');
+                        var distanceInput = document.querySelector('input[name="Distance"]');
+                        var fuelInput = document.querySelector('input[name="RemainingFuel"]');
+                        var mileage = 0;
+
+                        function toggleCheckboxHighlight() {
+                            if (checkbox.checked) {
+                                checkbox.classList.remove('border-danger');
+                                checkboxLabel.classList.remove('text-danger');
+                                distanceInputContainer.style.display = 'block';
+                            } else {
+                                checkbox.classList.add('border-danger');
+                                checkboxLabel.classList.add('text-danger');
+                                distanceInputContainer.style.display = 'none';
+                            }
+                        }
+
+                        toggleCheckboxHighlight();
+                        checkbox.addEventListener('change', toggleCheckboxHighlight);
+
+                        carDropdown.addEventListener('change', function () {
+                            var selectedCarId = carDropdown.value;
+                            if (selectedCarId) {
+                                fetch(`/MechanicHandovers/GetCarDetails?carId=${selectedCarId}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data && data.mileage !== undefined) {
+                                            mileage = data.mileage;
+                                            distanceInput.value = mileage;
+                                            distanceInput.setAttribute('min', mileage);
+                                        }
+                                        if (data && data.remainingFuel !== undefined) {
+                                            fuelInput.value = data.remainingFuel;
+                                        }
+                                    })
+                                    .catch(error => console.error('Error fetching car details:', error));
+                            }
+                        });
+
+                        form.addEventListener('submit', function (event) {
+                            var distanceValue = Number(distanceInput.value);
+                            var isGiven = checkbox.checked;
+
+                            if (distanceValue < mileage) {
+                                event.preventDefault();
+                                alert("Masofa mashinaning mavjud yurgan masofasidan kam bo'lishi mumkin emas!");
+                            } else if (distanceValue === 0 && isGiven) {
+                                event.preventDefault();
+                                alert("Boshlang'ich masofani kiritishingiz shart!");
+                            }
+                        });
+                    },
+                    error: function () {
+                        alert('Create formani yuklashda xatolik yuz berdi.');
+                    }
+                });
+            });
+        });        
+        $('#createMechanicHandoverReviewModal').on('hidden.bs.modal', function () {
+            $(this).find('#modalContent').empty(); // Modal yopilganda ichki kontentni tozalash
+        });
+        
+    </script>
+}
+
+<script>
+    $(document).ready(function () {
+        $('.openMechanicHandoverReviewModal').click(function (e) {
+            e.preventDefault();       
+            var driverId = $(this).data('driver-id');
+            var driverName = $(this).data('driver-name');
+            $.ajax({
+                url: "/mechanichandovers/create?driverid=" + driverId + "&driverName=" + driverName,
+                type: 'GET',
+                data: { id: driverId },
+                success: function (data) {                    
+                    $('#modalContent').html(data);
+                    $('#createMechanicHandoverReviewModal').modal('show');
+                    // Forma yuklangandan keyin hodisalarni bog'lash
+                    var form = document.getElementById('mechanicHandoverForm');
+                    var checkbox = document.getElementById('flexSwitchCheckDefault');
+                    var checkboxLabel = document.querySelector('label[for="flexSwitchCheckDefault"]');
+                    var carDropdown = document.getElementById('carIdDropdown');
+                    var distanceInputContainer = document.getElementById('distanceInputContainer');
+                    var distanceInput = document.querySelector('input[name="Distance"]');
+                    var fuelInput = document.querySelector('input[name="RemainingFuel"]');
+                    var mileage = 0;
+
+                    function toggleCheckboxHighlight() {
+                        if (checkbox.checked) {
+                            checkbox.classList.remove('border-danger');
+                            checkboxLabel.classList.remove('text-danger');
+                            distanceInputContainer.style.display = 'block';
+                        } else {
+                            checkbox.classList.add('border-danger');
+                            checkboxLabel.classList.add('text-danger');
+                            distanceInputContainer.style.display = 'none';
+                        }
+                    }
+
+                    toggleCheckboxHighlight();
+                    checkbox.addEventListener('change', toggleCheckboxHighlight);
+
+                    carDropdown.addEventListener('change', function () {
+                        var selectedCarId = carDropdown.value;
+                        if (selectedCarId) {
+                            fetch(`/MechanicHandovers/GetCarDetails?carId=${selectedCarId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data && data.mileage !== undefined) {
+                                        mileage = data.mileage;
+                                        distanceInput.value = mileage;
+                                        distanceInput.setAttribute('min', mileage);
+                                    }
+                                    if (data && data.remainingFuel !== undefined) {
+                                        fuelInput.value = data.remainingFuel;
+                                    }
+                                })
+                                .catch(error => console.error('Error fetching car details:', error));
+                        }
+                    });
+
+                    form.addEventListener('submit', function (event) {
+                        var distanceValue = Number(distanceInput.value);
+                        var isGiven = checkbox.checked;
+
+                        if (distanceValue < mileage) {
+                            event.preventDefault();
+                            alert("Masofa mashinaning mavjud yurgan masofasidan kam bo'lishi mumkin emas!");
+                        } else if (distanceValue === 0 && isGiven) {
+                            event.preventDefault();
+                            alert("Boshlang'ich masofani kiritishingiz shart!");
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    // Xatolik yuz berganda
+                    alert('Xatolik: ' + error);
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    // Default selected year and month
+    let selectedYear = new Date().getFullYear(); // Current year
+    let selectedMonth = new Date().getMonth() + 1; // Current month (months are zero-based)
+
+    // Function to handle the change event in the calendar
+    function valueChange(args) {
+        var selectedDate = args.value;
+        selectedYear = selectedDate.getFullYear();
+        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
+
+        // Optionally, update a label to display the selected date (if you have one)
+        document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
+    }
+
+    // Prevent the dropdown from closing when clicking inside
+    document.getElementById('dropdownMenu').addEventListener('click', function (event) {
+        event.stopPropagation(); // Stops the dropdown from closing when interacting with its contents
+    });
+
+    // Handle the download button click
+    document.getElementById('downloadButton').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent the default action of the link
+
+        // Construct the download URL using the selected year and month
+        const url = `/MechanicHandovers/Download?year=${selectedYear}&month=${selectedMonth}`;
+
+        // Create a temporary link to trigger the download
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', ''); // Add download attribute to force download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Clean up
+
+        // Manually close the dropdown after downloading
+        const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
+        dropdown.hide();
+    });
+</script>
 
 <style>
+    .modal-content {
+        width:450px;
+    }
     .nav-tabs .nav-link.active {
         background-color: #007bff;
         color: white;
@@ -235,44 +440,3 @@
     }
 
 </style>
-
-<script>
-    // Default selected year and month
-    let selectedYear = new Date().getFullYear(); // Current year
-    let selectedMonth = new Date().getMonth() + 1; // Current month (months are zero-based)
-
-    // Function to handle the change event in the calendar
-    function valueChange(args) {
-        var selectedDate = args.value;
-        selectedYear = selectedDate.getFullYear();
-        selectedMonth = selectedDate.getMonth() + 1; // Months are zero-based
-
-        // Optionally, update a label to display the selected date (if you have one)
-        document.getElementById('date_label').textContent = 'Выбранное значение: ' + selectedDate.toDateString();
-    }
-
-    // Prevent the dropdown from closing when clicking inside
-    document.getElementById('dropdownMenu').addEventListener('click', function (event) {
-        event.stopPropagation(); // Stops the dropdown from closing when interacting with its contents
-    });
-
-    // Handle the download button click
-    document.getElementById('downloadButton').addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent the default action of the link
-
-        // Construct the download URL using the selected year and month
-        const url = `/MechanicHandovers/Download?year=${selectedYear}&month=${selectedMonth}`;
-
-        // Create a temporary link to trigger the download
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', ''); // Add download attribute to force download
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link); // Clean up
-
-        // Manually close the dropdown after downloading
-        const dropdown = bootstrap.Dropdown.getInstance(document.getElementById('dropdownMenuButton'));
-        dropdown.hide();
-    });
-</script>

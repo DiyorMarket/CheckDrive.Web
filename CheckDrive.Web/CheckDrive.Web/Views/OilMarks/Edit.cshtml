@@ -2,27 +2,20 @@
 
 @{
     ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_LayoutForModal.cshtml";
 }
-
-<h4>Yoqilg'i ma`lumotini o`zgartirish</h4>
-
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div style="width : 1000px">
+    <div class="col-md-5 mb-3">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="OilMark" class="control-label"></label>
-                <input asp-for="OilMark" class="form-control" />
+            <div class="">
+                <label asp-for="OilMark" class="control-label">Yo'qilg'i turi nomi</label>
+                <input asp-for="OilMark" class="form-control" required />
                 <span asp-validation-for="OilMark" class="text-danger"></span>
             </div>
-            <div class="form-group mt-3">
-                <a asp-action="Index" asp-route-id="@Model?.Id" class="btn btn-outline-info">
-                    <i class="fa-solid fa-arrow-left-long"></i>
-                    Orqaga
-                </a>
-                <button class="btn btn-outline-success">
-                    <i class="fa fa-pencil"></i> Saqlash
+            <div class="form-group mt-3 d-flex justify-content-center">
+                <button type="submit" class="btn btn-success" style="width:200px">
+                    Saqlash
                 </button>
             </div>
         </form>

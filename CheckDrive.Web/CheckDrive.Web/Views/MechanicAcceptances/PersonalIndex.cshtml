@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<CheckDrive.ApiContracts.MechanicAcceptance.MechanicAcceptanceDto>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
 
 @{
@@ -6,33 +7,8 @@
     Layout = "~/Views/Shared/_PersonalLayout.cshtml";
     string activeTab = "MechanicAcceptances";
 }
-<div class="container-fluid py-2 px-4 d-flex justify-content-end">
-    <div class="d-flex align-items-center gap-2">
-        <button class="logout-btn" type="button" onclick="window.location.href='@Url.Action("Login", "Auth")'">
-            <span class="logout-icon">
-                <i class="fas fa-sign-out-alt"></i>
-            </span>
-            Chiqish
-        </button>
-        
-    </div>
-</div>
-
 <form method="get" action="@Url.Action("PersonalIndex")">
-    <div class="container mt-5">
-        <div class="mb-4">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "MechanicHandovers" ? "active" : "")" href="@Url.Action("PersonalIndex", "MechanicHandovers")">Mexanik(Topshirish)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "MechanicAcceptances" ? "active" : "")" href="@Url.Action("PersonalIndex", "MechanicAcceptances")">Mexanik(Qabul qilish)</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @(activeTab == "HistoryIndexForPersonalPage" ? "active" : "")" href="@Url.Action("HistoryIndexForPersonalPage", "MechanicAcceptances")">Tarixni ko'rish</a>
-                </li>
-            </ul>
-        </div>
+    <div class="container mt-5">    
         <div class="row justify-content-between align-items-center mb-4">
             <!-- Search -->
             <div class="col-md-4">
@@ -45,19 +21,19 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-8 d-flex justify-content-end align-items-center">
-                <div class="dropdown d-inline-block me-2">
-                    <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-download"></i> Yuklab olish
-                    </button>
-                    <div class="dropdown-menu p-3" id="dropdownMenu" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">
-                        <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
-                        <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
-                    </div>
-                </div>
-                <a class="btn btn-success" href="@Url.Action("CreateByButton", "MechanicAcceptances")">
+            <div class="col-md-8 d-flex justify-content-end align-items-center gap-2">
+                <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-download"></i> Yuklab olish
+                </button>
+                <div class="dropdown-menu p-3" id="dropdownMenu" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">
+                    <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
+                    <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
+                </div>                
+                <button id="openCreteMechanicAcceptancesModal" 
+                        class="btn btn-success"
+                        type="button">
                     <i class="fa fa-plus"></i> Yaratish
-                </a>
+                </button>
             </div>
         </div>
 
@@ -167,8 +143,132 @@
         </div>
     </div>
 </form>
+<!-- Modal oyna -->
+<div class="modal fade" id="createMechanicAcceptancesReviewModal" tabindex="-1" aria-labelledby="createReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h5 id="createMechanicAcceptancesReviewModalLabel">Ro'yxatga olish</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#openCreteMechanicAcceptancesModal').on('click', function () {
+                $('#modalContent').empty();
+                $.ajax({
+                    url: '/mechanicacceptances/createbybutton',
+                    type: 'GET',
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (data) {
+                        $('#modalContent').html(data);
+                        $('#createMechanicAcceptancesReviewModal').modal('show');
+                        var checkbox = document.getElementById('flexSwitchCheckDefault');
+                        var distanceGroup = document.getElementById('distanceGroup');
+                        var driverSelect = document.getElementById('driverSelect');
+                        var carSelect = document.getElementById('carSelect');
+                        var distanceInput = document.getElementById('distanceInput');
+                        var submitButton = document.getElementById('submitButton');  // Correct button ID
+                        var carIdInput = document.getElementById('carIdInput');
+                        var remainingFuelInput = document.getElementById('remainingFuelInput');
+                        var mileage = 0;
+
+                        function toggleDistanceInput() {
+                            if (checkbox.checked) {
+                                distanceGroup.style.display = "block";
+                            } else {
+                                distanceGroup.style.display = "none";
+                            }
+                        }
+
+                        checkbox.addEventListener('change', toggleDistanceInput);
+                        toggleDistanceInput();  // Initial check
+
+                        driverSelect.addEventListener('change', function () {
+                            var selectedOption = driverSelect.options[driverSelect.selectedIndex];
+                            var carId = selectedOption.getAttribute('data-carid');
+                            var carName = selectedOption.getAttribute('data-carname');
+                            mileage = parseInt(selectedOption.getAttribute('data-mileage')) || 0;
+
+                            if (carId) {
+                                fetch(`/MechanicAcceptances/GetCarDetails?carId=${carId}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        carIdInput.value = carId;
+                                        carSelect.innerHTML = `<option value="${carId}">${carName}</option>`;
+                                        distanceInput.value = mileage;
+                                        remainingFuelInput.value = data.remainingFuel;
+                                        validateDistance();
+                                    })
+                                    .catch(error => console.error('Error fetching car details:', error));
+                            } else {
+                                carSelect.innerHTML = '<option value="">Avtomobil tanlang</option>';
+                                distanceInput.value = '';
+                                remainingFuelInput.value = '';
+                            }
+                        });
+
+                        distanceInput.addEventListener('input', function () {
+                            validateDistance();
+                        });
+
+                        function validateDistance() {
+                            var distance = Number(distanceInput.value);
+                            if (distance < mileage) {
+                                distanceInput.classList.add('is-invalid');
+                                showValidationMessage(`Qabul qilish masofasi avtomobilning oxirgi kiritilgan masofasidan ${mileage} km kam bo'lishi mumkin emas!`);
+                                submitButton.disabled = true;  // Disable the correct button
+                            } else {
+                                distanceInput.classList.remove('is-invalid');
+                                clearValidationMessage();
+                                submitButton.disabled = false;  // Enable the correct button
+                            }
+                        }
+
+                        function showValidationMessage(message) {
+                            var errorSpan = document.querySelector('.distance-validation-message');
+                            if (!errorSpan) {
+                                errorSpan = document.createElement('span');
+                                errorSpan.className = 'distance-validation-message text-danger';
+                                distanceInput.parentNode.appendChild(errorSpan);
+                            }
+                            errorSpan.textContent = message;
+                        }
+
+                        function clearValidationMessage() {
+                            var errorSpan = document.querySelector('.distance-validation-message');
+                            if (errorSpan) {
+                                errorSpan.textContent = '';
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert("Ro'yhatga olish formani yuklashda xatolik yuz berdi.");
+                    }
+                });
+            });
+        });
+        $('#createMechanicAcceptancesReviewModal').on('hidden.bs.modal', function () {
+            $(this).find('#modalContent').empty(); // Modal yopilganda ichki kontentni tozalash
+        });
+    </script>
+}
 
 <style>
+    .modal-content {
+        width: 550px;
+    }
     .nav-tabs .nav-link.active {
         background-color: #007bff;
         color: white;

@@ -1,0 +1,175 @@
+﻿@model List<CheckDrive.Web.ViewModels.Debt.DebtViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-controller="Debts" asp-action="Index">
+    <div class="row mt-4">
+        <div class="d-flex justify-content-center mb-4">
+            <!-- Search -->
+            <div class="col-md-4 filter-bar position-relative">
+                <div class="position-relative w-100">
+                    <i class="fa-solid fa-magnifying-glass position-absolute top-50 start-0 translate-middle-y ms-3" style="color: dimgray;"></i>
+                    <ejs-textbox id="search-box"
+                                 name="search"
+                                 class="search-box ps-5"
+                                 placeholder="Qarzni izlash..."
+                                 floatLabelType="Never"
+                                 value="@ViewBag.SearchString"
+                                 input="searchAndFilter">
+                    </ejs-textbox>
+                </div>
+            </div>
+            <!-- Create -->
+            <div class="d-flex col-md justify-content-end create-btn">
+                <button id="openModalButton" class="btn btn-success" asp-action="create" type="button">
+                    <i class="fa fa-plus"></i> Yaratish
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-12">
+        <ejs-grid id="debts-list"
+                  allowPaging="true"
+                  dataSource="@Model"
+                  gridLines="Both"
+                  allowSorting="true">
+                  <e-grid-pagesettings pagesize="10"></e-grid-pagesettings>
+            <e-grid-columns>    
+                <e-grid-column headerText="Haydovchi" field="Driver" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
+                <e-grid-column headerText="Yoqilg'i turi" field="OilTypeText" textAlign=Center headerTextAlign=Center width="80"></e-grid-column>
+                <e-grid-column headerText="Qarz" field="DebtAmount" textAlign=Center headerTextAlign=Center width="40"></e-grid-column>
+                <e-grid-column headerText="Status" template="#statusColumnTemplate" textAlign=Center headerTextAlign=Center width="80"></e-grid-column>
+                <e-grid-column width="180" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
+            </e-grid-columns>
+        </ejs-grid>
+    </div>
+</div>
+
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h4 class="modal-title">Yangi ishchi ma'lumotini yaratish</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" data-target="#createModal">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="debtModalContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script id="statusColumnTemplate" type="text/x-template">
+    ${if(Status == 0)}
+        <span class="badge bg-success">To'langan</span>
+    ${else if(Status == 1)}
+        <span class="badge bg-danger">To'lanmagan</span>
+    ${/if} 
+</script>
+
+<script type="text/x-template" id="actionTemplate">
+    <button type="button" class="shadow-sm text-white  bg-success rounded e-btn e-flat mx-2">
+        <span>
+            Qarzni yopish
+        </span>
+    </button>
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#openModalButton').on('click', function () {
+            $('#debtModalContent').empty();
+            $.ajax({
+                url: '/debts/create',
+                type: 'GET',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (data) {
+                    $('#debtModalContent').html(data);
+                    $.getScript('/lib/jquery-validation/dist/jquery.validate.min.js', function () {
+                        $.getScript('/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js');
+                    });
+                    var modal = new bootstrap.Modal(document.getElementById('createModal'), {
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                    modal.show();
+
+                    var phoneTextbox = new ej.inputs.TextBox({
+                        value: "+998",
+                    });
+                    phoneTextbox.appendTo("#phoneNumberId");
+
+                },
+                error: function (error) {
+                    alert("Yaratish oynasini chiqarishda muommo buldi.");
+                }
+            });
+        });
+    });
+
+    $('#createModal').on('hidden.bs.modal', function () {
+        $(this).find('#debtModalContent').empty();
+        $(this).off('hidden.bs.modal');
+    });
+</script>
+
+<script>
+    function searchAndFilter() {
+        const searchInput = document.getElementById("search-box").value.trim();
+        const gridElement = document.getElementById("debts-list");
+        const gridInstance = gridElement?.ej2_instances?.[0];
+
+        if (!gridInstance) {
+            console.error("Grid instance not found.");
+            return;
+        }
+
+        if (searchInput) {
+            gridInstance.search(searchInput);
+        } else {
+            gridInstance.searchSettings.key = "";
+        }
+
+        gridInstance.refresh();
+    }
+</script>
+
+<style>
+    .input-group select {
+        height: 37px !important;
+        padding-left: 10px;
+        padding-top: 4px;
+    }
+
+    .e-input-group input {
+        height: 35px !important;
+    }
+
+    .position-relative .fa-magnifying-glass {
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    button {
+        height: 37px;
+    }
+
+    .e-filterbar {
+        display: none;
+    }
+
+    .e-pager .e-pagerexternalmsg {
+        display: none;
+    }
+</style>

@@ -36,30 +36,7 @@ namespace CheckDrive.Web.Controllers
             ViewBag.HasPreviousPage = response.HasPreviousPage;
             ViewBag.HasNextPage = response.HasNextPage;
 
-            var mechanicAcceptances = response.Data.Select(r => new
-            {
-                r.Id,
-                IsAccepted = (bool)r.IsAccepted ? "Qabul qilindi" : "Rad etildi",
-                r.Comments,
-                Status = ((StatusForDto)r.Status) switch
-                {
-                    StatusForDto.Pending => "Kutilmoqda",
-                    StatusForDto.Completed => "Yakunlangan",
-                    StatusForDto.Rejected => "Rad etilgan",
-                    StatusForDto.Unassigned => "Tayinlanmagan",
-                    StatusForDto.RejectedByDriver => "Haydovchi tomonidan rad etilgan",
-                    _ => "No`malum holat"
-                },
-                r.Date,
-                r.Distance,
-                r.DriverName,
-                r.MechanicName,
-                r.RemainingFuel,
-                r.CarName,
-                r.CarId
-            }).ToList();
-
-            ViewBag.MechanicAcceptances = mechanicAcceptances;
+            ViewBag.MechanicAcceptances = response.Data;
 
             return View();
         }
