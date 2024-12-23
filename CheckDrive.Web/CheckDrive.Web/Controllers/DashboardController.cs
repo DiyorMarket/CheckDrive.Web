@@ -2,6 +2,7 @@
 using CheckDrive.Web.Stores.Dashbord;
 using CheckDrive.Web.Stores.Debts;
 using CheckDrive.Web.Stores.MockDashboard;
+using CheckDrive.Web.Stores.SplineCharts;
 using CheckDrive.Web.ViewModels.Dashboard;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,16 +15,16 @@ namespace CheckDrive.Web.Controllers
         private readonly IDashboardStore _store;
         private readonly IAccountDataStore _accountDataStore;
         private readonly IMockDashboardStore _mockDashboardStore;
-        private readonly IDebtsStore _debtsStore;
+        private readonly ICheckPointStore _checkPointStore;
         public DashboardController(IDashboardStore store, 
             IAccountDataStore accountDataStore,
             IMockDashboardStore mockDashboardStore,
-            IDebtsStore debtsStore)
+            ICheckPointStore checkPointStore)
         {
             _store = store;
             _accountDataStore = accountDataStore;
             _mockDashboardStore = mockDashboardStore;
-            _debtsStore = debtsStore;
+            _checkPointStore = checkPointStore;
         }
 
         public async Task<IActionResult> Index()
@@ -47,10 +48,10 @@ namespace CheckDrive.Web.Controllers
             
             var dashboard = await _store.GetDashboard();
             var mockDashboard = await _mockDashboardStore.GetDashboard();
-            var debts = _debtsStore.GetAll("" , "");
+            var checkPoints = _checkPointStore.GetAll("");
 
 
-            dashboard.Debts=debts;
+            dashboard.CheckPoints = checkPoints;
             dashboard.OilAmount=mockDashboard.OilAmount;
 
             if (dashboard is null)
@@ -74,7 +75,7 @@ namespace CheckDrive.Web.Controllers
             ViewBag.EmployeesCountByRole = dashboard.EmployeesCountByRoles;
             ViewBag.SplineChartData = dashboard.SplineCharts;
             ViewBag.OilAmount=dashboard.OilAmount;
-            ViewBag.Debts = dashboard.Debts;
+            ViewBag.CheckPoint = dashboard.CheckPoints;
         }
     }
 }

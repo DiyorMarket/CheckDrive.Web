@@ -17,6 +17,7 @@ using CheckDrive.Web.Stores.OilMarks;
 using CheckDrive.Web.Stores.OperatorReviews;
 using CheckDrive.Web.Stores.Operators;
 using CheckDrive.Web.Stores.Roles;
+using CheckDrive.Web.Stores.SplineCharts;
 using CheckDrive.Web.Stores.Technicians;
 using CheckDrive.Web.Stores.User;
 
@@ -45,6 +46,7 @@ namespace CheckDrive.Web.Extensions
             services.AddScoped<IMockDashboardStore, MockDashboardStore>();
             services.AddScoped<IDebtsStore, DebtsStore>();
             services.AddScoped<IUserDataStore, UserDataStore>();
+            services.AddScoped<ICheckPointStore, CheckPointStore>();
 
             services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
