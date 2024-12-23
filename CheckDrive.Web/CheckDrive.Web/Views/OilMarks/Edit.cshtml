@@ -9,8 +9,8 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="">
-                <label asp-for="OilMark" class="control-label"></label>
-                <input asp-for="OilMark" class="form-control" />
+                <label asp-for="OilMark" class="control-label">Yo'qilg'i turi nomi</label>
+                <input asp-for="OilMark" class="form-control" required />
                 <span asp-validation-for="OilMark" class="text-danger"></span>
             </div>
             <div class="form-group mt-3 d-flex justify-content-center">

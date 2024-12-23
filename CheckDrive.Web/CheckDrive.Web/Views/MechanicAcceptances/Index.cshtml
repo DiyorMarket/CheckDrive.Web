@@ -6,86 +6,57 @@
 }
 
 <form asp-controller="MechanicAcceptances" asp-action="Index">
-    <div class="row">
-        <div class="d-flex justify-content-between">
-            <!-- Search -->
-            <div class="col-md-4 mb-4">
-                <div class="input-group">
-                    <input type="text" class="form-control rounded-left" placeholder="mexanik yoki haydovchini izlash..." name="searchString" value="@ViewBag.SearchString">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-search"></i> Qidirish
-                        </button>
-                    </div>
+    <div class="row mt-4">
+        <div class="d-flex justify-content-between mb-4">
+            <div class="col-md-4 filter-bar position-relative">
+                <div class="position-relative w-100">
+                    <i class="fa-solid fa-magnifying-glass position-absolute top-50 start-0 translate-middle-y ms-3" style="color: dimgray;"></i>
+                    <ejs-textbox id="search-box"
+                                 name="search"
+                                 class="search-box ps-5"
+                                 placeholder="Izlash..."
+                                 floatLabelType="Never"
+                                 value="@ViewBag.SearchString"
+                                 input="onChangeSearchAndDate">
+                    </ejs-textbox>
                 </div>
             </div>
-            <div class="col-md-4 mb-4 d-flex align-items-center">
-                <input type="date" name="date" class="form-control me-2">
-                <div class="dropdown">
+            <div class="col-md-4 date-filter">
+                <div class="d-flex gap-4">
+                    <ejs-datepicker id="date"
+                                    format="dd-MM-yyyy"
+                                    placeholder="Sanani tanlang"
+                                    floatLabelType="Never"
+                                    change="onChangeSearchAndDate">
+                    </ejs-datepicker>
                     <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-download"></i> Yuklab olish
                     </button>
-                    <div class="dropdown-menu p-3" id="dropdownMenu" aria-labelledby="dropdownMenuButton" data-bs-auto-close="outside">
-                        <ejs-calendar id="calendar" change="valueChange" Start="Year" Depth="Year"></ejs-calendar>
-                        <a class="dropdown-item mt-2 btn btn-info" href="#" id="downloadButton">Yuklash</a>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </form>
 
-<div class="tab-content" id="nav-tabContent">
-    <div class="tab-pane fade show active" id="nav-mechanicAcceptances" role="tabpanel" aria-labelledby="nav-mechanicAcceptances-tab">
-        <div class="row">
-            <div class="col-12">
-                <ejs-grid id="mechanicAcceptances-list" dataSource="@ViewBag.MechanicAcceptances" gridLines="Vertical" allowSorting="true" dataBound="onDataBound">
-                    <e-grid-columns>
-                        <e-grid-column headerText="Mexanik F.I.SH" field="MechanicName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
-                        <e-grid-column headerText="Haydovchi F.I.SH" field="DriverName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
-                        <e-grid-column headerText="Mashina" field="CarName" template="#carTemplate" type="string" textAlign=Center headerTextAlign=Center></e-grid-column>
-                        <e-grid-column headerText="Ro'yxatdan o'tgan vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" textAlign=Center headerTextAlign=Center></e-grid-column>
-                        <e-grid-column headerText="Status" field="Status" template="#statusColumnTemplate" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
-                        <e-grid-column width="100" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
-                    </e-grid-columns>
-                </ejs-grid>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="d-flex justify-content-between align-items-center my-3">
-    <nav aria-label="Page navigation">
-        <ul class="pagination">
-            @if (ViewBag.HasPreviousPage)
-            {
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = 1 })" aria-label="First">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage - 1 })">@(@ViewBag.CurrentPage - 1)</a>
-                </li>
-            }
-            @if (ViewBag.HasNextPage)
-            {
-                <li class="page-item active">
-                    <span class="page-link">@ViewBag.CurrentPage</span>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.CurrentPage + 1 })">@(@ViewBag.CurrentPage + 1)</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = ViewBag.PageCount })" aria-label="Last">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            }
-        </ul>
-    </nav>
-    <div class="p-2">
-        <p class="h6 mb-0">@ViewBag.PageCount sahifadan @ViewBag.CurrentPage tasi  ( umumiy mexaniklar qabul qilishlari soni: @ViewBag.TotalCount)</p>
+<div class="row">
+    <div class="col-12">
+        <ejs-grid 
+                id="mechanicAcceptances-list"
+                dataSource="@ViewBag.MechanicAcceptances"
+                gridLines="Both" 
+                allowSorting="true" 
+                allowPaging="true" 
+                dataBound="onDataBound">
+        <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+            <e-grid-columns>
+                <e-grid-column headerText="Mexanik" field="MechanicName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
+                <e-grid-column headerText="Haydovchi" field="DriverName" type="string" textAlign=Center headerTextAlign=Center width="200"></e-grid-column>
+                <e-grid-column headerText="Avtomobil" field="CarName" template="#carTemplate" type="string" textAlign=Center headerTextAlign=Center></e-grid-column>
+                <e-grid-column headerText="Ko'rik vaqt" field="Date" type="date" format="dd-MM-yyyy  |  HH:mm" textAlign=Center headerTextAlign=Center></e-grid-column>
+                <e-grid-column headerText="Status" field="Status" template="#statusColumnTemplate" textAlign=Center headerTextAlign=Center width="100"></e-grid-column>
+                <e-grid-column width="100" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
+            </e-grid-columns>
+        </ejs-grid>
     </div>
 </div>
 
@@ -235,7 +206,49 @@
     });
 </script>
 
+<script>
+    function onChangeSearchAndDate(args) {
+        const searchInput = document.getElementById("search-box").value.trim();
+        const gridElement = document.getElementById("mechanicAcceptances-list");
+        const gridInstance = gridElement?.ej2_instances?.[0];
+
+        if (!gridInstance) {
+            console.error("Grid instance not found.");
+            return;
+        }
+
+        if (searchInput) {
+            gridInstance.search(searchInput);
+        } else {
+            gridInstance.searchSettings.key = "";
+        }
+
+        gridInstance.refresh();
+    }
+</script>
+
 <style>
+    .e-input-group input {
+        height: 35px !important;
+    }
+
+    .search-box {
+        padding-left: 2rem;
+    }
+
+    .position-relative .fa-magnifying-glass {
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    button {
+        height: 37px;
+    }
+
+    .e-pager .e-pagerexternalmsg {
+        display: none;
+    }
+
     .modal-content {
         width: 90%;
     }
