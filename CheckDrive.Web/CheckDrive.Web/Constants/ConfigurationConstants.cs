@@ -1,7 +1,8 @@
 ﻿namespace CheckDrive.Web.Constants;
 
-public static class Configurations
+public static class ConfigurationConstants
 {
     public const string JwtToken = "JwtToken";
     public const string SynfusionLicenseKey = nameof(SynfusionLicenseKey);
+    public const string AuthorizationCookieHeader = "AuthToken";
 }
