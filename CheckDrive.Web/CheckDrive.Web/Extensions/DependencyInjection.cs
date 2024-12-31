@@ -1,8 +1,14 @@
-﻿using CheckDrive.Web.Constants;
+﻿using CheckDrive.Web.Configurations;
+using CheckDrive.Web.Constants;
 using CheckDrive.Web.Filters;
-using CheckDrive.Web.Service;
+using CheckDrive.Web.Helpers;
+using CheckDrive.Web.Services;
+using CheckDrive.Web.Services.CookieHandler;
+using CheckDrive.Web.Services.CurrentUserService;
 using CheckDrive.Web.Stores.Accounts;
+using CheckDrive.Web.Stores.Auth;
 using CheckDrive.Web.Stores.Cars;
+using CheckDrive.Web.Stores.CheckPoint;
 using CheckDrive.Web.Stores.Dashbord;
 using CheckDrive.Web.Stores.Debts;
 using CheckDrive.Web.Stores.DispatcherReviews;
@@ -19,7 +25,6 @@ using CheckDrive.Web.Stores.OilMarks;
 using CheckDrive.Web.Stores.OperatorReviews;
 using CheckDrive.Web.Stores.Operators;
 using CheckDrive.Web.Stores.Roles;
-using CheckDrive.Web.Stores.SplineCharts;
 using CheckDrive.Web.Stores.Technicians;
 using CheckDrive.Web.Stores.User;
 using Syncfusion.Licensing;
@@ -72,6 +77,7 @@ internal static class DependencyInjection
         services.AddScoped<IDebtsStore, DebtsStore>();
         services.AddScoped<IUserDataStore, UserDataStore>();
         services.AddScoped<ICheckPointStore, CheckPointStore>();
+        services.AddScoped<IAuthStore, AuthStore>();
     }
 
     private static void AddServices(IServiceCollection services)
@@ -80,18 +86,32 @@ internal static class DependencyInjection
 
         services.AddScoped<IMenuService, MenuService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<ICookieHandler, CookieHandler>();
+        services.AddTransient<AuthorizationHandler>();
     }
 
     private static void AddHttpClient(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient();
+        var settings = configuration
+            .GetSection(CheckDriveApiSettings.SectionName)
+            .Get<CheckDriveApiSettings>();
 
-        services.AddSingleton<ApiClient>();
+        if (settings is null)
+        {
+            throw new InvalidOperationException("Cannot setup API Client without configuration settings.");
+        }
+
+        services.AddHttpClient<CheckDriveApi>((client) =>
+        {
+            client.BaseAddress = new Uri(settings.BaseAddress);
+            client.Timeout = TimeSpan.FromSeconds(settings.TimeoutSeconds);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+        }).AddHttpMessageHandler<AuthorizationHandler>();
     }
 
     private static void RegisterLicenses(IConfiguration configuration)
     {
-        var key = configuration.GetValue<string>(Configurations.SynfusionLicenseKey);
+        var key = configuration.GetValue<string>(ConfigurationConstants.SynfusionLicenseKey);
 
         if (string.IsNullOrEmpty(key))
         {
