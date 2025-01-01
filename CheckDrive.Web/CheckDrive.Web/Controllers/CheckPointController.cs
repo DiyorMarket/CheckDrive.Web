@@ -1,4 +1,4 @@
-﻿using CheckDrive.Web.Stores.SplineCharts;
+﻿using CheckDrive.Web.Stores.CheckPoint;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
