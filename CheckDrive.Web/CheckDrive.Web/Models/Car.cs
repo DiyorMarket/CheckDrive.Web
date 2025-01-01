@@ -1,16 +1,31 @@
-﻿namespace CheckDrive.Web.Models
-{
-    public class Car
-    {
-        public int Id { get; set; }
-        public string Model { get; set; }
-        public string Color { get; set; }
-        public string Number { get; set; }
-        public double MeduimFuelConsumption { get; set; }
-        public double RemainingFuel { get; set; }
-        public double FuelTankCapacity { get; set; }
-        public int ManufacturedYear { get; set; }
+﻿using CheckDrive.Web.Models.Enums;
 
-        public virtual ICollection<MechanicHandover> MechanicHandovers { get; set; }
+namespace CheckDrive.Web.Models;
+
+public class Car
+{
+    public decimal AverageFuelConsumption { get; init; }
+    public decimal CurrentMonthFuelConsumption { get; init; }
+    public int CurrentMonthMileage { get; init; }
+    public decimal CurrentYearFuelConsumption { get; init; }
+    public int CurrentYearMileage { get; init; }
+    public decimal FuelCapacity { get; init; }
+    public int Id { get; init; }
+    public int ManufacturedYear { get; init; }
+    public int Mileage { get; init; }
+    public string Model { get; init; }
+    public int MonthlyDistanceLimit { get; init; }
+    public decimal MonthlyFuelConsumptionLimit { get; init; }
+    public string Number { get; init; }
+    public int? OilMarkId { get; init; }
+    public string? OilMarkName { get; init; }
+    public decimal RemainingFuel { get; init; }
+    public CarStatus Status { get; init; }
+    public int YearlyDistanceLimit { get; init; }
+    public decimal YearlyFuelConsumptionLimit { get; init; }
+
+    public override string ToString()
+    {
+        return $"{Model} ({Number})";
     }
 }
