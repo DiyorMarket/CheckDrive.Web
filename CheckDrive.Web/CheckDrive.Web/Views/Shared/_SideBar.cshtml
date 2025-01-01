@@ -1,5 +1,6 @@
 ﻿@using CheckDrive.Web.Stores.Menu;
 @using CheckDrive.Web.Stores.User
+@using CheckDrive.Web.Services.CurrentUserService;
 @inject ICurrentUserService currentUserService;
 @inject IMenuService menuService;
 
@@ -14,7 +15,7 @@
 
         <div class="app-logo logo-wrapper mb-5">
             <img src='~/Images/LogoCheakDrive.png' />
-        </div>    
+        </div>
         
         <ejs-menu id="menu"
                   items="menuItems"

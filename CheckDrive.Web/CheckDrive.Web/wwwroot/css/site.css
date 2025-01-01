@@ -31,6 +31,27 @@ body {
     background-color: #f6f6f6;
 }
 
+/* Ensure the parent container is relative */
+.position-relative {
+    position: relative;
+}
+
+/* Style the icon */
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px; /* Adjust as needed for proper spacing */
+    transform: translateY(-50%);
+    color: dimgray;
+    z-index: 1;
+    pointer-events: none; /* Ensures the icon does not interfere with clicks */
+}
+
+/* Add padding to the textbox to make room for the icon */
+.search-box {
+    padding-left: 35px !important; /* Ensure space for the icon */
+}
+
 .e-breadcrumb a, .e-breadcrumb a:hover {
     text-decoration: none !important;
     color: inherit !important;
@@ -41,13 +62,19 @@ body {
     box-shadow: none;
 }
 
+.w-60 {
+    width: 60%;
+}
+
+.w-40 {
+    width: 40%;
+}
+
 .filter-bar {
     display:flex;
-    margin-left:40px;
 }
 
 .create-btn{
-    margin-right:40px;
 }
 
 .date-filter{
@@ -60,8 +87,6 @@ body {
 }
 
 .e-grid {
-    margin-left:40px;
-    margin-right:40px;
     margin-top:10px;
     border: 0.5px solid #DBDFE3;
     border-radius: 10px;
@@ -230,11 +255,11 @@ nav.navbar {
 
 .app-logo img {
     text-align: center;
+    margin: auto;
     margin-bottom: 15px;
-    height:80px;
-    width:80px;
-    display:block;
-    margin: auto ;
+    height: 120px;
+    width: 120px;
+    display: block;
 }
 
 .e-menu-wrapper ul.e-menu .e-menu-item .e-menu-icon {
@@ -447,6 +472,7 @@ nav.navbar {
         -webkit-text-fill-color: transparent;
         font-size: 20px;
     }
+
 /* Open details pages in a popup modal */
 .grid-container .row {
     margin-left: 17px;
@@ -468,7 +494,7 @@ nav.navbar {
 .value .col {
     border-top: 0.1px solid #d9d9d9;
     border-right: 0.1px solid #d9d9d9;
-    padding: 14px;
+    padding: 12px;
     min-height: 45px;
     max-height: auto;
     font-size: 14px;

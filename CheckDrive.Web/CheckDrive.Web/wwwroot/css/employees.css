@@ -1,0 +1,26 @@
+﻿.input-group select {
+    height: 37px !important;
+    padding-left: 10px;
+    padding-top: 4px;
+}
+
+.e-input-group input {
+    height: 35px !important;
+}
+
+.position-relative .fa-magnifying-glass {
+    pointer-events: none;
+    z-index: 1;
+}
+
+button {
+    height: 37px;
+}
+
+.e-filterbar {
+    display: none;
+}
+
+.e-pager .e-pagerexternalmsg {
+    display: none;
+}

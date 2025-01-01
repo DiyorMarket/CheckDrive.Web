@@ -39,10 +39,15 @@ button.accept-policy {
   line-height: inherit;
 }
 
+.container {
+    max-width: 1520px;
+    margin: 0px;
+}
+
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
 }
