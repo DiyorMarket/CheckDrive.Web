@@ -1,5 +1,5 @@
-﻿using CheckDrive.Web.Enums;
-using CheckDrive.Web.Mappings;
+﻿using CheckDrive.Web.Mappings;
+using CheckDrive.Web.Models.Enums;
 using CheckDrive.Web.Requests.Employee;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.Employee;

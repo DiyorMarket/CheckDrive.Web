@@ -1,4 +1,4 @@
-﻿using CheckDrive.Web.Enums;
+﻿using CheckDrive.Web.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace CheckDrive.Web.Requests.Employee;

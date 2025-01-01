@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CheckDrive.Web.Enums;
+namespace CheckDrive.Web.Models.Enums;
 
 public enum EmployeePosition
 {
