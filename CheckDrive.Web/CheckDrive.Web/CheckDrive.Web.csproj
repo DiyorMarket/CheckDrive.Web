@@ -21,6 +21,7 @@
     <Compile Include="Controllers\DispatcherReviewsController.cs" />
     <Compile Include="Controllers\DoctorReviewsController.cs" />
     <Compile Include="Controllers\DriversController.cs" />
+    <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OilMarksController.cs" />
