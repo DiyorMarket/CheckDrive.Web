@@ -1,70 +1,45 @@
 ﻿using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
-using CheckDrive.Web.Service;
-using Newtonsoft.Json;
-using System.Text;
+using CheckDrive.Web.Services;
 
-namespace CheckDrive.Web.Stores.Operators
+namespace CheckDrive.Web.Stores.Operators;
+
+public class OperatorDataStore : IOperatorDataStore
 {
-    public class OperatorDataStore(ApiClient apiClient) : IOperatorDataStore
+    private readonly CheckDriveApi _apiClient;
+
+    public OperatorDataStore(CheckDriveApi apiClient)
     {
-        private readonly ApiClient _api = apiClient;
+        _apiClient = apiClient;
+    }
 
-        public async Task<GetOperatorResponse> GetOperators()
-        {
-            var response = await _api.GetAsync("operators?");
+    public Task<Operator> CreateOperator(Operator @operator)
+    {
+        throw new NotImplementedException();
+    }
 
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Could not fetch drivers.");
-            }
+    public Task DeleteOperator(int id)
+    {
+        throw new NotImplementedException();
+    }
 
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<GetOperatorResponse>(json);
+    public Task<Operator> GetOperator(int id)
+    {
+        throw new NotImplementedException();
+    }
 
-            return result;
-        }
+    public Task<GetOperatorResponse> GetOperators(int accountId)
+    {
+        throw new NotImplementedException();
+    }
 
-        public async Task<GetOperatorResponse> GetOperators(int accountId)
-        {
-            StringBuilder query = new("");
+    public Task<GetOperatorResponse> GetOperators()
+    {
+        throw new NotImplementedException();
+    }
 
-            if (!accountId.Equals(0))
-            {
-                query.Append($"accountId={accountId}");
-            }
-
-            var response = await _api.GetAsync("operators?" + query.ToString());
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Could not fetch operators.");
-            }
-
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<GetOperatorResponse>(json);
-
-            return result;
-        }
-
-        public Task<Operator> GetOperator(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Operator> CreateOperator(Operator @operator)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteOperator(int id)
-        {
-            throw new NotImplementedException();
-        }    
-
-        public Task<Operator> UpdateOperator(int id, Operator @operator)
-        {
-            throw new NotImplementedException();
-        }
+    public Task<Operator> UpdateOperator(int id, Operator @operator)
+    {
+        throw new NotImplementedException();
     }
 }

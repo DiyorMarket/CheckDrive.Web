@@ -3,7 +3,7 @@ using CheckDrive.Web.ViewModels.CheckPoint;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 
-namespace CheckDrive.Web.Stores.SplineCharts;
+namespace CheckDrive.Web.Stores.CheckPoint;
 
 public class CheckPointStore : ICheckPointStore
 {

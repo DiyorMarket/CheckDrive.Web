@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
-namespace CheckDrive.Web.Stores.SplineCharts
+namespace CheckDrive.Web.Stores.CheckPoint
 {
     public interface ICheckPointStore
     {

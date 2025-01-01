@@ -1,9 +1,8 @@
 ﻿using CheckDrive.Web.ViewModels.Dashboard;
 
-namespace CheckDrive.Web.Stores.Dashbord
+namespace CheckDrive.Web.Stores.Dashbord;
+
+public interface IDashboardStore
 {
-    public interface IDashboardStore
-    {
-        public Task<DashboardViewModel?> GetDashboard();
-    }
+    public Task<DashboardViewModel> GetDashboardAsync();
 }

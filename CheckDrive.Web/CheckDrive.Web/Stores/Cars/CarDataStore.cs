@@ -1,155 +1,64 @@
 ﻿using CheckDrive.ApiContracts.Car;
 using CheckDrive.Web.Models;
 using CheckDrive.Web.Responses;
-using CheckDrive.Web.Service;
-using Newtonsoft.Json;
-using System.Text;
+using CheckDrive.Web.Services;
 
-namespace CheckDrive.Web.Stores.Cars
+namespace CheckDrive.Web.Stores.Cars;
+
+public class CarDataStore : ICarDataStore
 {
-    public class CarDataStore : ICarDataStore
+    private readonly CheckDriveApi _apiClient;
+
+    public CarDataStore(CheckDriveApi apiClient)
     {
-        private readonly ApiClient _api;
+        _apiClient = apiClient;
+    }
 
-        public CarDataStore(ApiClient apiClient)
-        {
-            _api = apiClient;
-        }
+    public Task<List<Car>> GetAsync()
+        => _apiClient.GetAsync<List<Car>>("cars");
 
-        public async Task<GetCarResponse> GetCarsAsync(string? searchString,int? pageNumber)
-        {
-            StringBuilder query = new("");
+    public Task<CarDto> CreateCarAsync(CarForCreateDto carForCreate)
+    {
+        throw new NotImplementedException();
+    }
 
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                query.Append($"searchString={searchString}&");
-            }
-            if (pageNumber != null)
-            {
-                query.Append($"pageNumber={pageNumber}");
-            }
+    public Task DeleteCarAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
 
-            var response = await _api.GetAsync("cars?" + query.ToString());
+    public Task<CarDto> GetCarAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
 
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Could not fetch cars.");
-            }
+    public Task<GetCarResponse> GetCarsAsync(string? searchString, int? pageNumber)
+    {
+        throw new NotImplementedException();
+    }
 
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<GetCarResponse>(json);
+    public Task<GetCarResponse> GetCarsAsync(int? roleId, bool? isBusy)
+    {
+        throw new NotImplementedException();
+    }
 
-            return result;
-        }
+    public Task<GetCarHistoryResponse> GetCarsHistoryAsync(string? searchString, int? pageNumber, int? year, int? month)
+    {
+        throw new NotImplementedException();
+    }
 
-        public async Task<GetCarResponse> GetCarsAsync(int? roleId, bool? isBusy)
-        {
-            StringBuilder query = new("");
+    public Task<CarDto> UpdateCarAsync(int id, CarForUpdateDto car)
+    {
+        throw new NotImplementedException();
+    }
 
-            if (roleId != 0)
-                query.Append($"roleId={roleId}&");
+    public Task<DTOs.Car.CarDto> CreateCarAsync(DTOs.Car.CarForCreateDto carForCreate)
+    {
+        throw new NotImplementedException();
+    }
 
-            if (isBusy is not null)
-                query.Append($"isBusy={isBusy}&");
-
-            var response = await _api.GetAsync("cars?" + query.ToString());
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Could not fetch cars.");
-            }
-
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<GetCarResponse>(json);
-
-            return result;
-        }
-
-        public async Task<CarDto> GetCarAsync(int id)
-        {
-            var response = await _api.GetAsync($"cars/{id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"Could not fetch car with id: {id}.");
-            }
-
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<CarDto>(json);
-
-            return result;
-        }
-
-        public async Task<GetCarHistoryResponse> GetCarsHistoryAsync(string? searchString, int? pageNumber, int? year, int? month)
-        {
-            StringBuilder query = new("");
-
-            if (year != null)
-                query.Append($"year={year}&");
-
-            if (month != null)
-                query.Append($"month={month}&");
-
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                query.Append($"searchString={searchString}&");
-            }
-            if (pageNumber != null)
-            {
-                query.Append($"pageNumber={pageNumber}");
-            }
-
-            var response = await _api.GetAsync("cars/driverHistories?" + query.ToString());
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Could not fetch carsHistory.");
-            }
-
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<GetCarHistoryResponse>(json);
-
-            return result;
-        }
-
-        public async Task<CarDto> CreateCarAsync(CarForCreateDto carForCreate)
-        {
-            var json = JsonConvert.SerializeObject(carForCreate);
-            var response = await _api.PostAsync("cars", json);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Error creating cars.");
-            }
-
-            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
-            return JsonConvert.DeserializeObject<CarDto>(jsonResponse);
-        }
-
-        public async Task<CarDto> UpdateCarAsync(int id, CarForUpdateDto car)
-        {
-            var json = JsonConvert.SerializeObject(car);
-            var response = await _api.PutAsync($"cars/{car.Id}", json);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Error updating cars.");
-            }
-
-            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
-            return JsonConvert.DeserializeObject<CarDto>(jsonResponse);
-        }
-
-        public async Task DeleteCarAsync(int id)
-        {
-            var response = await _api.DeleteAsync($"cars/{id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"Could not delete car with id: {id}.");
-            }
-        }
+    public Task<DTOs.Car.CarDto> UpdateCarAsync(int id, DTOs.Car.CarForUpdateDto car)
+    {
+        throw new NotImplementedException();
     }
 }

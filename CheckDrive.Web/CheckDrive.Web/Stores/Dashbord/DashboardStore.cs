@@ -1,27 +1,21 @@
-﻿using CheckDrive.Web.Service;
+﻿using CheckDrive.Web.Services;
 using CheckDrive.Web.ViewModels.Dashboard;
-using Newtonsoft.Json;
 
-namespace CheckDrive.Web.Stores.Dashbord
+namespace CheckDrive.Web.Stores.Dashbord;
+
+public class DashboardStore : IDashboardStore
 {
-    public class DashboardStore : IDashboardStore
-    {
-        private readonly ApiClient _client;
-        public DashboardStore(ApiClient client)
-        {
-            _client = client;
-        }
-        public async Task<DashboardViewModel?> GetDashboard()
-        {
-            var response = await _client.GetAsync("Dashboard");
+    private readonly CheckDriveApi _apiClient;
 
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Error occured while fetching dashboard data.");
-            }
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<DashboardViewModel>(json);
-            return result;
-        }
+    public DashboardStore(CheckDriveApi apiClient)
+    {
+        _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
+    }
+
+    public async Task<DashboardViewModel> GetDashboardAsync()
+    {
+        var result = await _apiClient.GetAsync<DashboardViewModel>("Dashboard");
+
+        return result;
     }
 }
