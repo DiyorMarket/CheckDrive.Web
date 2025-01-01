@@ -16,6 +16,7 @@ using CheckDrive.Web.Stores.Dispatchers;
 using CheckDrive.Web.Stores.DoctorReviews;
 using CheckDrive.Web.Stores.Doctors;
 using CheckDrive.Web.Stores.Drivers;
+using CheckDrive.Web.Stores.Employee;
 using CheckDrive.Web.Stores.MechanicAcceptances;
 using CheckDrive.Web.Stores.MechanicHandovers;
 using CheckDrive.Web.Stores.Mechanics;
@@ -78,6 +79,7 @@ internal static class DependencyInjection
         services.AddScoped<IUserDataStore, UserDataStore>();
         services.AddScoped<ICheckPointStore, CheckPointStore>();
         services.AddScoped<IAuthStore, AuthStore>();
+        services.AddScoped<IEmployeeStore, EmployeeStore>();
     }
 
     private static void AddServices(IServiceCollection services)
