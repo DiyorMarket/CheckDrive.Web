@@ -1,0 +1,92 @@
+﻿@using CheckDrive.Web.Requests.Employee
+@model UpdateEmployeeRequest
+
+@{
+    ViewData["Title"] = "Edit";    
+    Layout = "~/Views/Shared/_LayoutForModal.cshtml";
+}
+
+@section Scripts {
+    <script src="~/js/employees/create.js"></script>
+}
+
+<form id="create-employee-form" method="post" asp-action="Edit" asp-controller="Employees">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input asp-for="AccountId" value="@Model.AccountId" hidden />
+    <div class="row gap-1 ms-4 mb-4">
+        <div class="col-md">
+            <label asp-for="FirstName" class="control-label">Ism</label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="col-md">
+            <label asp-for="LastName" class="control-label">Familiya</label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="col-md">
+            <label asp-for="Patronymic" class="control-label">Sharf</label>
+            <input asp-for="Patronymic" class="form-control" />
+            <span asp-validation-for="Patronymic" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row gap-1 ms-4 mb-4">
+        <div class="col-md">
+            <label asp-for="Passport" class="control-label">Pasport</label>
+            <input asp-for="Passport" class="form-control" />
+            <span asp-validation-for="Passport" class="text-danger"></span>
+        </div>
+        <div class="col-md">
+            <label asp-for="Birthdate" class="control-label">Tug'ilgan sana</label>
+            <ejs-datepicker id="birdate-input"
+                            class="background"
+                            format="MM/dd/yyyy"
+                            ejs-for="Birthdate"></ejs-datepicker>
+            <span asp-validation-for="Birthdate" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row gap-1 ms-4 mb-4">
+        <div class="col-md">
+            <label asp-for="Position" class=" control-label">Kasb</label>
+            <select id="position-select" class="form-select form-control border" name="position" asp-for="Position" asp-items="@ViewBag.Positions" onchange="onPositionChange()"></select>
+            <span asp-validation-for="Position" class="text-danger"></span>
+        </div>
+        <div class="col-md">
+            <label asp-for="PositionDescription" class="control-label">Kasb tavsili</label>
+            <input class="form-control" asp-for="PositionDescription" />
+            <span asp-validation-for="PositionDescription" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row gap-1 ms-4 mb-4">
+        <div class="col-md">
+            <label asp-for="PhoneNumber" class="control-label">Telefon raqam</label>
+            <input id="phoneNumberId" class="form-control" asp-for="PhoneNumber" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="col-md">
+            <label asp-for="Email" class="control-label">Elektron pochta</label>
+            <input id="phoneNumberId" class="form-control" asp-for="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row gap-1 ms-4 mb-4">
+        <div class="col-md">
+            <label asp-for="UserName" class="control-label">Foydalanuvchi ismi</label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <div class="col-md">
+            <label asp-for="AssignedCarId" class="control-label">Avtomobil</label>
+            <select id="assigned-car-select" class="form-select form-control border" name="AssignedCarId" asp-for="AssignedCarId" asp-items="@ViewBag.Cars"></select>
+            <span asp-validation-for="AssignedCarId" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center mb-3 mt-5">
+        <div class="d-grid w-50">
+            <button type="submit" id="saveButton" class="btn btn-success mr-auto" style="font-size: 14px;">
+                Saqlash
+            </button>
+        </div>
+    </div>
+</form>
