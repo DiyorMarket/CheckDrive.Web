@@ -92,6 +92,15 @@ function onDetailsClick(id) {
     });
 }
 
+function onToolbarClick(args) {
+    let grid = document.getElementById('employees-list').ej2_instances[0];
+    if (args.item.id === 'employees-list_pdfexport') {
+        grid.pdfExport();
+    } else if (args.item.id === 'employees-list_excelexport') {
+        grid.excelExport();
+    }
+}
+
 $('#detailsModal').on('hidden.bs.modal', function () {
     $(this).find('#detailsContent').empty();
 });
@@ -135,3 +144,80 @@ $('#createModal').on('hidden.bs.modal', function () {
     $(this).find('#accountModalContent').empty();
     $(this).off('hidden.bs.modal');
 });
+
+function exportToPdf() {
+    let grid = document.getElementById('employees-list').ej2_instances[0];
+    grid.pdfExport({
+        includeHiddenColumn: true,
+        fileName: 'xodimlar.pdf',
+        theme: {
+            header: {
+                fontName: 'Arial',
+                fontSize: 14,
+                size: 16,
+                bold: true,
+                italic: false,
+                color: '#FFFFFF',
+                background: '#4CAF50' // Header background color
+            },
+            record: {
+                fontName: 'Arial',
+                fontSize: 12,
+                size: 14,
+                color: '#000000'
+            },
+            caption: {
+                fontName: 'Arial',
+                fontSize: 12,
+                size: 14,
+                bold: true,
+                color: '#333333',
+                background: '#f8f8f8'
+            }
+        },
+        header: {
+            fromTop: 0,
+            height: 130,
+            contents: [
+                {
+                    width: 100,
+                    height: 50,
+                    type: 'Text',
+                    value: 'ATP Garaj xodimlari',
+                    position: { x: 250, y: 50 },
+                    style: { textBrushColor: '#3d3d3d', fontSize: 24, bold: true }
+                },
+                {
+                    type: 'Text',
+                    value: new Date().toLocaleDateString(),
+                    position: { x: 600, y: 100 },
+                    style: { textBrushColor: '#1f1f1f', fontSize: 16 }
+                }
+            ]
+        },
+        footer: {
+            fromBottom: 0,
+            height: 40,
+            contents: [
+                {
+                    type: 'Text',
+                    value: '© 2025 Silk Route Connect',
+                    position: { x: 250, y: 20 },
+                    style: { textBrushColor: '#333333', fontSize: 12 }
+                }
+            ]
+        },
+        columns: grid.getColumns().filter(col => col.field !== null && col.field !== undefined)
+    });
+
+    grid.addEventListener('pdfQueryCellInfo', function (args) {
+        if (args.cell) {
+            args.style = {
+                padding: { top: 5, right: 10, bottom: 5, left: 10 }
+            };
+        }
+    });
+}
+
+function exportToExcel() {
+}

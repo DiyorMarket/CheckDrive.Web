@@ -41,6 +41,8 @@
                 </div>
             </div>
             <div class="d-flex col-md justify-content-end create-btn">
+                <button class="btn btn-primary" onclick="exportToPdf()">Export to PDF</button>
+                <button class="btn btn-success" onclick="exportToExcel()">Export to Excel</button>
                 <button id="openModalButton" class="btn btn-success open-modal" type="button" style="width: 15%">
                     <i class="fa fa-plus"></i> Yangi
                 </button>
@@ -55,14 +57,17 @@
                       gridLines="Both"
                       allowSorting="true"
                       allowPaging="true"
-                      allowFiltering="true">
+                      allowFiltering="true"
+                      allowPdfExport="true"
+                      allowExcelExport="true"
+                      toolbarClick="onToolbarClick">
                 <e-grid-selectionsettings mode="Row" type="Single"></e-grid-selectionsettings>
                 <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
                 <e-grid-columns>
-                    <e-grid-column field="AccountId" headerText="Account ID" textAlign="Center" headerTextAlign="Center"></e-grid-column>
                     <e-grid-column headerText="Ism" field="FirstName" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
                     <e-grid-column headerText="Familiya" field="LastName" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
                     <e-grid-column headerText="Sharfi" field="Patronymic" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
+                    <e-grid-column headerText="Passport" field="Passport" textAlign="Center" headerTextAlign="Center"></e-grid-column>
                     <e-grid-column headerText="Telefon raqam" field="PhoneNumber" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
                     <e-grid-column headerText="Kasb" field="FormattedPosition" textAlign="Center" headerTextAlign="Center" typeof="text"></e-grid-column>
                     <e-grid-column width="180" type="text" textAlign="Center" template="#actionTemplate"></e-grid-column>
