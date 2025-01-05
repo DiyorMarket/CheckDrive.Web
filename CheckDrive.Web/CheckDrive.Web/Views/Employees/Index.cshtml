@@ -2,7 +2,7 @@
 @model List<EmployeeViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Ishchilar";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -40,10 +40,23 @@
                     </ejs-combobox>
                 </div>
             </div>
-            <div class="d-flex col-md justify-content-end create-btn">
-                <button class="btn btn-primary" onclick="exportToPdf()">Export to PDF</button>
-                <button class="btn btn-success" onclick="exportToExcel()">Export to Excel</button>
-                <button id="openModalButton" class="btn btn-success open-modal" type="button" style="width: 15%">
+            <div class="d-flex gap-3 col-md justify-content-end">
+                <div>
+                    <button id="download-dropdown-button" class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-download"></i> Yuklash
+                    </button>
+                    <div id="dropdown-menu" class="dropdown-menu" aria-labelledby="download-dropdown-button" data-bs-auto-close="outside">
+                        <button class="dropdown-item btn btn-info" onclick="exportToPdf()">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            PDF
+                        </button>
+                        <button class="dropdown-item btn btn-info" onclick="exportToExcel()">
+                            <i class="fa-solid fa-file-csv"></i>
+                            CSV
+                        </button>
+                    </div>
+                </div>
+                <button id="create-button" class="btn btn-success open-modal" type="button" style="width: 15%">
                     <i class="fa fa-plus"></i> Yangi
                 </button>
             </div>
