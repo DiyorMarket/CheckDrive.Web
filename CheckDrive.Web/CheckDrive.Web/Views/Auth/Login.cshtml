@@ -1,4 +1,4 @@
-﻿@model CheckDrive.ApiContracts.Account.AccountForLoginDto
+﻿@model CheckDrive.Web.Requests.Auth.LoginRequest;
 
 @{
     ViewData["Title"] = "Index";
@@ -106,10 +106,10 @@
     <div class="card">
         <img src="~/images/LogoCheakDrive.png" class="logo" alt="logo">
         <h4 class="card-title">Akkauntingizni kiriting</h4>
-        <form asp-action="Index" method="post">
+        <form asp-action="Login" method="post">
             <div class="form-outline">
-                <input type="text" asp-for="Login" id="login" class="form-control" placeholder="Login" />
-                @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
+                <input type="text" asp-for="UserName" id="login" class="form-control" placeholder="Login" />
+                @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
             </div>
             <div class="form-outline">
                 <div class="input-group">

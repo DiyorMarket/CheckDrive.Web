@@ -1,10 +1,9 @@
-﻿namespace CheckDrive.Web.Services.CookieHandler;
+﻿using CheckDrive.Web.Constants;
 
-public sealed class CookieHandler : ICookieHandler
+namespace CheckDrive.Web.Services.CookieHandler;
+
+public sealed class CookieHandler(IHttpContextAccessor httpContextAccessor) : ICookieHandler
 {
-    private const string AccessTokenHeader = "access_token";
-    private const string RefreshTokenHeader = "refresh_token";
-
     private static readonly CookieOptions cookieOptions = new()
     {
         HttpOnly = true,
@@ -12,11 +11,19 @@ public sealed class CookieHandler : ICookieHandler
         SameSite = SameSiteMode.Strict,
     };
 
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public CookieHandler(IHttpContextAccessor httpContextAccessor)
+    public (string? AccessToken, string? RefreshToken) GetTokens()
     {
-        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+        var cookies = httpContextAccessor.HttpContext?.Request?.Cookies;
+
+        if (cookies is null)
+        {
+            return (string.Empty, string.Empty);
+        }
+
+        var accessToken = cookies[HeaderConstants.AccessTokenHeader];
+        var refreshToken = cookies[HeaderConstants.RefreshTokenHeader];
+
+        return (accessToken, refreshToken);
     }
 
     public void UpdateTokens(string accessToken, string refreshToken)
@@ -24,42 +31,27 @@ public sealed class CookieHandler : ICookieHandler
         ArgumentException.ThrowIfNullOrEmpty(accessToken);
         ArgumentException.ThrowIfNullOrEmpty(refreshToken);
 
-        var cookies = _httpContextAccessor.HttpContext?.Response?.Cookies;
+        var cookies = httpContextAccessor.HttpContext?.Response?.Cookies;
 
         if (cookies is null)
         {
             return;
         }
 
-        cookies.Append(AccessTokenHeader, accessToken, cookieOptions);
-        cookies.Append(RefreshTokenHeader, refreshToken, cookieOptions);
+        cookies.Append(HeaderConstants.AccessTokenHeader, accessToken, cookieOptions);
+        cookies.Append(HeaderConstants.RefreshTokenHeader, refreshToken, cookieOptions);
     }
 
     public void ClearTokens()
     {
-        var cookies = _httpContextAccessor.HttpContext?.Response?.Cookies;
+        var cookies = httpContextAccessor.HttpContext?.Response?.Cookies;
 
         if (cookies is null)
         {
             return;
         }
 
-        cookies.Delete(AccessTokenHeader);
-        cookies.Delete(RefreshTokenHeader);
-    }
-
-    public (string? AccessToken, string? RefreshToken) GetTokens()
-    {
-        var cookies = _httpContextAccessor.HttpContext?.Request?.Cookies;
-
-        if (cookies is null)
-        {
-            return (string.Empty, string.Empty);
-        }
-
-        var accessToken = cookies[AccessTokenHeader];
-        var refreshToken = cookies[RefreshTokenHeader];
-
-        return (accessToken, refreshToken);
+        cookies.Delete(HeaderConstants.AccessTokenHeader);
+        cookies.Delete(HeaderConstants.RefreshTokenHeader);
     }
 }
