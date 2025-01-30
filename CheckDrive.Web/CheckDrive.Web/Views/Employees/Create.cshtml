@@ -6,10 +6,6 @@
     Layout = "~/Views/Shared/_LayoutForModal.cshtml";
 }
 
-@section Scripts {
-    <script src="~/js/employees/create.js"></script>
-}
-
 <form id="create-employee-form" method="post" asp-action="Create" asp-controller="Employees">
     @Html.AntiForgeryToken()
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>

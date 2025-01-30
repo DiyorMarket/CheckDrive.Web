@@ -1,14 +1,16 @@
-﻿@model CheckDrive.ApiContracts.Car.CarDto
+﻿@using CheckDrive.Web.Requests.Cars
+@model UpdateCarRequest
 
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_LayoutForModal.cshtml";
 }
-<form asp-action="edit" method="post" id="editCarForm" onsubmit="return validateForm()">
+<form asp-action="edit" method="post" id="editCarForm" onsubmit="validateForm()">
     @Html.AntiForgeryToken()
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input asp-for="Id" value="@Model.Id" hidden />
     <div class="row">
-        <div class=" col-md-6 mb-3">
+        <div class="col-md-6 mb-3">
             <label asp-for="Model" class="control-label">Model</label>
             <input asp-for="Model" class="form-control" />
             <span asp-validation-for="Model" class="text-danger"></span>
@@ -17,11 +19,6 @@
             <label asp-for="Number" class="control-label">Davlat raqami</label>
             <input asp-for="Number" class="form-control" />
             <span asp-validation-for="Number" class="text-danger"></span>
-        </div>
-        <div class="col-md-6 mb-3">
-            <label asp-for="Color" class="control-label">Rangi</label>
-            <input asp-for="Color" class="form-control" />
-            <span asp-validation-for="Color" class="text-danger"></span>
         </div>
         <div class="col-md-6 mb-3">
             <label asp-for="ManufacturedYear" class="control-label">Ishlab chiqarilgan yili</label>
@@ -34,14 +31,19 @@
             <span asp-validation-for="Mileage" class="text-danger"></span>
         </div>
         <div class="col-md-6 mb-3">
-            <label asp-for="FuelTankCapacity" class="control-label">Yoqilg'i baki sig'imi</label>
-            <input asp-for="FuelTankCapacity" class="form-control" id="fuelTankCapacity" />
-            <span asp-validation-for="FuelTankCapacity" class="text-danger"></span>
+            <label asp-for="OilMarkId" class=" control-label">Yoqilg'i turi</label>
+            <select id="oil-mark-select" class="form-select form-control border" name="OilMarkId" asp-for="OilMarkId" asp-items="@ViewBag.OilMarks"></select>
+            <span asp-validation-for="OilMarkId" class="text-danger"></span>
         </div>
         <div class="col-md-6 mb-3">
-            <label asp-for="MeduimFuelConsumption" class="control-label">100 km uchun yoqilg'i me'yori [litr]</label>
-            <input asp-for="MeduimFuelConsumption" class="form-control" id="meduimFuelConsumption" />
-            <span asp-validation-for="MeduimFuelConsumption" class="text-danger"></span>
+            <label asp-for="FuelCapacity" class="control-label">Yoqilg'i baki sig'imi</label>
+            <input asp-for="FuelCapacity" class="form-control" id="fuelTankCapacity" />
+            <span asp-validation-for="FuelCapacity" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="AverageFuelConsumption" class="control-label">100 km uchun yoqilg'i me'yori [litr]</label>
+            <input asp-for="AverageFuelConsumption" class="form-control" id="meduimFuelConsumption" />
+            <span asp-validation-for="AverageFuelConsumption" class="text-danger"></span>
         </div>
         <div class="col-md-6 mb-3">
             <label asp-for="RemainingFuel" class="control-label">Avtomobildagi yoqilg'i qoldig'i [litr]</label>
@@ -49,21 +51,22 @@
             <span asp-validation-for="RemainingFuel" class="text-danger"></span>
         </div>
         <div class="col-md-6 mb-3">
-            <label asp-for="OneYearMediumDistance" class="control-label">1 yillik bosib o'tish me'yori [km]</label>
-            <input asp-for="OneYearMediumDistance" class="form-control" id="oneYearMediumDistance" oninput="calculateMonthlyDistance()" />
-            <span asp-validation-for="OneYearMediumDistance" class="text-danger"></span>
+            <label asp-for="YearlyDistanceLimit" class="control-label">1 yillik bosib o'tish me'yori [km]</label>
+            <input asp-for="YearlyDistanceLimit" class="form-control" id="oneYearMediumDistance" oninput="calculateMonthlyDistance()" />
+            <span asp-validation-for="YearlyDistanceLimit" class="text-danger"></span>
         </div>
         <div class="col-md-6 mb-3">
-            <label for="monthlyDistance" class="control-label">1 oylik bosib o'tish me'yori [km]</label>
-            <input type="text" id="monthlyDistance" class="form-control" readonly />
+            <label asp-for="MonthlyDistanceLimit" class="control-label">1 oylik bosib o'tish me'yori [km]</label>
+            <input asp-for="MonthlyDistanceLimit" type="text" id="monthlyDistance" class="form-control" readonly />
+            <span asp-validation-for="MonthlyDistanceLimit" class="text-danger"></span>
         </div>
         <div class="col-md-6 mb-3">
-            <label for="yearlyMediumFuel" class="control-label">1 yillik yoqilg'i me'yori [litr]</label>
-            <input type="text" id="yearlyMediumFuel" class="form-control" readonly />
+            <label asp-for="YearlyFuelConsumptionLimit" class="control-label">1 yillik yoqilg'i me'yori [litr]</label>
+            <input asp-for="YearlyFuelConsumptionLimit" type="text" id="yearlyMediumFuel" class="form-control" readonly />
         </div>
         <div class="col-md-6 mb-3">
-            <label for="monthlyMediumFuel" class="control-label">1 oylik yoqilg'i me'yori [litr]</label>
-            <input type="text" id="monthlyMediumFuel" class="form-control" readonly />
+            <label asp-for="MonthlyFuelConsumptionLimit" class="control-label">1 oylik yoqilg'i me'yori [litr]</label>
+            <input asp-for="MonthlyFuelConsumptionLimit" type="text" id="monthlyMediumFuel" class="form-control" readonly />
         </div>
     </div>
     <div class="modal-footer d-flex justify-content-center ">
@@ -72,57 +75,4 @@
         </button>
     </div>
 </form>
-
-@section Scripts {
-    <script>
-        function validateForm() {
-            var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
-            var remainingFuel = document.getElementById("remainingFuel").value;
-
-            if (parseFloat(remainingFuel) > parseFloat(fuelTankCapacity)) {
-                alert("Avtomobil yoqilg'i qoldig'i yoqilg'i baki sig'imidan katta bo'lmaydi.");
-                return false;
-            }
-            return true;
-        }
-
-        function validateRemainingFuel() {
-            var fuelTankCapacity = document.getElementById("fuelTankCapacity").value;
-            var remainingFuel = document.getElementById("remainingFuel").value;
-
-            if (fuelTankCapacity === "") {
-                alert("Siz avval 'Yoqilg'i baki sig'imi' ga qiymat kiritishingiz kerak");
-                document.getElementById("remainingFuel").value = "";
-                return false;
-            }
-
-            if (parseFloat(remainingFuel) > parseFloat(fuelTankCapacity)) {
-                alert("Avtomobil yoqilg'i qoldig'i yoqilg'i baki sig'imidan katta bo'lmaydi.");
-                return false;
-            }
-            return true;
-        }
-
-        function calculateMonthlyDistance() {
-            var oneYearMediumDistance = document.getElementById("oneYearMediumDistance").value;
-            var meduimFuelConsumption = document.getElementById("meduimFuelConsumption").value;
-
-            if (meduimFuelConsumption === "") {
-                alert("Siz avval '100 km uchun yoqilg'i me'yori [litr]' ga qiymat kiritishingiz kerak");
-                document.getElementById("oneYearMediumDistance").value = "";
-                return;
-            }
-
-            var monthlyDistance = oneYearMediumDistance / 12;
-            document.getElementById("monthlyDistance").value = monthlyDistance.toFixed(1);
-
-            var yearlyMediumFuel = oneYearMediumDistance * (meduimFuelConsumption / 100);
-            document.getElementById("yearlyMediumFuel").value = yearlyMediumFuel.toFixed(1);
-
-            var monthlyMediumFuel = yearlyMediumFuel / 12;
-            document.getElementById("monthlyMediumFuel").value = monthlyMediumFuel.toFixed(1);
-        }
-    </script>
-}
-
 

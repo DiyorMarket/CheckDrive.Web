@@ -28,9 +28,23 @@
     gridInstance.refresh();
 }
 
+function onPositionChange() {
+    const positionSelect = document.getElementById("position-select");
+    const assignedCarSelect = document.getElementById("assigned-car-select");
+
+    const selectedPosition = positionSelect.value;
+
+    if (selectedPosition === "Driver") {
+        assignedCarSelect.disabled = false;
+    } else {
+        assignedCarSelect.disabled = true;
+        assignedCarSelect.value = "";
+    }
+}
+
 function onEditClick(id) {
-    console.log(id);
     $('#accountEditModalContent').empty();
+
     $.ajax({
         url: `/employees/edit/${id}`,
         type: 'GET',
@@ -77,7 +91,6 @@ function onDetailsClick(id) {
         type: 'GET',
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
         success: function (data) {
-            console.log(data);
             $('#detailsContent').html(data);
             var detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'), {
                 backdrop: 'static',
@@ -86,7 +99,6 @@ function onDetailsClick(id) {
             detailsModal.show();
         },
         error: function (error) {
-            console.log(error);
             alert("Ma'lumotlarni yuklashda muammo yuz berdi.");
         }
     });
