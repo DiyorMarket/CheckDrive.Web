@@ -1,4 +1,4 @@
-﻿using CheckDrive.Web.Stores.Dashbord;
+﻿using CheckDrive.Web.Stores.Dashboard;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers;
