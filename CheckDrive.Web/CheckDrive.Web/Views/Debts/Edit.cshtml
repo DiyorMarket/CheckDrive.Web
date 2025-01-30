@@ -1,0 +1,34 @@
+﻿@model CheckDrive.Web.Requests.Debt.UpdateDebtRequest
+
+@{
+    ViewData["Title"] = "Update";
+    Layout = "~/Views/Shared/_LayoutForModal.cshtml";
+}
+<h1 class="text-center mb-5 text-danger"><i class="fa fa-exclamation-circle" style="font-size:100px"></i></h1>
+<div class="d-flex justify-content-center align-items-center" style="height: 100%;">
+    <h4 class="text-center text-secondary">
+        Haqiqatan ham qarzni yopmoqchimisiz ?
+    </h4>
+</div>
+
+<div>
+    <hr />
+    <form asp-action="Edit" method="post">
+        <div class="d-flex justify-content-center mt-5 m-2" style="gap: 10px;">
+            <input type="hidden" name="id" value=@Model.Id>
+            <input type="hidden" name="FirstName" value=@Model.FirstName>
+            <input type="hidden" name="LastName" value=@Model.LastName>
+            <input type="hidden" name="FualAmount" value=@Model.FualAmount>
+            <input type="hidden" name="PaidAmount" value=@Model.PaidAmount>
+            <input type="hidden" name="Status" value=@Model.Status>
+            <input type="hidden" name="CheckPointId" value="@Model.CheckPointId">
+            <button asp-action="Index" class="btn btn-secondary" style="width:120px">
+                Yo'q
+            </button>
+            <button type="submit" asp-route-itemid="@Model.Id" class="btn btn-danger" style="width:120px">
+                Ha
+            </button>
+        </div>
+    </form>
+</div>
+
