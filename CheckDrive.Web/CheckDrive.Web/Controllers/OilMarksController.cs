@@ -1,76 +1,73 @@
-﻿using CheckDrive.ApiContracts.OilMark;
+﻿using CheckDrive.Web.Requests.OilMark;
 using CheckDrive.Web.Stores.OilMarks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CheckDrive.Web.Controllers
+namespace CheckDrive.Web.Controllers;
+
+public class OilMarksController(IOilMarkStore oilMarkDataStore) : Controller
 {
-    public class OilMarksController(IOilMarkDataStore oilMarkDataStore) : Controller
+    public async Task<IActionResult> Index()
     {
-        private readonly IOilMarkDataStore _oilMarkDataStore = oilMarkDataStore;
+        var oilMarks = await oilMarkDataStore.GetAsync();
 
-        public async Task<IActionResult> Index()
+        return View(oilMarks);
+    }
+
+    public async Task<IActionResult> Details(int id)
+    {
+        var oilMark = await oilMarkDataStore.GetByIdAsync(id);
+
+        return View(oilMark);
+    }
+
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([FromForm] CreateOilMarkRequest request)
+    {
+        if (ModelState.IsValid)
         {
-            var oilMarks = await _oilMarkDataStore.GetOilMarksAsync();
-            var oilMarkss = oilMarks.Data.ToList();
-            return View(oilMarkss);
-        }
-
-        public async Task<IActionResult> Details(int id)
-        {
-            var oilMark = await _oilMarkDataStore.GetOilMarkByIdAsync(id);
-
-            return View(oilMark);
-        }
-
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OilMark")] OilMarkForCreateDto _oilmark)
-        {
-            if (ModelState.IsValid)
-            {
-                await _oilMarkDataStore.CreateOilMarkAsync(_oilmark);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(_oilmark);
-        }
-
-        public async Task<IActionResult> Edit(int id)
-        {
-            var oilMark = await _oilMarkDataStore.GetOilMarkByIdAsync(id);
-
-            return View(oilMark);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OilMark")] OilMarkForUpdateDto _oilMark)
-        {
-            if (ModelState.IsValid)
-            {
-                await _oilMarkDataStore.UpdateOilMarkAsync(id, _oilMark);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(_oilMark);
-        }
-
-        public async Task<IActionResult> Delete(int id)
-        {
-            var oilMark = await _oilMarkDataStore.GetOilMarkByIdAsync(id);
-  
-            return View(oilMark);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            await _oilMarkDataStore.DeleteOilMarkAsync(id);
+            await oilMarkDataStore.CreateAsync(request);
             return RedirectToAction(nameof(Index));
         }
+        return View(request);
+    }
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var oilMark = await oilMarkDataStore.GetByIdAsync(id);
+
+        return View(oilMark);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit([FromForm] UpdateOilMarkRequest request)
+    {
+        if (ModelState.IsValid)
+        {
+            await oilMarkDataStore.UpdateAsync(request);
+            return RedirectToAction(nameof(Index));
+        }
+        return View(request);
+    }
+
+    public async Task<IActionResult> Delete(int id)
+    {
+        var oilMark = await oilMarkDataStore.GetByIdAsync(id);
+
+        return View(oilMark);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        await oilMarkDataStore.DeleteAsync(id);
+        return RedirectToAction(nameof(Index));
     }
 }
