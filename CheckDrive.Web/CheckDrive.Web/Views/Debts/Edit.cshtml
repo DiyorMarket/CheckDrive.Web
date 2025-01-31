@@ -16,8 +16,7 @@
     <form asp-action="Edit" method="post">
         <div class="d-flex justify-content-center mt-5 m-2" style="gap: 10px;">
             <input type="hidden" name="id" value=@Model.Id>
-            <input type="hidden" name="FirstName" value=@Model.FirstName>
-            <input type="hidden" name="LastName" value=@Model.LastName>
+            <input type="hidden" name="DriverFullName" value=@Model.DriverFullName>
             <input type="hidden" name="FuelAmount" value=@Model.FuelAmount>
             <input type="hidden" name="PaidAmount" value=@Model.PaidAmount>
             <input type="hidden" name="Status" value=@Model.Status>

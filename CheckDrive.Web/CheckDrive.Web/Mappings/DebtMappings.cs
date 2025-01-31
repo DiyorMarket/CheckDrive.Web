@@ -9,8 +9,7 @@ public static class DebtMappings
         new()
         {
             Id = viewModel.Id,
-            FirstName = viewModel.FirstName,
-            LastName = viewModel.LastName,
+            DriverFullName = viewModel.DriverFullName,
             CheckPointId = viewModel.CheckPointId,
             FuelAmount = viewModel.FuelAmount,
             PaidAmount = viewModel.PaidAmount,
