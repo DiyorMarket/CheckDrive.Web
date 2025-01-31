@@ -12,7 +12,7 @@ public static class DebtMappings
             FirstName = viewModel.FirstName,
             LastName = viewModel.LastName,
             CheckPointId = viewModel.CheckPointId,
-            FualAmount = viewModel.FualAmount,
+            FuelAmount = viewModel.FuelAmount,
             PaidAmount = viewModel.PaidAmount,
             Status = viewModel.Status,
         };
