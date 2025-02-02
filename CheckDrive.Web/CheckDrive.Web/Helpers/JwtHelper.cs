@@ -1,12 +1,13 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CheckDrive.Web.Helpers;
 
 internal static class JwtHelper
 {
-    public static bool IsTokenValid(string? token)
+    public static bool IsValid([NotNullWhen(true)] string? token)
     {
         if (string.IsNullOrEmpty(token))
         {
