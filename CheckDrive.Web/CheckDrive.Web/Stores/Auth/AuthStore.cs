@@ -24,4 +24,6 @@ public sealed class AuthStore(CheckDriveApi clientApi, ICookieHandler cookieHand
 
         return response;
     }
+
+    public void Logout() => cookieHandler.ClearTokens();
 }

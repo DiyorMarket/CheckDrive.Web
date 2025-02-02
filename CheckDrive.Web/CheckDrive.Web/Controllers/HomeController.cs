@@ -29,4 +29,12 @@ public class HomeController(IAuthStore authStore, IDashboardStore dashboardStore
 
         return RedirectToAction("Index", "Home");
     }
+
+    [HttpGet, Route("logout")]
+    public IActionResult Logout()
+    {
+        authStore.Logout();
+
+        return RedirectToAction(nameof(Login));
+    }
 }
