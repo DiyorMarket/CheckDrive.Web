@@ -10,20 +10,11 @@ using System.Reflection;
 
 namespace CheckDrive.Web.Controllers;
 
-public class EmployeesController : Controller
+public class EmployeesController(IEmployeeStore employeeStore, ICarStore carStore) : Controller
 {
-    private readonly IEmployeeStore _employeeStore;
-    private readonly ICarDataStore _carStore;
-
-    public EmployeesController(IEmployeeStore employeeStore, ICarDataStore carStore)
-    {
-        _employeeStore = employeeStore ?? throw new ArgumentNullException(nameof(employeeStore));
-        _carStore = carStore ?? throw new ArgumentNullException(nameof(carStore));
-    }
-
     public async Task<ActionResult> Index()
     {
-        var employees = await _employeeStore.GetAsync();
+        var employees = await employeeStore.GetAsync();
         ViewBag.Positions = GetPositions();
 
         return View(employees);
@@ -31,7 +22,7 @@ public class EmployeesController : Controller
 
     public async Task<ActionResult> Details(int id)
     {
-        var employee = await _employeeStore.GetByIdAsync(id);
+        var employee = await employeeStore.GetByIdAsync(id);
 
         return View(employee);
     }
@@ -50,9 +41,9 @@ public class EmployeesController : Controller
     {
         try
         {
-            var createdEmployee = await _employeeStore.CreateAsync(request);
-
-            return RedirectToAction(nameof(Details), new { id = createdEmployee.Id });
+            var createdEmployee = await employeeStore.CreateAsync(request);
+            
+            return RedirectToAction(nameof(Index));
         }
         catch
         {
@@ -62,7 +53,7 @@ public class EmployeesController : Controller
 
     public async Task<ActionResult> Edit(int id)
     {
-        var employee = await _employeeStore.GetByIdAsync(id);
+        var employee = await employeeStore.GetByIdAsync(id);
         ViewBag.Positions = GetPositions();
         ViewBag.Cars = await GetCarsAsync();
 
@@ -77,8 +68,7 @@ public class EmployeesController : Controller
     {
         try
         {
-            await _employeeStore.UpdateAsync(request);
-
+            await employeeStore.UpdateAsync(request);
             return RedirectToAction(nameof(Index));
         }
         catch
@@ -89,7 +79,7 @@ public class EmployeesController : Controller
 
     public async Task<ActionResult> Delete(int id)
     {
-        var employee = await _employeeStore.GetByIdAsync(id);
+        var employee = await employeeStore.GetByIdAsync(id);
 
         return View(employee);
     }
@@ -100,7 +90,7 @@ public class EmployeesController : Controller
     {
         try
         {
-            await _employeeStore.DeleteAsync(id);
+            await employeeStore.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
         catch
@@ -127,7 +117,7 @@ public class EmployeesController : Controller
 
     private async Task<List<SelectListItem>> GetCarsAsync()
     {
-        var cars = await _carStore.GetAsync();
+        var cars = await carStore.GetAsync();
 
         return cars
             .Select(e => new SelectListItem()

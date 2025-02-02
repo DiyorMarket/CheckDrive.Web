@@ -59,7 +59,7 @@ internal static class DependencyInjection
     private static void AddStores(IServiceCollection services)
     {
         services.AddScoped<IAccountDataStore, AccountDataStore>();
-        services.AddScoped<ICarDataStore, CarDataStore>();
+        services.AddScoped<ICarStore, CarStore>();
         services.AddScoped<IDispatcherReviewDataStore, DispatcherReviewDataStore>();
         services.AddScoped<IDispatcherDataStore, DispatcherDataStore>();
         services.AddScoped<IDoctorDataStore, DoctorDataStore>();
@@ -68,7 +68,7 @@ internal static class DependencyInjection
         services.AddScoped<IMechanicAcceptanceDataStore, MechanicAcceptanceDataStore>();
         services.AddScoped<IMechanicHandoverDataStore, MechanicHandoverDataStore>();
         services.AddScoped<IMechanicDataStore, MechanicDataStore>();
-        services.AddScoped<IOilMarkDataStore, OilMarkDataStore>();
+        services.AddScoped<IOilMarkStore, OilMarkStore>();
         services.AddScoped<IOperatorReviewDataStore, OperatorReviewDataStore>();
         services.AddScoped<IOperatorDataStore, OperatorDataStore>();
         services.AddScoped<IRoleDataStore, RoleDataStore>();
