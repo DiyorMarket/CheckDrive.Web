@@ -1,10 +1,12 @@
-﻿using CheckDrive.Web.ViewModels.Debt;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using CheckDrive.Web.Requests.Debt;
+using CheckDrive.Web.ViewModels.Debt;
 
 namespace CheckDrive.Web.Stores.Debts;
 
 public interface IDebtsStore
 {
-    List<DebtViewModel> GetAll(string? searchText, string? status );
-    List<SelectListItem> GetEnum();
+    Task<List<DebtViewModel>> GetAsync();
+    Task<DebtViewModel> GetByIdAsync(int id);
+    Task UpdateAsync(UpdateDebtRequest viewModel);
+    Task DeleteAsync(int id);
 }
