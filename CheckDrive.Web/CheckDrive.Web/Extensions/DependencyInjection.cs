@@ -9,7 +9,7 @@ using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Auth;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.CheckPoint;
-using CheckDrive.Web.Stores.Dashbord;
+using CheckDrive.Web.Stores.Dashboard;
 using CheckDrive.Web.Stores.Debts;
 using CheckDrive.Web.Stores.DispatcherReviews;
 using CheckDrive.Web.Stores.Dispatchers;

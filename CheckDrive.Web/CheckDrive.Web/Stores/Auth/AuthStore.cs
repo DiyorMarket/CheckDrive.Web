@@ -9,7 +9,7 @@ public sealed class AuthStore(CheckDriveApi clientApi, ICookieHandler cookieHand
 {
     public async Task<TokenResponse> LoginAsync(LoginRequest request)
     {
-        TokenResponse response = await clientApi.PostAsync<LoginRequest, TokenResponse>("auth/login", request);
+        var response = await clientApi.PostAsync<LoginRequest, TokenResponse>("auth/login", request);
 
         cookieHandler.UpdateTokens(response.AccessToken, response.RefreshToken);
 
