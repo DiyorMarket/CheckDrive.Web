@@ -13,7 +13,6 @@
     <None Remove="Controllers\**" />
     <Content Remove="wwwroot\css\LogOutButtun.css" />
     <_ContentIncludedByDefault Remove="appsettings.Production.json" />
-    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\CarsController.cs" />
     <Compile Include="Controllers\CheckPointController.cs" />
     <Compile Include="Controllers\DebtsController.cs" />

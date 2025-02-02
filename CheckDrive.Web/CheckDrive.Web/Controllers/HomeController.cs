@@ -1,21 +1,32 @@
-﻿using CheckDrive.Web.Stores.Dashboard;
+﻿using CheckDrive.Web.Requests.Auth;
+using CheckDrive.Web.Stores.Auth;
+using CheckDrive.Web.Stores.Dashboard;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers;
 
-public class HomeController : Controller
+public class HomeController(IAuthStore authStore, IDashboardStore dashboardStore) : Controller
 {
-    private readonly IDashboardStore _dashboardStore;
-
-    public HomeController(IDashboardStore dashboardStore)
-    {
-        _dashboardStore = dashboardStore ?? throw new ArgumentNullException(nameof(dashboardStore));
-    }
-
     public async Task<IActionResult> Index()
     {
-        var result = await _dashboardStore.GetDashboardAsync();
+        var result = await dashboardStore.GetDashboardAsync();
 
         return View(result);
+    }
+
+    [HttpGet, Route("login")]
+    public IActionResult Login() => View();
+
+    [HttpPost, Route("login")]
+    public async Task<IActionResult> Login(LoginRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(request);
+        }
+
+        await authStore.LoginAsync(request);
+
+        return RedirectToAction("Index", "Home");
     }
 }
