@@ -5,22 +5,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CheckDrive.Web.Stores.CheckPoint;
 
-internal sealed class CheckPointStore : ICheckPointStore
+internal sealed class CheckPointStore(CheckDriveApi apiClient) : ICheckPointStore
 {
     private static readonly string _resourceUrl = "checkPoints";
-    private readonly CheckDriveApi _apiClient;
-
-    public CheckPointStore(CheckDriveApi apiClient)
-    {
-        _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
-    }
 
     public Task<List<CheckPointViewModel>> GetAllAsync()
-        => _apiClient.GetAsync<List<CheckPointViewModel>>(_resourceUrl);
+        => apiClient.GetAsync<List<CheckPointViewModel>>(_resourceUrl);
 
     public async Task<CheckPointViewModel> GetCheckPointByIdAsync(int id)
     {
-        var checkPoints = await _apiClient.GetAsync<List<CheckPointViewModel>>(_resourceUrl);
+        var checkPoints = await apiClient.GetAsync<List<CheckPointViewModel>>(_resourceUrl);
 
         var result = checkPoints.FirstOrDefault(x => x.Id == id);
 

@@ -1,12 +1,11 @@
 ﻿using CheckDrive.Web.ViewModels.CheckPoint;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace CheckDrive.Web.Stores.CheckPoint
+namespace CheckDrive.Web.Stores.CheckPoint;
+
+public interface ICheckPointStore
 {
-    public interface ICheckPointStore
-    {
-        Task<List<CheckPointViewModel>> GetAllAsync();
-        Task<CheckPointViewModel> GetCheckPointByIdAsync(int id);
-        List<SelectListItem> GetEnumValues<TEnum>() where TEnum : Enum;
-    }
+    Task<List<CheckPointViewModel>> GetAllAsync();
+    Task<CheckPointViewModel> GetCheckPointByIdAsync(int id);
+    List<SelectListItem> GetEnumValues<TEnum>() where TEnum : Enum;
 }

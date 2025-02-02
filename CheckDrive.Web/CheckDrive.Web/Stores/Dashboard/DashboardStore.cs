@@ -3,18 +3,11 @@ using CheckDrive.Web.ViewModels.Dashboard;
 
 namespace CheckDrive.Web.Stores.Dashboard;
 
-public class DashboardStore : IDashboardStore
+internal sealed class DashboardStore(CheckDriveApi apiClient) : IDashboardStore
 {
-    private readonly CheckDriveApi _apiClient;
-
-    public DashboardStore(CheckDriveApi apiClient)
-    {
-        _apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
-    }
-
     public async Task<DashboardViewModel> GetDashboardAsync()
     {
-        var result = await _apiClient.GetAsync<DashboardViewModel>("Dashboard");
+        var result = await apiClient.GetAsync<DashboardViewModel>("Dashboard");
 
         return result;
     }
