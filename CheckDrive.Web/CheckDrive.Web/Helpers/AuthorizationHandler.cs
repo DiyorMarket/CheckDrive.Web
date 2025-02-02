@@ -8,9 +8,9 @@ using CheckDrive.Web.Stores.Auth;
 namespace CheckDrive.Web.Helpers;
 
 // Initializes CookieHandler & AuthStore via ServiceProvider due to circular dependency
-// AuthorizationHandler -> AuthStore -> CheckDriveApi -> HttpClient -> AuthorizationHandler,
+// AuthorizationHandler -> AuthStore -> ApiClient -> HttpClient -> AuthorizationHandler,
 // which means before initialization of AuthorizationHandler we cannot resolve AuthStore.
-// Resolving CookieHandler via ServiceProvider as well to keep it consistent and easier to follow.
+// Resolving CookieHandler via ServiceProvider as well, to keep it consistent and easier to follow.
 internal sealed class AuthorizationHandler(IServiceProvider serviceProvider) : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -20,19 +20,12 @@ internal sealed class AuthorizationHandler(IServiceProvider serviceProvider) : D
             return await base.SendAsync(request, cancellationToken);
         }
 
-        await AddAuthorizationHeaders(request);
+        await TryAddAuthorizationHeadersAsync(request);
 
         return await base.SendAsync(request, cancellationToken);
     }
 
-    private async Task AddAuthorizationHeaders(HttpRequestMessage request)
-    {
-        var accessToken = await GetAccessToken();
-
-        request.Headers.Authorization = new AuthenticationHeaderValue(HeaderConstants.AuthenticationSchema, accessToken);
-    }
-
-    private async Task<string> GetAccessToken()
+    private async Task TryAddAuthorizationHeadersAsync(HttpRequestMessage request)
     {
         using var scope = serviceProvider.CreateScope();
         var cookieHandler = scope.ServiceProvider.GetRequiredService<ICookieHandler>();
@@ -40,13 +33,18 @@ internal sealed class AuthorizationHandler(IServiceProvider serviceProvider) : D
 
         var (accessToken, refreshToken) = cookieHandler.GetTokens();
 
-        if (!JwtHelper.IsTokenValid(accessToken) && !string.IsNullOrWhiteSpace(refreshToken))
+        if (JwtHelper.IsValid(accessToken))
+        {
+            request.Headers.Authorization = new AuthenticationHeaderValue(HeaderConstants.AuthenticationSchema, accessToken);
+
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(refreshToken))
         {
             var response = await authStore.RefreshTokenAsync(new RefreshTokenRequest(refreshToken));
 
-            return response.AccessToken;
+            request.Headers.Authorization = new AuthenticationHeaderValue(HeaderConstants.AuthenticationSchema, response.AccessToken);
         }
-
-        return accessToken ?? string.Empty;
     }
 }
