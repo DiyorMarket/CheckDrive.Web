@@ -1,0 +1,21 @@
+﻿.e-input-group input {
+    height: 35px !important;
+}
+
+.search-box {
+    padding-left: 2rem;
+}
+
+.position-relative .fa-magnifying-glass {
+    pointer-events: none;
+    z-index: 1;
+}
+
+button {
+    height: 37px;
+}
+
+.e-pager .e-pagerexternalmsg {
+    display: none;
+}
+    
