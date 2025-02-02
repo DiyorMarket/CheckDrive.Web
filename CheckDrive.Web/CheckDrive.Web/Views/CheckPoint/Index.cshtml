@@ -123,6 +123,9 @@
         <div class="col text-center">
             <input type="number" class="form-control" style="text-align:center;" name="CurrentFuelAmount" value="@Model.CurrentFuelAmount" />
         </div>
+        <div class="col text-center">
+            <input type="number" class="form-control" style="text-align:center;" name="DebtAmount" value="@Model.DebtAmount" />
+        </div>
     </div>
     <div class="row content">
         <div class="col text-center">
@@ -130,9 +133,7 @@
         </div>
     </div>
     <div class="row value">
-        <div class="col text-center">
-            <input type="number" class="form-control" style="text-align:center;" name="DebtAmount" value="@Model.DebtAmount" />
-        </div>
+        
     </div>
     <div class="d-flex col-md mb-4 justify-content-center">
         <button id="openModalButton" class="btn btn-success" asp-action="create" type="button">

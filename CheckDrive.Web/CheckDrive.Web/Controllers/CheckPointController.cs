@@ -1,4 +1,4 @@
-﻿using CheckDrive.Web.Stores.SplineCharts;
+﻿using CheckDrive.Web.Stores.CheckPoint;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CheckDrive.Web.Controllers
@@ -10,9 +10,9 @@ namespace CheckDrive.Web.Controllers
         {
             _checkPointStore = checkPointStore ?? throw new ArgumentNullException(nameof(checkPointStore));
         }
-        public ActionResult Index(int id)
+        public async Task<ActionResult> Index(int id)
         {
-            var checkPoint = _checkPointStore.GetCheckPointById(id);
+            var checkPoint = await _checkPointStore.GetCheckPointByIdAsync(id);
 
             return View(checkPoint);
         }

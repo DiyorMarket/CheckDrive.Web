@@ -1,157 +1,123 @@
-﻿using CheckDrive.ApiContracts;
-using CheckDrive.ApiContracts.Car;
+﻿using CheckDrive.Web.Mappings;
+using CheckDrive.Web.Requests.Cars;
 using CheckDrive.Web.Stores.Cars;
+using CheckDrive.Web.Stores.OilMarks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace CheckDrive.Web.Controllers
+namespace CheckDrive.Web.Controllers;
+
+public class CarsController(ICarStore carStore, IOilMarkStore oilMarkStore) : Controller
 {
-    public class CarsController : Controller
+    public async Task<IActionResult> Index()
     {
-        private readonly ICarDataStore _carDataStore;
+        var cars = await carStore.GetAsync();
 
-        public CarsController(ICarDataStore carDataStore)
+        ViewBag.Cars = cars;
+        return View();
+    }
+
+    public async Task<IActionResult> Details(int id)
+    {
+        var car = await carStore.GetByIdAsync(id);
+
+        return View(car);
+    }
+
+    public async Task<IActionResult> DetailsForMechanicAcceptance(int id)
+    {
+        var car = await carStore.GetByIdAsync(id);
+        if (car == null)
         {
-            _carDataStore = carDataStore;
+            return NotFound();
         }
+        return PartialView("_CarDetailsForMechanicAcceptance", car);
+    }
 
-        public async Task<IActionResult> Index(string? searchString, int? pageNumber)
+    public async Task<IActionResult> DetailsForMechanicHandover(int id)
+    {
+        var car = await carStore.GetByIdAsync(id);
+        if (car == null)
         {
-            var cars = await _carDataStore.GetCarsAsync(searchString, pageNumber);
-
-            ViewBag.SearchString = searchString;
-
-            ViewBag.PageSize = cars.PageSize;
-            ViewBag.PageCount = cars.TotalPages;
-            ViewBag.TotalCount = cars.TotalCount;
-            ViewBag.CurrentPage = cars.PageNumber;
-            ViewBag.HasPreviousPage = cars.HasPreviousPage;
-            ViewBag.HasNextPage = cars.HasNextPage;
-
-            var _cars = cars.Data.Select(c => new
-            {
-                c.Id,
-                c.Model,
-                c.Number,
-                c.Mileage,
-                c.Color,
-                c.RemainingFuel,
-                c.MeduimFuelConsumption,
-                c.FuelTankCapacity,
-                c.ManufacturedYear,
-                Status = ((CarStatusDto)c.CarStatus) switch
-                {
-                    CarStatusDto.Free => "Bo'sh",
-                    CarStatusDto.Busy => "Band",
-                    CarStatusDto.Limited => "Limit tugagan",
-                    _ => "No`malum holat"
-                }
-            }).ToList();
-
-            ViewBag.Cars = _cars;
-            return View();
+            return NotFound();
         }
+        return PartialView("_CarDetailsForMechanicHandover", car);
+    }
 
-        public async Task<IActionResult> CarHistoryIndex(string? searchString, int? pageNumber, int? year, int? month)
+    public async Task<IActionResult> Create()
+    {
+        var oilMarks = await GetOilMarkAsync();
+        ViewBag.OilMarks = oilMarks;
+
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([FromForm] CreateCarRequest request)
+    {
+        if (ModelState.IsValid)
         {
-            var cars = await _carDataStore.GetCarsHistoryAsync(searchString, pageNumber, year, month);
-
-            ViewBag.SearchString = searchString;
-            ViewBag.Cars = cars.Data;
-
-            ViewBag.PageSize = cars.PageSize;
-            ViewBag.PageCount = cars.TotalPages;
-            ViewBag.TotalCount = cars.TotalCount;
-            ViewBag.CurrentPage = cars.PageNumber;
-            ViewBag.HasPreviousPage = cars.HasPreviousPage;
-            ViewBag.HasNextPage = cars.HasNextPage;
-            return View();
-        }
-
-        public async Task<IActionResult> Details(int id)
-        {
-            var car = await _carDataStore.GetCarAsync(id);
-            if (car == null)
-            {
-                return NotFound();
-            }
-            return View(car);
-        }
-
-        public async Task<IActionResult> DetailsForMechanicAcceptance(int id)
-        {
-            var car = await _carDataStore.GetCarAsync(id);
-            if (car == null)
-            {
-                return NotFound();
-            }
-            return PartialView("_CarDetailsForMechanicAcceptance", car);
-        }
-
-        public async Task<IActionResult> DetailsForMechanicHandover(int id)
-        {
-            var car = await _carDataStore.GetCarAsync(id);
-            if (car == null)
-            {
-                return NotFound();
-            }
-            return PartialView("_CarDetailsForMechanicHandover", car);
-        }
-
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Model,Color,Number,RemainingFuel,Mileage, MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear, OneYearMediumDistance")] CarForCreateDto car)
-        {
-            if (ModelState.IsValid)
-            {
-                var newCar = await _carDataStore.CreateCarAsync(car);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(car);
-        }
-
-        public async Task<IActionResult> Edit(int id)
-        {
-            var car = await _carDataStore.GetCarAsync(id);
-            if (car == null)
-            {
-                return NotFound();
-            }
-            return View(car);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Model,Color,Number,RemainingFuel,Mileage, MeduimFuelConsumption,FuelTankCapacity,ManufacturedYear, OneYearMediumDistance")] CarForUpdateDto car)
-        {
-            if (ModelState.IsValid)
-            {
-                var newCar = await _carDataStore.UpdateCarAsync(id, car);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(car);
-        }
-
-        public async Task<IActionResult> Delete(int id)
-        {
-            var car = await _carDataStore.GetCarAsync(id);
-            if (car == null)
-            {
-                return NotFound();
-            }
-            return View(car);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            await _carDataStore.DeleteCarAsync(id);
+            var newCar = await carStore.CreateAsync(request);
             return RedirectToAction(nameof(Index));
         }
+        return BadRequest(ModelState);
+    }
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var car = await carStore.GetByIdAsync(id);
+        var oilMarks = await GetOilMarkAsync();
+
+        ViewBag.OilMarks = oilMarks;
+        var carRequest = car.ToUpdateViewModel();
+
+        return View(carRequest);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit([FromForm] UpdateCarRequest request)
+    {
+        try
+        {
+            await carStore.UpdateAsync(request);
+            return RedirectToAction(nameof(Index));
+        }
+        catch(Exception ex)
+        {
+            return BadRequest();
+        }
+    }
+
+    public async Task<IActionResult> Delete(int id)
+    {
+        var car = await carStore.GetByIdAsync(id);
+        if (car == null)
+        {
+            return NotFound();
+        }
+        return View(car);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        await carStore.DeleteAsync(id);
+        return RedirectToAction(nameof(Index));
+    }
+
+    private async Task<List<SelectListItem>> GetOilMarkAsync()
+    {
+        var oilMarks = await oilMarkStore.GetAsync();
+
+        return oilMarks
+            .Select(e => new SelectListItem()
+            {
+                Value = e.Id.ToString(),
+                Text = e.Name.ToString()
+            })
+            .ToList();
     }
 }

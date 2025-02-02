@@ -4,172 +4,61 @@ using CheckDrive.ApiContracts.DoctorReview;
 using CheckDrive.ApiContracts.Mechanic;
 using CheckDrive.ApiContracts.OperatorReview;
 using CheckDrive.Web.Responses;
-using CheckDrive.Web.Service;
-using Newtonsoft.Json;
-using System.Text;
+using CheckDrive.Web.Services;
 
-namespace CheckDrive.Web.Stores.Accounts
+namespace CheckDrive.Web.Stores.Accounts;
+
+public class AccountDataStore : IAccountDataStore
 {
-    public class AccountDataStore : IAccountDataStore
+    private readonly CheckDriveApi _api;
+
+    public AccountDataStore(CheckDriveApi apiClient)
     {
-        private readonly ApiClient _api;
+        _api = apiClient;
+    }
 
-        public AccountDataStore(ApiClient apiClient)
-        {
-            _api = apiClient;
-        }
+    public Task<AccountDto> CreateAccountAsync(AccountForCreateDto account)
+    {
+        throw new NotImplementedException();
+    }
 
+    public Task DeleteAccountAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
 
-        public async Task<GetAccountResponse> GetAccountsAsync(string? searchString, int? roleId, DateTime? birthDate, int? pageNumber)
-        {
-            StringBuilder query = new("");
+    public Task<AccountDto> GetAccountAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
 
-            if (birthDate is not null)
-            {
-                query.Append($"birthDate={birthDate.Value.ToString("MM/dd/yyyy")}&");
-            }
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                query.Append($"searchString={searchString}&");
-            }
-            if (roleId is not null)
-            {
-                query.Append($"roleId={roleId}&");
-            }
-            if (pageNumber != null)
-            {
-                query.Append($"pageNumber={pageNumber}");
-            }
+    public Task<GetAccountResponse> GetAccountsAsync(string? searchString, int? roleId, DateTime? birthDate, int? pageNumber)
+    {
+        throw new NotImplementedException();
+    }
 
-            var response = await _api.GetAsync("accounts?" + query.ToString());
+    public Task<IEnumerable<DispatcherReviewDto>> GetDispatcherHistories(int Id)
+    {
+        throw new NotImplementedException();
+    }
 
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Could not fetch accounts.");
-            }
+    public Task<IEnumerable<DoctorReviewDto>> GetDoctorHistories(int Id)
+    {
+        throw new NotImplementedException();
+    }
 
+    public Task<IEnumerable<MechanicHistororiesDto>> GetMechanicHistories(int Id)
+    {
+        throw new NotImplementedException();
+    }
 
-            var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-            var result = JsonConvert.DeserializeObject<GetAccountResponse>(json);
+    public Task<IEnumerable<OperatorReviewDto>> GetOperatorHistories(int Id)
+    {
+        throw new NotImplementedException();
+    }
 
-            return result;
-        }
-
-        public async Task<AccountDto> GetAccountAsync(int id)
-        {
-            var response = await _api.GetAsync($"accounts/{id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"Could not fetch account with id: {id}.");
-            }
-
-            var json = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<AccountDto>(json);
-
-            return result;
-        }
-
-        public async Task<AccountDto> CreateAccountAsync(AccountForCreateDto account)
-        {
-            var json = JsonConvert.SerializeObject(account);
-            var response = await _api.PostAsync("accounts", json);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Error creating account.");
-            }
-
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<AccountDto>(jsonResponse);
-        }
-
-
-
-        public async Task<AccountDto> UpdateAccountAsync(int id, AccountForUpdateDto account)
-        {
-            var json = JsonConvert.SerializeObject(account);
-            var response = await _api.PutAsync($"accounts/{account.Id}", json);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception("Error updating account.");
-            }
-
-            var jsonResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-
-            return JsonConvert.DeserializeObject<AccountDto>(jsonResponse);
-        }
-
-        public async Task DeleteAccountAsync(int id)
-        {
-            var response = await _api.DeleteAsync($"accounts/{id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"Could not delete account with id: {id}.");
-            }
-        }
-
-        public async Task<IEnumerable<DoctorReviewDto>> GetDoctorHistories(int Id)
-        {
-            var response = await _api.GetAsync($"doctors/review/doctorHistories?accountId={Id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception();
-            }
-
-            var json = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<IEnumerable<DoctorReviewDto>>(json);
-
-            return result;
-        }
-
-        public async Task<IEnumerable<OperatorReviewDto>> GetOperatorHistories(int Id)
-        {
-            var response = await _api.GetAsync($"operators/review/operatorHistories?accountId={Id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception();
-            }
-
-            var json = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<IEnumerable<OperatorReviewDto>>(json);
-
-            return result;
-        }
-
-        public async Task<IEnumerable<MechanicHistororiesDto>> GetMechanicHistories(int Id)
-        {
-            var response = await _api.GetAsync($"mechanics/mechanicHistories?accountId={Id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception();
-            }
-
-            var json = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<IEnumerable<MechanicHistororiesDto>>(json);
-
-            return result;
-        }
-
-        public async Task<IEnumerable<DispatcherReviewDto>> GetDispatcherHistories(int Id)
-        {
-            var response = await _api.GetAsync($"dispatchers/dispatcherHistories?accountId={Id}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception();
-            }
-
-            var json = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<IEnumerable<DispatcherReviewDto>>(json);
-
-
-            return result;
-        }
+    public Task<AccountDto> UpdateAccountAsync(int id, AccountForUpdateDto account)
+    {
+        throw new NotImplementedException();
     }
 }

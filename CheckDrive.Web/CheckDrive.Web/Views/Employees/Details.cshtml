@@ -1,0 +1,457 @@
+﻿@using CheckDrive.Web.ViewModels.Employee
+@model EmployeeViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_LayoutForModal.cshtml";
+}
+
+<div class="nav nav-pills nav-fill" id="nav-tab" role="tablist">
+    <button class="nav-link active ms-3" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">Ma'lumot</button>
+    <button class="nav-link me-3" id="nav-history-tab" data-bs-toggle="tab" data-bs-target="#nav-history" type="button" role="tab" aria-controls="nav-history" aria-selected="false">Ish tarixi</button>
+</div>
+
+<div id="detailsBlock" class="mt-4">
+    <div class="grid-container">
+        <div class="row content">
+            <div class="col col-md text-center">
+                Ism
+            </div>
+            <div class="col col-md text-center">
+                Familiya
+            </div>
+            <div class="col col-md text-center">
+                Sharf
+            </div>
+        </div>
+        <div class="row value">
+            <div class="col col-md text-center">
+                @Model.FirstName
+            </div>
+            <div class="col col-md text-center">
+                @Model.LastName
+            </div>
+            <div class="col col-md text-center">
+                @Model.Patronymic
+            </div>
+        </div>
+
+        <div class="row content">
+            <div class="col col-md text-center">
+                Passport
+            </div>
+            <div class="col col-md text-center">
+                Tug'ilgan sana
+            </div>
+        </div>
+        <div class="row value">
+            <div class="col col-md text-center">
+                @Model.Passport
+            </div>
+            <div class="col col-md text-center">
+                @Model.Birthdate?.ToString("dd/MM/yyyy")
+            </div>
+        </div>
+        
+        <div class="row content">
+            <div class="col col-md text-center">
+                Foydalanuvchi ismi
+            </div>
+            <div class="col col-md text-center">
+                Telefon raqam
+            </div>
+            <div class="col col-md text-center">
+                Elektron pochta
+            </div>
+        </div>
+        <div class="row value">
+            <div class="col col-md text-center">
+                @Model.UserName
+            </div>
+            <div class="col col-md text-center">
+                @Model.PhoneNumber
+            </div>
+            <div class="col col-md text-center">
+                @Model.Email
+            </div>
+        </div>
+
+        <div class="row content">
+            <div class="col col-md text-center">
+                Kasb
+            </div>
+            <div class="col col-md text-center">
+                Kasb tasvili
+            </div>
+        </div>
+        <div class="row value">
+            <div class="col col-md text-center bottom-style">
+                @Model.FormattedPosition
+            </div>
+            <div class="col col-md text-center bottom-style">
+                @Model.PositionDescription
+            </div>
+        </div>
+    </div>
+</div>
+
+@* <div id="historyBlock" class="container mt-3">
+    @if (ViewBag.DriverHistories != null && ViewBag.DriverHistories.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover paper-shadow">
+                <thead>
+                    <tr>
+                        <th>Sana</th>
+                        <th>Doktor Ko'rik</th>
+                        <th>Mexanik (Topshirish)</th>
+                        <th>Operator</th>
+                        <th>Mexanik (Qabul qilish)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var history in ViewBag.DriverHistories)
+                    {
+                        <tr>
+                            <td>@history.Date.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @if (history.IsHealthy)
+                                {
+                                    <a class="badge bg-success" href="/DoctorReviews/details/@history.DoctorReviewId">Sog`lom</a>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Kasal</span>
+                                }
+                            </td>
+                            <td>
+                                @if (history.IsHanded)
+                                {
+                                    <a class="badge bg-success" href="/MechanicHandovers/details/@history.MechanicHandoverId">Berildi</a>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Berilmadi</span>
+                                }
+                            </td>
+                            <td>
+                                @if (history.IsGiven)
+                                {
+                                    <a class="badge bg-success" href="/OperatorReviews/details/@history.OperatorReviewId">Quyildi</a>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Quyilmadi</span>
+                                }
+                            </td>
+                            <td>
+                                @if (history.IsAccepted)
+                                {
+                                    <a class="badge bg-success" href="/MechanicAcceptances/details/@history.MechanicAcceptanceId">Qabul qilindi</a>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Qabul qilinmadi</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else if (ViewBag.DoctorHistories != null && ViewBag.DoctorHistories.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover paper-shadow">
+                <thead>
+                    <tr>
+                        <th>Sana</th>
+                        <th>Haydovchi F.I.SH</th>
+                        <th>Health Status</th>
+                        <th>Izoh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var history in ViewBag.DoctorHistories)
+                    {
+                        <tr>
+                            <td>@history.Date.ToString("dd/MM/yyyy")</td>
+                            <td>@history.DriverName</td>
+                            <td>
+                                @if (history.IsHealthy == true)
+                                {
+                                    <span class="badge bg-success">Sog'lom'</span>
+                                }
+                                else if (history.IsHealthy == false)
+                                {
+                                    <span class="badge bg-danger">Kasal</span>
+                                }
+                            </td>
+                            <td>@history.Comments</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else if (ViewBag.OperatorHistories != null && ViewBag.OperatorHistories.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover paper-shadow">
+                <thead>
+                    <tr>
+                        <th>Sana</th>
+                        <th>Haydovchi F.I.SH</th>
+                        <th>Quyildimi</th>
+                        <th>Yoqilg'i hajmi</th>
+                        <th>Yoqilg'i markasi</th>
+                        <th>Avtomobil model</th>
+                        <th>Avtomobil raqami</th>
+                        <th>Status</th>
+                        <th>Izoh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var history in ViewBag.OperatorHistories)
+                    {
+                        <tr>
+                            <td>@history.Date.ToString("dd/MM/yyyy")</td>
+                            <td>@history.DriverName</td>
+                            <td>
+                                @if (history.IsGiven == true)
+                                {
+                                    <span class="badge bg-success">Quyildi</span>
+                                }
+                                else if (history.IsGiven == false)
+                                {
+                                    <span class="badge bg-danger">Quyilmadi</span>
+                                }
+                            </td>
+                            @if (history.IsGiven == true)
+                            {
+                                <td>@history.OilAmount</td>
+                                <td>@history.OilMarks</td>
+                            }
+                            else
+                            {
+                                <td colspan="2" class="text-center">-</td>
+                            }
+                            <td>@history.CarModel</td>
+                            <td>@history.CarNumber</td>
+                            <td>
+                                @switch (history.Status)
+                                {
+                                    case StatusForDto.Pending:
+                                        <span class="badge bg-warning">Kutilmoqda</span>
+                                        break;
+                                    case StatusForDto.Completed:
+                                        <span class="badge bg-success">Bajarildi</span>
+                                        break;
+                                    case StatusForDto.Rejected:
+                                        <span class="badge bg-danger">Rad etildi</span>
+                                        break;
+                                    case StatusForDto.Unassigned:
+                                        <span class="badge bg-secondary">Belgilangan emas</span>
+                                        break;
+                                    case StatusForDto.RejectedByDriver:
+                                        <span class="badge bg-danger">Haydovchi tomonidan rad etildi</span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-secondary">Noma'lum</span>
+                                        break;
+                                }
+                            <td>@history.Comments</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else if (ViewBag.MechanicHistories != null && ViewBag.MechanicHistories.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover paper-shadow">
+                <thead>
+                    <tr>
+                        <th>Sana</th>
+                        <th>Haydovchi F.I.SH</th>
+                        <th>Pozitsiya</th>
+                        <th>Holati tekshirilgan</th>
+                        <th>Avtomobil ismi</th>
+                        <th>Masofa</th>
+                        <th>Izoh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var history in ViewBag.MechanicHistories)
+                    {
+                        <tr>
+                            <td>@history.Date?.ToString("dd/MM/yyyy")</td>
+                            <td>@history.DriverName</td>
+                            <td>
+                                @if (history.Position == "Topshiruvchi")
+                                {
+                                    <span>Topshiruvchi</span>
+                                }
+                                else
+                                {
+                                    <span>Qabul qilivchi</span>
+                                }
+                            </td>
+                            <td>
+                                @if (history.Position == "Topshiruvchi")
+                                {
+                                    @if (history.IsChecked == true)
+                                    {
+                                        <span class="badge bg-success">Topshirdi</span>
+                                    }
+                                    else if (history.IsChecked == false)
+                                    {
+                                        <span class="badge bg-danger">Topshirmadi</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Noma'lum</span>
+                                    }
+                                }
+                                else
+                                {
+                                    @if (history.IsChecked == true)
+                                    {
+                                        <span class="badge bg-success">Qabul qilindi</span>
+                                    }
+                                    else if (history.IsChecked == false)
+                                    {
+                                        <span class="badge bg-danger">Qabul qilinmadi</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Noma'lum</span>
+                                    }
+                                }
+                            </td>
+                            <td>@history.CarName</td>
+                            <td>@history.Distance</td>
+                            <td>@history.Comments</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else if (ViewBag.DispatcherHistories != null && ViewBag.DispatcherHistories.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover paper-shadow">
+                <thead>
+                    <tr>
+                        <th>Sana</th>
+                        <th>Haydovchi ismi</th>
+                        <th>Yoqilg'i sarflandi</th>
+                        <th>Yurilgan masofa</th>
+                        <th>Boshlang'ich masofa</th>
+                        <th>Yakuniy masofa</th>
+                        <th>Quyilgan yoqilg'i</th>
+                        <th>Avtomobil ismi</th>
+                        <th>Avtomobilning o'rtacha sarfi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var review in ViewBag.DispatcherHistories)
+                    {
+                        <tr>
+                            <td>@review.Date.ToString("dd/MM/yyyy")</td>
+                            <td>@review.DriverName</td>
+                            <td>@review.FuelSpended</td>
+                            <td>@review.DistanceCovered</td>
+                            <td>@review.InitialDistance</td>
+                            <td>@review.FinalDistance</td>        
+                            <td>@review.PouredFuel</td>                        
+                            <td>@review.CarName</td>
+                            <td>@review.CarMeduimFuelConsumption</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>Tarixda ma'lumotlar mavjud emas.</p>
+    }
+</div> *@
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#detailsBlock").show();
+        $("#historyBlock").hide();
+
+        $("#nav-details-tab").click(function () {
+            $("#detailsBlock").show();
+            $("#historyBlock").hide();
+        });
+
+        $("#nav-history-tab").click(function () {
+            $("#detailsBlock").hide();
+            $("#historyBlock").show();
+        });
+    });
+</script>
+
+<style>
+    .badge {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .bg-success {
+        background-color: #28a745;
+    }
+
+    .bg-danger {
+        background-color: #dc3545;
+    }
+
+    .container {
+        margin-top: 30px;
+    }
+
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+    .paper-shadow {
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .pagination {
+        justify-content: flex-end;
+    }
+
+    .shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .pagination .page-link {
+        margin-left: 5px;
+    }
+
+    .pagination .page-item.shadow {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .font-weight-normal {
+        font-weight: normal;
+    }
+</style>

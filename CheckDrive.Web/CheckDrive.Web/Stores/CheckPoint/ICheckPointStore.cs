@@ -1,13 +1,11 @@
 ﻿using CheckDrive.Web.ViewModels.CheckPoint;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
-namespace CheckDrive.Web.Stores.SplineCharts
+namespace CheckDrive.Web.Stores.CheckPoint;
+
+public interface ICheckPointStore
 {
-    public interface ICheckPointStore
-    {
-        List<CheckPointViewModel> GetAll(string? search);
-        CheckPointViewModel GetCheckPointById(int id);
-        List<SelectListItem> GetEnumValues<TEnum>() where TEnum : Enum;
-    }
+    Task<List<CheckPointViewModel>> GetAllAsync();
+    Task<CheckPointViewModel> GetCheckPointByIdAsync(int id);
+    List<SelectListItem> GetEnumValues<TEnum>() where TEnum : Enum;
 }
