@@ -1,0 +1,97 @@
+﻿/* login.css */
+
+/* Background - Darkened Blue Gradient Matching Logo */
+body {
+    background: linear-gradient(to bottom right, rgba(24, 47, 91, 0.9), rgba(17, 30, 75, 0.9)), url('/images/simple.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Inter', sans-serif;
+    color: #ECF0F1;
+    margin: 0;
+}
+
+/* Center login container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 40px 60px;
+}
+
+/* Login Card - Frosted Glass Effect with Better Contrast */
+.login-card {
+    width: 500px;
+    background: rgba(50, 60, 80, 0.3);
+    border: 1px solid rgba(200, 200, 200, 0.2);
+    backdrop-filter: blur(15px);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+    /* Logo - Centered */
+    .login-card .logo {
+        width: 125px;
+        display: block;
+        margin: 0 auto 15px;
+    }
+
+    /* Card Title - Brighter for Visibility */
+    .login-card .card-title {
+        font-size: 26px;
+        margin-bottom: 20px;
+        color: #FFFFFF;
+        font-weight: 600;
+    }
+
+    /* Increased Spacing */
+    .login-card .form-group {
+        margin-bottom: 20px;
+    }
+
+    /* Inputs - Light Gray-Blue Background */
+    .login-card .form-control {
+        background: rgba(220, 235, 255, 0.2);
+        border: 1px solid rgba(120, 160, 220, 0.4);
+        border-radius: 5px;
+        color: #FFFFFF;
+        height: 50px;
+        font-size: 16px;
+        padding: 10px 15px;
+    }
+
+        /* Placeholder Text - Light Blue for Visibility */
+        .login-card .form-control::placeholder {
+            color: rgba(200, 220, 255, 0.9);
+            font-weight: 500;
+        }
+
+/* Button - Dark Blue Gradient with Teal */
+.btn-login {
+    background: linear-gradient(to right, #173B68, #1F829B);
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    padding: 12px;
+    border-radius: 8px;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+    /* Button Hover - Slightly Brighter Teal */
+    .btn-login:hover {
+        background: linear-gradient(to right, #154360, #1F618D);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+/* Password Toggle Icon */
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #ECF0F1;
+}
