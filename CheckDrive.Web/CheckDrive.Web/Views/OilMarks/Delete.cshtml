@@ -1,4 +1,5 @@
-﻿@model CheckDrive.ApiContracts.OilMark.OilMarkDto
+﻿@using CheckDrive.Web.ViewModels.OilMark
+@model OilMarkViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -6,7 +7,7 @@
 }
 <h1 class="text-center mb-5 text-danger"><i class="fa fa-exclamation-circle" style="font-size:100px"></i></h1>
 <h4 style="color:grey;">
-    Haqiqatan ham <b style="color:black;">@Model.OilMark</b> ni  oʻchirib tashlamoqchimisiz?
+    Haqiqatan ham <b style="color:black;">@Model.Name</b> ni  oʻchirib tashlamoqchimisiz?
     O'chirsangiz bu yoqilg'i turidan foydalangan barcha ma'lumotlar ham o'chiriladi!!!
 </h4>
 
