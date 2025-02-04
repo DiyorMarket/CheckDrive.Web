@@ -16,7 +16,6 @@ internal sealed class CheckPointStore(CheckDriveApi apiClient) : ICheckPointStor
     {
         var checkPoint = await apiClient.GetAsync<CheckPointViewModel>($"{_resourceUrl}/{id}");
 
-
         return checkPoint;
     }
 
