@@ -54,7 +54,7 @@ public class EmployeesController(IEmployeeStore employeeStore, ICarStore carStor
     public async Task<ActionResult> Edit(int id)
     {
         var employee = await employeeStore.GetByIdAsync(id);
-        ViewBag.Positions = GetPositions();
+        ViewBag.Positions = GetPositions(employee.Position);
         ViewBag.Cars = await GetCarsAsync();
 
         var updateRequest = employee.ToUpdateViewModel();
@@ -99,7 +99,7 @@ public class EmployeesController(IEmployeeStore employeeStore, ICarStore carStor
         }
     }
 
-    private static List<SelectListItem> GetPositions()
+    private static List<SelectListItem> GetPositions(EmployeePosition? selectedPosition = EmployeePosition.Driver)
     {
         var excludedPositions = new[] { EmployeePosition.Manager, EmployeePosition.Custom };
         var positions = Enum.GetValues(typeof(EmployeePosition))
@@ -108,7 +108,8 @@ public class EmployeesController(IEmployeeStore employeeStore, ICarStore carStor
                     .Select(e => new SelectListItem()
                     {
                         Value = e.ToString(),
-                        Text = e.GetType().GetField(e.ToString())?.GetCustomAttribute<DisplayAttribute>()?.Name ?? e.ToString()
+                        Text = e.GetType().GetField(e.ToString())?.GetCustomAttribute<DisplayAttribute>()?.Name ?? e.ToString(),
+                        Selected = e == selectedPosition
                     })
                     .ToList();
 
@@ -123,7 +124,7 @@ public class EmployeesController(IEmployeeStore employeeStore, ICarStore carStor
             .Select(e => new SelectListItem()
             {
                 Value = e.Id.ToString(),
-                Text = e.ToString()
+                Text = $"{e.Model} ({e.Number})"
             })
             .ToList();
     }
