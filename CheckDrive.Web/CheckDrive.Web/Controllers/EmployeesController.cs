@@ -12,6 +12,8 @@ namespace CheckDrive.Web.Controllers;
 
 public class EmployeesController(IEmployeeStore employeeStore, ICarStore carStore) : Controller
 {
+    private static readonly EmployeePosition[] excludedPositions = [EmployeePosition.Custom];
+
     public async Task<ActionResult> Index()
     {
         var employees = await employeeStore.GetAsync();
@@ -101,7 +103,6 @@ public class EmployeesController(IEmployeeStore employeeStore, ICarStore carStor
 
     private static List<SelectListItem> GetPositions(EmployeePosition? selectedPosition = EmployeePosition.Driver)
     {
-        var excludedPositions = new[] { EmployeePosition.Manager, EmployeePosition.Custom };
         var positions = Enum.GetValues(typeof(EmployeePosition))
                     .Cast<EmployeePosition>()
                     .Where(e => !excludedPositions.Contains(e))
