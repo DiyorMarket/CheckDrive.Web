@@ -12,14 +12,8 @@ internal sealed class CheckPointStore(CheckDriveApi apiClient) : ICheckPointStor
     public Task<List<CheckPointViewModel>> GetAllAsync()
         => apiClient.GetAsync<List<CheckPointViewModel>>(_resourceUrl);
 
-    public async Task<CheckPointViewModel> GetCheckPointByIdAsync(int id)
-    {
-        var checkPoints = await apiClient.GetAsync<List<CheckPointViewModel>>(_resourceUrl);
-
-        var result = checkPoints.FirstOrDefault(x => x.Id == id);
-
-        return result;
-    }
+    public Task<CheckPointViewModel> GetByIdAsync(int id)
+        => apiClient.GetAsync<CheckPointViewModel>($"{_resourceUrl}/{id}");
 
     public List<SelectListItem> GetEnumValues<TEnum>() where TEnum : Enum
     {

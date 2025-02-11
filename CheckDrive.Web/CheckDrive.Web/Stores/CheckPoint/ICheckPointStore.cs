@@ -6,6 +6,6 @@ namespace CheckDrive.Web.Stores.CheckPoint;
 public interface ICheckPointStore
 {
     Task<List<CheckPointViewModel>> GetAllAsync();
-    Task<CheckPointViewModel> GetCheckPointByIdAsync(int id);
+    Task<CheckPointViewModel> GetByIdAsync(int id);
     List<SelectListItem> GetEnumValues<TEnum>() where TEnum : Enum;
 }
