@@ -74,7 +74,11 @@
         </div>
         <div class="col-md">
             <label asp-for="AssignedCarId" class="control-label">Avtomobil</label>
-            <select id="assigned-car-select" class="form-select form-control border" name="AssignedCarId" asp-for="AssignedCarId" asp-items="@ViewBag.Cars"></select>
+            <select id="assigned-car-select" class="form-select form-control border" 
+                    name="AssignedCarId" asp-for="AssignedCarId"
+                    asp-items="@(Model.Position.ToString() == "Driver" ? ViewBag.Cars : new SelectList(Enumerable.Empty<SelectListItem>()))"
+                    disabled=@(Model.Position.ToString() != "Driver" ? "disabled" : null)>
+            </select>
             <span asp-validation-for="AssignedCarId" class="text-danger"></span>
         </div>
     </div>
