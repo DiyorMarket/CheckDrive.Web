@@ -1,17 +1,19 @@
-﻿@model CheckDrive.ApiContracts.OilMark.OilMarkDto
+﻿@using CheckDrive.Web.Requests.OilMark
+@model UpdateOilMarkRequest
 
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_LayoutForModal.cshtml";
 }
-<div style="width : 1000px">
-    <div class="col-md-5 mb-3">
+<div class="oilMarkModal">
+    <div class="mb-3">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id"/>
             <div class="">
-                <label asp-for="OilMark" class="control-label">Yo'qilg'i turi nomi</label>
-                <input asp-for="OilMark" class="form-control" required />
-                <span asp-validation-for="OilMark" class="text-danger"></span>
+                <label asp-for="Name" class="control-label">Yo'qilg'i turi nomi</label>
+                <input asp-for="Name" class="form-control" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group mt-3 d-flex justify-content-center">
                 <button type="submit" class="btn btn-success" style="width:200px">

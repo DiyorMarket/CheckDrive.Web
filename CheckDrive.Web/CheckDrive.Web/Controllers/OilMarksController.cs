@@ -1,4 +1,5 @@
-﻿using CheckDrive.Web.Requests.OilMark;
+﻿using CheckDrive.Web.Mappings;
+using CheckDrive.Web.Requests.OilMark;
 using CheckDrive.Web.Stores.OilMarks;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,10 +21,7 @@ public class OilMarksController(IOilMarkStore oilMarkDataStore) : Controller
         return View(oilMark);
     }
 
-    public IActionResult Create()
-    {
-        return View();
-    }
+    public IActionResult Create() => View();
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -40,8 +38,9 @@ public class OilMarksController(IOilMarkStore oilMarkDataStore) : Controller
     public async Task<IActionResult> Edit(int id)
     {
         var oilMark = await oilMarkDataStore.GetByIdAsync(id);
+        var updateRequest = oilMark.ToUpdateViewModel();
 
-        return View(oilMark);
+        return View(updateRequest);
     }
 
     [HttpPost]
