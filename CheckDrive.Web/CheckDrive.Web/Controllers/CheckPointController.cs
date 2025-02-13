@@ -1,20 +1,21 @@
 ﻿using CheckDrive.Web.Stores.CheckPoint;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CheckDrive.Web.Controllers
-{
-    public class CheckPointController : Controller
-    {
-        private readonly ICheckPointStore _checkPointStore;
-        public CheckPointController(ICheckPointStore checkPointStore)
-        {
-            _checkPointStore = checkPointStore ?? throw new ArgumentNullException(nameof(checkPointStore));
-        }
-        public async Task<ActionResult> Index(int id)
-        {
-            var checkPoint = await _checkPointStore.GetCheckPointByIdAsync(id);
+namespace CheckDrive.Web.Controllers;
 
-            return View(checkPoint);
-        }
+public class CheckPointController(ICheckPointStore checkPointStore) : Controller
+{
+    public async Task<ActionResult> Index(int id)
+    {
+        var checkPoint = await checkPointStore.GetByIdAsync(id);
+
+        return View(checkPoint);
+    }
+
+    public async Task<ActionResult> Details(int id)
+    {
+        var checkPoint = await checkPointStore.GetByIdAsync(id);
+
+        return View(checkPoint);
     }
 }

@@ -12,13 +12,11 @@ internal sealed class CheckPointStore(CheckDriveApi apiClient) : ICheckPointStor
     public Task<List<CheckPointViewModel>> GetAllAsync()
         => apiClient.GetAsync<List<CheckPointViewModel>>(_resourceUrl);
 
-    public async Task<CheckPointViewModel> GetCheckPointByIdAsync(int id)
+    public async Task<CheckPointViewModel> GetByIdAsync(int id)
     {
-        var checkPoints = await apiClient.GetAsync<List<CheckPointViewModel>>(_resourceUrl);
+        var checkPoint = await apiClient.GetAsync<CheckPointViewModel>($"{_resourceUrl}/{id}");
 
-        var result = checkPoints.FirstOrDefault(x => x.Id == id);
-
-        return result;
+        return checkPoint;
     }
 
     public List<SelectListItem> GetEnumValues<TEnum>() where TEnum : Enum
