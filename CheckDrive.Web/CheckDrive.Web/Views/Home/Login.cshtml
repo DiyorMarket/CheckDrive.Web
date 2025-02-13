@@ -1,0 +1,24 @@
+﻿@model CheckDrive.Web.Requests.Auth.LoginRequest
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<div class="login-card">
+    <img src="~/images/logo.png" class="logo" alt="Company Logo" />
+    <h4 class="card-title">Hisobingizni kiriting</h4>
+    <form asp-action="Login" method="post" id="loginForm">
+        <div class="form-group">
+            <input type="text" asp-for="UserName" class="form-control" placeholder="Login" />
+            @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group position-relative">
+            <input type="password" asp-for="Password" class="form-control" placeholder="Password" id="passwordInput" />
+            <span class="password-toggle" onclick="togglePasswordVisibility()">
+                <i id="password-icon" class="fas fa-eye-slash"></i>
+            </span>
+            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+        </div>
+        <button type="submit" class="btn-login">Log in</button>
+    </form>
+</div>

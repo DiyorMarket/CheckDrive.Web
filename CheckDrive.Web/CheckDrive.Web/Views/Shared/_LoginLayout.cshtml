@@ -1,33 +1,28 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Check Drive</title>
+    <title>@ViewData["Title"] - ATP Garaj</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link href="https://cdn.syncfusion.com/ej2/20.1.55/bootstrap5-dark.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/20.1.55/bootstrap5.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Lesson11.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
-    <script src="https://cdn.syncfusion.com/ej2/20.2.43/dist/ej2.min.js"></script>
-    <link rel="icon" type="image/x-icon" href="~/images/LogoCheakDrive.png">
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap">
+    <link rel="icon" type="image/x-icon" href="~/images/logo.png">
 </head>
-<body class="e-bigger" style="background-image: url('/images/simple.jpg'); background-repeat: no-repeat; background-size: cover; height: 100vh;">
-    <div class="dock-target">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+<body class="e-bigger">
+    <div class="login-container">
+        @RenderBody()
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.syncfusion.com/ej2/20.2.43/dist/ej2.min.js"></script>
+    <script src="~/js/login.js" asp-append-version="true"></script>
 
-    <ejs-scripts></ejs-scripts>
-    @await RenderSectionAsync("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

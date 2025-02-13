@@ -7,4 +7,5 @@ public interface IAuthStore
 {
     Task<TokenResponse> LoginAsync(LoginRequest request);
     Task<TokenResponse> RefreshTokenAsync(RefreshTokenRequest request);
+    void Logout();
 }

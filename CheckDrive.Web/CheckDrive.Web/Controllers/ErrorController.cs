@@ -10,12 +10,12 @@ public class ErrorController : Controller
         return View();
     }
 
-    [Route("Error/{statusCode:int}")]
+    [Route("{statusCode:int}")]
     public IActionResult ErrorPage(int statusCode)
     {
         return statusCode switch
         {
-            401 => View(nameof(Unauthorized)),
+            401 => RedirectToAction("Login", "Home"),
             403 => View(nameof(Forbidden)),
             404 => View(nameof(NotFound)),
             409 => RedirectToAction(nameof(Error409)),
