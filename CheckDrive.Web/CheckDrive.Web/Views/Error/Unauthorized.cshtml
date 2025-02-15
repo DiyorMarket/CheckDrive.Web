@@ -1,6 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Internal Server Error";
-    Layout = "~/Views/Shared/_ErrorLayout.cshtml";
+    ViewBag.Title = "Unauthorized";
+    Layout = "~/Views/Shared/Layouts/_ErrorLayout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -27,9 +27,12 @@
         }
 
         .button-container {
-            position: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
             bottom: 20px;
-            right: 20px;
+            width: 100%;
         }
 
             .button-container a {
@@ -37,7 +40,7 @@
                 padding: 10px 20px;
                 font-size: 16px;
                 cursor: pointer;
-                background-color: #F62D2D;
+                background-color: #007bff;
                 color: white;
                 text-decoration: none;
                 border: none;
@@ -47,7 +50,10 @@
 </head>
 <body>
     <div class="container">
-        <img src="~/images/InternalServerError.png" />
+        <img src="~/images/Unauthorize.png" />
+    </div>
+    <div class="button-container">
+        <a href="@Url.Action("Login", "Auth")">Loginga qaytish</a>
     </div>
 </body>
 </html>

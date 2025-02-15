@@ -1,6 +1,6 @@
 ﻿@{
     ViewBag.Title = "Unauthorized";
-    Layout = "~/Views/Shared/_ErrorLayout.cshtml";
+    Layout = "~/Views/Shared/Layouts/_ErrorLayout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -50,7 +50,7 @@
 </head>
 <body>
     <div class="container">
-        <img src="~/images/Unauthorize.png" />
+        <img src="~/images/Error409.png" />
     </div>
     <div class="button-container">
         <a href="@Url.Action("Login", "Auth")">Loginga qaytish</a>

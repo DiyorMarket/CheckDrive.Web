@@ -44,7 +44,7 @@ public class EmployeesController(IEmployeeStore employeeStore, ICarStore carStor
         try
         {
             var createdEmployee = await employeeStore.CreateAsync(request);
-            
+
             return RedirectToAction(nameof(Index));
         }
         catch

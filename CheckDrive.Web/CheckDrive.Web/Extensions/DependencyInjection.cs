@@ -5,29 +5,14 @@ using CheckDrive.Web.Helpers;
 using CheckDrive.Web.Services;
 using CheckDrive.Web.Services.CookieHandler;
 using CheckDrive.Web.Services.CurrentUserService;
-using CheckDrive.Web.Stores.Accounts;
 using CheckDrive.Web.Stores.Auth;
 using CheckDrive.Web.Stores.Cars;
 using CheckDrive.Web.Stores.CheckPoint;
 using CheckDrive.Web.Stores.Dashboard;
 using CheckDrive.Web.Stores.Debts;
-using CheckDrive.Web.Stores.DispatcherReviews;
-using CheckDrive.Web.Stores.Dispatchers;
-using CheckDrive.Web.Stores.DoctorReviews;
-using CheckDrive.Web.Stores.Doctors;
-using CheckDrive.Web.Stores.Drivers;
 using CheckDrive.Web.Stores.Employee;
-using CheckDrive.Web.Stores.MechanicAcceptances;
-using CheckDrive.Web.Stores.MechanicHandovers;
-using CheckDrive.Web.Stores.Mechanics;
 using CheckDrive.Web.Stores.Menu;
-using CheckDrive.Web.Stores.MockDashboard;
 using CheckDrive.Web.Stores.OilMarks;
-using CheckDrive.Web.Stores.OperatorReviews;
-using CheckDrive.Web.Stores.Operators;
-using CheckDrive.Web.Stores.Roles;
-using CheckDrive.Web.Stores.Technicians;
-using CheckDrive.Web.Stores.User;
 using Syncfusion.Licensing;
 
 namespace CheckDrive.Web.Extensions;
@@ -58,25 +43,10 @@ internal static class DependencyInjection
 
     private static void AddStores(IServiceCollection services)
     {
-        services.AddScoped<IAccountDataStore, AccountDataStore>();
         services.AddScoped<ICarStore, CarStore>();
-        services.AddScoped<IDispatcherReviewDataStore, DispatcherReviewDataStore>();
-        services.AddScoped<IDispatcherDataStore, DispatcherDataStore>();
-        services.AddScoped<IDoctorDataStore, DoctorDataStore>();
-        services.AddScoped<IDoctorReviewDataStore, DoctorReviewDataStore>();
-        services.AddScoped<IDriverDataStore, DriverDataStore>();
-        services.AddScoped<IMechanicAcceptanceDataStore, MechanicAcceptanceDataStore>();
-        services.AddScoped<IMechanicHandoverDataStore, MechanicHandoverDataStore>();
-        services.AddScoped<IMechanicDataStore, MechanicDataStore>();
         services.AddScoped<IOilMarkStore, OilMarkStore>();
-        services.AddScoped<IOperatorReviewDataStore, OperatorReviewDataStore>();
-        services.AddScoped<IOperatorDataStore, OperatorDataStore>();
-        services.AddScoped<IRoleDataStore, RoleDataStore>();
-        services.AddScoped<ITechnicianDataStore, MockTechnicianDataStore>();
         services.AddScoped<IDashboardStore, DashboardStore>();
-        services.AddScoped<IMockDashboardStore, MockDashboardStore>();
         services.AddScoped<IDebtsStore, DebtsStore>();
-        services.AddScoped<IUserDataStore, UserDataStore>();
         services.AddScoped<ICheckPointStore, CheckPointStore>();
         services.AddScoped<IAuthStore, AuthStore>();
         services.AddScoped<IEmployeeStore, EmployeeStore>();

@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_LayoutForModal.cshtml";
+    Layout = "~/Views/Shared/Layouts/_LayoutForModal.cshtml";
 }
 <form asp-action="Create" method="post" id="createCarForm" onsubmit="return validateForm()">
     @Html.AntiForgeryToken()
