@@ -1,8 +1,7 @@
 ﻿@{
-    ViewBag.Title = "Forbidden";
-    Layout = "~/Views/Shared/_ErrorLayout.cshtml";
+    ViewBag.Title = "Not Found";
+    Layout = "~/Views/Shared/Layouts/_ErrorLayout.cshtml";
 }
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -47,10 +46,10 @@
 </head>
 <body>
     <div class="container">
-        <img src="~/images/Forbidden.png"/>
+        <img src="~/images/NotFound.png" alt="Description of the image" />
     </div>
     <div class="button-container">
-        <a href="@Url.Action("Login", "Auth")">Login</a>
+        <a href="@Url.Action("Index", "Dashboard")">Bosh Sahifaga Qaytish</a>
     </div>
 </body>
 </html>

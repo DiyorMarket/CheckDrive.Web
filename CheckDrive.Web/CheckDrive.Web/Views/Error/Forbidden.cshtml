@@ -1,6 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Unauthorized";
-    Layout = "~/Views/Shared/_ErrorLayout.cshtml";
+    ViewBag.Title = "Forbidden";
+    Layout = "~/Views/Shared/Layouts/_ErrorLayout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -27,12 +27,9 @@
         }
 
         .button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
+            position: fixed;
             bottom: 20px;
-            width: 100%;
+            right: 20px;
         }
 
             .button-container a {
@@ -40,7 +37,7 @@
                 padding: 10px 20px;
                 font-size: 16px;
                 cursor: pointer;
-                background-color: #007bff;
+                background-color: #F62D2D;
                 color: white;
                 text-decoration: none;
                 border: none;
@@ -50,10 +47,10 @@
 </head>
 <body>
     <div class="container">
-        <img src="~/images/Error409.png" />
+        <img src="~/images/Forbidden.png"/>
     </div>
     <div class="button-container">
-        <a href="@Url.Action("Login", "Auth")">Loginga qaytish</a>
+        <a href="@Url.Action("Login", "Auth")">Login</a>
     </div>
 </body>
 </html>
